@@ -165,7 +165,6 @@ function View(B, self) {
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F; white-space:nowrap;`)}>{personaName}</div>
 <div style={css(`font-size:11px; color:#5A5E66; white-space:nowrap;`)}>{personaRole}</div>
 </div>
-<button onClick={onSignOut} title={"Sign out"} aria-label={"Sign out"} style={css(`border:none; background:transparent; cursor:pointer; padding:5px; color:#8E96A3; display:flex; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `color:#D14B4B;`)} onMouseLeave={(e) => hoverOff(e, `border:none; background:transparent; cursor:pointer; padding:5px; color:#8E96A3; display:flex; flex-shrink:0;`, `color:#D14B4B;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </header>
 {/* IN-MODULE SUB-TABS (Tier-2 only): filters / inner views for the active module.
@@ -454,9 +453,9 @@ function View(B, self) {
 {(isScMaster) ? (<>
 <div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · existing SC Codes are updated, new ones are added</div></div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={uploadScMasterFile} disabled={scUploadSaving} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:${scUploadSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${scUploadSaving ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{scUploadSaving ? 'Saving…' : 'Upload CSV'}</button>
+<button onClick={uploadFile} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 </div>
 <div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:13px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
@@ -497,7 +496,7 @@ function View(B, self) {
 <div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
-<div style={css(`padding:10px 10px; overflow:hidden;`)}><div style={css(`font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div><div style={css(`font-size:10px; color:#8E96A3; margin-top:1px; font-variant-numeric:tabular-nums;`)}>{s.coords}</div></div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{s.scType}</span></div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66; white-space:nowrap;`)}>{s.zone}</span></div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
@@ -553,7 +552,7 @@ function View(B, self) {
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — SC Vehicle Availability</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per vehicle type per SC · upload replaces all prior records</div></div>
 <button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={uploadAvailFile} disabled={availUploadSaving} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:${availUploadSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${availUploadSaving ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{availUploadSaving ? 'Saving…' : 'Upload CSV'}</button>
+<button onClick={uploadFile} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; display:flex; align-items:center; gap:14px; margin-bottom:12px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
@@ -594,24 +593,25 @@ function View(B, self) {
 <div style={css(`flex:1; min-width:86px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>CAPACITY <span style={css(`font-weight:400; color:#8E96A3;`)}>(VM {g.addForm.vmCap})</span></div><input type={"number"} min={"0"} placeholder={g.addForm.vmCap} value={g.addForm.cap} onInput={g.addForm.onCapChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none; text-align:right; font-variant-numeric:tabular-nums;`)} /></div>
 <div style={css(`flex:1; min-width:90px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>DISTANCE</div><div style={css(`height:36px; display:flex; align-items:center; padding:0 10px; border:1px solid #EEF1F6; border-radius:8px; background:#F2F5FA; font-size:13px; color:#5A5E66;`)}>{g.addForm.dist}</div></div>
 <div style={css(`flex:1; min-width:108px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>ZONE FEASIBILITY</div><select value={g.addForm.zoneFeas} onChange={g.addForm.onZoneFeasChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto;`)}><option value={"Both"}>Both</option><option value={"Local"}>Local</option><option value={"Non-Local"}>Non-Local</option></select></div>
-<button onClick={g.addForm.onAdd} disabled={g.addForm.saving} style={css(`height:36px; padding:0 18px; border:none; background:${g.addForm.saving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${g.addForm.saving ? 'not-allowed' : 'pointer'}; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>{g.addForm.submitLabel}</button>
+<button onClick={g.addForm.onAdd} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>{g.addForm.submitLabel}</button>
 <button onClick={g.addForm.onCancel} style={css(`height:36px; padding:0 14px; border:1px solid #D0D5DD; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `color:#14171F; border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 14px; border:1px solid #D0D5DD; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`, `color:#14171F; border-color:#C3C9D4;`)}>Cancel</button>
 </div>
 {(g.addForm.tpWarn) ? (<><div style={css(`margin-top:10px; font-size:11.5px; color:#C77B00; display:inline-flex; align-items:center; gap:5px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{g.addForm.tpWarnText}</div></>) : null}
 </div>
 </>) : null}
-<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1.1fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1fr 0.95fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>VEHICLES</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>TP LIMIT</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ZONE FEASIBILITY</div>
+<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>WITHIN LIMIT</div>
 <div />
 </div>
 <div style={css(`max-height:138px; overflow-y:auto;`)}>
 {(g.rows || []).map((r, __i21) => (<React.Fragment key={__i21}>
-<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1.1fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1fr 0.95fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.t}</div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><select value={r.draftType} onChange={r.onDraftType} style={css(`width:100%; height:30px; padding:0 6px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto; box-sizing:border-box;`)}>{(r.typeOpts || []).map((to, __i19) => (<React.Fragment key={__i19}><option value={to.value}>{to.label}</option></React.Fragment>))}</select></div></>) : null}
@@ -630,9 +630,11 @@ function View(B, self) {
 {/* ZONE FEASIBILITY */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:${r.zfBg}; color:${r.zfFg};`)}>{r.zf}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center;`)}>{(r.zfChips || []).map((zc, __i20) => (<React.Fragment key={__i20}><button onClick={zc.onSelect} style={css(`height:26px; padding:0 8px; border:1px solid ${zc.bd}; background:${zc.bg}; color:${zc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)}>{zc.label}</button></React.Fragment>))}</div></>) : null}
+{/* WITHIN LIMIT (static in both modes) */}
+<div style={css(`padding:11px 14px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; background:${r.vmBg}; color:${r.vmFg};`)}>{r.vmLabel}</span></div>
 {/* ACTION CELL */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:0 6px; display:flex; align-items:center; justify-content:center; gap:4px;`)}><button onClick={r.onEditAvail} aria-label={"Edit row"} title={"Edit"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={r.rowDelete} aria-label={"Delete row"} title={"Remove"} style={css(`width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)} onMouseEnter={(e) => hoverOn(e, `background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`, `background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
-{(r.rowEditing) ? (<><div style={css(`padding:6px 8px; display:flex; align-items:center; justify-content:flex-end; gap:5px;`)}><button onClick={r.onSaveAvailRow} disabled={r.rowSaving} title={"Save"} style={css(`height:28px; padding:0 11px; border:none; background:${r.rowSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:${r.rowSaving ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:28px; padding:0 11px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`, `background:#00337D;`)}>{r.rowSaving ? 'Saving…' : 'Save'}</button><button onClick={r.onCancelAvailRow} disabled={r.rowSaving} title={"Cancel"} style={css(`height:28px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#8E96A3;`)} onMouseLeave={(e) => hoverOff(e, `height:28px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`, `border-color:#8E96A3;`)}>Cancel</button></div></>) : null}
+{(r.rowEditing) ? (<><div style={css(`padding:6px 8px; display:flex; align-items:center; justify-content:flex-end; gap:5px;`)}><button onClick={r.onSaveAvailRow} title={"Save"} style={css(`height:28px; padding:0 11px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:28px; padding:0 11px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`, `background:#00337D;`)}>Save</button><button onClick={r.onCancelAvailRow} title={"Cancel"} style={css(`height:28px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#8E96A3;`)} onMouseLeave={(e) => hoverOff(e, `height:28px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:999px; cursor:pointer;`, `border-color:#8E96A3;`)}>Cancel</button></div></>) : null}
 </div>
 </React.Fragment>))}
 </div>
@@ -675,22 +677,27 @@ function View(B, self) {
 <div style={css(`display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;`)}>
 <div style={css(`flex:1.4; min-width:126px;`)}>
 <div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Vehicle Type<span style={css(`color:#D14B4B;`)}> *</span></div>
-<select value={addVehVtype} onChange={onAddVehVtype} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)}>
-<option value={""}>Select…</option>
-{(addVehTypeOptions || []).map((o, __iVT1) => (<React.Fragment key={__iVT1}><option value={o}>{o}</option></React.Fragment>))}
-</select>
+<input value={addVehVtype} onInput={onAddVehVtype} placeholder={"e.g. 20ft"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
 </div>
 <div style={css(`flex:1; min-width:96px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Capacity (Shipments)</div>
+<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Capacity</div>
 <input type={"number"} min={"0"} value={addVehCapacity} onInput={onAddVehCapacity} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
 </div>
 <div style={css(`flex:1; min-width:96px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Distance Limit (Kms)</div>
+<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Dist (KM)</div>
 <input type={"number"} min={"0"} value={addVehDist} onInput={onAddVehDist} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
 </div>
 <div style={css(`flex:1; min-width:100px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>Touch Point Limit<span style={css(`color:#D14B4B;`)}> *</span></div>
+<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>TP Hard Cap<span style={css(`color:#D14B4B;`)}> *</span></div>
 <input type={"number"} min={"0"} value={addVehHardCap} onInput={onAddVehHardCap} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
+</div>
+<div style={css(`flex:1; min-width:92px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>TP Local</div>
+<input type={"number"} min={"0"} value={addVehLocalTp} onInput={onAddVehLocalTp} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
+</div>
+<div style={css(`flex:1; min-width:104px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>TP Non-Local</div>
+<input type={"number"} min={"0"} value={addVehNonLocalTp} onInput={onAddVehNonLocalTp} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
 </div>
 <div style={css(`flex:1.4; min-width:150px;`)}>
 <div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>LH Feasibility</div>
@@ -701,7 +708,7 @@ function View(B, self) {
 </div>
 </div>
 <button onClick={closeAddVeh} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}>Cancel</button>
-<button onClick={submitAddVeh} disabled={!addVehValid} style={css(`height:36px; padding:0 20px; border:none; background:${addVehBtnBg}; color:${addVehBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${addVehBtnCursor}; white-space:nowrap;`)}>{addVehSubmitLabel}</button>
+<button onClick={submitAddVeh} style={css(`height:36px; padding:0 20px; border:none; background:${addVehBtnBg}; color:${addVehBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${addVehBtnCursor}; white-space:nowrap;`)}>{addVehSubmitLabel}</button>
 </div>
 </div>
 </>) : null}
@@ -720,7 +727,7 @@ function View(B, self) {
 <div style={css(`display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr 84px; align-items:center; border-top:1px solid #EEF1F6; background:${v.editing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(v.notEditing) ? (<><div style={css(`padding:13px 14px; font-size:13px; font-weight:700; color:#14171F;`)}>{v.name}</div></>) : null}
-{(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><select value={v.draftVtype} onChange={v.onDraftVtype} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:700; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; background:#fff;`)}>{(addVehTypeOptions || []).map((o, __iVT2) => (<React.Fragment key={__iVT2}><option value={o}>{o}</option></React.Fragment>))}</select></div></>) : null}
+{(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><input value={v.draftVtype} onInput={v.onDraftVtype} placeholder={"Vehicle type"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:700; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
 {/* CAPACITY */}
 {(v.notEditing) ? (<><div style={css(`padding:13px 14px; text-align:right; font-size:13px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{v.capacity}</div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><input type={"number"} min={"0"} value={v.draftCap} onInput={v.onDraftCap} placeholder={"0"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:right; background:#fff;`)} /></div></>) : null}
@@ -735,7 +742,7 @@ function View(B, self) {
 {(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; flex-wrap:wrap; gap:5px; align-items:center;`)}>{(v.evFeasChips || []).map((fc, __i26) => (<React.Fragment key={__i26}><button onClick={fc.onToggle} style={css(`height:26px; padding:0 9px; border:1px solid ${fc.bd}; background:${fc.bg}; color:${fc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{fc.label}</button></React.Fragment>))}</div></>) : null}
 {/* ACTION CELL */}
 {(v.notEditing) ? (<><div style={css(`padding:7px 14px; display:flex; justify-content:flex-end; gap:6px;`)}><button onClick={v.onEdit} title={"Edit vehicle type"} aria-label={`Edit ${v.name}`} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={v.onDeleteConfirm} title={"Remove vehicle type"} aria-label={`Remove ${v.name}`} style={css(`width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)} onMouseEnter={(e) => hoverOn(e, `background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`, `background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
-{(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end; gap:6px;`)}><button onClick={v.onSaveRow} disabled={v.rowSaving} title={"Save changes"} style={css(`height:30px; padding:0 12px; border:none; background:${v.rowSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:${v.rowSaving ? 'not-allowed' : 'pointer'}; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>{v.rowSaving ? 'Saving…' : 'Save'}</button><button onClick={v.onCancelRow} disabled={v.rowSaving} title={"Cancel"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#8E96A3;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`, `border-color:#8E96A3;`)}>Cancel</button></div></>) : null}
+{(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end; gap:6px;`)}><button onClick={v.onSaveRow} title={"Save changes"} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>Save</button><button onClick={v.onCancelRow} title={"Cancel"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#8E96A3;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`, `border-color:#8E96A3;`)}>Cancel</button></div></>) : null}
 </div>
 </React.Fragment>))}
 </div>{/* /max-height Vehicle Master body */}
@@ -847,7 +854,7 @@ function View(B, self) {
 <div style={css(`width:40px; height:40px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"20"} height={"20"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 16V4M7 9l5-5 5 5M4 20h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1;`)}><div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>Upload node changes</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Single CSV — additions, closures & migrations in one file · <strong style={css(`color:#C77B00;`)}>override</strong>: the latest upload fully replaces all prior node-change data (not appended)</div></div>
 <button onClick={changesTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}>Template</button>
-<button onClick={uploadNodeChanges} disabled={nodeUploadSaving} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 15px; border:none; background:${nodeUploadSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${nodeUploadSaving ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{nodeUploadSaving ? 'Saving…' : 'Upload CSV'}</button>
+<button onClick={uploadNodeChanges} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 </div>
 {/* 1.6 UNIFIED additions · closures · migrations table */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
@@ -895,7 +902,7 @@ function View(B, self) {
 <div style={css(`width:40px; height:40px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"20"} height={"20"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 16V4M7 9l5-5 5 5M4 20h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1;`)}><div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>Ingest an external RLH plan</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>CSV · template enforced · validated then eligible to push for alignment</div></div>
 <button onClick={ingestTemplate} style={css(`height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}>Template</button>
-<button onClick={uploadFile} disabled={ingestUploadSaving} style={css(`height:36px; padding:0 15px; border:none; background:${ingestUploadSaving ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${ingestUploadSaving ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{ingestUploadSaving ? 'Saving…' : 'Ingest CSV'}</button>
+<button onClick={uploadFile} style={css(`height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Ingest CSV</button>
 </div>
 {/* Recently ingested list */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
@@ -958,22 +965,15 @@ function View(B, self) {
 <div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
 {(addScContacts || []).map((c, __i38) => (<React.Fragment key={__i38}>
 <div>
-<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}{(c.req) ? (<><span style={css(`color:#D14B4B;`)}> *</span></>) : null}</div>
-<input type={"email"} value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
+<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div>
+<input value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
 </div>
 </React.Fragment>))}
-</div>
-<div style={css(`margin-top:20px;`)}>
-<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:8px;`)}>Default Reviewers <span style={css(`font-weight:400; color:#8E96A3; letter-spacing:0; text-transform:none;`)}>— real Ops Leads pre-selected when a plan for this SC is pushed</span></div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:7px;`)}>
-{(addScReviewerChips || []).map((r, __i169) => (<React.Fragment key={__i169}><button onClick={r.onToggle} style={css(`display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1px solid ${r.bd}; background:${r.bg}; color:${r.fg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{r.name}</button></React.Fragment>))}
-{(!addScHasReviewerOptions) ? (<><span style={css(`font-size:12px; color:#8E96A3;`)}>No Ops Leads registered yet — invite them in Supabase, then they'll show up here.</span></>) : null}
-</div>
 </div>
 </div>
 <div style={css(`display:flex; align-items:center; justify-content:flex-end; gap:12px; padding:16px 24px; border-top:1px solid #E6EBF2; background:#FAFBFD; position:sticky; bottom:0;`)}>
 <button onClick={closeAddSc} style={css(`height:38px; padding:0 18px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={submitAddSc} disabled={savingSc} style={css(`height:38px; padding:0 22px; border:none; background:${savingSc ? '#8FA8D6' : '#003F98'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${savingSc ? 'not-allowed' : 'pointer'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 22px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{addScSubmitLabel}</button>
+<button onClick={submitAddSc} style={css(`height:38px; padding:0 22px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 22px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>{addScSubmitLabel}</button>
 </div>
 </div>
 </div>
@@ -1738,9 +1738,9 @@ function View(B, self) {
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>Triggered {c.triggeredAt} · {c.triggeredBy}</div>
 </div>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
-{(c.hasMap) ? (<><button onClick={c.onMap} aria-label={"Open this run on the map"} title={"View routes on map"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
+<button onClick={c.onMap} aria-label={"Open this run on the map"} title={"View routes on map"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onDownloadCsv} aria-label={"Download this plan as CSV"} title={"Download plan summary CSV"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-{(c.hasDetail) ? (<><button onClick={c.onDetail} aria-label={"Open full plan detail"} title={"Open full plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
+<button onClick={c.onDetail} aria-label={"Open full plan detail"} title={"Open full plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 {/* MIDDLE: compact inputs line + output metrics grid */}
@@ -1772,6 +1772,24 @@ function View(B, self) {
 </React.Fragment>))}
 </div>
 </>) : null}
+{/* Ingested plans section (RLH Plan Ingestion → Design Review wiring) */}
+{(hasReviewIngested) ? (<>
+<div style={css(`margin-top:22px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#5A5E66; letter-spacing:0.05em; margin-bottom:10px;`)}>INGESTED PLANS</div>
+{(reviewIngestedPlans || []).map((ip, __i61) => (<React.Fragment key={__i61}>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:13px 16px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:8px;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:14px; padding:13px 16px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:8px;`, `background:#FAFBFD;`)}>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px;`)}>
+<span style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>{ip.name}</span>
+<span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAF3FB; color:#1E6FB8;`)}>Ingested</span>
+<span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:#E7F4EC; color:#128A3E;`)}>Validated</span>
+</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>{ip.runId} · SC {ip.scCode} · {ip.rows} rows · {ip.by} · {ip.date}</div>
+</div>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
 {(noCurSC) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 40px; text-align:center;`)}>
 <div style={css(`width:54px; height:54px; border-radius:8px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.5"}><path d={"M12 8v4l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
@@ -1790,11 +1808,15 @@ function View(B, self) {
 <button onClick={closePush} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`padding:20px 22px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Add a POC</div>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>SC POCs <span style={css(`font-weight:500; color:#5A5E66;`)}>— from SC Master</span></div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px;`)}>
+{(pocChips || []).map((p, __i62) => (<React.Fragment key={__i62}><button onClick={p.onToggle} style={css(`display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1px solid ${p.bd}; background:${p.bg}; color:${p.fg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{p.name}</button></React.Fragment>))}
+</div>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Add a reviewer manually</div>
 <div style={css(`display:flex; gap:8px; margin-bottom:20px;`)}>
-<select value={pushAddSelect} onChange={onPushAddSelect} style={css(`flex:1; height:38px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; outline:none; cursor:pointer;`)}>
-{(pushAddOptions || []).map((o, __i162) => (<React.Fragment key={__i162}><option value={o.value}>{o.label}</option></React.Fragment>))}
-</select>
+<input value={pushName} onInput={onPushName} placeholder={"Name"} style={css(`flex:1; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
+<input value={pushEmail} onInput={onPushEmail} placeholder={"email@valmo.com"} style={css(`flex:1.2; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
+<button onClick={addManualReviewer} style={css(`height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`, `background:#EAEEFB;`)}>Add</button>
 </div>
 <div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Reviewers <span style={css(`color:#003F98;`)}>({pushCount})</span></div>
 <div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
@@ -1802,10 +1824,10 @@ function View(B, self) {
 <div style={css(`display:flex; align-items:center; gap:11px; padding:9px 13px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:8px;`)}>
 <div style={css(`width:30px; height:30px; border-radius:50%; background:#EAEEFB; color:#003F98; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; overflow:hidden;`)}>{r.initials}</div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.name}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.email}</div></div>
+{(r.isPoc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6;`)}>SC POC</span></>) : null}
 <button onClick={r.onRemove} aria-label={"Remove reviewer"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 </React.Fragment>))}
-{(reviewersList || []).length === 0 ? (<><div style={css(`padding:14px; text-align:center; font-size:12px; color:#8E96A3; border:1px dashed #E6EBF2; border-radius:8px;`)}>No reviewers yet — this SC has no default reviewers on file. Add one above.</div></>) : null}
 </div>
 </div>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
@@ -2107,14 +2129,8 @@ function View(B, self) {
 </>) : null}
 {(aSel.needsAckToDecide) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops feedback is in. Review it under Plan Details, then <strong>Acknowledge & freeze</strong> to start accepting or rejecting each flagged change.</span></div></>) : null}
 {(aSel.isAck) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#E7F0F8; border:1px solid #CFE0F1; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops editing is <strong>locked</strong> — reviewers can no longer change this plan. Accept or reject each flagged change under Plan Details, then Finalise.</span></div></>) : null}
-{(aSel.isFinal) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This plan is <strong>finalised & frozen</strong> — shown as committed, no pending remarks. {(aSel.finalWarningsCount > 0) ? (<>{aSel.finalWarningsCount} advisory warning{aSel.finalWarningsCount === 1 ? '' : 's'} below.</>) : ('No outstanding warnings.')}</span></div></>) : null}
-{(aSel.isFinal && aSel.finalWarningsCount > 0) ? (<>
-<div style={css(`display:flex; align-items:flex-start; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBF1DF; border:1px solid #F0DBA8; border-radius:8px;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"2"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<div style={css(`flex:1;`)}>{(aSel.finalWarnings || []).map((w, __iFW) => (<React.Fragment key={__iFW}><div style={css(`font-size:11.5px; color:#9A5E00; margin-bottom:2px;`)}>{w}</div></React.Fragment>))}</div>
-</div>
-</>) : null}
-{/* Plan Inputs — SC details + vehicles used (2026-07-16, unifies with Design Review's layout) */}
+{(aSel.isFinal) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This plan is <strong>finalised & frozen</strong> — shown as committed, no pending remarks. {(aSel.finalWarningsCount > 0) ? (<>{aSel.finalWarningsCount} advisory warning{aSel.finalWarningsCount === 1 ? '' : 's'} under Validation Flags.</>) : ('No outstanding warnings.')}</span></div></>) : null}
+{/* SECTION 1 — Plan Inputs (SC details, vehicles used, related details) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Inputs</span></div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:12px;`)}>
 <div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>Nodes</div><div style={css(`font-size:15px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{aSel.inputNodes}</div></div>
@@ -2125,7 +2141,7 @@ function View(B, self) {
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:18px 20px; margin-bottom:18px;`)}>
 <div style={css(`display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:13px;`)}><div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Vehicles used</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>{aSel.inputVehTotal} total</div></div>
 <div style={css(`display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;`)}>
-{(aSel.inputVehArr || []).map((v, __iIVA) => (<React.Fragment key={__iIVA}>
+{(aSel.inputVehArr || []).map((v, __iIV) => (<React.Fragment key={__iIV}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 13px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}>
 <span style={css(`font-size:12.5px; color:#14171F; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{v.veh}</span>
 <span style={css(`font-size:13px; font-weight:700; color:#003F98; flex-shrink:0;`)}>×{v.n}</span>
@@ -2133,21 +2149,20 @@ function View(B, self) {
 </React.Fragment>))}
 </div>
 </div>
-{/* Plan Outputs */}
+{/* SECTION 2 — Plan Outputs (metric views) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Outputs</span></div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(108px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:16px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(108px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 {(aSel.metrics || []).map((m, __i73) => (<React.Fragment key={__i73}><div style={css(`background:#fff; padding:13px 14px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:500; color:#14171F; line-height:1;`)}>{m.value}</div><div style={css(`font-size:11px; color:#5A5E66; margin-top:5px;`)}>{m.label}</div></div></React.Fragment>))}
 </div>
-{/* Validation Flags */}
+{/* SECTION 3 — Validation Flags */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(aSel.hasPlanFlags) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:16px;`)}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:12px;`)}>
 <div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
-{(aSel.planFlags || []).map((fl, __iPFa) => (<React.Fragment key={__iPFa}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
+{(aSel.planFlags || []).map((fl, __iPF) => (<React.Fragment key={__iPF}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
 </div>
 </div>
 </>) : null}
-{(aSel.noPlanFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:16px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this plan.</div></>) : null}
 {(aSel.hasSubmissionGap) ? (<>
 <div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBEAEA; border:1px solid #F3C6C6; border-radius:8px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.9"}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
@@ -2155,24 +2170,19 @@ function View(B, self) {
 </div>
 </>) : null}
 {(aSel.hasDistanceVariance) ? (<>
-<div style={css(`display:flex; align-items:flex-start; gap:9px; padding:10px 14px; margin-bottom:12px; background:${aSel.distanceVarianceCount > 0 ? '#FBF1DF' : '#E7F4EC'}; border:1px solid ${aSel.distanceVarianceCount > 0 ? '#F0DBA8' : '#BFE3CC'}; border-radius:8px;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={aSel.distanceVarianceCount > 0 ? "#C77B00" : "#128A3E"} strokeWidth={"2"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<div style={css(`display:flex; align-items:flex-start; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBF1DF; border:1px solid #F0DBA8; border-radius:8px;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"2"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <div style={css(`flex:1;`)}>
-<span style={css(`font-size:12px; font-weight:700; color:#9A5E00;`)}>{aSel.distanceVarianceCount > 0 ? (aSel.distanceVarianceCount + ' entered distance' + (aSel.distanceVarianceCount === 1 ? '' : 's') + ' still don\u2019t match the calculated leg by more than 25% — decide each below.') : 'All flagged distances have been accepted with warning.'}</span>
+<span style={css(`font-size:12px; font-weight:700; color:#9A5E00;`)}>{aSel.distanceVarianceCount} entered distance{aSel.distanceVarianceCount === 1 ? '' : 's'} still don\u2019t match the calculated leg by more than 25%. Decide each in its route's Review Changes.</span>
 {(aSel.distanceVarianceEntries || []).map((e, __iDV) => (<React.Fragment key={__iDV}>
-<div style={css(`display:flex; align-items:center; gap:10px; margin-top:6px; padding-top:6px; border-top:1px solid #F0DBA8; flex-wrap:wrap;`)}>
-<span style={css(`font-size:11.5px; color:#5A5E66; flex:1; min-width:200px;`)}>{e.text}{(e.isAccepted) ? (<><span style={css(`margin-left:7px; font-size:10px; font-weight:700; color:#128A3E;`)}>\u2713 Accepted with warning</span></>) : null}</span>
-{(e.canDecideThis) ? (<>
-<div style={css(`display:flex; gap:6px;`)}>
-<button onClick={e.onAccept} title={"Keep the entered distance despite the warning"} style={css(`height:26px; padding:0 10px; border:1px solid ${e.isAccepted ? '#128A3E' : '#D8DEE8'}; background:${e.isAccepted ? '#128A3E' : '#fff'}; color:${e.isAccepted ? '#fff' : '#128A3E'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Accept anyway</button>
-<button onClick={e.onRevert} title={"Revert to the calculated distance"} style={css(`height:26px; padding:0 10px; border:1px solid #D8DEE8; background:#fff; color:#5A5E66; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Revert to calculated</button>
-</div>
-</>) : (<><span style={css(`font-size:10.5px; color:#8E96A3; font-style:italic;`)}>Decidable after Acknowledge & Freeze</span></>)}
+<div style={css(`display:flex; align-items:center; gap:10px; margin-top:6px; padding-top:6px; border-top:1px solid #F0DBA8;`)}>
+<span style={css(`font-size:11.5px; color:#5A5E66;`)}>{e.text}</span>
 </div>
 </React.Fragment>))}
 </div>
 </div>
 </>) : null}
+{(aSel.noPlanFlags && !aSel.hasSubmissionGap && !aSel.hasDistanceVariance) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:18px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this plan.</div></>) : null}
 {/* SECTION 4 — Plan Details (tabs: Plan Details / Route View) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Details</span></div>
 <div style={css(`display:flex; align-items:center; gap:20px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
@@ -2198,7 +2208,7 @@ function View(B, self) {
 {(dv.isFirstInGroup) ? (<>
 <div style={css(`display:flex; flex-direction:column; gap:7px; padding:10px 12px; margin-top:6px; border:2px solid ${(aSel.dcGroupHeaders[dv.routeIdx] || {}).hasErrorIssues ? '#D14B4B' : '#8E96A3'}; border-bottom:none; background:${(aSel.dcGroupHeaders[dv.routeIdx] || {}).hasErrorIssues ? '#FBEAEA' : ((aSel.dcGroupHeaders[dv.routeIdx] || {}).hasChanges ? '#FBF1DF' : '#F7F8FB')};`)}>
 <div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap;`)}>
-<button onClick={(aSel.dcGroupHeaders[dv.routeIdx] || {}).onOpenReview} style={css(`font-size:12.5px; font-weight:700; color:#003F98; background:none; border:none; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:2px;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).routeCode}</button>
+{(aSel.isFinal) ? (<><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).routeCode}</span></>) : (<><button onClick={(aSel.dcGroupHeaders[dv.routeIdx] || {}).onOpenReview} style={css(`font-size:12.5px; font-weight:700; color:#003F98; background:none; border:none; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:2px;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).routeCode}</button></>)}
 {((aSel.dcGroupHeaders[dv.routeIdx] || {}).hasErrorIssues) ? (<><span style={css(`padding:1px 7px; border-radius:999px; font-size:9.5px; font-weight:700; background:#D14B4B; color:#fff;`)}>ERROR</span></>) : null}
 {((aSel.dcGroupHeaders[dv.routeIdx] || {}).hasRouteFlags) ? (<>
 <div style={css(`display:flex; gap:5px; flex-wrap:wrap;`)}>
@@ -2207,6 +2217,7 @@ function View(B, self) {
 </>) : null}
 {((aSel.dcGroupHeaders[dv.routeIdx] || {}).hasChanges) ? (<>
 <span style={css(`font-size:11.5px; color:${(aSel.dcGroupHeaders[dv.routeIdx] || {}).hasErrorIssues ? '#D14B4B' : '#9A5E00'}; flex:1; min-width:0;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).changeSummary}</span>
+{((aSel.dcGroupHeaders[dv.routeIdx] || {}).proposedBy) ? (<><span style={css(`padding:1px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).proposedBy}</span></>) : null}
 <span style={css(`font-size:10.5px; font-weight:700; color:${(aSel.dcGroupHeaders[dv.routeIdx] || {}).hasErrorIssues ? '#D14B4B' : '#9A5E00'}; white-space:nowrap;`)}>{(aSel.dcGroupHeaders[dv.routeIdx] || {}).changeDecidedCount}/{(aSel.dcGroupHeaders[dv.routeIdx] || {}).changeTotal} decided</span>
 {((aSel.dcGroupHeaders[dv.routeIdx] || {}).acceptAllRouteShow) ? (<>
 <div style={css(`display:flex; gap:6px;`)}>
@@ -2235,7 +2246,7 @@ function View(B, self) {
 <div style={css(`padding:11px 12px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums;`)}>{(dv.hasTpChange) ? (<><span style={css(`color:#9A5E00;`)}>{dv.tp}</span></>) : (dv.hasTpRipple) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; justify-content:center;`)} title={"Renumbered automatically because another DC left or joined this route \u2014 not an edit of its own"}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.tp}</span><span style={css(`color:#1E6FB8; font-weight:700;`)}>{dv.rippleTp}</span></span></>) : (<><span style={css(`color:#14171F;`)}>{dv.tp}</span></>)}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66;`)}>{dv.zone}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:${dv.hasVehChange ? '#9A5E00' : '#14171F'};`)}>{dv.hasVehChange ? dv.vehTypeProposed : dv.vehType}</div>
-<div style={css(`padding:11px 12px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; color:${dv.hasDistChange ? '#9A5E00' : '#14171F'};`)}>{dv.hasDistChange ? dv.rtDistProposed : dv.rtDist}</div>
+<div style={css(`padding:11px 12px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; color:${dv.hasDistChange ? '#9A5E00' : '#14171F'};`)}>{dv.hasDistChange ? dv.rtDistProposed : dv.rtDist}{(dv.hasDistVariance) ? (<><span title={"Entered distance is >25% off the calculated leg"} style={css(`margin-left:5px; color:#C77B00;`)}>⚠</span></>) : null}</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -2350,7 +2361,7 @@ function View(B, self) {
 <div>
 <div style={css(`font-size:10px; font-weight:700; color:#7A8094; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;`)}>Vehicle mix — original vs. suggested</div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px;`)}>
-{(aSel.planSimVehCards || []).map((vc, __iPSVA) => (<React.Fragment key={__iPSVA}>
+{(aSel.planSimVehCards || []).map((vc, __iPSV) => (<React.Fragment key={__iPSV}>
 <div style={css(`background:#fff; border:${vc.cardBd}; border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; gap:4px;`)}>
 <div style={css(`font-size:10.5px; font-weight:600; color:#7A8094; letter-spacing:0.04em; text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{vc.veh}</div>
 <div style={css(`display:flex; align-items:baseline; gap:10px; margin-top:4px;`)}>
@@ -2553,7 +2564,6 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
-{/* FIN MODAL */}
 {/* REVIEW CHANGES POPUP (planner) — opened by clicking a route with changes in the Details tab.
     Shows the full per-field diff + accept/reject, scoped to one route, in a focused modal instead
     of cluttering the flat table with icons for every route at once (2026-07-10). Fixed 2026-07-10:
@@ -2586,8 +2596,9 @@ function View(B, self) {
 {(grp.items || []).map((c, __iRC) => (<React.Fragment key={__iRC}>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 13px; background:${c.rowBg}; border:1px solid #EEF1F6; border-radius:8px;`)}>
 <div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:2px;`)}>{c.whereLabel} · {c.fieldLabel}</div>
+<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:2px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{c.whereLabel} · {c.fieldLabel}</span>{(c.proposedBy) ? (<><span style={css(`padding:1px 7px; border-radius:999px; font-size:9px; font-weight:700; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{c.proposedBy}</span></>) : null}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{c.changeVal}</div>
+{(c.hasVariance) ? (<><div style={css(`display:flex; align-items:center; gap:5px; margin-top:3px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"2.2"}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:10.5px; font-weight:600; color:#9A5E00;`)}>{c.varianceNote}</span></div></>) : null}
 </div>
 {(c.canDecide) ? (<>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
@@ -2717,8 +2728,10 @@ function View(B, self) {
 {/* ===== MASTER RAIL: assigned plan list (persistent, like Design Review) ===== */}
 {(opsIsL1) ? (<>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
-<div style={css(`padding:12px 12px 8px; flex-shrink:0; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} style={css(`height:26px; padding:0 10px; border:none; border-radius:999px; background:${fs.bg}; color:${fs.fg}; font-family:inherit; font-size:10.5px; font-weight:${fs.weight}; cursor:pointer; white-space:nowrap;`)}>{fs.label} {fs.count}</button></React.Fragment>))}
+<div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:3px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`flex:1; min-width:0; height:29px; border:none; border-radius:6px; background:${fs.bg}; color:${fs.fg}; font-family:inherit; font-size:11px; font-weight:${fs.weight}; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{fs.label} {fs.count}</button></React.Fragment>))}
+</div>
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
 <div style={css(`padding:0 12px 8px; display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0;`)}>
@@ -2810,7 +2823,7 @@ function View(B, self) {
 {(oSel.submitted) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:14px; background:#E7F4EC; border:1px solid #B6E0C6; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}><strong style={css(`font-weight:700;`)}>{oSel.submittedRecord}</strong> — the planner can now review your row decisions.</span></div></>) : null}
 {/* §10 O2 — plan-level co-reviewer awareness: surface "someone has proposed a change" up front (the same way the planner sees feedback received), not only row-by-row. */}
 {(oSel.hasProp) ? (<><div style={css(`display:flex; align-items:center; gap:9px; padding:11px 14px; margin-bottom:14px; background:#EAF3FB; border:1px solid #C4DDF2; border-radius:8px; flex-wrap:wrap;`)}><svg aria-hidden={"true"} width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>{oSel.propSummary}</span><span style={css(`font-size:12px; color:#5A5E66;`)}>Review the flagged rows before you submit your feedback.</span></div></>) : null}
-{/* Plan Inputs — SC details + vehicles used (2026-07-16, unifies with Design Review's layout) */}
+{/* SECTION 1 — Plan Inputs (SC details, vehicles used, related details) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Inputs</span></div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:12px;`)}>
 <div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>Nodes</div><div style={css(`font-size:15px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{oSel.inputNodes}</div></div>
@@ -2819,36 +2832,44 @@ function View(B, self) {
 <div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>SC coordinates</div><div style={css(`font-size:13.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{oSel.inputScCoords}</div></div>
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:18px 20px; margin-bottom:18px;`)}>
-<div style={css(`display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:13px;`)}><div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Vehicles used</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>{oSel.inputVehTotal} total</div></div>
-<div style={css(`display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;`)}>
-{(oSel.inputVehArr || []).map((v, __iIVO) => (<React.Fragment key={__iIVO}>
+<div style={css(`display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:13px;`)}><div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Vehicles used</div></div>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px;`)}>
+{(oSel.mixArr || []).map((v, __i96b) => (<React.Fragment key={__i96b}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 13px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}>
 <span style={css(`font-size:12.5px; color:#14171F; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{v.veh}</span>
-<span style={css(`font-size:13px; font-weight:700; color:#003F98; flex-shrink:0;`)}>×{v.n}</span>
+<span style={css(`font-size:12.5px; font-weight:700; color:#003F98; flex-shrink:0;`)}>{v.n} routes</span>
 </div>
 </React.Fragment>))}
 </div>
 </div>
-{/* Plan Outputs */}
+{/* SECTION 2 — Plan Outputs (metric views) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Outputs</span></div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(108px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:16px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(108px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 {(oSel.metrics || []).map((m, __i93) => (<React.Fragment key={__i93}><div style={css(`background:#fff; padding:13px 14px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:500; color:#14171F; line-height:1;`)}>{m.value}</div><div style={css(`font-size:11px; color:#5A5E66; margin-top:5px;`)}>{m.label}</div></div></React.Fragment>))}
 </div>
-{/* Validation Flags */}
+{/* SECTION 3 — Validation Flags */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
+{(oSel.hasSubmissionGap) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBEAEA; border:1px solid #F3C6C6; border-radius:8px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.9"}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12px; color:#D14B4B; font-weight:600;`)}>⚠ {oSel.submissionGapMsg}</span>
+</div>
+</>) : null}
 {(oSel.hasPlanFlags) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:16px;`)}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:12px;`)}>
 <div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
-{(oSel.planFlags || []).map((fl, __iPFo) => (<React.Fragment key={__iPFo}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
+{(oSel.planFlags || []).map((fl, __iOPF) => (<React.Fragment key={__iOPF}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
 </div>
 </div>
 </>) : null}
-{(oSel.noPlanFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:16px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this plan.</div></>) : null}
+{(oSel.noPlanFlags && !oSel.hasSubmissionGap) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:18px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this plan.</div></>) : null}
 {/* SECTION 4 — Plan Details (tabs: Plan Details / Route View) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#003F98; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Details</span></div>
 <div style={css(`display:flex; gap:22px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
 {(oSel.sections || []).map((t, __i92) => (<React.Fragment key={__i92}><button onClick={t.onClick} style={css(`position:relative; padding:0 0 12px; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}{(t.active) ? (<><span style={css(`position:absolute; left:0; right:0; bottom:0; height:3px; background:#003F98; border-radius:3px 3px 0 0;`)} /></>) : null}</button></React.Fragment>))}
 </div>
+{/* DETAILS — flat DC × Route list, same column layout as Design Review's Detail View. Editable
+    (route-group Aligned / Needs-Change actions) whenever the plan isn't locked yet. */}
 {/* DETAILS — flat DC × Route list, same column layout as Design Review's Detail View. Editable
     (route-group Aligned / Needs-Change actions) whenever the plan isn't locked yet. */}
 {(oSel.secDetails) ? (<>
@@ -2892,11 +2913,11 @@ function View(B, self) {
 <div style={css(`padding:11px 12px; font-size:11.5px; text-align:right; font-variant-numeric:tabular-nums;`)}>{(dv.hasLatLngChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:10.5px;`)}>{dv.lat}</span><span style={css(`color:#C77B00; font-weight:600;`)}>{dv.latProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('latLng')} aria-label={"Revert position"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (<><span style={css(`color:#14171F;`)}>{dv.lat}</span></>)}</div>
 <div style={css(`padding:11px 12px; font-size:11.5px; text-align:right; font-variant-numeric:tabular-nums;`)}>{(dv.hasLatLngChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:10.5px;`)}>{dv.lng}</span><span style={css(`color:#C77B00; font-weight:600;`)}>{dv.lngProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('latLng')} aria-label={"Revert position"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (<><span style={css(`color:#14171F;`)}>{dv.lng}</span></>)}</div>
 <div style={css(`padding:11px 12px; font-size:12px;`)}>{(dv.hasRouteCodeChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.routeCode}</span><span style={css(`color:#C77B00; font-weight:600;`)}>→{dv.routeCodeProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('routeCode')} aria-label={"Revert route code"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (<><span style={css(`color:#14171F;`)}>{dv.routeCode}</span></>)}</div>
-<div style={css(`padding:11px 12px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums;`)}>{(dv.hasTpChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.tp}</span><span style={css(`color:#C77B00; font-weight:700;`)}>{dv.tpProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('tp')} aria-label={"Revert touch point"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (dv.hasTpRipple) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; justify-content:center;`)} title={"Renumbered automatically because another DC left or joined this route \u2014 not an edit of its own"}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.tp}</span><span style={css(`color:#1E6FB8; font-weight:700;`)}>{dv.rippleTp}</span></span></>) : (<><span style={css(`color:#14171F;`)}>{dv.tp}</span></>)}</div>
+<div style={css(`padding:11px 12px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums;`)}>{(dv.hasTpChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.tp}</span><span style={css(`color:#C77B00; font-weight:700;`)}>{dv.tpProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('tp')} aria-label={"Revert touch point"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (dv.hasTpRipple) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px;`)} title={"Renumbered automatically because another DC left or joined this route \u2014 not an edit of its own"}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.tp}</span><span style={css(`color:#1E6FB8; font-weight:700;`)}>{dv.rippleTp}</span></span></>) : (<><span style={css(`color:#14171F;`)}>{dv.tp}</span></>)}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66;`)}>{dv.zone}</div>
 <div style={css(`padding:11px 12px; font-size:12px;`)}>{(dv.hasVehChange) ? (<><span style={css(`color:#C77B00; font-weight:600;`)}>{dv.vehTypeProposed}</span></>) : (<><span style={css(`color:#14171F;`)}>{dv.vehType}</span></>)}</div>
 <div style={css(`padding:11px 12px; font-size:12px; text-align:right;`)}>{(dv.hasDistChange) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; justify-content:flex-end;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{dv.rtDist}</span><span style={css(`color:#C77B00; font-weight:600;`)}>{dv.rtDistProposed}</span>{(dv.editable) ? (<><button onClick={() => dv.onRevertField('distance')} aria-label={"Revert distance"} title={"Revert"} style={css(`border:none; background:transparent; cursor:pointer; padding:1px; color:#8E96A3; display:flex;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</span></>) : (<><span style={css(`color:#14171F;`)}>{dv.rtDist}</span></>)}</div>
-<div style={css(`padding:11px 12px; font-size:11px; color:#8E96A3; text-align:right;`)}>{(dv.hasChange) ? (<><span style={css(`color:#C77B00; font-weight:600;`)}>Feedback pending</span></>) : null}</div>
+<div style={css(`padding:11px 12px; font-size:11px; text-align:right;`)}>{(dv.hasChange) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6;`)}>{dv.proposedBy}</span></>) : null}</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -2904,17 +2925,6 @@ function View(B, self) {
 </>) : null}
 {/* ROUTE VIEW — read-only pivot, one row per route, same layout as Design Review's Route View. */}
 {(oSel.secRoute) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:14px 16px; margin-bottom:14px;`)}>
-<div style={css(`font-size:11px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:10px;`)}>VEHICLE MIX ACROSS ROUTES</div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px;`)}>
-{(oSel.mixArr || []).map((v, __i96) => (<React.Fragment key={__i96}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 13px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}>
-<span style={css(`font-size:12.5px; color:#14171F; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{v.veh}</span>
-<span style={css(`font-size:12.5px; font-weight:700; color:#003F98; flex-shrink:0;`)}>{v.n} routes</span>
-</div>
-</React.Fragment>))}
-</div>
-</div>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:820px;`)}>
 <div style={css(`display:grid; grid-template-columns:1.1fr 0.9fr 0.9fr 1fr 1.1fr 0.9fr 0.9fr; background:#E6EBF2;`)}>
@@ -3029,7 +3039,7 @@ function View(B, self) {
 <div>
 <div style={css(`font-size:10px; font-weight:700; color:#7A8094; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;`)}>Vehicle mix — original vs. suggested</div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px;`)}>
-{(oSel.opsSimVehCards || []).map((vc, __iOSVA) => (<React.Fragment key={__iOSVA}>
+{(oSel.opsSimVehCards || []).map((vc, __iOSV) => (<React.Fragment key={__iOSV}>
 <div style={css(`background:#fff; border:${vc.cardBd}; border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; gap:4px;`)}>
 <div style={css(`font-size:10.5px; font-weight:600; color:#7A8094; letter-spacing:0.04em; text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{vc.veh}</div>
 <div style={css(`display:flex; align-items:baseline; gap:10px; margin-top:4px;`)}>
@@ -3215,14 +3225,14 @@ function View(B, self) {
 {(ncDcList || []).map((dc, __i111) => (<React.Fragment key={__i111}>
 <div style={css(`border-top:1px solid #EEF1F6; padding:9px 12px; background:${dc.flagged ? '#FFFCF6' : '#fff'};`)}>
 <div style={css(`display:flex; align-items:center; gap:10px;`)}>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{dc.name}</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>{dc.code} · lat {dc.curLat} · lng {dc.curLng} · TP {dc.curTp} · leg {dc.curDist} km</div></div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`display:flex; align-items:center; gap:7px;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{dc.name}</span>{(dc.routeCodeVal) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; padding:1px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAF1FB; color:#1E6FB8;`)}><svg width={"9"} height={"9"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.5"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{dc.isSplitTarget || dc.isPendingRoute ? ('Split \u2192 ' + dc.routeCodeVal) : ('Moving to ' + dc.routeCodeVal)}</span></>) : null}</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>{dc.code} · lat {dc.curLat} · lng {dc.curLng} · TP {dc.curTp} · leg {dc.curDist} km</div></div>
 <button onClick={dc.onToggle} style={css(`display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 9px; border:1px solid ${dc.toggleBd}; background:${dc.toggleBg}; color:${dc.toggleFg}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:6px; cursor:pointer; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{dc.toggleLabel}</button>
 </div>
 {(dc.flagged) ? (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; margin-top:8px;`)}>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Latitude</div><input value={dc.latVal} onInput={dc.onLat} placeholder={dc.curLat} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Longitude</div><input value={dc.lngVal} onInput={dc.onLng} placeholder={dc.curLng} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
-<div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Touch-point #</div><input value={dc.tpVal} onInput={dc.onTp} placeholder={dc.curTp} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
+<div><div style={css(`font-size:10px; color:${dc.tpRequired ? '#C77B00' : '#8E96A3'}; margin-bottom:3px; font-weight:${dc.tpRequired ? '700' : '400'};`)}>Touch-point #{(dc.isPendingRoute) ? (<> <span style={css(`color:#D14B4B;`)}>*</span></>) : null}</div><input value={dc.tpVal} onInput={dc.onTp} placeholder={dc.tpPlaceholder} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${dc.tpRequired ? '#D14B4B' : '#C77B00'}; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} />{(dc.tpRequired) ? (<><div style={css(`font-size:9.5px; color:#D14B4B; margin-top:3px;`)}>Required \u2014 no established order in the new route yet</div></>) : null}</div>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Distance (km) <span title={"Leg into this DC, from whichever node precedes it. The return leg back to the SC is always calculated automatically — never editable."} style={css(`cursor:help;`)}>ⓘ</span></div><input value={dc.distVal} onInput={dc.onDist} placeholder={dc.curDist} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
 </div>
 <div style={css(`display:grid; grid-template-columns:${dc.isSplitTarget ? '1fr 1fr' : '1fr'}; gap:8px; margin-top:8px;`)}>
@@ -3311,118 +3321,6 @@ function View(B, self) {
 <div style={css(`padding:14px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #EEF1F6;`)}>
 <button onClick={closeVolErrModal} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#F2F5FA;`)}>Close</button>
 <button onClick={volErrModalReplace} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16V4M7 9l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Re-upload corrected file</button>
-</div>
-</div>
-</div>
-</>) : null}
-{/* RLH PLAN INGESTION ROW ERRORS (Mode 2) */}
-{(ingestErrModalOpen) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
-<div style={css(`width:560px; max-width:100%; background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden;`)}>
-<div style={css(`display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`width:38px; height:38px; border-radius:8px; background:#FBEAEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Row errors — {ingestErrModal.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:1px;`)}>Nothing was ingested. Fix the file and re-upload.</div></div>
-<button onClick={closeIngestErrModal} style={css(`width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA; color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`, `background:#F2F5FA; color:#5A5E66;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M18 6L6 18M6 6l12 12"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-</div>
-<div style={css(`padding:6px 0; max-height:360px; overflow-y:auto;`)}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW</div>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ERROR</div>
-</div>
-{(ingestErrModal.rows || []).map((er, __i114) => (<React.Fragment key={__i114}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 16px; font-size:12.5px; font-weight:700; color:#D14B4B; font-variant-numeric:tabular-nums;`)}>{er.row == null ? '—' : er.row}</div>
-<div style={css(`padding:10px 16px; font-size:12.5px; color:#5A5E66;`)}>{er.msg}</div>
-</div>
-</React.Fragment>))}
-</div>
-<div style={css(`padding:14px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #EEF1F6;`)}>
-<button onClick={closeIngestErrModal} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#F2F5FA;`)}>Close</button>
-<button onClick={ingestErrModalRetry} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16V4M7 9l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Re-upload corrected file</button>
-</div>
-</div>
-</div>
-</>) : null}
-{/* NODE ADDITIONS/CLOSURES/MIGRATIONS ROW ERRORS */}
-{(nodeErrModalOpen) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
-<div style={css(`width:560px; max-width:100%; background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden;`)}>
-<div style={css(`display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`width:38px; height:38px; border-radius:8px; background:#FBEAEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Row errors — {nodeErrModal.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:1px;`)}>Nothing was applied. Fix the file and re-upload.</div></div>
-<button onClick={closeNodeErrModal} style={css(`width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA; color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`, `background:#F2F5FA; color:#5A5E66;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M18 6L6 18M6 6l12 12"} strokeLinecap={"round"} /></svg></button>
-</div>
-<div style={css(`padding:6px 0; max-height:360px; overflow-y:auto;`)}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW</div>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ERROR</div>
-</div>
-{(nodeErrModal.rows || []).map((er, __i901) => (<React.Fragment key={__i901}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 16px; font-size:12.5px; font-weight:700; color:#D14B4B; font-variant-numeric:tabular-nums;`)}>{er.row == null ? '—' : er.row}</div>
-<div style={css(`padding:10px 16px; font-size:12.5px; color:#5A5E66;`)}>{er.msg}</div>
-</div>
-</React.Fragment>))}
-</div>
-<div style={css(`padding:14px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #EEF1F6;`)}>
-<button onClick={closeNodeErrModal} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#F2F5FA;`)}>Close</button>
-<button onClick={nodeErrModalRetry} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16V4M7 9l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Re-upload corrected file</button>
-</div>
-</div>
-</div>
-</>) : null}
-{/* SC MASTER BULK UPLOAD ROW ERRORS */}
-{(scErrModalOpen) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
-<div style={css(`width:560px; max-width:100%; background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden;`)}>
-<div style={css(`display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`width:38px; height:38px; border-radius:8px; background:#FBEAEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Row errors — {scErrModal.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:1px;`)}>Nothing was applied. Fix the file and re-upload.</div></div>
-<button onClick={closeScErrModal} style={css(`width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA; color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`, `background:#F2F5FA; color:#5A5E66;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M18 6L6 18M6 6l12 12"} strokeLinecap={"round"} /></svg></button>
-</div>
-<div style={css(`padding:6px 0; max-height:360px; overflow-y:auto;`)}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW</div>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ERROR</div>
-</div>
-{(scErrModal.rows || []).map((er, __i902) => (<React.Fragment key={__i902}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 16px; font-size:12.5px; font-weight:700; color:#D14B4B; font-variant-numeric:tabular-nums;`)}>{er.row == null ? '—' : er.row}</div>
-<div style={css(`padding:10px 16px; font-size:12.5px; color:#5A5E66;`)}>{er.msg}</div>
-</div>
-</React.Fragment>))}
-</div>
-<div style={css(`padding:14px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #EEF1F6;`)}>
-<button onClick={closeScErrModal} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#F2F5FA;`)}>Close</button>
-<button onClick={scErrModalRetry} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16V4M7 9l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Re-upload corrected file</button>
-</div>
-</div>
-</div>
-</>) : null}
-{/* SC VEHICLE AVAILABILITY BULK UPLOAD ROW ERRORS */}
-{(availErrModalOpen) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
-<div style={css(`width:560px; max-width:100%; background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.25); overflow:hidden;`)}>
-<div style={css(`display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`width:38px; height:38px; border-radius:8px; background:#FBEAEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Row errors — {availErrModal.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:1px;`)}>Nothing was applied. Fix the file and re-upload.</div></div>
-<button onClick={closeAvailErrModal} style={css(`width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA; color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`, `background:#F2F5FA; color:#5A5E66;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M18 6L6 18M6 6l12 12"} strokeLinecap={"round"} /></svg></button>
-</div>
-<div style={css(`padding:6px 0; max-height:360px; overflow-y:auto;`)}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW</div>
-<div style={css(`padding:8px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ERROR</div>
-</div>
-{(availErrModal.rows || []).map((er, __i903) => (<React.Fragment key={__i903}>
-<div style={css(`display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:80px 1fr; border-top:1px solid #EEF1F6; align-items:center;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 16px; font-size:12.5px; font-weight:700; color:#D14B4B; font-variant-numeric:tabular-nums;`)}>{er.row == null ? '—' : er.row}</div>
-<div style={css(`padding:10px 16px; font-size:12.5px; color:#5A5E66;`)}>{er.msg}</div>
-</div>
-</React.Fragment>))}
-</div>
-<div style={css(`padding:14px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #EEF1F6;`)}>
-<button onClick={closeAvailErrModal} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#F2F5FA;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#F2F5FA;`)}>Close</button>
-<button onClick={availErrModalRetry} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:7px;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16V4M7 9l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Re-upload corrected file</button>
 </div>
 </div>
 </div>
@@ -3610,9 +3508,6 @@ function View(B, self) {
 {/* ===== NETWORK MAP ===== */}
 {(isMap) ? (<>
 <div style={css(`display:flex; flex-direction:column; height:100%;`)}>
-{(mapEmpty) ? (<>
-<div style={css(`margin:14px 26px 0; padding:10px 14px; background:#FBF1DF; border:1px solid #F0DBA8; border-radius:8px; font-size:12.5px; color:#9A5E00;`)}>{mapEmptyMessage}</div>
-</>) : null}
 {/* top bar: plan type + data source */}
 <div style={css(`display:flex; align-items:center; gap:14px; padding:12px 26px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; gap:8px;`)}>
@@ -3829,16 +3724,6 @@ function View(B, self) {
 // Solver concurrency — In-Progress slots run at once, the rest wait as Planned. Single source of
 // truth shared by triggerRuns (slot assignment) and the Step-4 ETA math so they can never disagree.
 const NDC_CONCURRENCY = 6;
-
-// Supabase client — auth (magic-link) + Ops Alignment persistence (plans / plan_reviewers /
-// plan_row_feedback / plan_reviewer_status tables). Anon key is safe client-side; the RLS policies
-// set up alongside this repo are what actually gate access, not this key.
-const NDC_SUPABASE_URL = 'https://txpdodgovdfmcuvsaoqf.supabase.co';
-const NDC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cGRvZGdvdmRmbWN1dnNhb3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxMTU2NDgsImV4cCI6MjA5OTY5MTY0OH0.0xxU2uR3nY7PMkzgE7XmiPdrtDV67cG8FghUP_aHs5k';
-const supabase = (window.supabase && window.supabase.createClient)
-  ? window.supabase.createClient(NDC_SUPABASE_URL, NDC_SUPABASE_ANON_KEY)
-  : null; // null only if the CDN script failed to load — auth screen shows a clear error in that case
-
 const NDC_RUN_MINUTES = 30; // ~30 min per solve (used for the batch ETA estimate)
 // NDC_COST_PER_KM — hardcoded RLH vehicle running cost, Rs/km (2026-07-09, provided by product).
 // Only ACE / Bolero / 407 were given explicit rates. Any other RLH-feasible vehicle type (e.g. the
@@ -3875,61 +3760,6 @@ function NDC_haversineKm(lat1, lng1, lat2, lng2) {
   // without needing a real road-network router. Replace this with a real distance service call
   // when one exists -- this is a stand-in, not a claim about real-world road distance.
 }
-// NDC_realHaversineKm — genuine straight-line distance between two REAL lat/lng points, in km,
-// with a flat 25% buffer to approximate real road distance (e.g. 50km straight-line -> 62.5km).
-// Deliberately separate from NDC_haversineKm above: that function's ×55 multiplier only makes
-// sense for this app's fabricated, sub-degree, city-scale jittered coordinates. Real ingested
-// coordinates (RLH Plan Ingestion) span real-world distances and must never go through ×55 --
-// this is the function for those. 2026-07-23.
-function NDC_realHaversineKm(lat1, lng1, lat2, lng2) {
-  const R = 6371;
-  const toRad = (d) => (d * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
-  const straight = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return +(straight * 1.25).toFixed(1);
-}
-// NDC_parseCsv — minimal CSV parser: handles quoted fields (including embedded commas/quotes) and
-// CRLF/CR/LF line endings. No existing CSV parser in this app -- every upload path before this one
-// only read file.name/file.size (see validateVolCsv), never actual file content. Used by RLH Plan
-// Ingestion; returns an array of row arrays (strings), header included as row 0.
-function NDC_parseCsv(text) {
-  const rows = [];
-  let row = [], field = '', inQuotes = false;
-  const s = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  for (let i = 0; i < s.length; i++) {
-    const c = s[i];
-    if (inQuotes) {
-      if (c === '"') { if (s[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; } }
-      else field += c;
-    } else {
-      if (c === '"') inQuotes = true;
-      else if (c === ',') { row.push(field); field = ''; }
-      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
-      else field += c;
-    }
-  }
-  if (field.length || row.length) { row.push(field); rows.push(row); }
-  return rows.filter(r => !(r.length === 1 && r[0] === ''));
-}
-// SC_POC_FIELDS — canonical list of the 8 SC contact/POC fields (key + display role), shared
-// between the Add/Edit SC form (submitAddSc), the edit-reopen prefill (openScEdit), and the SC
-// Master list's POC dropdown (scRows). Storing POCs as an object keyed by these 8 keys (rather
-// than a flat name array) means a field's value can never shift to a different role just because
-// an earlier field was left blank -- each of the 8 keys always maps to the same stored slot.
-const SC_POC_FIELDS = [
-  ['opsZh', 'Ops ZH'], ['lhOpsZh', 'LH Ops ZH'],
-  ['opsCh', 'Ops CH'], ['lhOpsCh', 'LH Ops CH'],
-  ['opsAm1', 'Ops AM-1'], ['lhOpsAm1', 'LH Ops AM-1'],
-  ['opsAm2', 'Ops AM-2'], ['lhOpsAm2', 'LH Ops AM-2'],
-];
-// VEH_TYPE_OPTIONS — the fixed 10 vehicle sizes from the Vehicle Master template's Validation
-// Rule (Selection field, not free text). Shared by the Add Vehicle Type form and the Vehicle
-// Master list's inline row-rename dropdown.
-const VEH_TYPE_OPTIONS = ['7FT Trailer', '8FT Trailer', '10FT Trailer', '14FT Trailer', '17FT Trailer', '20FT Trailer', '22FT Trailer', '24FT Trailer', '32FT Trailer', '42FT Trailer'];
-// NDC_isValidEmail — shared email-format check used by the SC Master form (submitAddSc) and the
-// SC Master CSV bulk-upload validator, so both enforce the identical rule.
-function NDC_isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v == null ? '' : v).trim()); }
 class NDCApp extends React.Component {
   constructor(props) {
     super(props);
@@ -3945,18 +3775,10 @@ class NDCApp extends React.Component {
     this.standaloneMapSc = _qp.get('standaloneMap');
     this.standaloneMapMode = _qp.get('mapMode') || '';
     this.state = {
-      // Real auth (2026-07-16) — replaces the "Acting as"/View-as toggles. authChecked flips true
-      // once the initial supabase.auth.getSession() resolves; authUser/authProfile are null until
-      // a real magic-link session exists. See componentDidMount for the auth listener.
-      authChecked: false, authUser: null, authProfile: null,
-      authEmail: '', authSending: false, authSent: false, authError: '',
       persona: 'planner',
       // 2026-07-14 — lets the Ops Lead view be "acted" as any of a plan's assigned reviewers instead
       // of always being hardcoded to Rahul Sharma, so more-than-one-reviewer scenarios can actually be
       // simulated (submit as A, switch to B, submit differently, see the co-reviewer overlay update).
-      // 2026-07-16 — retired now that logins are real: a logged-in Ops Lead reviews as themselves,
-      // not a switchable persona. Left wired (harmless) in case it's needed for QA later; the
-      // switcher UI itself is hidden (showOpsActingSwitcher forced false in renderVals).
       opsActingPersona: null,
       view: 'inputs', // Command Center hidden for now -- see nav comment near plannerNav
       showCoach: props.showFtux !== false,
@@ -3974,11 +3796,7 @@ class NDCApp extends React.Component {
       nodeStep: 'active',
       ingestionTab: 'rlh',
       ingestedPlans: [],
-      ingestedRlhPlans: {}, // real per-SC "validated, ready to push" plans from RLH Plan Ingestion — keyed by LMSC code
-      ingestErrModal: null,
-      nodeErrModal: null,
-      scErrModal: null,
-      availErrModal: null,
+      ingestionCounter: 0,
       resolved: {},
       creationStep: 1, creationView: 'wizard',
       fixReturnStep: null, focusSC: null,
@@ -4018,7 +3836,7 @@ class NDCApp extends React.Component {
       ackOpen: false, ackPlanId: null,
       unfreezeOpen: false, unfreezePlanId: null,
       finOpen: false, finPlanId: null, finDirectOpen: false, finDirectSCcode: null,
-      opsPlanId: null, opsPage: 0, opsSection: 'summary', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', opsSubmitted: {},
+      opsPlanId: null, opsPage: 0, opsSection: 'details', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', opsSubmitted: { 'PL-GGNS': { by: 'Rahul Sharma', at: '05 Jul' }, 'PL-NOIS': { by: 'Rahul Sharma', at: '06 Jul' }, 'PL-JAIS': { by: 'Rahul Sharma', at: '06 Jul' } },
       alignExpandedRow: {}, opsExpandedRow: {},
       alignAllOpen: false, alignAllPlanId: null, opsPartialOpen: false, opsPartialPlanId: null, delConfirm: null,
       acceptAllPlanOpen: false, acceptAllPlanId: null,
@@ -4033,36 +3851,323 @@ class NDCApp extends React.Component {
       data: this.buildSeed(),
     };
     // §9 — do NOT pre-select sort centres; the planner selects their own on Step 1 (selectedSCs stays [] from initial state).
-    this.state.reviewSC = this.state.data.scs[0] ? this.state.data.scs[0].code : null;
+    this.state.reviewSC = this.state.data.scs[0].code;
     // B — do NOT auto-select a plan on entry; both personas open with null = unselected blank state.
     // this.state.alignPlanId and this.state.opsPlanId start null (declared above in state init).
-    this.state.mapSC = this.state.data.scs[0] ? this.state.data.scs[0].code : null;
+    this.state.mapSC = this.state.data.scs[0].code;
   }
 
   buildSeed() {
+    let s = 20260624;
+    const R = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+    const ri = (a, b) => a + Math.floor(R() * (b - a + 1));
+    const rf = (a, b) => a + R() * (b - a);
+    const pick = (arr) => arr[Math.floor(R() * arr.length)];
 
-    // 2026-07-14 — SKELETON BUILD for UAT: no generated SCs, plans, volume-runs, AutoDML/ingestion
-    // history, or availability data. Every screen, engine calculation, and flow above this function
-    // is untouched — this only changes what buildSeed() hands them at startup, from "80 fabricated
-    // Sort Centres + demo plans" to "nothing, ready for real ingested data."
-    //
-    // 2026-07-24 — Vehicle Master fleet cleared per explicit user instruction, now that the Add/
-    // Edit Vehicle Type form matches the real Vehicle Master template (fixed Vehicle Type dropdown
-    // of 10 sizes, Capacity/Distance Limit/Touch Point Limit, LH Feasibility). Previously this
-    // array was deliberately kept non-empty as placeholder fleet config; the user will now enter
-    // real vehicle types through that form instead. NOTE: computeHypotheticalPlan/genDcRows/etc.
-    // all already read d.VEH defensively (`(d.VEH || []).find(...)`), so an empty fleet won't
-    // crash anything — Design Creation / Ops Alignment vehicle dropdowns will just show no options
-    // until real vehicle types are added here.
-    const VEH = [];
+    const VEH = [
+      { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'] },
+      { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'] },
+      { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'] },
+      { name: '17ft / MCV',      tp: 6, cap: 5000,  caps: [4800, 5000, 5200],  dist: 700,  feas: ['NLH', 'RLH'] },
+      { name: '19ft / MCV',      tp: 5, cap: 6500,  caps: [6300, 6500, 6700],  dist: 800,  feas: ['NLH', 'RLH'] },
+      { name: '22ft / LCV',      tp: 4, cap: 8000,  caps: [7800, 8000, 8200],  dist: 900,  feas: ['NLH', 'RLH'] },
+      { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'] },
+      { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'] },
+    ];
 
-    return {
-      scs: [], runs: [], plans: [],
-      autodml: [], autodmlDetails: {}, autodmlNodes: [],
-      volumeFiles: [], nodeAdditions: [], nodeClosures: [], migrations: [], nodeChangesUnified: [],
-      scVehAvail: [], VEH,
-      totals: { dcTotal: 0, volTotal: 0 },
+    const NAMES = ['Aarti Nair','Rahul Sharma','Imran Khan','Deepa Rao','Suresh Menon','Neha Tiwari','Vivek Pillai','Karthik Varma','Pooja Gupta','Sandeep Lal','Megha Bose','Arjun Desai'];
+
+    const Z = [
+      { z: 'North', cities: [['Delhi','DEL'],['Gurugram','GGN'],['Noida','NOI'],['Jaipur','JAI'],['Lucknow','LKO'],['Kanpur','KNP'],['Chandigarh','CHD'],['Ludhiana','LDH'],['Agra','AGR'],['Meerut','MRT'],['Amritsar','ASR'],['Dehradun','DDN']], lat: [26.5, 30.8], lng: [74.5, 80.5] },
+      { z: 'West', cities: [['Mumbai','BOM'],['Pune','PNQ'],['Ahmedabad','AMD'],['Surat','STV'],['Nagpur','NAG'],['Nashik','ISK'],['Rajkot','RAJ'],['Vadodara','BDQ'],['Indore','IDR'],['Bhopal','BHO'],['Thane','TNA']], lat: [18.4, 23.6], lng: [70.0, 77.2] },
+      { z: 'South', cities: [['Bengaluru','BLR'],['Chennai','MAA'],['Hyderabad','HYD'],['Coimbatore','CJB'],['Kochi','COK'],['Madurai','IXM'],['Mysuru','MYS'],['Vijayawada','VGA'],['Vizag','VTZ'],['Trichy','TRZ'],['Salem','SXV']], lat: [9.5, 17.6], lng: [75.5, 83.2] },
+      { z: 'East', cities: [['Kolkata','CCU'],['Patna','PAT'],['Bhubaneswar','BBI'],['Ranchi','IXR'],['Guwahati','GAU'],['Siliguri','IXB'],['Cuttack','CTC'],['Durgapur','RDP'],['Asansol','ASN']], lat: [21.5, 27.2], lng: [83.5, 92.0] },
+      { z: 'Central', cities: [['Raipur','RPR'],['Jabalpur','JLR'],['Gwalior','GWL'],['Bilaspur','PAB'],['Ujjain','UJN']], lat: [21.5, 26.5], lng: [78.0, 83.5] },
+    ];
+
+    const scs = [];
+    let zi = 0, ci = 0, guard = 0;
+    while (scs.length < 80 && guard < 600) {
+      guard++;
+      const zone = Z[zi % Z.length];
+      const cityArr = zone.cities;
+      const city = cityArr[ci % cityArr.length];
+      const variant = scs.filter(x => x.cityCode === city[1]).length;
+      if (variant === 0 || (variant < 2 && R() < 0.45)) {
+        const code = variant === 0 ? city[1] + 'S' : city[1] + (variant + 1);
+        const dcCount = ri(95, 205);
+        const volume = Math.round(dcCount * rf(230, 420));
+        const lat = rf(zone.lat[0], zone.lat[1]);
+        const lng = rf(zone.lng[0], zone.lng[1]);
+        // farDist = farthest-DC round-trip distance for this SC (km) — used by the Step-3 distance-limit
+        // validation. Seed distribution (deterministic, index-driven): most SCs sit comfortably within the
+        // common vehicle range (~150–235 km < TATA ACE's 250 km limit), and a realistic handful exceed it
+        // (~270–520 km) so the demo trips the distance flag on only a few SCs by default, not on almost all.
+        // Uses exactly ONE rf() draw to preserve the deterministic RNG stream for all later seeded fields.
+        const farIdx = scs.length;
+        const farOverLimit = (farIdx % 17 === 7) || (farIdx % 19 === 6) || (farIdx % 23 === 1);
+        const farDist = farOverLimit ? Math.round(270 + rf(0, 1) * 250) : Math.round(150 + rf(0, 1) * 85);
+        const zeroVolDc = (variant + city[1].charCodeAt(0)) % 5 === 0 ? ri(1, 4) : 0;
+        // Cap the volume-gap total (zero + miss) at 6 so it never exceeds the 6 droppable LMDC rows
+        // (expand list indices 0-5). This keeps the "drop the zero/missing-volume DCs" resolution
+        // genuinely completable per SC — the planner can always drive volGap to 0 by dropping, without
+        // being forced to de-select the SC just because the seeded gap outran the droppable rows.
+        const missRaw = (variant + city[1].charCodeAt(1)) % 4 === 0 ? ri(2, 9) : 0;
+        const missVolDc = Math.min(missRaw, Math.max(0, 6 - zeroVolDc));
+        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.round(volume * rf(0.98, 1.4) / 1000) * 1000, volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]) });
+      }
+      ci++;
+      if (ci % cityArr.length === 0) zi++;
+    }
+
+    const HW = [0, 0.5, 1];
+    const runs = [];
+    // §9 — a run is ONE triggered DS job for ONE SC. HW is just a parameter on the run, not the
+    // organising axis. mkRun synthesises a single run; an SC can be triggered multiple times in a
+    // cycle (re-runs), so the Design-Review view lists ALL of an SC's runs as separate plan cards.
+    const RUNDATES = ['05 Jul · 09:12', '06 Jul · 14:40', '07 Jul · 10:05', '08 Jul · 16:22', '09 Jul · 11:48'];
+    const PLANNERS = ['Pranita Sapkal', 'Komal Rao', 'Dixan Mehta'];
+    const mkRun = (sc, hw, baseCps, runNo, suffix) => {
+      const matchBand = hw === 0 ? [52, 70] : hw === 0.5 ? [76, 89] : [94, 99];
+      const cpsMul = hw === 0 ? rf(0.86, 0.94) : hw === 0.5 ? rf(0.93, 0.99) : rf(0.99, 1.07);
+      const avgTP = rf(3.4, 6.6);
+      const routes = Math.max(1, Math.round(sc.dcCount / avgTP));
+      const vehicles = routes + ri(0, 3);
+      const distance = Math.round(routes * rf(170, 320));
+      const cps = +(baseCps * cpsMul).toFixed(2);
+      const util = +rf(0.42, 0.93).toFixed(2);
+      const coverage = +(R() < 0.22 ? rf(0.9, 0.978) : rf(0.985, 1.0)).toFixed(3);
+      const avgTat = +rf(6.2, 10.8).toFixed(1);
+      const flags = [];
+      // B4 — thresholds must match their labels: TP fires at >7, under-util at <40%.
+      if (avgTP > 7) flags.push({ t: 'Avg touch points > 7 on some routes', sev: 'warning' });
+      if (util > 0.9) flags.push({ t: 'Over-loaded', sev: 'warning' });
+      if (util < 0.40) flags.push({ t: 'Under-utilised (<40%)', sev: 'warning' });
+      if (coverage < 0.98) flags.push({ t: 'Coverage gap — ' + Math.round((1 - coverage) * sc.dcCount) + ' DCs unserved', sev: 'danger' });
+      if (R() < 0.1) flags.push({ t: 'Input ≠ output node count', sev: 'danger' });
+      // B2 — per-type vehicle breakdown summing to `vehicles` (canonical VEH order: ACE / Bolero / 407 / 14ft).
+      const vbt = [0, 0, 0, 0];
+      for (let vi = 0; vi < vehicles; vi++) { vbt[Math.floor(R() * 4)]++; }
+      const vehByType = [
+        { name: VEH[0].name, short: 'ACE', n: vbt[0] },
+        { name: VEH[1].name, short: 'Bolero', n: vbt[1] },
+        { name: VEH[2].name, short: '407', n: vbt[2] },
+        { name: VEH[3].name, short: '14ft', n: vbt[3] },
+      ];
+      // vehTypeInput = the vehicle types fed into the run (the input config), distinct from the
+      // solver-chosen mix. Keep it to the types with a positive count for a tidy card line.
+      const vehInput = vehByType.filter(v => v.n > 0).map(v => v.short + ' ×' + v.n);
+      const triggeredBy = PLANNERS[runNo % PLANNERS.length];
+      return { id: sc.code + '-HW' + String(hw).replace('.', '_') + (suffix || ''), runId: 'RUN-' + sc.code + '-' + String(runNo).padStart(2, '0'),
+        runNo, triggeredAt: RUNDATES[(runNo - 1) % RUNDATES.length], triggeredBy, scCode: sc.code, scName: sc.name, zone: sc.zone, hw, status: 'Completed',
+        coverage, cps, util, routes, vehicles, vehByType, vehInput, distance, cost: Math.round(sc.volume * cps), avgTat, avgTP: +avgTP.toFixed(1),
+        routeMatch: ri(matchBand[0], matchBand[1]), flags, dcCount: sc.dcCount, volume: sc.volume };
     };
+    scs.forEach((sc, sci) => {
+      const baseCps = rf(2.35, 3.05);
+      // Base cycle: each SC is triggered once per HW value (the planner's first sweep). runNo is the
+      // sequential trigger order within this SC for the cycle.
+      let runNo = 0;
+      HW.forEach((hw) => { runNo++; runs.push(mkRun(sc, hw, baseCps, runNo)); });
+      // §9 R1 — make multi-run demonstrable: the first two SCs were re-triggered during the cycle
+      // (e.g. a bad first result → planner re-ran with a different HW). These extra runs appear as
+      // additional plan cards under the SAME SC, proving HW is a per-run parameter, not the axis.
+      if (sci === 0) { runNo++; runs.push(mkRun(sc, 0.5, baseCps * 0.97, runNo, '-r2')); runNo++; runs.push(mkRun(sc, 1, baseCps * 1.01, runNo, '-r3')); }
+      if (sci === 1) { runNo++; runs.push(mkRun(sc, 0, baseCps * 0.95, runNo, '-r2')); }
+    });
+    // §P3.3 — guarantee ≥1 Completed run shows <100% coverage so RED coverage indicator is demonstrable
+    const demoCovRun = runs.find(r => r.status === 'Completed' && r.coverage >= 0.98);
+    if (demoCovRun) {
+      demoCovRun.coverage = 0.946;
+      const _gapDCs = Math.round((1 - 0.946) * demoCovRun.dcCount);
+      const _ci = demoCovRun.flags.findIndex(f => f.t && f.t.startsWith('Coverage gap'));
+      if (_ci >= 0) demoCovRun.flags[_ci].t = 'Coverage gap — ' + _gapDCs + ' DCs unserved';
+      else demoCovRun.flags.push({ t: 'Coverage gap — ' + _gapDCs + ' DCs unserved', sev: 'danger' });
+    }
+    let inProg = 41, planned = 19;
+    for (let i = runs.length - 1; i >= 0 && (inProg > 0 || planned > 0); i--) {
+      if (planned > 0) { runs[i].status = 'Planned'; planned--; }
+      else if (inProg > 0) { runs[i].status = 'In-Progress'; runs[i].progress = ri(15, 85); inProg--; }
+    }
+
+    const statusPlan = [];
+    for (let i = 0; i < 18; i++) statusPlan.push('Pushed');
+    for (let i = 0; i < 12; i++) statusPlan.push('In Alignment');
+    for (let i = 0; i < 4; i++) statusPlan.push('Acknowledged');
+    for (let i = 0; i < 7; i++) statusPlan.push('Finalised');
+
+    // 2026-07-14 — was a separate abbreviated pool ('Rahul S.', 'Megha B.', ...) that could never
+    // string-match the full-name acting Ops-Lead persona ('Rahul Sharma') used elsewhere in the app —
+    // reusing NAMES (the same full-name pool SC POCs already draw from) fixes that mismatch and is
+    // also what makes the Ops-Lead persona switcher below able to show up as an assigned reviewer on
+    // ordinary seeded plans, not just the two hand-built demo ones.
+    const REV = NAMES;
+    const plans = [];
+    scs.slice(0, 41).forEach((sc, i) => {
+      const status = statusPlan[i];
+      const hwChoice = pick([0.5, 0.5, 0.5, 1, 0]);
+      const run = runs.find(r => r.scCode === sc.code && r.hw === hwChoice) || runs.find(r => r.scCode === sc.code);
+      const rowCount = Math.min(Math.max(run.routes, 6), 13);
+      const rows = [];
+      for (let j = 0; j < rowCount; j++) {
+        const veh = pick([VEH[0], VEH[1], VEH[1], VEH[2], VEH[2], VEH[3]]);
+        const tp = ri(2, veh.tp + (R() < 0.16 ? 1 : 0));
+        const dcs = [];
+        for (let k = 0; k < tp; k++) dcs.push(sc.cityCode + ri(101, 989));
+        let ops = 'Pending', planner = null, fb = null, proposedBy = null;
+        if (status !== 'Pushed') {
+          const r = R();
+          ops = r < 0.7 ? 'Aligned' : 'Needs Change';
+          if (ops !== 'Aligned') {
+            fb = { cells: {}, dcCells: {}, remark: pick(['DC location looks off vs ground truth','Vehicle infeasible at this DC cluster','Route splits the city — please re-cluster','Distance entered doesn\u2019t match ground reality','Touch point sequence looks inefficient']) };
+            // 2026-07-09 model — Touch Point and Distance are DC-level (a specific DC's breakdown
+            // leg / order), not route-level; only Vehicle Type stays route-level.
+            if (R() < 0.6 && dcs.length) fb.dcCells[dcs[0]] = Object.assign({}, fb.dcCells[dcs[0]], { tp: String(Math.max(1, tp - 1)) });
+            if (R() < 0.5) fb.cells.vehicleType = { from: veh.name, to: pick(VEH).name };
+            if (R() < 0.4 && dcs.length) fb.dcCells[dcs[dcs.length > 1 ? 1 : 0]] = Object.assign({}, fb.dcCells[dcs[dcs.length > 1 ? 1 : 0]], { distance: String(ri(20, 90)) });
+            fb.dcCount = Object.keys(fb.dcCells).length;
+            // §10 O2 — multi-reviewer visibility: attribute each proposed change to the reviewer who
+            // raised it, so a second reviewer (and the planner) sees "Change proposed by <name>".
+            proposedBy = REV[Math.floor(R() * REV.length)];
+          }
+          if (status === 'Acknowledged' || status === 'Finalised') planner = ops === 'Aligned' ? 'Accept' : (R() < 0.6 ? 'Accept' : 'Reject');
+          else if (status === 'In Alignment') planner = R() < 0.35 ? (R() < 0.5 ? 'Accept' : 'Reject') : null;
+        }
+        // 2026-07-16 — a plan seeded straight into 'Finalised' never passes through confirmFin(), so
+        // without this it would keep whatever Needs-Change/fb/proposedBy the generic journey above
+        // randomly assigned — a real Finalised plan has none of that (confirmFin() nulls fb and resets
+        // ops on every row). Match that exactly so Review Changes / Accept-Reject / reviewer tags
+        // genuinely don't appear on a Finalised plan, seeded or real.
+        if (status === 'Finalised') { ops = 'Aligned'; planner = 'Accept'; fb = null; proposedBy = null; }
+        rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh: veh.name, vehTp: veh.tp, tp, dcs, rtDist: ri(60, 360), breakdownTat: +rf(0.5, 2.6).toFixed(1), outCutoff: pick(['22:30','23:00','23:30','00:15','01:00']), oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount * rf(0.6, 1.4)), util: +rf(0.42, 0.95).toFixed(2), cps: +(run.cps * rf(0.9, 1.12)).toFixed(2), ops, planner, fb, proposedBy });
+      }
+      const rn = [REV[Math.floor(R() * REV.length)], REV[Math.floor(R() * REV.length)]];
+      // 2026-07-13 — real per-reviewer submission tracking (fixes Acknowledge/Finalise silently
+      // implying every assigned reviewer had submitted). Pushed = nobody yet. Otherwise, roughly a
+      // third of non-Pushed plans deliberately seed a GAP (only the lead reviewer submitted) so the
+      // new "not all reviewers submitted" flag has real demo cases to show, not just the happy path.
+      const submittedReviewers = status === 'Pushed' ? [] : ((i % 3 === 0) ? rn.slice(0, 1) : rn.slice());
+      plans.push({ id: 'PL-' + sc.code, name: sc.code + ' · ' + sc.name + ' RLH', scCode: sc.code, scName: sc.name, zone: sc.zone, hw: hwChoice, status, rows, pushedBy: PLANNERS[i % PLANNERS.length], sentDate: '0' + ri(5, 9) + ' Jul', sendBack: (status === 'In Alignment' && R() < 0.3) ? 1 : 0, feedbackReceived: status !== 'Pushed', allDecided: rows.every(r => r.planner), reviewerNames: rn, submittedReviewers, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } });
+    });
+    let ack = 4;
+    plans.forEach(p => { if (p.status === 'In Alignment' && ack > 0) { p.rows.forEach(r => { if (!r.planner) r.planner = 'Accept'; }); p.allDecided = true; ack--; } });
+
+    // §10 O2 — seed a demonstrable multi-reviewer case. The FIRST Pushed plan (assigned to the current
+    // Ops-Lead persona, Rahul Sharma) already has a change PROPOSED BY a co-reviewer, Ravi Kumar, on
+    // one row. A second Ops Lead opening this plan — and the planner once feedback is in — both see
+    // "Change proposed by Ravi Kumar" rather than a blank slate. Deterministic so the demo is stable.
+    const demoPushed = plans.find(p => p.status === 'Pushed');
+    if (demoPushed) {
+      demoPushed.reviewerNames = ['Ravi Kumar', 'Rahul Sharma'];
+      const dr = demoPushed.rows[0];
+      dr.ops = 'Needs Change';
+      dr.proposedBy = 'Ravi Kumar';
+      const drDcCells = {};
+      if (dr.dcs && dr.dcs.length) drDcCells[dr.dcs[0]] = { tp: String(Math.max(1, dr.tp - 1)) };
+      dr.fb = { cells: { vehicleType: { from: dr.veh, to: VEH[1].name } }, dcCells: drDcCells, dcCount: Object.keys(drDcCells).length, remark: 'Route splits the city — please re-cluster the southern DCs', by: 'Ravi Kumar' };
+    }
+    // Mirror the Ravi Kumar attribution on the FIRST In-Alignment plan so the planner's feedback view
+    // also shows "Proposed by Ravi Kumar" on a real flagged row (O2 visible from both sides).
+    const demoInAlign = plans.find(p => p.status === 'In Alignment');
+    if (demoInAlign) {
+      if (demoInAlign.reviewerNames.indexOf('Ravi Kumar') < 0) demoInAlign.reviewerNames = ['Ravi Kumar', demoInAlign.reviewerNames[0] || 'Rahul Sharma'];
+      // Only Ravi Kumar has actually submitted here — the other assigned reviewer has not, by design,
+      // so this plan is the canonical "reviewer gap" demo case once it's Acknowledged/Finalised.
+      demoInAlign.submittedReviewers = ['Ravi Kumar'];
+      const fr = demoInAlign.rows.find(r => r.ops === 'Needs Change') || demoInAlign.rows[0];
+      if (!fr.fb) fr.fb = { cells: {}, remark: 'DC location looks off vs ground truth' };
+      fr.ops = 'Needs Change';
+      fr.proposedBy = 'Ravi Kumar';
+      fr.fb.by = 'Ravi Kumar';
+      // seed per-DC changes so the planner's per-DC accept/reject is demonstrable (2026-07-03)
+      if (fr.dcs && fr.dcs.length) { fr.fb.dcCells = {}; fr.fb.dcCells[fr.dcs[0]] = { tp: '2' }; if (fr.dcs.length > 1) fr.fb.dcCells[fr.dcs[1]] = { lat: (fr.oLat + 0.02).toFixed(4), lng: (fr.oLng - 0.01).toFixed(4) }; fr.fb.dcCount = Object.keys(fr.fb.dcCells).length; }
+    }
+
+    const autodml = [
+      { key: 'inactive', label: 'Link active but node is inactive', count: 14, sev: 'warning' },
+      { key: 'zerocap', label: 'Link active but LMDC has zero capacity', count: 6, sev: 'danger' },
+      { key: 'multi', label: 'LMDC mapped to more than one SC', count: 9, sev: 'warning' },
+    ];
+    const dcCode = (sc, i) => sc.cityCode + '-' + (300 + i);
+    const autodmlDetails = {
+      inactive: scs.slice(0, 14).map((sc, i) => ({ link: sc.code + ' \u2192 ' + dcCode(sc, i), detail: 'LMDC node flagged inactive in AutoDML', zone: sc.zone })),
+      zerocap: scs.slice(6, 12).map((sc, i) => ({ link: sc.code + ' \u2192 ' + dcCode(sc, i + 20), detail: 'LMDC sort / handling capacity = 0', zone: sc.zone })),
+      multi: scs.slice(2, 11).map((sc, i) => ({ link: dcCode(sc, i + 40) + ' \u2194 ' + sc.code + ' + ' + scs[(i + 25) % scs.length].code, detail: 'DC mapped to two SCs', zone: sc.zone })),
+    };
+    const volumeFiles = [
+      { name: 'July 2026 \u00b7 30L Base', type: 'LMDC Landing', rows: 11432, vol: 3010000, date: '10 Jul \u00b7 09:12', by: 'Pranita Sapkal', validated: true, errorCount: 0, active: true },
+      { name: 'July 2026 \u00b7 Sale Peak', type: 'LMDC Landing', rows: 11480, vol: 3520000, date: '10 Jul \u00b7 09:40', by: 'Pranita Sapkal', validated: true, errorCount: 0 },
+      { name: 'July 2026 \u00b7 35L Mid', type: 'LMDC Landing', rows: 11450, vol: 3290000, date: '10 Jul \u00b7 10:05', by: 'Komal Rao', validated: true, errorCount: 0 },
+      { name: 'June 2026 \u00b7 Finalised (carry)', type: 'LMDC Landing', rows: 11120, vol: 2980000, date: '08 Jun \u00b7 18:22', by: 'Komal Rao', validated: false, errorCount: 4, errorRows: [{ row: 42, msg: 'Missing Planned Volume' }, { row: 88, msg: 'LMDC Code blank' }, { row: 213, msg: 'Volume = 0 (must be > 0)' }, { row: 407, msg: 'Duplicate LMDC Code' }] },
+      { name: 'July 2026 \u00b7 FMSC Manifest', type: 'FMSC Manifestation', rows: 9800, vol: 0, date: '10 Jul \u00b7 08:50', by: 'Dixan Mehta', validated: false, errorCount: 6, errorRows: [{ row: 12, msg: 'FMSC Code blank' }, { row: 55, msg: 'Planned Volume missing' }, { row: 61, msg: 'Duplicate FMSC Code' }, { row: 88, msg: 'Volume = 0 (must be > 0)' }, { row: 140, msg: 'Invalid FMSC Code format' }, { row: 203, msg: 'Planned Volume not a number' }] },
+      { name: 'July 2026 \u00b7 LMSC Manifest', type: 'LMSC Landing', rows: 11432, vol: 0, date: '10 Jul \u00b7 09:12', by: 'Shashvat Jain', validated: true, errorCount: 0, active: true },
+    ];
+    const nodeAdditions = [
+      { dc: 'BLR-742', name: 'Whitefield Ext', sc: 'BLRS', zone: 'South', cap: 8000, mapped: true },
+      { dc: 'DEL-913', name: 'Dwarka Sec-29', sc: 'DELS', zone: 'North', cap: 9500, mapped: true },
+      { dc: 'PNQ-388', name: 'Hinjewadi Phase 4', sc: '', zone: 'West', cap: 7000, mapped: false },
+      { dc: 'HYD-551', name: 'Kompally North', sc: 'HYDS', zone: 'South', cap: 6500, mapped: true },
+      { dc: 'CCU-204', name: 'Rajarhat NewTown', sc: '', zone: 'East', cap: 5800, mapped: false },
+    ];
+    const nodeClosures = [
+      { dc: 'MAA-118', name: 'Tambaram Old', sc: 'MAAS', zone: 'South', reason: 'Merged into MAA-220' },
+      { dc: 'AMD-077', name: 'Maninagar', sc: 'AMDS', zone: 'West', reason: 'Low volume \u2014 consolidated' },
+    ];
+    const migrations = [
+      { dc: 'JAI-410', name: 'Vaishali Nagar', from: 'JAIS', to: 'JAI2', zone: 'North' },
+      { dc: 'IDR-233', name: 'Vijay Nagar', from: 'IDRS', to: 'BHOS', zone: 'Central' },
+      { dc: 'NAG-090', name: 'Wardha Road', from: 'NAGS', to: 'NAG2', zone: 'West' },
+    ];
+    // Unified node changes list for the redesigned Additions/Closures/Migrations table (fix 1.6).
+    // Columns: LMSC Code \u00b7 LMDC Code \u00b7 Node Flag \u00b7 LMDC Latitude \u00b7 LMDC Longitude
+    const nodeChangesUnified = [
+      { lmscCode: 'BLRS', lmdcCode: 'BLR-742', flag: 'Addition', lat: '12.9754', lng: '77.7204' },
+      { lmscCode: 'DELS', lmdcCode: 'DEL-913', flag: 'Addition', lat: '28.5921', lng: '77.0688' },
+      { lmscCode: 'PNQS', lmdcCode: 'PNQ-388', flag: 'Addition', lat: '18.5904', lng: '73.7382' },
+      { lmscCode: 'HYDS', lmdcCode: 'HYD-551', flag: 'Addition', lat: '17.5494', lng: '78.4898' },
+      { lmscCode: 'CCUS', lmdcCode: 'CCU-204', flag: 'Addition', lat: '22.5958', lng: '88.4885' },
+      { lmscCode: 'MAAS', lmdcCode: 'MAA-118', flag: 'Closure',  lat: '12.9259', lng: '80.0991' },
+      { lmscCode: 'AMDS', lmdcCode: 'AMD-077', flag: 'Closure',  lat: '23.0124', lng: '72.5876' },
+      { lmscCode: 'JAI2', lmdcCode: 'JAI-410', flag: 'Migration', lat: '26.9124', lng: '75.8001' },
+      { lmscCode: 'BHOS', lmdcCode: 'IDR-233', flag: 'Migration', lat: '22.7196', lng: '75.8577' },
+      { lmscCode: 'NAG2', lmdcCode: 'NAG-090', flag: 'Migration', lat: '21.0745', lng: '79.0888' },
+    ];
+
+    const autodmlNodes = [
+      ...autodmlDetails.inactive.map(r => { const p = r.link.split(' → '); return { lmsc: p[0] || '', lmdc: p[1] || r.link, zone: r.zone, issue: 'Link active, node inactive', sev: 'danger', sevBg: '#FBEAEA', sevFg: '#D14B4B', sevLabel: 'Error' }; }),
+      ...autodmlDetails.zerocap.map(r => { const p = r.link.split(' → '); return { lmsc: p[0] || '', lmdc: p[1] || r.link, zone: r.zone, issue: 'Zero capacity', sev: 'danger', sevBg: '#FBEAEA', sevFg: '#D14B4B', sevLabel: 'Error' }; }),
+      ...autodmlDetails.multi.map(r => { const p = r.link.split(' ↔ '); return { lmsc: (p[1] || '').trim(), lmdc: p[0] || r.link, zone: r.zone, issue: 'Multi-SC mapping', sev: 'warning', sevBg: '#FBF1DF', sevFg: '#C77B00', sevLabel: 'Warning' }; }),
+    ];
+
+    // SC Vehicle Availability — one row per vehicle type per SC (real BLRS-style SCs).
+    // Generated for the first 6 SCs so the masters tab shows realistic per-SC variety.
+    // B1 — vehicle types, capacities, distance limits and TP limits ALL derive from the canonical
+    // VEH master (the same set Creation / Map / Ops mix use). The ONLY per-SC overrides are the
+    // vehicle COUNT and the Zone-Feasibility (Both / Local / Non-Local).
+    const vehDist = (name) => { const v = VEH.find(x => x.name === name); return v ? v.dist : 600; };
+    const ZFEAS = ['Both', 'Local', 'Non-Local'];
+    const scVehAvail = scs.slice(0, 6).map((sc, scIdx) => {
+      const nTypes = scIdx === 0 ? ri(4, 5) : ri(2, 3);
+      const rows = [];
+      const used = {};
+      for (let k = 0; k < nTypes; k++) {
+        let vIdx = Math.floor(R() * VEH.length);
+        let guard2 = 0;
+        while (used[vIdx] && guard2 < 8) { vIdx = Math.floor(R() * VEH.length); guard2++; }
+        used[vIdx] = true;
+        const v = VEH[vIdx];
+        rows.push({
+          vehicleType: v.name,
+          capacity: v.cap,                                 // canonical default capacity from VEH master
+          distanceLimit: vehDist(v.name) + ' km',          // canonical distance limit (same scale as Vehicle Master)
+          vehicleCount: ri(2, 6),                          // per-SC override
+          tpLimit: v.tp,                                   // canonical TP limit (ACE 4 · others 7)
+          zoneFeas: ZFEAS[Math.floor(R() * ZFEAS.length)], // per-SC override
+        });
+      }
+      return { code: sc.code, name: sc.name + ' LMSC', zone: sc.zone, rows };
+    });
+    return { scs, runs, plans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   showToast(msg, dot, undoFn) { clearTimeout(this._t); this.setState({ toast: { msg, dot: dot || '#2F4FC6', undo: undoFn || null } }); this._t = setTimeout(() => this.setState({ toast: null }), undoFn ? 5200 : 3500); }
@@ -4072,10 +4177,7 @@ class NDCApp extends React.Component {
   setPersona(p) { this.setState({ persona: p, view: p === 'ops' ? 'align' : 'inputs' }); }
   // Current "acting" Ops Lead identity — defaults to Rahul Sharma (the original single hardcoded
   // persona) so nothing changes until the person deliberately switches who they're simulating.
-  // 2026-07-16 — real identity: returns the logged-in person's display name (falls back to their
-  // email if the profile row hasn't loaded yet). Replaces the old switchable/hardcoded persona.
-  opsPersonaName() { const p = this.state.authProfile; return (p && p.display_name) || (this.state.authUser && this.state.authUser.email) || 'Unknown reviewer'; }
-  plannerPersonaName() { const p = this.state.authProfile; return (p && p.display_name) || (this.state.authUser && this.state.authUser.email) || 'Unknown planner'; }
+  opsPersonaName() { return this.state.opsActingPersona || 'Rahul Sharma'; }
   switchOpsPersona(name, planId) {
     // Clear any not-yet-submitted draft on the currently open plan when switching identity, so an
     // in-progress edit made "as" one reviewer doesn't silently get submitted under a different name.
@@ -4135,56 +4237,29 @@ class NDCApp extends React.Component {
       txt('code', 'SC Code', true, 'e.g. BLRS'),
       txt('name', 'SC Name', false, 'e.g. Bengaluru'),
       txt('city', 'SC City, State', false, 'e.g. Bengaluru, KA'),
-      txt('lat', 'SC Latitude', true, 'e.g. 12.9716'),
-      txt('lng', 'SC Longitude', true, 'e.g. 77.5946'),
       sel('type', 'SC Type', true, opt(['LMSC', 'FMSC', 'Hybrid'])),
       sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West'])),
       txt('volCap', 'Volume Capacity', true, 'shipments / day'),
       txt('sortCap', 'Sort Capacity', true, 'shipments / day'),
       txt('nlhDocks', 'NLH Docks', true, ''),
       txt('rlhDocks', 'RLH Docks', true, ''),
-      txt('localTp', 'Local TP Limit', false, ''),
-      txt('nonLocalTp', 'Non-Local TP Limit', false, ''),
+      txt('localTp', 'Local TP Limit', true, ''),
+      txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
       tm('open', 'SC Opening Time', '06:00'),
       tm('close', 'SC Closing Time', '22:00'),
     ];
-    const contacts = [['opsZh', 'SC Ops ZH', true], ['lhOpsZh', 'SC-LH Ops ZH', true], ['opsCh', 'SC Ops CH', true], ['lhOpsCh', 'SC-LH Ops CH', true], ['opsAm1', 'SC Ops AM-1', false], ['lhOpsAm1', 'SC-LH Ops AM-1', false], ['opsAm2', 'SC Ops AM-2', false], ['lhOpsAm2', 'SC-LH Ops AM-2', false]];
-    const addScContacts = contacts.map(c => ({ key: c[0], label: c[1], req: !!c[2], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
+    const contacts = [['opsZh', 'SC Ops ZH'], ['lhOpsZh', 'SC-LH Ops ZH'], ['opsCh', 'SC Ops CH'], ['lhOpsCh', 'SC-LH Ops CH'], ['opsAm1', 'SC Ops AM-1'], ['lhOpsAm1', 'SC-LH Ops AM-1'], ['opsAm2', 'SC Ops AM-2'], ['lhOpsAm2', 'SC-LH Ops AM-2']];
+    const addScContacts = contacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
     const editing = !!st.addScEditCode;
-    const directory = st.opsLeadDirectory || [];
-    const selectedIds = st.addScReviewerIds || [];
-    const addScReviewerChips = directory.map(p => {
-      const on = selectedIds.indexOf(p.id) >= 0;
-      const name = p.display_name || p.email;
-      return { id: p.id, name, on, bg: on ? '#003F98' : '#fff', fg: on ? '#fff' : '#5A5E66', bd: on ? '#003F98' : '#C3C9D4', onToggle: () => this.toggleAddScReviewer(p.id) };
-    });
-    return { addScOpen: !!st.addScOpen, addScMain: addScMain, addScContacts: addScContacts, addScReviewerChips, addScHasReviewerOptions: directory.length > 0, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', savingSc: !!st.savingSc, addScSubmitLabel: st.savingSc ? 'Saving…' : (editing ? 'Save changes' : 'Add SC'), closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
+    return { addScOpen: !!st.addScOpen, addScMain: addScMain, addScContacts: addScContacts, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
   }
   // C10 — open the SC editor pre-filled from an existing SC (real inline-equivalent edit, not a dead control).
   openScEdit(code) {
     const sc = (this.state.data.scs || []).concat(this.state.addedScs || []).find(s => s.code === code);
     if (!sc) { this.comingSoon('Edit SC'); return; }
-    // sc.pocs is the new role-keyed object (SC_POC_FIELDS) for anything added/edited post-fix;
-    // guard against the old flat-array shape (or absence, for the ~80 fabricated seed SCs, which
-    // never had a pocs field at all) by treating anything non-object as "no POCs on file".
-    const pocsSrc = (sc.pocs && !Array.isArray(sc.pocs)) ? sc.pocs : {};
-    const form = {
-      code: sc.code, name: sc.name, city: sc.city != null ? sc.city : ((sc.name || '') + (sc.zone ? ', ' + sc.zone : '')),
-      type: sc.type || 'LMSC', zone: sc.zone || 'South',
-      volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
-      // Real stored values when present; blank/default only for legacy seed SCs that never had
-      // these fields at all -- no fabricated guess in either case.
-      nlhDocks: sc.nlhDocks != null ? String(sc.nlhDocks) : '',
-      rlhDocks: sc.rlhDocks != null ? String(sc.rlhDocks) : '',
-      localTp: sc.localTp != null ? String(sc.localTp) : '',
-      nonLocalTp: sc.nonLocalTp != null ? String(sc.nonLocalTp) : '',
-      open: sc.open || '06:00', close: sc.close || '22:00',
-      lat: (sc.lat || sc.lng) ? String(sc.lat) : '', lng: (sc.lat || sc.lng) ? String(sc.lng) : '',
-    };
-    SC_POC_FIELDS.forEach(([k]) => { form[k] = pocsSrc[k] || ''; });
-    this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null, addScReviewerIds: [] });
-    // Real default reviewers (sc_reviewers), separate from the decorative contact-role fields above.
-    this.loadScReviewers(code).then(reviewers => { if (this.state.addScEditCode === code) this.setState({ addScReviewerIds: reviewers.map(r => r.id) }); });
+    const pl = sc.pocs || [];
+    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''), nlhDocks: String(sc.docks || ''), rlhDocks: '0', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00', opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '' };
+    this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null });
   }
   // C12 — functional INLINE edit for SC Vehicle Availability: per-field overlay stored as
   // { cnt, tp, zf } objects keyed by "scCode|vehType". setAvailField is the generic writer;
@@ -4205,91 +4280,21 @@ class NDCApp extends React.Component {
     const code = (f.code || '').trim().toUpperCase();
     if (!code) { this.showToast('SC Code is required', '#C77B00'); return; }
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
-    // Email validation — hard block, per template ("Input Format: email ID" is a distinct format
-    // rule, not a warning-tagged one like the TP limits below). Mandatory fields must be present
-    // AND valid; optional fields may be blank, but must be valid if filled in at all.
-    const MANDATORY_POC = ['opsZh', 'lhOpsZh', 'opsCh', 'lhOpsCh'];
-    for (const k of MANDATORY_POC) {
-      const v = (f[k] || '').trim();
-      const label = (SC_POC_FIELDS.find(p => p[0] === k) || [k, k])[1];
-      if (!v) { this.showToast('SC ' + label + ' is required', '#C77B00'); return; }
-      if (!NDC_isValidEmail(v)) { this.showToast('SC ' + label + ' must be a valid email address: "' + v + '"', '#C77B00'); return; }
+    const pocs = ['opsZh', 'opsCh', 'opsAm1', 'opsAm2'].map(k => (f[k] || '').trim()).filter(Boolean);
+    if (st.addScEditCode) {
+      // Edit mode — apply changes to a session-edited overlay so the existing SC row reflects them.
+      const edits = Object.assign({}, st.scEdits || {});
+      edits[st.addScEditCode] = { name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), pocs: pocs.length ? pocs : ['—'] };
+      // also patch any session-added SC in place
+      const addedScs = (st.addedScs || []).map(s => s.code === st.addScEditCode ? Object.assign({}, s, edits[st.addScEditCode]) : s);
+      this.setState({ scEdits: edits, addedScs: addedScs, addScOpen: false, addScEditCode: null, addScForm: {} });
+      this.showToast('Sort Centre ' + st.addScEditCode + ' updated', '#128A3E');
+      return;
     }
-    for (const [k, label] of SC_POC_FIELDS) {
-      if (MANDATORY_POC.indexOf(k) >= 0) continue;
-      const v = (f[k] || '').trim();
-      if (v && !NDC_isValidEmail(v)) { this.showToast('SC ' + label + ' must be a valid email address: "' + v + '"', '#C77B00'); return; }
-    }
-    // SC Latitude/Longitude — hard block, per template (Mandatory, Number, explicit range).
-    // Real coordinates matter here beyond form-filling correctness: they're the route origin
-    // point for every plan ingested against this SC, and feed the map view directly.
-    const latVal = String(f.lat == null ? '' : f.lat).trim(), lngVal = String(f.lng == null ? '' : f.lng).trim();
-    if (!latVal || isNaN(Number(latVal)) || Number(latVal) < -90 || Number(latVal) > 90) { this.showToast('SC Latitude must be a number between -90 and 90: "' + latVal + '"', '#C77B00'); return; }
-    if (!lngVal || isNaN(Number(lngVal)) || Number(lngVal) < -180 || Number(lngVal) > 180) { this.showToast('SC Longitude must be a number between -180 and 180: "' + lngVal + '"', '#C77B00'); return; }
-    // Capture all 8 POC/contact fields, keyed by field name (not a filtered flat array) -- see
-    // SC_POC_FIELDS. This is what makes reopening the edit form show each name back in the exact
-    // field it was entered under, regardless of which other fields were left blank.
-    const pocs = {}; SC_POC_FIELDS.forEach(([k]) => { pocs[k] = (f[k] || '').trim(); });
-    const reviewerIds = st.addScReviewerIds || [];
-    // Local/Non-Local TP Limit: Optional per template, "Max=7 (Warning)" -- doesn't block saving,
-    // just flags. Same non-blocking-warning pattern as Vehicle Master's RLH TP>7 check.
-    if (num(f.localTp) > 7) this.showToast('Local TP Limit ' + num(f.localTp) + ' exceeds the recommended max of 7 — saved, but flagged.', '#C77B00');
-    if (num(f.nonLocalTp) > 7) this.showToast('Non-Local TP Limit ' + num(f.nonLocalTp) + ' exceeds the recommended max of 7 — saved, but flagged.', '#C77B00');
-    // Real-input fields that used to be silently dropped on save (type, city) or collapsed into a
-    // single combined number the list view then re-derived from a code hash anyway (docks/TP/
-    // hours) -- now stored explicitly so the SC Master list can read the actual entered values.
-    const realFields = {
-      type: f.type || 'LMSC',
-      city: (f.city || '').trim(),
-      localTp: num(f.localTp), nonLocalTp: num(f.nonLocalTp),
-      open: f.open || '', close: f.close || '',
-      nlhDocks: num(f.nlhDocks), rlhDocks: num(f.rlhDocks),
-    };
-    const sc = Object.assign({ code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), lat: Number(latVal), lng: Number(lngVal), hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs }, realFields);
-    const isEdit = !!st.addScEditCode;
-    this.setState({ savingSc: true });
-    this.saveScMasterRow(sc).then(({ error }) => {
-      this.setState({ savingSc: false });
-      if (error) { this.showToast('Failed to save ' + code + ': ' + error.message, '#D14B4B'); return; }
-      this.setState({ addScOpen: false, addScEditCode: null, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
-      this.loadMastersFromSupabase();
-      this.saveScReviewers(code, reviewerIds);
-      this.showToast('Sort Centre ' + code + (isEdit ? ' updated' : ' added to the master'), '#128A3E');
-    });
+    const sc = { code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), lat: 0, lng: 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs.length ? pocs : ['—'] };
+    this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
+    this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
   }
-  // Upsert-by-sc_code -- handles both the new-SC and edit-SC paths identically, since a
-  // pre-existing sc_code just updates in place (matches the CSV pipeline's own upsert semantics).
-  // Maps the app's internal sc shape to the DB row shape -- shared by the single-row save
-  // (Add/Edit SC form) and the batch upsert (CSV bulk upload) below.
-  scToDbRow(sc, uid) {
-    const pocs = sc.pocs || {};
-    return {
-      sc_code: sc.code, sc_name: sc.name || null, city_state: sc.city || null,
-      sc_latitude: sc.lat, sc_longitude: sc.lng,
-      sc_type: sc.type, zone: sc.zone,
-      volume_capacity: sc.volCap, sort_capacity: sc.sortCap,
-      nlh_docks: sc.nlhDocks, rlh_docks: sc.rlhDocks,
-      local_tp_limit: sc.localTp, non_local_tp_limit: sc.nonLocalTp,
-      opening_time: sc.open || null, closing_time: sc.close || null,
-      ops_zh: pocs.opsZh, lh_ops_zh: pocs.lhOpsZh, ops_ch: pocs.opsCh, lh_ops_ch: pocs.lhOpsCh,
-      ops_am1: pocs.opsAm1 || null, lh_ops_am1: pocs.lhOpsAm1 || null, ops_am2: pocs.opsAm2 || null, lh_ops_am2: pocs.lhOpsAm2 || null,
-      created_by: uid,
-    };
-  }
-  saveScMasterRow(sc) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    return supabase.from('sc_master').upsert(this.scToDbRow(sc, uid), { onConflict: 'sc_code' });
-  }
-  // Batch upsert for the CSV bulk-upload path -- one network call for every row in the file,
-  // rather than one call per row. Existing sc_codes update in place; new ones are inserted.
-  upsertScMasterRows(scs) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    const dbRows = scs.map(sc => this.scToDbRow(sc, uid));
-    return supabase.from('sc_master').upsert(dbRows, { onConflict: 'sc_code' });
-  }
-  toggleAddScReviewer(id) { const cur = (this.state.addScReviewerIds || []).slice(); const i = cur.indexOf(id); i >= 0 ? cur.splice(i, 1) : cur.push(id); this.setState({ addScReviewerIds: cur }); }
   submitAddVeh() {
     const st = this.state; const f = st.addVehForm || {};
     const name = (f.vtype || '').trim();
@@ -4300,25 +4305,17 @@ class NDCApp extends React.Component {
     // still set a larger number here; that no longer blocks saving, it just shows a warning (both
     // right here at save time, and as a persistent flag on the vehicle master row below).
     if ((f.feas || []).indexOf('RLH') >= 0 && num(hardCap) > 7) { this.showToast('TP limit ' + num(hardCap) + ' exceeds the default RLH cap of 7 for this vehicle type — saved, but flagged on the Vehicle Master row.', '#C77B00'); }
-    this.setState({ savingVeh: true });
-    this.saveVehicleMasterRow({ name: name, capacity: num(f.capacity), dist: num(f.dist), tp: num(hardCap), feas: (f.feas || []).slice() }).then(({ error }) => {
-      this.setState({ savingVeh: false });
-      if (error) { this.showToast('Failed to save ' + name + ': ' + error.message, '#D14B4B'); return; }
-      this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null });
-      this.loadMastersFromSupabase();
-      this.showToast(name + ' saved to vehicle master', '#128A3E');
-    });
-  }
-  // Upsert-by-vehicle_type -- reused by the Add modal above and the inline row-edit below.
-  saveVehicleMasterRow(v) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    const row = { vehicle_type: v.name, capacity: v.capacity, distance_limit: v.dist, touch_point_limit: v.tp, lh_feasibility: v.feas || [], created_by: uid };
-    return supabase.from('vehicle_master').upsert(row, { onConflict: 'vehicle_type' });
-  }
-  deleteVehicleMasterRow(name) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    return supabase.from('vehicle_master').delete().eq('vehicle_type', name);
+    // Edit mode — update the type's params via a vehEdits override keyed by the original name.
+    if (st.addVehEditName) {
+      const ve = Object.assign({}, st.vehEdits || {});
+      ve[st.addVehEditName] = { capacity: num(f.capacity), dist: num(f.dist), tp: num(hardCap), localTp: num(f.localTp), nonLocalTp: num(f.nonLocalTp), feas: (f.feas || []).slice() };
+      this.setState({ vehEdits: ve, addVehOpen: false, addVehForm: {}, addVehEditName: null });
+      this.showToast(st.addVehEditName + ' updated in vehicle master', '#128A3E');
+      return;
+    }
+    const veh = { name: name, capacity: num(f.capacity), dist: num(f.dist), tp: num(hardCap), localTp: num(f.localTp), nonLocalTp: num(f.nonLocalTp), feas: (f.feas || []).slice() };
+    this.setState({ addedVehTypes: (st.addedVehTypes || []).concat([veh]), addVehOpen: false, addVehForm: {} });
+    this.showToast(name + ' added to vehicle master', '#128A3E');
   }
   downloadText(name, text) { try { const blob = new Blob([text], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); } catch (e) {} }
   downloadCsvFile() { const d = this.state.data; const head = 'SC Code,Name,Zone,Sort Capacity,Volume Capacity,RLH Docks,LMDC Count\n'; const body = d.scs.map(s => [s.code, s.name, s.zone, s.sortCap, s.volCap, s.docks, s.dcCount].join(',')).join('\n'); this.downloadText('network-design-export.csv', head + body); this.showToast('CSV downloaded · ' + d.scs.length + ' rows', '#128A3E'); }
@@ -4364,972 +4361,24 @@ class NDCApp extends React.Component {
   }
   downloadNodeCsv(rows) { rows = rows || []; const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }; const head = 'LMSC,LMDC Code,LMDC Name,Zone,Capacity,Status,Flag\n'; const body = rows.map(r => [r.lmsc, r.lmdc, r.lmdcName, r.zone, r.capStr, r.statusLabel, r.flagMsg].map(esc).join(',')).join('\n'); this.downloadText('autodml-node-view.csv', head + body + '\n'); this.showToast('AutoDML node view downloaded · ' + rows.length + ' node' + (rows.length === 1 ? '' : 's'), '#128A3E'); }
   pickFile(reject) { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.csv'; inp.onchange = () => { const f = inp.files && inp.files[0]; if (!f) { this.showToast('Upload cancelled', '#5A5E66'); return; } if (reject) this.showToast('Validated ' + f.name + ' · 7 rows rejected (already in AutoDML)', '#C77B00'); else this.showToast('Validated ' + f.name + ' — ready to submit', '#128A3E'); }; inp.click(); }
-  // ===== RLH Plan Ingestion (Mode 2) — 2026-07-23 ===============================================
-  // Real CSV parsing + validation + plan-building, replacing the old fabricated ingestRlhPlan()
-  // stub. Grain matches the real source data: one row per DC (touch point), not per route --
-  // Volume/lat/lng/Breakdown Distance all come in at DC-level already, nothing here is synthesized.
-  // Logic was unit-tested standalone (node) against the real 571-row / 156-route / 4-SC sample
-  // before this integration -- see ingest_prototype.js in the working notes for that harness.
-
-  parseRlhIngestCsv(text) {
-    const table = NDC_parseCsv(text);
-    if (!table.length) return { fileError: 'File is empty.' };
-    const header = table[0].map(h => (h || '').trim());
-    const EXPECTED = ['Zone', 'LMSC', 'LMDC', 'DC latitude', 'DC longitude', 'Volume', 'Route Code', 'Touch Point', 'Vehicle Type', 'Breakdown Distance', 'Round Trip Distance', 'Run ID'];
-    const missing = EXPECTED.filter(h => header.indexOf(h) < 0);
-    if (missing.length) return { fileError: 'Missing column(s): ' + missing.join(', ') };
-    const idx = {}; EXPECTED.forEach(h => { idx[h] = header.indexOf(h); });
-    // Strip thousands-separator commas from numeric-looking fields (e.g. a quoted "1,286" cell
-    // for a volume over 999) -- Number("1,286") is NaN in JS, so without this every such row
-    // would fail validation despite being perfectly valid data.
-    const numClean = (v) => (v == null ? v : String(v).trim().replace(/,/g, ''));
-    const rows = table.slice(1).filter(r => r.some(c => (c || '').trim() !== '')).map((r, i) => ({
-      _rowNo: i + 2,
-      zone: (r[idx['Zone']] || '').trim(), lmsc: (r[idx['LMSC']] || '').trim(), lmdc: (r[idx['LMDC']] || '').trim(),
-      lat: numClean(r[idx['DC latitude']]), lng: numClean(r[idx['DC longitude']]), volume: numClean(r[idx['Volume']]),
-      routeCode: (r[idx['Route Code']] || '').trim(), tp: numClean(r[idx['Touch Point']]), vehType: (r[idx['Vehicle Type']] || '').trim(),
-      breakdownDist: numClean(r[idx['Breakdown Distance']]), roundTripDist: numClean(r[idx['Round Trip Distance']]), runId: (r[idx['Run ID']] || '').trim(),
-    }));
-    return { rows };
-  }
-
-  // rows -> { errors: [{row,msg}], warnings: [{row,msg}], ok }. Cross-checks against the real
-  // SC Master (must exist) and Vehicle Master (must exist) already in this.state.data -- per the
-  // agreed scope, both are maintained manually and are NOT auto-created from the file.
-  validateRlhIngestRows(rows) {
-    const d = this.state.data;
-    const scByCode = {}; (d.scs || []).forEach(s => { scByCode[s.code] = s; });
-    const vehNames = {}; (d.VEH || []).forEach(v => { vehNames[v.name] = true; });
-    const errors = [], warnings = [];
-    const isNum = (v) => v !== '' && v != null && !isNaN(Number(v));
-
-    rows.forEach(r => {
-      if (!r.lmsc) errors.push({ row: r._rowNo, msg: 'LMSC is blank' });
-      else if (!scByCode[r.lmsc]) errors.push({ row: r._rowNo, msg: 'LMSC "' + r.lmsc + '" not found in SC Master' });
-      if (!r.lmdc) errors.push({ row: r._rowNo, msg: 'LMDC is blank' });
-      if (!isNum(r.lat) || Number(r.lat) < -90 || Number(r.lat) > 90) errors.push({ row: r._rowNo, msg: 'DC latitude invalid: ' + r.lat });
-      if (!isNum(r.lng) || Number(r.lng) < -180 || Number(r.lng) > 180) errors.push({ row: r._rowNo, msg: 'DC longitude invalid: ' + r.lng });
-      if (!isNum(r.volume) || Number(r.volume) <= 0) errors.push({ row: r._rowNo, msg: 'Volume must be a number > 0: ' + r.volume });
-      if (!r.routeCode) errors.push({ row: r._rowNo, msg: 'Route Code is blank' });
-      if (!isNum(r.tp) || Number(r.tp) <= 0 || !Number.isInteger(Number(r.tp))) errors.push({ row: r._rowNo, msg: 'Touch Point must be a positive integer: ' + r.tp });
-      if (!r.vehType) errors.push({ row: r._rowNo, msg: 'Vehicle Type is blank' });
-      else if (!vehNames[r.vehType]) errors.push({ row: r._rowNo, msg: 'Vehicle Type "' + r.vehType + '" not found in Vehicle Master' });
-      if (!isNum(r.breakdownDist) || Number(r.breakdownDist) < 0) errors.push({ row: r._rowNo, msg: 'Breakdown Distance invalid: ' + r.breakdownDist });
-      if (!isNum(r.roundTripDist) || Number(r.roundTripDist) <= 0) errors.push({ row: r._rowNo, msg: 'Round Trip Distance invalid: ' + r.roundTripDist });
-      if (!r.runId) errors.push({ row: r._rowNo, msg: 'Run ID is blank' });
-      if (r.zone && scByCode[r.lmsc] && scByCode[r.lmsc].zone && r.zone !== scByCode[r.lmsc].zone) {
-        warnings.push({ row: r._rowNo, msg: 'Zone "' + r.zone + '" does not match SC Master zone "' + scByCode[r.lmsc].zone + '" for ' + r.lmsc });
-      }
-    });
-
-    const byLmsc = {}; rows.forEach(r => { (byLmsc[r.lmsc] = byLmsc[r.lmsc] || []).push(r); });
-    Object.keys(byLmsc).forEach(lmsc => {
-      const scRows = byLmsc[lmsc];
-      const runIds = new Set(scRows.map(r => r.runId).filter(Boolean));
-      if (runIds.size > 1) errors.push({ row: null, msg: 'SC ' + lmsc + ' has multiple Run IDs in this file (' + Array.from(runIds).join(', ') + ') — expected exactly one' });
-
-      const byRoute = {}; scRows.forEach(r => { (byRoute[r.routeCode] = byRoute[r.routeCode] || []).push(r); });
-      Object.keys(byRoute).forEach(routeCode => {
-        const rr = byRoute[routeCode].slice().sort((a, b) => Number(a.tp) - Number(b.tp));
-        const seen = {};
-        rr.forEach(r => { if (seen[r.lmdc]) errors.push({ row: r._rowNo, msg: 'LMDC "' + r.lmdc + '" appears more than once in route ' + routeCode }); seen[r.lmdc] = true; });
-
-        const vehSet = new Set(rr.map(r => r.vehType).filter(Boolean));
-        if (vehSet.size > 1) errors.push({ row: null, msg: 'Route ' + routeCode + ' has more than one Vehicle Type: ' + Array.from(vehSet).join(', ') });
-
-        const rtdSet = new Set(rr.map(r => r.roundTripDist).filter(v => v !== '' && v != null));
-        if (rtdSet.size > 1) errors.push({ row: null, msg: 'Route ' + routeCode + ' has inconsistent Round Trip Distance values: ' + Array.from(rtdSet).join(', ') });
-
-        const tps = rr.map(r => Number(r.tp));
-        const expected = tps.map((_, i) => i + 1);
-        if (JSON.stringify(tps) !== JSON.stringify(expected)) errors.push({ row: null, msg: 'Route ' + routeCode + ' Touch Point sequence is not 1..' + tps.length + ' with no gaps (got ' + tps.join(',') + ')' });
-
-        // Breakdown Distance must never decrease -- a tie is a legitimate zero-distance leg
-        // between co-located DCs (confirmed against real data); only a decrease is bad data.
-        const bds = rr.map(r => Number(r.breakdownDist));
-        for (let i = 1; i < bds.length; i++) {
-          if (bds[i] < bds[i - 1]) { errors.push({ row: rr[i]._rowNo, msg: 'Breakdown Distance decreases along route ' + routeCode + ' (row has ' + bds[i] + ', previous was ' + bds[i - 1] + ')' }); break; }
-        }
-        if (rtdSet.size === 1 && bds.length) {
-          const rtd = Number(rr[0].roundTripDist), lastBd = bds[bds.length - 1];
-          if (!(rtd > lastBd)) errors.push({ row: null, msg: 'Route ' + routeCode + ': Round Trip Distance (' + rtd + ') must exceed the last Breakdown Distance (' + lastBd + ')' });
-        }
-      });
-    });
-
-    return { errors, warnings, ok: errors.length === 0 };
-  }
-
-  // Groups already-valid rows into one plan per LMSC, rows[] one per Route Code, each carrying a
-  // real dcs[] (real lat/lng/volume/tp) plus a real per-DC leg distance derived from Breakdown
-  // Distance deltas (ground truth -- not synthesized, not haversine-derived) and the route's
-  // real return leg (Round Trip Distance - last Breakdown Distance).
-  buildIngestedRlhPlans(rows) {
-    const d = this.state.data;
-    const scByCode = {}; (d.scs || []).forEach(s => { scByCode[s.code] = s; });
-    const byLmsc = {}; rows.forEach(r => { (byLmsc[r.lmsc] = byLmsc[r.lmsc] || []).push(r); });
-    const plans = {};
-    Object.keys(byLmsc).forEach(lmsc => {
-      const sc = scByCode[lmsc] || {};
-      const scRows = byLmsc[lmsc];
-      const runId = scRows[0].runId;
-      const byRoute = {}; scRows.forEach(r => { (byRoute[r.routeCode] = byRoute[r.routeCode] || []).push(r); });
-      const planRows = Object.keys(byRoute).sort((a, b) => a.localeCompare(b)).map(routeCode => {
-        const rr = byRoute[routeCode].slice().sort((a, b) => Number(a.tp) - Number(b.tp));
-        const rtd = Number(rr[0].roundTripDist);
-        let prevBd = 0;
-        const dcs = rr.map((r, i) => {
-          const bd = Number(r.breakdownDist);
-          const leg = i === 0 ? bd : (bd - prevBd);
-          prevBd = bd;
-          return { code: r.lmdc, lat: Number(r.lat), lng: Number(r.lng), vol: Number(r.volume), tpOrder: Number(r.tp), dist: +leg.toFixed(2) };
-        });
-        const lastBd = Number(rr[rr.length - 1].breakdownDist);
-        const returnLeg = +(rtd - lastBd).toFixed(2);
-        return { routeCode, veh: rr[0].vehType, dcs, returnLeg, rtDist: rtd, oLat: sc.lat, oLng: sc.lng, zone: rr[0].zone };
-      });
-      const rowCount = scRows.length;
-      plans[lmsc] = { scCode: lmsc, scName: sc.name, zone: sc.zone, fileBaseName: runId, rows: planRows, rowCount };
-    });
-    return plans;
-  }
-
-  // Shared by doPush() and Design Review's ingested-plan card (reviewVals) -- single source of
-  // truth for turning a raw ingested plan (routes + DCs, no metrics yet) into the same real
-  // routes/vehicles/distance/cps/cost/coverage/util numbers computeHypotheticalPlan already
-  // produces for a pushed plan. Previously this only ever ran at push time; now it can run at
-  // Design Review render time too, so a not-yet-pushed ingested plan shows real metrics, not
-  // just a passive log entry.
-  computeIngestedRunMetrics(ingested) {
-    const d = this.state.data;
-    const hyp = this.computeHypotheticalPlan({ rows: ingested.rows }, {});
-    const vehRecordFor = (name) => (d.VEH || []).find(v => v.name === name) || {};
-    const rows = ingested.rows.map((row) => {
-      const hypRoute = hyp.routes.find(rt => rt.routeCode === row.routeCode) || {};
-      const vehRecord = vehRecordFor(row.veh);
-      const util = vehRecord.cap ? Math.min(0.98, +((hypRoute.volume || 0) / vehRecord.cap).toFixed(2)) : 0;
-      return Object.assign({}, row, {
-        tp: row.dcs.length, vehTp: vehRecord.tp || 7,
-        volume: hypRoute.volume || 0, cps: hypRoute.cps || 0, util,
-        // No Breakdown TAT / Out Cutoff column exists in the real RLH Plan Ingestion template —
-        // there's no real data source for these yet (flagged as an open gap, not fabricated).
-        breakdownTat: null, outCutoff: null,
-        ops: 'Pending', planner: null, fb: null,
-      });
-    });
-    const avgUtil = rows.length ? +(rows.reduce((a, r) => a + r.util, 0) / rows.length).toFixed(2) : 0;
-    const metrics = {
-      routes: hyp.routes.length, vehicles: hyp.routes.length,
-      distance: Math.round(hyp.routes.reduce((a, r) => a + r.distance, 0)),
-      cps: hyp.scCPS, cost: Math.round(hyp.scCost),
-      coverage: 1, // every DC in the ingested file is genuinely served -- nothing is "skipped" the way an optimizer run might
-      util: avgUtil,
-      avgTat: null, // same gap as row-level breakdownTat -- no real TAT data in the ingested file yet
-    };
-    // hyp.warnings/hyp.errors are already shaped {t, sev, ...} -- exactly what the plan-card flags
-    // display expects, no mapping needed.
-    const flags = (hyp.errors || []).concat(hyp.warnings || []);
-    return { rows, metrics, flags, dcCount: ingested.rowCount };
-  }
-
-  // ===== SC Master bulk CSV upload — real pipeline, replacing the previously-broken "Upload CSV"
-  // button (it silently called ingestRlhPlanFile — the wrong feature entirely). Upsert-by-SC-Code:
-  // a code already present (in data.scs or addedScs) is treated as an update, routed through the
-  // same scEdits overlay the single-entry Edit SC form uses; a new code is added fresh. The
-  // template didn't specify update-vs-insert semantics for a re-uploaded code — this is a judgment
-  // call, flagged to the user as such. All-or-nothing per file, matching the existing convention.
-  parseScMasterCsv(text) {
-    const table = NDC_parseCsv(text);
-    if (!table.length) return { fileError: 'File is empty.' };
-    const header = table[0].map(h => (h || '').trim());
-    const EXPECTED = ['SC Code', 'SC Name', 'SC City,State', 'SC Latitude', 'SC Longitude', 'SC Type', 'Zone', 'Volume Capacity', 'Sort Capacity', 'NLH Docks', 'RLH Docks', 'Local TP Limit', 'Non-Local TP Limit', 'SC Opening Time', 'SC Closing Time', 'SC Ops ZH', 'SC-LH Ops ZH', 'SC Ops CH', 'SC-LH Ops CH', 'SC Ops AM-1', 'SC-LH Ops AM-1', 'SC Ops AM-2', 'SC-LH Ops AM-2'];
-    const missing = EXPECTED.filter(h => header.indexOf(h) < 0);
-    if (missing.length) return { fileError: 'Missing column(s): ' + missing.join(', ') };
-    const idx = {}; EXPECTED.forEach(h => { idx[h] = header.indexOf(h); });
-    // Same fix as parseRlhIngestCsv: strip thousands-separator commas from numeric fields
-    // (Number("1,286") is NaN in JS) before validation ever sees them.
-    const numClean = (v) => (v == null ? v : String(v).trim().replace(/,/g, ''));
-    const rows = table.slice(1).filter(r => r.some(c => (c || '').trim() !== '')).map((r, i) => ({
-      _rowNo: i + 2,
-      code: (r[idx['SC Code']] || '').trim().toUpperCase(), name: (r[idx['SC Name']] || '').trim(),
-      city: (r[idx['SC City,State']] || '').trim(), lat: numClean(r[idx['SC Latitude']]), lng: numClean(r[idx['SC Longitude']]),
-      type: (r[idx['SC Type']] || '').trim(), zone: (r[idx['Zone']] || '').trim(),
-      volCap: numClean(r[idx['Volume Capacity']]), sortCap: numClean(r[idx['Sort Capacity']]),
-      nlhDocks: numClean(r[idx['NLH Docks']]), rlhDocks: numClean(r[idx['RLH Docks']]),
-      localTp: numClean(r[idx['Local TP Limit']]), nonLocalTp: numClean(r[idx['Non-Local TP Limit']]),
-      open: (r[idx['SC Opening Time']] || '').trim(), close: (r[idx['SC Closing Time']] || '').trim(),
-      opsZh: (r[idx['SC Ops ZH']] || '').trim(), lhOpsZh: (r[idx['SC-LH Ops ZH']] || '').trim(),
-      opsCh: (r[idx['SC Ops CH']] || '').trim(), lhOpsCh: (r[idx['SC-LH Ops CH']] || '').trim(),
-      opsAm1: (r[idx['SC Ops AM-1']] || '').trim(), lhOpsAm1: (r[idx['SC-LH Ops AM-1']] || '').trim(),
-      opsAm2: (r[idx['SC Ops AM-2']] || '').trim(), lhOpsAm2: (r[idx['SC-LH Ops AM-2']] || '').trim(),
-    }));
-    return { rows };
-  }
-
-  validateScMasterRows(rows) {
-    const errors = [], warnings = [];
-    const isNum = (v) => v !== '' && v != null && !isNaN(Number(v));
-    const TYPES = { fmsc: 'FMSC', lmsc: 'LMSC', hybrid: 'Hybrid' };
-    const ZONES = ['North', 'South', 'East', 'West'];
-    const timeOk = (v) => !v || /^\d{2}:\d{2}$/.test(v);
-    const seen = {};
-    rows.forEach(r => {
-      if (!r.code) errors.push({ row: r._rowNo, msg: 'SC Code is blank' });
-      else if (!/^[A-Za-z0-9]{3,6}$/.test(r.code)) errors.push({ row: r._rowNo, msg: 'SC Code must be alphanumeric, 3-6 characters: "' + r.code + '"' });
-      else { if (seen[r.code]) errors.push({ row: r._rowNo, msg: 'SC Code "' + r.code + '" appears more than once in this file' }); seen[r.code] = true; }
-      if (!isNum(r.lat) || Number(r.lat) < -90 || Number(r.lat) > 90) errors.push({ row: r._rowNo, msg: 'SC Latitude must be a number between -90 and 90: ' + r.lat });
-      if (!isNum(r.lng) || Number(r.lng) < -180 || Number(r.lng) > 180) errors.push({ row: r._rowNo, msg: 'SC Longitude must be a number between -180 and 180: ' + r.lng });
-      const typeNorm = TYPES[r.type.toLowerCase()];
-      if (!r.type) errors.push({ row: r._rowNo, msg: 'SC Type is blank' });
-      else if (!typeNorm) errors.push({ row: r._rowNo, msg: 'SC Type must be one of FMSC / LMSC / Hybrid: "' + r.type + '"' });
-      else r.type = typeNorm;
-      if (!r.zone) errors.push({ row: r._rowNo, msg: 'Zone is blank' });
-      else if (ZONES.indexOf(r.zone) < 0) errors.push({ row: r._rowNo, msg: 'Zone must be one of ' + ZONES.join('/') + ': "' + r.zone + '"' });
-      if (!isNum(r.volCap) || Number(r.volCap) < 0) errors.push({ row: r._rowNo, msg: 'Volume Capacity must be a non-negative number: ' + r.volCap });
-      if (!isNum(r.sortCap) || Number(r.sortCap) < 0) errors.push({ row: r._rowNo, msg: 'Sort Capacity must be a non-negative number: ' + r.sortCap });
-      if (!isNum(r.nlhDocks) || Number(r.nlhDocks) < 0) errors.push({ row: r._rowNo, msg: 'NLH Docks must be a non-negative number: ' + r.nlhDocks });
-      if (!isNum(r.rlhDocks) || Number(r.rlhDocks) < 0) errors.push({ row: r._rowNo, msg: 'RLH Docks must be a non-negative number: ' + r.rlhDocks });
-      // Local/Non-Local TP Limit: optional, "Max=7 (Warning)" -- non-blocking, matches the form.
-      if (r.localTp !== '' && r.localTp != null) {
-        if (!isNum(r.localTp)) errors.push({ row: r._rowNo, msg: 'Local TP Limit must be a number: ' + r.localTp });
-        else if (Number(r.localTp) > 7) warnings.push({ row: r._rowNo, msg: 'Local TP Limit ' + r.localTp + ' exceeds the recommended max of 7' });
-      }
-      if (r.nonLocalTp !== '' && r.nonLocalTp != null) {
-        if (!isNum(r.nonLocalTp)) errors.push({ row: r._rowNo, msg: 'Non-Local TP Limit must be a number: ' + r.nonLocalTp });
-        else if (Number(r.nonLocalTp) > 7) warnings.push({ row: r._rowNo, msg: 'Non-Local TP Limit ' + r.nonLocalTp + ' exceeds the recommended max of 7' });
-      }
-      if (!timeOk(r.open)) errors.push({ row: r._rowNo, msg: 'SC Opening Time must be HH:MM: "' + r.open + '"' });
-      if (!timeOk(r.close)) errors.push({ row: r._rowNo, msg: 'SC Closing Time must be HH:MM: "' + r.close + '"' });
-      // POC emails: 4 mandatory, 4 optional-but-validated-if-present -- hard block, per user decision.
-      const MANDATORY = [['opsZh', 'SC Ops ZH'], ['lhOpsZh', 'SC-LH Ops ZH'], ['opsCh', 'SC Ops CH'], ['lhOpsCh', 'SC-LH Ops CH']];
-      const OPTIONAL = [['opsAm1', 'SC Ops AM-1'], ['lhOpsAm1', 'SC-LH Ops AM-1'], ['opsAm2', 'SC Ops AM-2'], ['lhOpsAm2', 'SC-LH Ops AM-2']];
-      MANDATORY.forEach(([k, label]) => {
-        if (!r[k]) errors.push({ row: r._rowNo, msg: label + ' is blank' });
-        else if (!NDC_isValidEmail(r[k])) errors.push({ row: r._rowNo, msg: label + ' must be a valid email address: "' + r[k] + '"' });
-      });
-      OPTIONAL.forEach(([k, label]) => {
-        if (r[k] && !NDC_isValidEmail(r[k])) errors.push({ row: r._rowNo, msg: label + ' must be a valid email address: "' + r[k] + '"' });
-      });
-    });
-    return { errors, warnings, ok: errors.length === 0 };
-  }
-
-  buildScMasterRows(rows) {
-    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9.]/g, ''), 10); return isNaN(n) ? 0 : n; };
-    return rows.map(r => ({
-      code: r.code, name: r.name || r.code, cityCode: r.code.replace(/[^A-Z]/g, '').slice(0, 3) || r.code, city: r.city,
-      type: r.type, zone: r.zone, dcCount: 0,
-      volume: num(r.volCap), volCap: num(r.volCap), sortCap: num(r.sortCap),
-      nlhDocks: num(r.nlhDocks), rlhDocks: num(r.rlhDocks), docks: num(r.nlhDocks) + num(r.rlhDocks),
-      localTp: r.localTp !== '' ? num(r.localTp) : 0, nonLocalTp: r.nonLocalTp !== '' ? num(r.nonLocalTp) : 0,
-      open: r.open || '', close: r.close || '',
-      lat: Number(r.lat), lng: Number(r.lng), hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0,
-      pocs: { opsZh: r.opsZh, lhOpsZh: r.lhOpsZh, opsCh: r.opsCh, lhOpsCh: r.lhOpsCh, opsAm1: r.opsAm1, lhOpsAm1: r.lhOpsAm1, opsAm2: r.opsAm2, lhOpsAm2: r.lhOpsAm2 },
-    }));
-  }
-
-  uploadScMasterFile() {
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = '.csv';
-    inp.onchange = (e) => {
-      const f = e.target.files && e.target.files[0]; if (!f) { this.showToast('Upload cancelled', '#5A5E66'); return; }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const { rows, fileError } = this.parseScMasterCsv(String(reader.result || ''));
-        if (fileError) { this.setState({ scErrModal: { name: f.name, rows: [{ row: null, msg: fileError }] } }); this.showToast('Could not read ' + f.name + ' — ' + fileError, '#D14B4B'); return; }
-        const { errors, warnings, ok } = this.validateScMasterRows(rows);
-        if (!ok) {
-          this.setState({ scErrModal: { name: f.name, rows: errors } });
-          this.showToast(errors.length + ' row error' + (errors.length === 1 ? '' : 's') + ' in ' + f.name + ' — fix and re-upload; nothing was applied', '#D14B4B');
-          return;
-        }
-        const built = this.buildScMasterRows(rows);
-        this.setState({ scUploadSaving: true });
-        this.upsertScMasterRows(built).then(({ error }) => {
-          this.setState({ scUploadSaving: false });
-          if (error) { this.showToast('Failed to save ' + f.name + ': ' + error.message, '#D14B4B'); return; }
-          this.setState({ scErrModal: null });
-          this.loadMastersFromSupabase();
-          const warnMsg = warnings.length ? (' · ' + warnings.length + ' warning' + (warnings.length === 1 ? '' : 's')) : '';
-          this.showToast('Uploaded ' + f.name + ' — ' + built.length + ' SC' + (built.length === 1 ? '' : 's') + ' applied' + warnMsg, '#128A3E');
-        });
-      };
-      reader.readAsText(f);
-    };
-    inp.click();
-  }
-
-  // Effective Vehicle Master pool -- same VEH + vehEdits + addedVehTypes chain the render layer
-  // builds as VEHMA, reconstructed here for use inside validate/build (which run outside that
-  // render closure).
-  effectiveVehPool() {
-    const st = this.state, d = st.data;
-    const vehEdits = st.vehEdits || {};
-    return (d.VEH || []).filter(v => !(st.vehRemoved || {})[v.name]).map(v => {
-      const ov = vehEdits[v.name] || {};
-      return { name: v.name, cap: ov.capacity != null ? ov.capacity : v.cap, dist: ov.dist != null ? ov.dist : v.dist, tp: ov.hardCap != null ? ov.hardCap : v.tp };
-    }).concat((st.addedVehTypes || []).map(v => {
-      const ov = vehEdits[v.name] || {};
-      return { name: v.name, cap: ov.capacity != null ? ov.capacity : (v.capacity || v.cap || 2000), dist: ov.dist != null ? ov.dist : (v.dist || 600), tp: ov.hardCap != null ? ov.hardCap : (v.tp || 7) };
-    }));
-  }
-
-  // ===== SC Vehicle Availability bulk CSV upload — real pipeline, replacing the previously-broken
-  // "Upload CSV" button (it silently called ingestRlhPlanFile too). "Upload replaces all prior
-  // records" per the existing UI copy -- a successful upload clears availAdded/availEdits/
-  // availRemoved entirely and rebuilds availAdded fresh, grouped by SC Code.
-  parseAvailCsv(text) {
-    const table = NDC_parseCsv(text);
-    if (!table.length) return { fileError: 'File is empty.' };
-    const header = table[0].map(h => (h || '').trim());
-    const EXPECTED = ['SC Code', 'Vehicle Type', 'Capacity (Shipments)', 'Distance Limit (Kms)', 'Vehicle Count', 'Touch Point Limit', 'Zone Feasibility'];
-    const missing = EXPECTED.filter(h => header.indexOf(h) < 0);
-    if (missing.length) return { fileError: 'Missing column(s): ' + missing.join(', ') };
-    const idx = {}; EXPECTED.forEach(h => { idx[h] = header.indexOf(h); });
-    const numClean = (v) => (v == null ? v : String(v).trim().replace(/,/g, ''));
-    const rows = table.slice(1).filter(r => r.some(c => (c || '').trim() !== '')).map((r, i) => ({
-      _rowNo: i + 2,
-      scCode: (r[idx['SC Code']] || '').trim().toUpperCase(), vehicleType: (r[idx['Vehicle Type']] || '').trim(),
-      capacity: numClean(r[idx['Capacity (Shipments)']]), distanceLimit: numClean(r[idx['Distance Limit (Kms)']]),
-      vehicleCount: numClean(r[idx['Vehicle Count']]), tpLimit: numClean(r[idx['Touch Point Limit']]),
-      zoneFeas: (r[idx['Zone Feasibility']] || '').trim(),
-    }));
-    return { rows };
-  }
-
-  // SC Code cross-check against SC Master IS a hard error here (unlike the Node Changes precedent,
-  // where an unresolved LMSC was left as a future enhancement) -- because this tab's cards are now
-  // derived strictly from the real SC list; a row for a code that doesn't exist has nowhere to
-  // attach and would silently vanish rather than just being unvalidated.
-  validateAvailRows(rows) {
-    const d = this.state.data;
-    const scCodes = {}; (this.state.addedScs || []).forEach(s => { scCodes[s.code] = true; }); (d.scs || []).forEach(s => { scCodes[s.code] = true; });
-    const vehPool = this.effectiveVehPool();
-    const vehByName = {}; vehPool.forEach(v => { vehByName[v.name] = v; });
-    const isNum = (v) => v !== '' && v != null && !isNaN(Number(v));
-    const ZF = { local: 'Local', 'non-local': 'Non-Local', both: 'Both' };
-    const errors = [];
-    rows.forEach(r => {
-      if (!r.scCode) errors.push({ row: r._rowNo, msg: 'SC Code is blank' });
-      else if (!/^[A-Za-z0-9]{3,6}$/.test(r.scCode)) errors.push({ row: r._rowNo, msg: 'SC Code must be alphanumeric, 3-6 characters: "' + r.scCode + '"' });
-      else if (!scCodes[r.scCode]) errors.push({ row: r._rowNo, msg: 'SC Code "' + r.scCode + '" not found in SC Master' });
-      if (!r.vehicleType) errors.push({ row: r._rowNo, msg: 'Vehicle Type is blank' });
-      else if (!vehByName[r.vehicleType]) errors.push({ row: r._rowNo, msg: 'Vehicle Type "' + r.vehicleType + '" not found in Vehicle Master' });
-      if (r.capacity !== '' && r.capacity != null && (!isNum(r.capacity) || Number(r.capacity) < 0)) errors.push({ row: r._rowNo, msg: 'Capacity (Shipments) must be a non-negative number: ' + r.capacity });
-      if (r.distanceLimit !== '' && r.distanceLimit != null && (!isNum(r.distanceLimit) || Number(r.distanceLimit) < 0)) errors.push({ row: r._rowNo, msg: 'Distance Limit (Kms) must be a non-negative number: ' + r.distanceLimit });
-      if (r.vehicleCount !== '' && r.vehicleCount != null && (!isNum(r.vehicleCount) || Number(r.vehicleCount) <= 0)) errors.push({ row: r._rowNo, msg: 'Vehicle Count must be a positive number: ' + r.vehicleCount });
-      if (r.tpLimit !== '' && r.tpLimit != null && (!isNum(r.tpLimit) || Number(r.tpLimit) < 0)) errors.push({ row: r._rowNo, msg: 'Touch Point Limit must be a non-negative number: ' + r.tpLimit });
-      if (r.zoneFeas) {
-        const zfNorm = ZF[r.zoneFeas.toLowerCase()];
-        if (!zfNorm) errors.push({ row: r._rowNo, msg: 'Zone Feasibility must be one of Local / Non-Local / Both: "' + r.zoneFeas + '"' });
-        else r.zoneFeas = zfNorm;
-      }
-    });
-    return { errors, ok: errors.length === 0 };
-  }
-
-  // Groups validated rows by SC Code. Capacity/Distance Limit/Touch Point Limit default to the
-  // matched Vehicle Type's Vehicle Master values when blank (optional per-row override, confirmed
-  // with the user); Vehicle Count defaults to 1; Zone Feasibility defaults to "Both".
-  buildAvailRows(rows) {
-    const vehPool = this.effectiveVehPool();
-    const vehByName = {}; vehPool.forEach(v => { vehByName[v.name] = v; });
-    const grouped = {};
-    rows.forEach(r => {
-      const vm = vehByName[r.vehicleType] || { cap: 2000, dist: 600, tp: 7 };
-      const capacity = (r.capacity === '' || r.capacity == null) ? vm.cap : Number(r.capacity);
-      const dist = (r.distanceLimit === '' || r.distanceLimit == null) ? vm.dist : Number(r.distanceLimit);
-      const tpLimit = (r.tpLimit === '' || r.tpLimit == null) ? vm.tp : Number(r.tpLimit);
-      const vehicleCount = (r.vehicleCount === '' || r.vehicleCount == null) ? 1 : Number(r.vehicleCount);
-      const row = { vehicleType: r.vehicleType, capacity, distanceLimit: dist + ' km', vehicleCount, tpLimit, zoneFeas: r.zoneFeas || 'Both' };
-      (grouped[r.scCode] = grouped[r.scCode] || []).push(row);
-    });
-    return grouped;
-  }
-
-  uploadAvailFile() {
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = '.csv';
-    inp.onchange = (e) => {
-      const f = e.target.files && e.target.files[0]; if (!f) { this.showToast('Upload cancelled', '#5A5E66'); return; }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const { rows, fileError } = this.parseAvailCsv(String(reader.result || ''));
-        if (fileError) { this.setState({ availErrModal: { name: f.name, rows: [{ row: null, msg: fileError }] } }); this.showToast('Could not read ' + f.name + ' — ' + fileError, '#D14B4B'); return; }
-        const { errors, ok } = this.validateAvailRows(rows);
-        if (!ok) {
-          this.setState({ availErrModal: { name: f.name, rows: errors } });
-          this.showToast(errors.length + ' row error' + (errors.length === 1 ? '' : 's') + ' in ' + f.name + ' — fix and re-upload; nothing was applied', '#D14B4B');
-          return;
-        }
-        const grouped = this.buildAvailRows(rows);
-        const scCount = Object.keys(grouped).length;
-        this.setState({ availUploadSaving: true });
-        this.replaceAvailability(grouped).then(({ error }) => {
-          this.setState({ availUploadSaving: false });
-          if (error) { this.showToast('Failed to save ' + f.name + ': ' + error.message, '#D14B4B'); return; }
-          this.setState({ availErrModal: null });
-          this.loadMastersFromSupabase();
-          this.showToast('Uploaded ' + f.name + ' — ' + rows.length + ' vehicle row' + (rows.length === 1 ? '' : 's') + ' across ' + scCount + ' SC' + (scCount === 1 ? '' : 's'), '#128A3E');
-        });
-      };
-      reader.readAsText(f);
-    };
-    inp.click();
-  }
-
-  // Simple delete-all-then-insert-all, per explicit user decision -- same accepted risk as
-  // replaceNodeChanges (a failed insert after a successful delete leaves the table empty).
-  // `grouped` is { scCode: [{vehicleType,capacity,distanceLimit,vehicleCount,tpLimit,zoneFeas}] },
-  // the shape buildAvailRows() already produces.
-  replaceAvailability(grouped) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    const dbRows = [];
-    Object.keys(grouped).forEach(scCode => {
-      grouped[scCode].forEach(r => {
-        dbRows.push({
-          sc_code: scCode, vehicle_type: r.vehicleType, capacity: r.capacity,
-          distance_limit: parseInt(String(r.distanceLimit).replace(/[^0-9]/g, ''), 10) || null,
-          vehicle_count: r.vehicleCount, touch_point_limit: r.tpLimit, zone_feasibility: r.zoneFeas, created_by: uid,
-        });
-      });
-    });
-    return supabase.from('sc_vehicle_availability').delete().not('id', 'is', null).then(({ error: delErr }) => {
-      if (delErr) return { error: delErr };
-      if (!dbRows.length) return { error: null };
-      return supabase.from('sc_vehicle_availability').insert(dbRows);
-    });
-  }
-
-  // Single-row upsert-by-(sc_code,vehicle_type) -- used by both the per-SC "Add Vehicle" inline
-  // form and the row-edit save, so an SC's availability can be corrected one row at a time
-  // without triggering the whole-table replace above.
-  saveAvailabilityRow(scCode, r) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    const distNum = typeof r.distanceLimit === 'number' ? r.distanceLimit : (parseInt(String(r.distanceLimit).replace(/[^0-9]/g, ''), 10) || null);
-    const row = { sc_code: scCode, vehicle_type: r.vehicleType, capacity: r.capacity, distance_limit: distNum, vehicle_count: r.vehicleCount, touch_point_limit: r.tpLimit, zone_feasibility: r.zoneFeas || 'Both', created_by: uid };
-    return supabase.from('sc_vehicle_availability').upsert(row, { onConflict: 'sc_code,vehicle_type' });
-  }
-  deleteAvailabilityRow(scCode, vehicleType) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    return supabase.from('sc_vehicle_availability').delete().eq('sc_code', scCode).eq('vehicle_type', vehicleType);
-  }
-
-  // File picker -> read -> parse -> validate -> build -> store. All-or-nothing: matches this
-  // app's existing Volume-upload convention (an invalid file is never partially accepted).
-  ingestRlhPlanFile() {
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = '.csv';
-    inp.onchange = (e) => {
-      const f = e.target.files && e.target.files[0]; if (!f) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const { rows, fileError } = this.parseRlhIngestCsv(String(reader.result || ''));
-        if (fileError) { this.setState({ ingestErrModal: { name: f.name, rows: [{ row: null, msg: fileError }] } }); this.showToast('Could not read ' + f.name + ' — ' + fileError, '#D14B4B'); return; }
-        const { errors, warnings, ok } = this.validateRlhIngestRows(rows);
-        if (!ok) {
-          this.setState({ ingestErrModal: { name: f.name, rows: errors } });
-          this.showToast(errors.length + ' row error' + (errors.length === 1 ? '' : 's') + ' in ' + f.name + ' — fix and re-upload; nothing was ingested', '#D14B4B');
-          return;
-        }
-        const plans = this.buildIngestedRlhPlans(rows);
-        const scCodes = Object.keys(plans);
-        const now = new Date();
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        // Stamp uploader/date directly onto each plan -- Design Review's ingested-plan card
-        // reads these directly (triggeredAt/triggeredBy) rather than looking them up separately.
-        scCodes.forEach(sc => { plans[sc].uploadedBy = 'You (Planner)'; plans[sc].uploadedAt = date; });
-        this.setState({ ingestUploadSaving: true });
-        this.saveIngestedRlhPlanDrafts(plans, f.name).then(({ error }) => {
-          this.setState({ ingestUploadSaving: false });
-          if (error) { this.showToast('Failed to save ' + f.name + ': ' + error.message, '#D14B4B'); return; }
-          const logEntries = scCodes.map(sc => ({ name: plans[sc].fileBaseName + '.csv', by: 'You (Planner)', date, rows: plans[sc].rowCount, runId: plans[sc].fileBaseName, scCode: sc }));
-          const nextIngestedRlhPlans = Object.assign({}, this.state.ingestedRlhPlans || {}, plans);
-          const nextLog = logEntries.concat(this.state.ingestedPlans || []);
-          this.setState({ ingestedRlhPlans: nextIngestedRlhPlans, ingestedPlans: nextLog, ingestErrModal: null });
-          const warnMsg = warnings.length ? (' · ' + warnings.length + ' warning' + (warnings.length === 1 ? '' : 's')) : '';
-          this.showToast('Ingested ' + f.name + ' — ' + scCodes.length + ' SC' + (scCodes.length === 1 ? '' : 's') + ' validated (' + scCodes.join(', ') + ')' + warnMsg, '#128A3E');
-        });
-      };
-      reader.readAsText(f);
-    };
-    inp.click();
-  }
-  // ===== Node Additions/Closures/Migrations upload — real pipeline, replacing the old
-  // uploadNodeChanges() cosmetic stub. Template: LMSC Code, LMDC Code, Node Flag (Addition/
-  // Closure/Migration), LMDC Latitude, LMDC Longitude. Confirmed with the user (2026-07-24):
-  // - Lat/Long mandatory-ness follows the template's Validation Rule row (conditional on Node
-  //   Flag), which overrides that same row's own blanket "Mandatory" tag for these two columns:
-  //   Addition -> mandatory; Closure / Migration -> optional (validated if given, not required).
-  // - A Migration row's LMSC Code is the DESTINATION SC — the DC is retagged there and dropped
-  //   from its old SC. Resolving/updating the *old* SC association is not done here (this pass
-  //   only ingests the change rows into the display table; wiring this into the live Node/SC
-  //   Master is a separate, later step).
-  // - LMSC Code is explicitly NOT cross-checked against SC Master in this pass (user decision,
-  //   2026-07-24) — flagged as a future enhancement once this ties into Node Master properly.
-  parseNodeChangesCsv(text) {
-    const table = NDC_parseCsv(text);
-    if (!table.length) return { fileError: 'File is empty.' };
-    const header = table[0].map(h => (h || '').trim());
-    const EXPECTED = ['LMSC Code', 'LMDC Code', 'Node Flag', 'LMDC Latitude', 'LMDC Longitude'];
-    const missing = EXPECTED.filter(h => header.indexOf(h) < 0);
-    if (missing.length) return { fileError: 'Missing column(s): ' + missing.join(', ') };
-    const idx = {}; EXPECTED.forEach(h => { idx[h] = header.indexOf(h); });
-    const numClean = (v) => (v == null ? v : String(v).trim().replace(/,/g, ''));
-    const rows = table.slice(1).filter(r => r.some(c => (c || '').trim() !== '')).map((r, i) => ({
-      _rowNo: i + 2,
-      lmscCode: (r[idx['LMSC Code']] || '').trim(), lmdcCode: (r[idx['LMDC Code']] || '').trim(),
-      flag: (r[idx['Node Flag']] || '').trim(), lat: numClean(r[idx['LMDC Latitude']]), lng: numClean(r[idx['LMDC Longitude']]),
-    }));
-    return { rows };
-  }
-
-  // rows -> { errors: [{row,msg}], ok }. Mutates r.flag in place to its canonical casing on
-  // success, matching the pattern of other validators in this app.
-  validateNodeChangeRows(rows) {
-    const errors = [];
-    const isNum = (v) => v !== '' && v != null && !isNaN(Number(v));
-    const FLAGS = { addition: 'Addition', closure: 'Closure', migration: 'Migration' };
-    rows.forEach(r => {
-      if (!r.lmscCode) errors.push({ row: r._rowNo, msg: 'LMSC Code is blank' });
-      else if (!/^[A-Za-z0-9]{3,6}$/.test(r.lmscCode)) errors.push({ row: r._rowNo, msg: 'LMSC Code must be alphanumeric, 3-6 characters: "' + r.lmscCode + '"' });
-      if (!r.lmdcCode) errors.push({ row: r._rowNo, msg: 'LMDC Code is blank' });
-      else if (!/^[A-Za-z0-9]{3,6}$/.test(r.lmdcCode)) errors.push({ row: r._rowNo, msg: 'LMDC Code must be alphanumeric, 3-6 characters: "' + r.lmdcCode + '"' });
-      const flagNorm = FLAGS[r.flag.toLowerCase()];
-      if (!r.flag) errors.push({ row: r._rowNo, msg: 'Node Flag is blank' });
-      else if (!flagNorm) errors.push({ row: r._rowNo, msg: 'Node Flag must be one of Addition / Closure / Migration: "' + r.flag + '"' });
-      else r.flag = flagNorm;
-      const latGiven = r.lat !== '' && r.lat != null, lngGiven = r.lng !== '' && r.lng != null;
-      if (flagNorm === 'Addition') {
-        if (!isNum(r.lat) || Number(r.lat) < -90 || Number(r.lat) > 90) errors.push({ row: r._rowNo, msg: 'LMDC Latitude invalid (required for Addition): ' + r.lat });
-        if (!isNum(r.lng) || Number(r.lng) < -180 || Number(r.lng) > 180) errors.push({ row: r._rowNo, msg: 'LMDC Longitude invalid (required for Addition): ' + r.lng });
-      } else {
-        // Closure / Migration: optional, but still validate range if a value was actually given.
-        if (latGiven && (!isNum(r.lat) || Number(r.lat) < -90 || Number(r.lat) > 90)) errors.push({ row: r._rowNo, msg: 'LMDC Latitude invalid: ' + r.lat });
-        if (lngGiven && (!isNum(r.lng) || Number(r.lng) < -180 || Number(r.lng) > 180)) errors.push({ row: r._rowNo, msg: 'LMDC Longitude invalid: ' + r.lng });
-      }
-    });
-    return { errors, ok: errors.length === 0 };
-  }
-
-  buildNodeChangeRows(rows) {
-    return rows.map(r => ({ lmscCode: r.lmscCode, lmdcCode: r.lmdcCode, flag: r.flag, lat: (r.lat === '' || r.lat == null) ? null : Number(r.lat), lng: (r.lng === '' || r.lng == null) ? null : Number(r.lng) }));
+  ingestRlhPlan() {
+    const n = (this.state.ingestionCounter || 0) + 1;
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const scs = (this.state.data && this.state.data.scs) || [];
+    const scCode = scs.length ? scs[(n - 1) % scs.length].code : 'BLR-S1';
+    const rows = 1000 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 3001);
+    const plan = { name: 'RLH-Plan-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCode: scCode, runId: 'ING-' + String(n).padStart(3, '0') };
+    const plans = [plan].concat(this.state.ingestedPlans || []);
+    this.setState({ ingestedPlans: plans, ingestionCounter: n });
+    this.showToast('Plan ingested & validated · ' + plan.name, '#128A3E');
   }
   // C6/C7 — single node-changes upload (additions + closures + migrations in one file). OVERRIDE:
-  // the latest valid file fully replaces all prior node-change data (nodeChangesUnified), matching
-  // the existing UI copy. Real parse/validate/store, replacing the old cosmetic stub.
-  uploadNodeChanges() {
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = '.csv';
-    inp.onchange = (e) => {
-      const f = e.target.files && e.target.files[0]; if (!f) { this.showToast('Upload cancelled', '#5A5E66'); return; }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const { rows, fileError } = this.parseNodeChangesCsv(String(reader.result || ''));
-        if (fileError) { this.setState({ nodeErrModal: { name: f.name, rows: [{ row: null, msg: fileError }] } }); this.showToast('Could not read ' + f.name + ' — ' + fileError, '#D14B4B'); return; }
-        const { errors, ok } = this.validateNodeChangeRows(rows);
-        if (!ok) {
-          this.setState({ nodeErrModal: { name: f.name, rows: errors } });
-          this.showToast(errors.length + ' row error' + (errors.length === 1 ? '' : 's') + ' in ' + f.name + ' — fix and re-upload; nothing was applied', '#D14B4B');
-          return;
-        }
-        const changeRows = this.buildNodeChangeRows(rows);
-        const now = new Date();
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        this.setState({ nodeUploadSaving: true });
-        this.replaceNodeChanges(changeRows).then(({ error }) => {
-          this.setState({ nodeUploadSaving: false });
-          if (error) { this.showToast('Failed to save ' + f.name + ': ' + error.message, '#D14B4B'); return; }
-          this.setState({ nodeChangeBy: 'You (Planner)', nodeChangeDate: date, nodeErrModal: null });
-          this.loadMastersFromSupabase();
-          this.showToast('Uploaded ' + f.name + ' — ' + changeRows.length + ' node change' + (changeRows.length === 1 ? '' : 's') + ' applied', '#128A3E');
-        });
-      };
-      reader.readAsText(f);
-    };
-    inp.click();
-  }
+  // the latest file fully replaces all prior node-change data. Stamps the "last uploaded by" indicator.
+  uploadNodeChanges() { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.csv'; inp.onchange = () => { const f = inp.files && inp.files[0]; if (!f) { this.showToast('Upload cancelled', '#5A5E66'); return; } const now = new Date(); const date = String(now.getDate()).padStart(2, '0') + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'); this.setState({ nodeChangeBy: 'You (Planner)', nodeChangeDate: date }); this.showToast('6 nodes rejected as they are already part of AutoDML', '#C77B00'); }; inp.click(); }
 
-  // Simple delete-all-then-insert-all, per explicit user decision (not the atomic Postgres-
-  // function alternative discussed and declined). Two separate network calls -- if the delete
-  // succeeds but the insert fails, the table is left empty rather than reverted. Accepted risk.
-  replaceNodeChanges(rows) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    return supabase.from('node_changes').delete().not('id', 'is', null).then(({ error: delErr }) => {
-      if (delErr) return { error: delErr };
-      if (!rows.length) return { error: null };
-      const dbRows = rows.map(r => ({ lmsc_code: r.lmscCode, lmdc_code: r.lmdcCode, node_flag: r.flag, lat: r.lat, lng: r.lng, created_by: uid }));
-      return supabase.from('node_changes').insert(dbRows);
-    });
-  }
-
-  componentDidMount() {
-    if (!supabase) {
-      // CDN script failed to load or was blocked — surface this clearly instead of hanging on a
-      // blank "Loading…" auth screen forever.
-      this.setState({ authChecked: true, authError: 'Could not reach the Supabase client library (CDN blocked?). Refresh, or check your network settings.' });
-      return;
-    }
-    supabase.auth.getSession().then(({ data }) => {
-      const session = data && data.session;
-      this.setState({ authChecked: true, authUser: session ? session.user : null });
-      if (session) this.loadAuthProfile(session.user.id);
-    });
-    this._authSub = supabase.auth.onAuthStateChange((_event, session) => {
-      this.setState({ authUser: session ? session.user : null, authProfile: session ? this.state.authProfile : null });
-      if (session) this.loadAuthProfile(session.user.id);
-    });
-  }
-
-  loadAuthProfile(userId) {
-    if (!supabase) return;
-    supabase.from('profiles').select('role, display_name, email').eq('id', userId).single()
-      .then(({ data, error }) => {
-        if (error) { console.error('Failed to load profile', error); return; }
-        this.setState({
-          authProfile: data,
-          // Map the DB role onto this app's existing persona values ('planner' | 'ops') — no
-          // manual toggle anymore, this is fixed by whoever set the role in Table Editor.
-          persona: data && data.role === 'ops_lead' ? 'ops' : 'planner',
-          view: data && data.role === 'ops_lead' ? 'align' : 'inputs',
-        });
-        this.loadOpsLeadDirectory();
-        if (data && data.role !== 'ops_lead') { this.loadMastersFromSupabase(); this.loadIngestedRlhPlanDrafts(); }
-        this.loadPlansFromSupabase();
-      });
-  }
-
-  // ===== Supabase data layer for the 4 Masters (2026-07-24) ======================================
-  // Replaces the empty buildSeed() defaults (data.scs / data.VEH / data.nodeChangesUnified /
-  // data.scVehAvail) with the real tables once auth resolves. Everything downstream (scEdits/
-  // vehEdits/addedScs/addedVehTypes overlays, scRows/vehMaster/scVehAvailRows builders) is left
-  // completely unchanged -- it already treats data.scs/data.VEH/etc. as "the base list", regardless
-  // of whether that base came from buildSeed() or Supabase.
-  loadMastersFromSupabase() {
-    if (!supabase) return;
-    Promise.all([
-      supabase.from('sc_master').select('*'),
-      supabase.from('vehicle_master').select('*'),
-      supabase.from('node_changes').select('*'),
-      supabase.from('sc_vehicle_availability').select('*'),
-    ]).then(([scRes, vehRes, nodeRes, availRes]) => {
-      if (scRes.error) console.error('Failed to load SC Master', scRes.error);
-      if (vehRes.error) console.error('Failed to load Vehicle Master', vehRes.error);
-      if (nodeRes.error) console.error('Failed to load Node Changes', nodeRes.error);
-      if (availRes.error) console.error('Failed to load SC Vehicle Availability', availRes.error);
-
-      const scs = (scRes.data || []).map(row => ({
-        code: row.sc_code, name: row.sc_name || row.sc_code, cityCode: row.sc_code.replace(/[^A-Z]/g, '').slice(0, 3) || row.sc_code,
-        city: row.city_state, type: row.sc_type, zone: row.zone, dcCount: 0,
-        volume: row.volume_capacity, volCap: row.volume_capacity, sortCap: row.sort_capacity,
-        nlhDocks: row.nlh_docks, rlhDocks: row.rlh_docks, docks: (row.nlh_docks || 0) + (row.rlh_docks || 0),
-        localTp: row.local_tp_limit, nonLocalTp: row.non_local_tp_limit,
-        open: row.opening_time ? String(row.opening_time).slice(0, 5) : '', close: row.closing_time ? String(row.closing_time).slice(0, 5) : '',
-        lat: row.sc_latitude != null ? row.sc_latitude : 0, lng: row.sc_longitude != null ? row.sc_longitude : 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0,
-        pocs: { opsZh: row.ops_zh, lhOpsZh: row.lh_ops_zh, opsCh: row.ops_ch, lhOpsCh: row.lh_ops_ch, opsAm1: row.ops_am1 || '', lhOpsAm1: row.lh_ops_am1 || '', opsAm2: row.ops_am2 || '', lhOpsAm2: row.lh_ops_am2 || '' },
-        _dbId: row.id,
-      }));
-
-      const VEH = (vehRes.data || []).map(row => ({ name: row.vehicle_type, cap: row.capacity, dist: row.distance_limit, tp: row.touch_point_limit, feas: row.lh_feasibility || [], _dbId: row.id }));
-
-      const nodeChangesUnified = (nodeRes.data || []).map(row => ({ lmscCode: row.lmsc_code, lmdcCode: row.lmdc_code, flag: row.node_flag, lat: row.lat, lng: row.lng }));
-
-      // Resolve Capacity/Distance/TP Limit defaults from Vehicle Master NOW (at load time),
-      // same as buildAvailRows() does for a fresh CSV upload -- the existing scVehAvailRows
-      // display code reads these as concrete "current" values, it doesn't re-resolve against
-      // Vehicle Master itself.
-      const vehByName = {}; VEH.forEach(v => { vehByName[v.name] = v; });
-      const availByCode = {};
-      (availRes.data || []).forEach(row => {
-        const vm = vehByName[row.vehicle_type] || { cap: 2000, dist: 600, tp: 7 };
-        const capacity = row.capacity != null ? row.capacity : vm.cap;
-        const dist = row.distance_limit != null ? row.distance_limit : vm.dist;
-        const tpLimit = row.touch_point_limit != null ? row.touch_point_limit : vm.tp;
-        (availByCode[row.sc_code] = availByCode[row.sc_code] || []).push({
-          vehicleType: row.vehicle_type, capacity, distanceLimit: dist + ' km', vehicleCount: row.vehicle_count, tpLimit, zoneFeas: row.zone_feasibility, _dbId: row.id,
-        });
-      });
-      const scVehAvail = Object.keys(availByCode).map(code => ({ code, rows: availByCode[code] }));
-
-      this.setState(st => ({ data: Object.assign({}, st.data, { scs, VEH, nodeChangesUnified, scVehAvail }) }));
-    });
-  }
-
-  // ===== RLH Plan Ingestion pre-push draft persistence (2026-07-24) ==============================
-  // Restores ingestedRlhPlans / ingestedPlans (the "Recently ingested" log) from
-  // rlh_ingested_plans on load, so a refresh between "Ingest CSV" and "Push" no longer loses the
-  // validated-but-unpushed plan the same way Vehicle Master data used to.
-  loadIngestedRlhPlanDrafts() {
-    if (!supabase) return;
-    supabase.from('rlh_ingested_plans').select('*').then(({ data, error }) => {
-      if (error) { console.error('Failed to load RLH ingested plan drafts', error); return; }
-      const ingestedRlhPlans = {};
-      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const ingestedPlans = (data || []).map(row => {
-        ingestedRlhPlans[row.sc_code] = row.plan_data;
-        const d = new Date(row.created_at);
-        const date = String(d.getDate()).padStart(2, '0') + ' ' + months[d.getMonth()] + ' · ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-        return { name: row.file_name, by: 'You (Planner)', date, rows: row.row_count, runId: (row.plan_data || {}).fileBaseName, scCode: row.sc_code };
-      });
-      this.setState({ ingestedRlhPlans, ingestedPlans });
-    });
-  }
-
-  // Upsert-by-sc_code, one call for every SC in a freshly-ingested file (matches the app's own
-  // "re-ingesting an SC replaces its prior draft" behaviour).
-  saveIngestedRlhPlanDrafts(plans, fileName) {
-    if (!supabase) return Promise.resolve({ error: { message: 'Supabase client not available' } });
-    const uid = this.state.authUser && this.state.authUser.id;
-    const dbRows = Object.keys(plans).map(code => ({ sc_code: code, file_name: fileName, row_count: plans[code].rowCount, plan_data: plans[code], created_by: uid }));
-    return supabase.from('rlh_ingested_plans').upsert(dbRows, { onConflict: 'sc_code' });
-  }
-
-  // Called once a draft has actually been pushed into the real `plans` table -- it's no longer
-  // "not yet pushed," so its draft row is cleaned up. Failure here is logged, not surfaced to the
-  // user: the push itself already succeeded, and a leftover draft row is harmless clutter, not a
-  // data-loss risk (worst case: it just gets overwritten next time that SC is re-ingested).
-  deleteIngestedRlhPlanDraft(code) {
-    if (!supabase) return;
-    supabase.from('rlh_ingested_plans').delete().eq('sc_code', code).then(({ error }) => { if (error) console.error('Failed to clean up ingested-plan draft for ' + code, error); });
-  }
-
-  // ===== Supabase data layer for Ops Alignment (2026-07-16) =====================================
-  // Everything below reads/writes the real tables (plans / plan_reviewers / plan_row_feedback /
-  // plan_reviewer_status / sc_reviewers) set up alongside this repo. Local plan.rows/.metrics stay
-  // exactly the shape they always were — only the OUTER wrapper (status, who's tagged, the latest
-  // per-row feedback overlay, who's submitted) is now Supabase-backed instead of buildSeed() demo data.
-
-  // Every real Ops Lead in the system — powers both the Push modal's "add a reviewer" picker and
-  // SC Master's default-reviewer picker. Loaded once after login; small enough not to need paging.
-  loadOpsLeadDirectory() {
-    if (!supabase) return;
-    supabase.from('profiles').select('id, display_name, email').eq('role', 'ops_lead').order('display_name')
-      .then(({ data, error }) => {
-        if (error) { console.error('Failed to load Ops Lead directory', error); return; }
-        this.setState({ opsLeadDirectory: data || [] });
-      });
-  }
-
-  // Returns a Promise of this SC's default reviewers, as [{id, display_name, email}] — used to
-  // pre-populate the Push modal's chips.
-  loadScReviewers(scCode) {
-    if (!supabase) return Promise.resolve([]);
-    return supabase.from('sc_reviewers').select('reviewer_id, profiles(id, display_name, email)').eq('sc_code', scCode)
-      .then(({ data, error }) => { if (error) { console.error('Failed to load SC reviewers', error); return []; } return (data || []).map(r => r.profiles).filter(Boolean); });
-  }
-
-  // Diffs the given reviewer id list against what's currently stored for this SC and applies just
-  // the additions/removals — called from SC Master's "Default Reviewers" picker, not from the Push
-  // modal (per decision: adding someone in the Push modal tags that one plan only, doesn't change
-  // the SC's standing default list).
-  saveScReviewers(scCode, reviewerIds) {
-    if (!supabase) return Promise.resolve();
-    return supabase.from('sc_reviewers').select('reviewer_id').eq('sc_code', scCode).then(({ data }) => {
-      const current = new Set((data || []).map(r => r.reviewer_id));
-      const next = new Set(reviewerIds);
-      const toAdd = reviewerIds.filter(id => !current.has(id));
-      const toRemove = [...current].filter(id => !next.has(id));
-      const ops = [];
-      if (toAdd.length) ops.push(supabase.from('sc_reviewers').insert(toAdd.map(id => ({ sc_code: scCode, reviewer_id: id }))));
-      toRemove.forEach(id => ops.push(supabase.from('sc_reviewers').delete().eq('sc_code', scCode).eq('reviewer_id', id)));
-      return Promise.all(ops);
-    });
-  }
-
-  // Full plan list for the logged-in user, reconstructed into the exact shape the rest of the app
-  // already expects (rows/metrics untouched; reviewerNames/submittedReviewers/status/row-feedback
-  // now come from the real tables instead of buildSeed()). RLS already scopes this correctly:
-  // a planner's query returns every plan, an Ops Lead's returns only plans they're tagged on.
-  loadPlansFromSupabase() {
-    if (!supabase || !this.state.authUser) return;
-    Promise.all([
-      supabase.from('plans').select('*'),
-      supabase.from('plan_reviewers').select('plan_id, reviewer_id, profiles(id, display_name, email)'),
-      supabase.from('plan_row_feedback').select('*'),
-      supabase.from('plan_reviewer_status').select('*'),
-    ]).then(([plansRes, reviewersRes, feedbackRes, statusRes]) => {
-      if (plansRes.error) { console.error('Failed to load plans', plansRes.error); return; }
-      const reviewersByPlan = {}, feedbackByPlan = {}, statusByPlan = {};
-      (reviewersRes.data || []).forEach(r => { (reviewersByPlan[r.plan_id] = reviewersByPlan[r.plan_id] || []).push(r); });
-      (feedbackRes.data || []).forEach(f => { (feedbackByPlan[f.plan_id] = feedbackByPlan[f.plan_id] || []).push(f); });
-      (statusRes.data || []).forEach(s => { (statusByPlan[s.plan_id] = statusByPlan[s.plan_id] || []).push(s); });
-      const STATUS_MAP = { ingested: 'Pushed', pending: 'Pushed', acknowledged: 'Acknowledged', finalized: 'Finalised' };
-      const plans = (plansRes.data || []).map(row => {
-        const planObj = Object.assign({}, row.data, { id: row.id, remote: true });
-        const revRows = reviewersByPlan[row.id] || [];
-        const fbRows = feedbackByPlan[row.id] || [];
-        const statusRows = statusByPlan[row.id] || [];
-        planObj.reviewerNames = revRows.map(r => r.profiles && (r.profiles.display_name || r.profiles.email)).filter(Boolean);
-        planObj.reviewerIds = revRows.map(r => r.reviewer_id);
-        planObj.submittedReviewers = statusRows.filter(s => s.submitted).map(s => {
-          const match = revRows.find(r => r.reviewer_id === s.reviewer_id);
-          return (match && match.profiles && (match.profiles.display_name || match.profiles.email)) || s.reviewer_id;
-        });
-        // overlay each row's LATEST feedback (row_id = routeCode, latest-write-wins already enforced
-        // by plan_row_feedback being a single row per (plan_id, row_id)) onto the planner-owned base rows.
-        const fbByRoute = {}; fbRows.forEach(f => { fbByRoute[f.row_id] = f; });
-        planObj.rows = (planObj.rows || []).map(r => {
-          const fb = fbByRoute[r.routeCode];
-          if (!fb) return r;
-          return Object.assign({}, r, { ops: 'Needs Change', fb: fb.feedback });
-        });
-        planObj.status = (row.status === 'pending' && (planObj.submittedReviewers || []).length > 0) ? 'In Alignment' : (STATUS_MAP[row.status] || 'Pushed');
-        return planObj;
-      });
-      this.setState(s => ({ data: Object.assign({}, s.data, { plans }) }));
-    });
-  }
-
-  // Pushes a brand-new plan: inserts the planner-owned base structure (rows/metrics/hw/zone/etc,
-  // everything reviewer- and status-related stripped out since those live in their own tables) plus
-  // one plan_reviewers row per tagged Ops Lead. Scoped to first-push only — re-pushing an
-  // already-pushed plan to reset it back to 'pending' isn't wired yet (status can only change via
-  // the acknowledge/finalise/unfreeze functions), flagged as a follow-up if that's ever needed.
-  pushPlanToSupabase(plan, reviewerIds) {
-    if (!supabase || !this.state.authUser) return;
-    const uid = this.state.authUser.id;
-    const dataBlob = Object.assign({}, plan);
-    delete dataBlob.id; delete dataBlob.status; delete dataBlob.remote;
-    delete dataBlob.reviewerNames; delete dataBlob.reviewerIds; delete dataBlob.submittedReviewers;
-    supabase.from('plans').insert({ id: plan.id, created_by: uid, status: 'pending', data: dataBlob }).then(({ error }) => {
-      if (error) { this.showToast('Could not push to Supabase — ' + error.message, '#D14B4B'); return; }
-      const rows = (reviewerIds || []).map(rid => ({ plan_id: plan.id, reviewer_id: rid }));
-      const done = () => this.loadPlansFromSupabase();
-      if (!rows.length) { done(); return; }
-      supabase.from('plan_reviewers').insert(rows).then(({ error: e2 }) => {
-        if (e2) this.showToast('Plan pushed, but could not tag all reviewers — ' + e2.message, '#C77B00');
-        done();
-      });
-    });
-  }
-
-  // Writes this reviewer's latest per-row feedback + flips their submission status. feedbackByRoute
-  // is { [routeCode]: fbObject }, the SAME shape already used locally as row.fb.
-  submitFeedbackToSupabase(plan, feedbackByRoute) {
-    if (!supabase || !this.state.authUser) return;
-    const uid = this.state.authUser.id;
-    const rows = Object.keys(feedbackByRoute || {}).map(routeCode => ({ plan_id: plan.id, row_id: routeCode, feedback: feedbackByRoute[routeCode], updated_by: uid, updated_at: new Date().toISOString() }));
-    const writeFeedback = rows.length ? supabase.from('plan_row_feedback').upsert(rows) : Promise.resolve({ error: null });
-    writeFeedback.then(({ error }) => {
-      if (error) { this.showToast('Could not save feedback — ' + error.message, '#D14B4B'); return; }
-      supabase.from('plan_reviewer_status').upsert({ plan_id: plan.id, reviewer_id: uid, submitted: true, submitted_at: new Date().toISOString() }).then(({ error: e2 }) => {
-        if (e2) { this.showToast('Could not record submission — ' + e2.message, '#D14B4B'); return; }
-        this.loadPlansFromSupabase();
-      });
-    });
-  }
-
-  acknowledgePlanRemote(planId) {
-    if (!supabase) return;
-    supabase.rpc('acknowledge_plan', { p_plan_id: planId }).then(({ error }) => {
-      if (error) { this.showToast('Could not acknowledge — ' + error.message, '#D14B4B'); return; }
-      this.loadPlansFromSupabase();
-    });
-  }
-  finalisePlanRemote(planId) {
-    if (!supabase) return;
-    supabase.rpc('finalise_plan', { p_plan_id: planId }).then(({ error }) => {
-      if (error) { this.showToast('Could not finalise — ' + error.message, '#D14B4B'); return; }
-      this.loadPlansFromSupabase();
-    });
-  }
-  unfreezePlanRemote(planId) {
-    if (!supabase) return;
-    supabase.rpc('unfreeze_plan', { p_plan_id: planId }).then(({ error }) => {
-      if (error) { this.showToast('Could not unfreeze — ' + error.message, '#D14B4B'); return; }
-      this.loadPlansFromSupabase();
-    });
-  }
-
-  // ===== Plan file-naming / snapshot versioning (2026-07-16) ============================
-  // Stores exactly 3 named "files" per plan, per the agreed convention:
-  //   1. {name}            — ingested / pushed to alignment (same file, no new snapshot at push)
-  //   2. {name}_FEEDBACK   — Ops feedback submitted (re-submission overwrites this same file;
-  //                          Acknowledge does NOT create a new one, it just freezes this one)
-  //   3. {name}_FINALISED  — finalised by the planner
-  // Finalise Directly skips stage 2 — only {name} and {name}_FINALISED exist.
-  //
-  // Real ingestion isn't built yet, so {name} is generated here in the same shape a real ingested
-  // file would have (SCCODE_YYYYMMDD_HHMMSS, e.g. VWS_20260716_142026) at first-push time, and
-  // carried on the plan itself from then on — swap this for the real ingested filename once
-  // Design Ingestion is built; nothing else about this naming/versioning logic needs to change.
-  generateIngestFileName(scCode) {
-    const d = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    return scCode + '_' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '_' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
-  }
-
-  // Upserts one named snapshot — "unique (plan_id, file_name)" in the schema is what keeps this
-  // at exactly one row per stage (a resubmission overwrites the _FEEDBACK file, it doesn't add one).
-  saveSnapshot(planId, stage, fileName, planSnapshotData) {
-    if (!supabase || !this.state.authUser) return;
-    const uid = this.state.authUser.id;
-    supabase.from('plan_snapshots').upsert({ plan_id: planId, file_name: fileName, stage, data: planSnapshotData, created_by: uid }, { onConflict: 'plan_id,file_name' })
-      .then(({ error }) => { if (error) console.error('Failed to save snapshot ' + fileName, error); });
-  }
-  // ===== end plan file-naming / snapshot versioning =====
-
-  // ===== end Supabase data layer =====
-
-  sendMagicLink() {
-    if (!supabase) return;
-    const email = (this.state.authEmail || '').trim();
-    if (!email) { this.setState({ authError: 'Enter your email address.' }); return; }
-    this.setState({ authSending: true, authError: '' });
-    supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } }).then(({ error }) => {
-      if (error) { this.setState({ authSending: false, authError: error.message || 'Could not send the link — is this email on the invited list?' }); return; }
-      this.setState({ authSending: false, authSent: true });
-    });
-  }
-
-  signOut() {
-    if (!supabase) return;
-    supabase.auth.signOut().then(() => this.setState({ authUser: null, authProfile: null, authEmail: '', authSent: false }));
-  }
-
-  renderLogin() {
-    const e = React.createElement;
-    const st = this.state;
-    if (!st.authChecked) {
-      return e('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: "'Inter', sans-serif", color: '#5A5E66' } }, 'Loading…');
-    }
-    return e('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#F4F5F8', fontFamily: "'Inter', sans-serif" } },
-      e('div', { style: { width: '360px', maxWidth: '92vw', background: '#fff', border: '1px solid #E6EBF2', borderRadius: '14px', padding: '28px 26px', boxShadow: '0 12px 34px rgba(11,20,48,0.10)' } },
-        e('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' } },
-          e('div', { style: { width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg,#003F98,#2F4FC6)' } }),
-          e('div', { style: { fontSize: '14px', fontWeight: 700, color: '#14171F' } }, 'Network Design Central')
-        ),
-        st.authSent
-          ? e('div', null,
-              e('div', { style: { fontSize: '13.5px', fontWeight: 600, color: '#14171F', marginBottom: '6px' } }, 'Check your email'),
-              e('div', { style: { fontSize: '12.5px', color: '#5A5E66', lineHeight: 1.5 } }, "We've sent a sign-in link to " + st.authEmail + '. Click it to continue — you can close this tab.'),
-              e('button', { onClick: () => this.setState({ authSent: false }), style: { marginTop: '14px', height: '34px', padding: '0 12px', border: '1px solid #E6EBF2', background: '#fff', color: '#5A5E66', fontFamily: 'inherit', fontSize: '12.5px', fontWeight: 600, borderRadius: '8px', cursor: 'pointer' } }, 'Use a different email')
-            )
-          : e('div', null,
-              e('div', { style: { fontSize: '13.5px', fontWeight: 600, color: '#14171F', marginBottom: '4px' } }, 'Sign in'),
-              e('div', { style: { fontSize: '12px', color: '#8E96A3', marginBottom: '14px' } }, "Enter your work email — we'll send a one-time sign-in link. Only invited addresses will receive one."),
-              e('input', {
-                type: 'email', value: st.authEmail, placeholder: 'name@valmo.com',
-                onChange: (ev) => this.setState({ authEmail: ev.target.value, authError: '' }),
-                onKeyDown: (ev) => { if (ev.key === 'Enter') this.sendMagicLink(); },
-                style: { width: '100%', height: '38px', padding: '0 12px', border: '1px solid #C3C9D4', borderRadius: '8px', fontFamily: 'inherit', fontSize: '13px', color: '#14171F', outline: 'none', boxSizing: 'border-box', marginBottom: '10px' },
-              }),
-              st.authError ? e('div', { style: { fontSize: '11.5px', color: '#D14B4B', marginBottom: '10px', lineHeight: 1.4 } }, st.authError) : null,
-              e('button', {
-                onClick: () => this.sendMagicLink(), disabled: st.authSending,
-                style: { width: '100%', height: '38px', border: 'none', background: st.authSending ? '#8FA9D8' : '#003F98', color: '#fff', fontFamily: 'inherit', fontSize: '13px', fontWeight: 600, borderRadius: '8px', cursor: st.authSending ? 'default' : 'pointer' },
-              }, st.authSending ? 'Sending…' : 'Send sign-in link')
-            )
-      )
-    );
-  }
-
-  componentWillUnmount() { clearInterval(this._q); clearTimeout(this._t); if (this._authSub && this._authSub.data && this._authSub.data.subscription) this._authSub.data.subscription.unsubscribe(); }
+  componentWillUnmount() { clearInterval(this._q); clearTimeout(this._t); }
 
   // A1/A3 — single source of truth for the July 2026 cycle dates. Freeze (Acknowledge) = Jul 12.
   // "now" is pinned to the seed cycle (24 Jun 2026) so the demo is deterministic, not a frozen literal.
@@ -5494,7 +4543,7 @@ class NDCApp extends React.Component {
     const zf = st.inputsZone || 'All';
     const zoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
     const nstep = st.nodeStep || 'active';
-    const nodeChangeCount = (d.nodeChangesUnified || []).length;
+    const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
     const nodeSteps = nodeStepMeta.map(s => ({ label: s[1] + ' (' + s[2] + ')', tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
     const anFiltered = d.scs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
@@ -5597,33 +4646,33 @@ class NDCApp extends React.Component {
     const _addedScs = (st.addedScs || []).filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
     const scRemovedMap = st.scRemoved || {};
     const scFiltered = _addedScs.concat(anFiltered).filter(s => !scRemovedMap[s.code]);
-    // PARITY §6 — identity columns City / State + Type. State is the representative state for the SC's zone (deterministic).
-    // Type/Docks/TP-limits/Hours are read from real stored fields (see submitAddSc) -- previously
-    // this block fabricated all of these from a hash of the SC code, which silently overrode
-    // whatever the user actually entered in the Add/Edit SC form. '—' means the field was
-    // genuinely never entered (true for all ~80 fabricated seed SCs, which predate these fields).
+    // PARITY §6 — identity columns City / State + Type. State is the representative state for the SC's
+    // zone (deterministic); Type derives from scale (large LMSC = Hub, mid = Regional, small = Spoke).
     const ZSTATE = { North: 'Delhi NCR', West: 'Maharashtra', South: 'Karnataka', East: 'West Bengal', Central: 'Madhya Pradesh' };
+    // C9 — POC details: up to 6 POCs/SC, names visible via a per-row dropdown (no separate screen).
+    const POC_ROLES = ['Ops ZH', 'LH Ops ZH', 'Ops CH', 'LH Ops CH', 'Ops AM-1', 'Ops AM-2'];
     const pocOpenRow = st.pocOpenRow;
     const scEdits = st.scEdits || {};
     // Pagination — page the full filtered SC list (10/page) instead of the old hard 16-row cap.
     const scMasterPager = this.pager(scFiltered, st.pgScMaster, 'pgScMaster');
     const scRows = scMasterPager.pageRows.map(s0 => {
       const s = scEdits[s0.code] ? Object.assign({}, s0, scEdits[s0.code]) : s0;
-      // sc.pocs is the role-keyed object (SC_POC_FIELDS); guard the old flat-array shape / absence
-      // (seed SCs never had a pocs field) by treating anything non-object as "no POCs on file".
-      const pocsSrc = (s.pocs && !Array.isArray(s.pocs)) ? s.pocs : {};
-      const pocEntries = SC_POC_FIELDS.map(([k, role]) => ({ role, name: (pocsSrc[k] || '').trim() })).filter(p => p.name);
-      const nlhDocks = s.nlhDocks != null ? s.nlhDocks : '—';
-      const rlhDocks = s.rlhDocks != null ? s.rlhDocks : '—';
-      const localTp = s.localTp != null ? s.localTp : '—';
-      const nonLocalTp = s.nonLocalTp != null ? s.nonLocalTp : '—';
-      const openTime = s.open || '—';
-      const closeTime = s.close || '—';
+      const pl = (s.pocs || []).slice(0, 6);
+      // Synthetic per-SC values derived deterministically from code so the table looks realistic
+      const h = s.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const nlhDocks = 3 + (h % 7);
+      const rlhDocks = 2 + ((h >> 3) % 6);
+      const localTp = 4 + (h % 3);
+      const nonLocalTp = 2 + ((h >> 2) % 3);
+      const openHour = 5 + (h % 3);
+      const closeHour = 21 + ((h >> 4) % 3);
+      const openTime = String(openHour).padStart(2, '0') + ':00';
+      const closeTime = String(closeHour).padStart(2, '0') + ':00';
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.city ? s.city : (s.name + ' / ' + (ZSTATE[s.zone] || s.zone)), coords: (s.lat || s.lng) ? (Number(s.lat).toFixed(4) + ', ' + Number(s.lng).toFixed(4)) : '—', scType: s.type || '—', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, localTp: localTp, nonLocalTp: nonLocalTp, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
-        pocCount: pocEntries.length, pocSummary: pocEntries.length ? (pocEntries.length + ' lead' + (pocEntries.length === 1 ? '' : 's')) : 'None on file',
-        pocList: pocEntries.map(p => ({ name: p.name, role: p.role, email: p.name.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
+      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, localTp: localTp, nonLocalTp: nonLocalTp, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
+        pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
+        pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
         rowEdit: () => this.openScEdit(s.code), rowDelete: () => { const r = Object.assign({}, this.state.scRemoved || {}); r[s.code] = true; this.setState({ scRemoved: r }); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[s.code]; this.setState({ scRemoved: rr }); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
@@ -5635,7 +4684,7 @@ class NDCApp extends React.Component {
     // vehEdits = per-type param overrides from the Edit modal, applied by name over both library + added rows.
     const vehEdits = st.vehEdits || {};
     const VEH_FEAS_OPTS_M = ['FM Carting', 'NLH', 'RLH'];
-    const openEditVeh = (name, eff) => this.setState({ editVehName: name, editVehDraft: { vtype: name, capacity: String(eff.capacity == null ? '' : eff.capacity), dist: String(eff.dist == null ? '' : eff.dist), tp: String(eff.tp == null ? '' : eff.tp), feas: (eff.feas || []).slice() } });
+    const openEditVeh = (name, eff) => this.setState({ editVehName: name, editVehDraft: { vtype: name, capacity: String(eff.capacity == null ? '' : eff.capacity), dist: String(eff.dist == null ? '' : eff.dist), tp: String(eff.tp == null ? '' : eff.tp), localTp: String(eff.localTp == null ? '' : eff.localTp), nonLocalTp: String(eff.nonLocalTp == null ? '' : eff.nonLocalTp), feas: (eff.feas || []).slice() } });
     // Inline row-edit helpers for Vehicle Master
     const evName = st.editVehName || null;
     const evDraft = st.editVehDraft || {};
@@ -5646,41 +4695,7 @@ class NDCApp extends React.Component {
         onToggle: () => { const cur = ((this.state.editVehDraft || {}).feas || []); const next = cur.indexOf(opt) >= 0 ? cur.filter(x => x !== opt) : cur.concat([opt]); evSetDraft({ feas: next }); } };
     });
     const vehMasterBase = (d.VEH || []).filter(v => !vehRemoved[v.name]).map(v => {
-      const eff = Object.assign({ capacity: v.cap, dist: v.dist, tp: v.tp, feas: v.feas }, vehEdits[v.name] || {});
-      const editing = evName === v.name;
-      const tpOverCap = (eff.feas || []).indexOf('RLH') >= 0 && Number(eff.tp) > 7;
-      return { name: v.name, capacity: (eff.capacity === '' || eff.capacity == null) ? '—' : String(eff.capacity), dist: (eff.dist === '' || eff.dist == null) ? '—' : Number(eff.dist).toLocaleString('en-IN'), tp: eff.tp, feas: (eff.feas && eff.feas.length ? eff.feas : ['—']), tpOverCap,
-        editing: editing, notEditing: !editing, rowSaving: st.savingVehRow === v.name,
-        draftCap: evDraft.capacity || '', draftDist: evDraft.dist || '', draftTp: evDraft.tp || '', draftVtype: evDraft.vtype || '',
-        evFeasChips: editing ? evFeasChips : [],
-        onDraftCap: (e) => evSetDraft({ capacity: e.target.value }),
-        onDraftDist: (e) => evSetDraft({ dist: e.target.value }),
-        onDraftTp: (e) => evSetDraft({ tp: e.target.value }),
-        onDraftVtype: (e) => evSetDraft({ vtype: e.target.value }),
-        onSaveRow: () => {
-          const d2 = this.state.editVehDraft || {};
-          const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? '' : n; };
-          const newType = (d2.vtype || v.name).trim();
-          const payload = { name: newType, capacity: num(d2.capacity), dist: num(d2.dist), tp: num(d2.tp), feas: (d2.feas || eff.feas || []).slice() };
-          const renamed = newType !== v.name;
-          this.setState({ savingVehRow: v.name });
-          const op = renamed
-            ? this.deleteVehicleMasterRow(v.name).then(() => this.saveVehicleMasterRow(payload))
-            : this.saveVehicleMasterRow(payload);
-          op.then(({ error } = {}) => {
-            this.setState({ savingVehRow: null, editVehName: null, editVehDraft: null });
-            if (error) { this.showToast('Failed to save ' + v.name + ': ' + error.message, '#D14B4B'); return; }
-            this.loadMastersFromSupabase();
-            this.showToast(newType + ' updated in vehicle master', '#128A3E');
-          });
-        },
-        onCancelRow: () => this.setState({ editVehName: null, editVehDraft: null }),
-        onEdit: () => openEditVeh(v.name, eff),
-        onDelete: () => { const r = Object.assign({}, this.state.vehRemoved); r[v.name] = true; this.setState({ vehRemoved: r }); this.showToast(v.name + ' removed from vehicle master', '#D14B4B', () => { const rr = Object.assign({}, this.state.vehRemoved); delete rr[v.name]; this.setState({ vehRemoved: rr }); }); }, onDeleteConfirm: () => this.setState({ delConfirm: { kind: 'veh', key: v.name, label: v.name } }) };
-    });
-    // Add Vehicle Type modal appends user-added types to the master table (same row shape as the library rows).
-    const addedVehRows = (st.addedVehTypes || []).map((v, i) => {
-      const eff = Object.assign({ capacity: v.capacity, dist: v.dist, tp: v.tp, feas: v.feas }, vehEdits[v.name] || {});
+      const eff = Object.assign({ capacity: v.cap, dist: v.dist, tp: v.tp, localTp: v.localTp, nonLocalTp: v.nonLocalTp, feas: v.feas }, vehEdits[v.name] || {});
       const editing = evName === v.name;
       const tpOverCap = (eff.feas || []).indexOf('RLH') >= 0 && Number(eff.tp) > 7;
       return { name: v.name, capacity: (eff.capacity === '' || eff.capacity == null) ? '—' : String(eff.capacity), dist: (eff.dist === '' || eff.dist == null) ? '—' : Number(eff.dist).toLocaleString('en-IN'), tp: eff.tp, feas: (eff.feas && eff.feas.length ? eff.feas : ['—']), tpOverCap,
@@ -5695,7 +4710,32 @@ class NDCApp extends React.Component {
           const d2 = this.state.editVehDraft || {};
           const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? '' : n; };
           const ve = Object.assign({}, this.state.vehEdits || {});
-          ve[v.name] = { capacity: num(d2.capacity), dist: num(d2.dist), tp: num(d2.tp), feas: (d2.feas || eff.feas || []).slice() };
+          ve[v.name] = { capacity: num(d2.capacity), dist: num(d2.dist), tp: num(d2.tp), localTp: eff.localTp, nonLocalTp: eff.nonLocalTp, feas: (d2.feas || eff.feas || []).slice() };
+          this.setState({ vehEdits: ve, editVehName: null, editVehDraft: null });
+          this.showToast(v.name + ' updated in vehicle master', '#128A3E');
+        },
+        onCancelRow: () => this.setState({ editVehName: null, editVehDraft: null }),
+        onEdit: () => openEditVeh(v.name, eff),
+        onDelete: () => { const r = Object.assign({}, this.state.vehRemoved); r[v.name] = true; this.setState({ vehRemoved: r }); this.showToast(v.name + ' removed from vehicle master', '#D14B4B', () => { const rr = Object.assign({}, this.state.vehRemoved); delete rr[v.name]; this.setState({ vehRemoved: rr }); }); }, onDeleteConfirm: () => this.setState({ delConfirm: { kind: 'veh', key: v.name, label: v.name } }) };
+    });
+    // Add Vehicle Type modal appends user-added types to the master table (same row shape as the library rows).
+    const addedVehRows = (st.addedVehTypes || []).map((v, i) => {
+      const eff = Object.assign({ capacity: v.capacity, dist: v.dist, tp: v.tp, localTp: v.localTp, nonLocalTp: v.nonLocalTp, feas: v.feas }, vehEdits[v.name] || {});
+      const editing = evName === v.name;
+      const tpOverCap = (eff.feas || []).indexOf('RLH') >= 0 && Number(eff.tp) > 7;
+      return { name: v.name, capacity: (eff.capacity === '' || eff.capacity == null) ? '—' : String(eff.capacity), dist: (eff.dist === '' || eff.dist == null) ? '—' : Number(eff.dist).toLocaleString('en-IN'), tp: eff.tp, feas: (eff.feas && eff.feas.length ? eff.feas : ['—']), tpOverCap,
+        editing: editing, notEditing: !editing,
+        draftCap: evDraft.capacity || '', draftDist: evDraft.dist || '', draftTp: evDraft.tp || '', draftVtype: evDraft.vtype || '',
+        evFeasChips: editing ? evFeasChips : [],
+        onDraftCap: (e) => evSetDraft({ capacity: e.target.value }),
+        onDraftDist: (e) => evSetDraft({ dist: e.target.value }),
+        onDraftTp: (e) => evSetDraft({ tp: e.target.value }),
+        onDraftVtype: (e) => evSetDraft({ vtype: e.target.value }),
+        onSaveRow: () => {
+          const d2 = this.state.editVehDraft || {};
+          const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? '' : n; };
+          const ve = Object.assign({}, this.state.vehEdits || {});
+          ve[v.name] = { capacity: num(d2.capacity), dist: num(d2.dist), tp: num(d2.tp), localTp: eff.localTp, nonLocalTp: eff.nonLocalTp, feas: (d2.feas || eff.feas || []).slice() };
           this.setState({ vehEdits: ve, editVehName: null, editVehDraft: null });
           this.showToast(v.name + ' updated in vehicle master', '#128A3E');
         },
@@ -5725,27 +4765,7 @@ class NDCApp extends React.Component {
     const availEdits = st.availEdits || {};
     const availRemovedMap = st.availRemoved || {};
     const fmtIntAvail = (n) => (typeof n === 'number' ? n.toLocaleString('en-IN') : (n == null ? '—' : n));
-    const scEditsForAvail = st.scEdits || {};
-    // scByCode now searches the full REAL SC list (addedScs + data.scs, scEdits applied), not just
-    // data.scs -- previously an SC added via Add SC / CSV upload wouldn't resolve here at all.
-    const scByCode = (code) => {
-      const fromAdded = (st.addedScs || []).find(s => s.code === code);
-      const base = fromAdded || (d.scs || []).find(s => s.code === code);
-      if (!base) return {};
-      return scEditsForAvail[code] ? Object.assign({}, base, scEditsForAvail[code]) : base;
-    };
-    // allRealScs — the actual grouping source for this tab. Previously this mapped over
-    // d.scVehAvail directly, which is empty in this real-data build (no seed), so NO SC -- old or
-    // newly-added -- ever got a card to add vehicles to, regardless of anything in availAdded.
-    // Now every real SC (SC Master's merged addedScs + data.scs, honoring scRemoved) gets a card;
-    // any base rows already in d.scVehAvail (e.g. future Supabase-loaded data) are merged in by
-    // SC code where present, defaulting to an empty rows[] otherwise.
-    const scRemovedForAvail = st.scRemoved || {};
-    const availByCode = {}; (d.scVehAvail || []).forEach(g => { availByCode[g.code] = g; });
-    const allRealScs = (st.addedScs || []).concat(d.scs || []).filter(s => !scRemovedForAvail[s.code]).map(s => {
-      const g = availByCode[s.code];
-      return { code: s.code, name: s.name, zone: s.zone, rows: (g && g.rows) || [] };
-    });
+    const scByCode = (code) => (d.scs || []).find(s => s.code === code) || {};
     // Add-Vehicle to an SC's availability — mirrors the Design-Creation Step-2 inline add flow (addForm pattern).
     // VEHMA = live fleet with vehEdits/vehRemoved/addedVehTypes applied (same chain as VEHM in creationVals).
     const VEHMA = (d.VEH || []).filter(v => !(st.vehRemoved || {})[v.name]).map(v => {
@@ -5765,18 +4785,17 @@ class NDCApp extends React.Component {
       const m = VEHMA.find(x => x.name === availForm.vehicleType) || VEHMA[0] || { cap: 2000, tp: 7 };
       const tp = availForm.tp == null ? m.tp : availForm.tp; const tpWarn = tp > m.tp; const zf = availZfStyle(availForm.zoneFeas || 'Both');
       const afCap = availForm.cap == null ? m.cap : availForm.cap;
-      const savingThis = st.availRowSaving === (code + '|' + availForm.vehicleType);
       return { vehicleType: availForm.vehicleType, count: availForm.count, tp: tp, cap: afCap, vmCap: m.cap, dist: vehDistAvail(availForm.vehicleType) + ' km', vmTp: m.tp, zoneFeas: availForm.zoneFeas || 'Both',
         typeOptions: VEHMA.map(x => ({ value: x.name, label: x.name, selected: x.name === availForm.vehicleType })), zfBg: zf.zfBg, zfFg: zf.zfFg,
         tpWarn: tpWarn, tpBd: tpWarn ? '#E0B84A' : '#E6EBF2', tpWarnText: 'Entered TP ' + tp + ' exceeds the vehicle-master limit of ' + m.tp + ' — allowed, but the DS plan may be infeasible.',
         title: 'Add vehicle',
-        submitLabel: savingThis ? 'Saving…' : 'Add', saving: savingThis,
+        submitLabel: 'Add',
         onTypeChange: (e) => { const nm = VEHMA.find(x => x.name === e.target.value) || {}; this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { vehicleType: e.target.value, tp: nm.tp || 7, cap: nm.cap }) }); },
         onCountChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { count: parseInt(e.target.value) || 1 }) }),
         onTpChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { tp: parseInt(e.target.value) || 1 }) }),
         onCapChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { cap: e.target.value }) }),
         onZoneFeasChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { zoneFeas: e.target.value }) }),
-        onAdd: () => { const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both' }; this.setState({ availRowSaving: code + '|' + f.vehicleType }); this.saveAvailabilityRow(code, nr).then(({ error }) => { this.setState({ availRowSaving: null, addingAvailSC: null, availAddForm: null }); if (error) { this.showToast('Failed to add ' + f.vehicleType + ': ' + error.message, '#D14B4B'); return; } this.loadMastersFromSupabase(); this.showToast(f.vehicleType + ' added to ' + code, '#128A3E'); }); },
+        onAdd: () => { const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both' }; const add = Object.assign({}, this.state.availAdded || {}); add[code] = (add[code] || []).concat([nr]); this.setState({ availAdded: add, addingAvailSC: null, availAddForm: null }); this.showToast(f.vehicleType + ' added to ' + code, '#128A3E'); },
         onCancel: () => this.setState({ addingAvailSC: null, availAddForm: null, editingAvail: null }) };
     };
     // Inline-row-edit state for SC Vehicle Availability
@@ -5784,7 +4803,7 @@ class NDCApp extends React.Component {
     const ead = st.editAvailDraft || {};
     const eadSet = (patch) => { this.setState({ editAvailDraft: Object.assign({}, this.state.editAvailDraft || {}, patch) }); };
     const ZF_OPTS = ['Both', 'Local', 'Non-Local'];
-    const scVehAvailRows = allRealScs.map(g => {
+    const scVehAvailRows = (d.scVehAvail || []).map(g => {
       const src = scByCode(g.code);
       const rows = g.rows.concat(availAdded[g.code] || []).filter(r => !availRemovedMap[g.code + '|' + r.vehicleType]).map(r => {
         const availKey = g.code + '|' + r.vehicleType;
@@ -5807,7 +4826,8 @@ class NDCApp extends React.Component {
         const typeOpts = VEHMA.map(x => ({ value: x.name, label: x.name, selected: x.name === (rowEditing ? (ead.type || displayType) : displayType) }));
         return {
           t: displayType, cap: cap, dist: distNum + ' km', cnt: cnt, tp: tp, zf: zf, zfBg: zfBg, zfFg: zfFg,
-          rowEditing: rowEditing, rowNotEditing: !rowEditing, rowSaving: st.availRowSaving === availKey,
+          vmLabel: exceeds ? (cntExceeds ? 'Exceeds limit' : '\u26a0 TP over master') : 'OK', vmBg: exceeds ? (cntExceeds ? '#FBEAEA' : '#FBF1DF') : '#E7F4EC', vmFg: exceeds ? (cntExceeds ? '#D14B4B' : '#C77B00') : '#128A3E',
+          rowEditing: rowEditing, rowNotEditing: !rowEditing,
           draftType: rowEditing ? (ead.type || displayType) : displayType,
           draftCap: rowEditing ? (ead.cap != null ? ead.cap : cap) : cap,
           draftDist: rowEditing ? (ead.dist != null ? ead.dist : distNum) : distNum,
@@ -5825,31 +4845,16 @@ class NDCApp extends React.Component {
           onSaveAvailRow: () => {
             const d2 = this.state.editAvailDraft || {};
             const pi = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
-            const newType = d2.type || displayType;
-            const payload = { vehicleType: newType, capacity: d2.cap != null ? pi(d2.cap) : cap, distanceLimit: d2.dist != null ? pi(d2.dist) : distNum, vehicleCount: pi(d2.cnt), tpLimit: pi(d2.tp), zoneFeas: d2.zf || zf };
-            const renamed = newType !== r.vehicleType;
-            this.setState({ availRowSaving: availKey });
-            const op = renamed
-              ? this.deleteAvailabilityRow(g.code, r.vehicleType).then(() => this.saveAvailabilityRow(g.code, payload))
-              : this.saveAvailabilityRow(g.code, payload);
-            op.then(({ error } = {}) => {
-              this.setState({ availRowSaving: null, editAvailKey: null, editAvailDraft: null });
-              if (error) { this.showToast('Failed to save ' + newType + ': ' + error.message, '#D14B4B'); return; }
-              this.loadMastersFromSupabase();
-              this.showToast(newType + ' updated in ' + g.code, '#128A3E');
-            });
+            const ov2 = Object.assign({}, this.state.availEdits || {});
+            ov2[availKey] = { cnt: pi(d2.cnt), tp: pi(d2.tp), zf: d2.zf || zf, type: d2.type || displayType, cap: d2.cap != null ? pi(d2.cap) : cap, dist: d2.dist != null ? pi(d2.dist) : distNum };
+            this.setState({ availEdits: ov2, editAvailKey: null, editAvailDraft: null });
+            this.showToast((d2.type || displayType) + ' updated in ' + g.code, '#128A3E');
           },
           onCancelAvailRow: () => this.setState({ editAvailKey: null, editAvailDraft: null }),
           onCntInput: (e) => this.setAvailRow(g.code, r.vehicleType, e.target.value),
           onTpInput: (e) => this.setAvailField(g.code, r.vehicleType, 'tp', parseInt(e.target.value) || r.tpLimit),
           onZoneInput: (e) => this.setAvailField(g.code, r.vehicleType, 'zf', e.target.value),
-          rowDelete: () => {
-            this.deleteAvailabilityRow(g.code, r.vehicleType).then(({ error }) => {
-              if (error) { this.showToast('Failed to remove ' + r.vehicleType + ': ' + error.message, '#D14B4B'); return; }
-              this.loadMastersFromSupabase();
-              this.showToast(r.vehicleType + ' removed from ' + g.code, '#D14B4B');
-            });
-          }
+          rowDelete: () => { const rm = Object.assign({}, this.state.availRemoved || {}); rm[availKey] = true; this.setState({ availRemoved: rm }); this.showToast(r.vehicleType + ' removed from ' + g.code, '#D14B4B', () => { const rm2 = Object.assign({}, this.state.availRemoved || {}); delete rm2[availKey]; this.setState({ availRemoved: rm2 }); }); }
         };
       });
       const totalCount = rows.reduce((a, x) => a + (parseInt(x.cnt) || 0), 0);
@@ -5878,39 +4883,25 @@ class NDCApp extends React.Component {
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
       autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
-      ingestErrModalOpen: !!(st.ingestErrModal), ingestErrModal: st.ingestErrModal || { name: '', rows: [] },
-      closeIngestErrModal: () => this.setState({ ingestErrModal: null }),
-      ingestErrModalRetry: () => { this.setState({ ingestErrModal: null }); this.ingestRlhPlanFile(); },
-      nodeErrModalOpen: !!(st.nodeErrModal), nodeErrModal: st.nodeErrModal || { name: '', rows: [] },
-      closeNodeErrModal: () => this.setState({ nodeErrModal: null }),
-      nodeErrModalRetry: () => { this.setState({ nodeErrModal: null }); this.uploadNodeChanges(); },
-      scErrModalOpen: !!(st.scErrModal), scErrModal: st.scErrModal || { name: '', rows: [] },
-      closeScErrModal: () => this.setState({ scErrModal: null }),
-      scErrModalRetry: () => { this.setState({ scErrModal: null }); this.uploadScMasterFile(); },
-      uploadScMasterFile: () => this.uploadScMasterFile(),
-      availErrModalOpen: !!(st.availErrModal), availErrModal: st.availErrModal || { name: '', rows: [] },
-      closeAvailErrModal: () => this.setState({ availErrModal: null }),
-      availErrModalRetry: () => { this.setState({ availErrModal: null }); this.uploadAvailFile(); },
-      uploadAvailFile: () => this.uploadAvailFile(),
       zoneChips, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail',
       mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.']].map(t => ({ label: t[1] + ' (' + t[2] + ')', tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
       scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
-      addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', feas: [] } }),
+      addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
       addVehOpen: !!st.addVehOpen,
       addVehNotOpen: !st.addVehOpen,
       addVehInlineHint: st.addVehEditName ? 'Editing vehicle type…' : 'Adding a vehicle type…',
-      addVehModalTitle: st.addVehEditName ? 'Edit Vehicle Type' : 'Add Vehicle Type', addVehSubmitLabel: st.savingVeh ? 'Saving…' : (st.addVehEditName ? 'Save changes' : 'Add Vehicle Type'),
-      addVehVtype: vf.vtype || '', addVehCapacity: vf.capacity || '', addVehDist: vf.dist || '', addVehHardCap: vf.hardCap || '', addVehTypeOptions: VEH_TYPE_OPTIONS,
-      onAddVehVtype: vset('vtype'), onAddVehCapacity: vset('capacity'), onAddVehDist: vset('dist'), onAddVehHardCap: vset('hardCap'),
-      addVehFeasChips: addVehFeasChips, addVehValid: addVehValid && !st.savingVeh,
-      addVehBtnBg: (addVehValid && !st.savingVeh) ? '#003F98' : '#E6EBF2', addVehBtnFg: (addVehValid && !st.savingVeh) ? '#fff' : '#8E96A3', addVehBtnCursor: (addVehValid && !st.savingVeh) ? 'pointer' : 'not-allowed',
+      addVehModalTitle: st.addVehEditName ? 'Edit Vehicle Type' : 'Add Vehicle Type', addVehSubmitLabel: st.addVehEditName ? 'Save changes' : 'Add Vehicle Type',
+      addVehVtype: vf.vtype || '', addVehCapacity: vf.capacity || '', addVehDist: vf.dist || '', addVehHardCap: vf.hardCap || '', addVehLocalTp: vf.localTp || '', addVehNonLocalTp: vf.nonLocalTp || '',
+      onAddVehVtype: vset('vtype'), onAddVehCapacity: vset('capacity'), onAddVehDist: vset('dist'), onAddVehHardCap: vset('hardCap'), onAddVehLocalTp: vset('localTp'), onAddVehNonLocalTp: vset('nonLocalTp'),
+      addVehFeasChips: addVehFeasChips, addVehValid: addVehValid,
+      addVehBtnBg: addVehValid ? '#003F98' : '#E6EBF2', addVehBtnFg: addVehValid ? '#fff' : '#8E96A3', addVehBtnCursor: addVehValid ? 'pointer' : 'not-allowed',
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
-      submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Capacity (Shipments)' }, { k: 'Distance Limit (Kms)' }, { k: 'Vehicle Count' }, { k: 'Touch Point Limit' }, { k: 'Zone Feasibility' }]), availUploadSaving: !!st.availUploadSaving,
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'SC Name' }, { k: 'SC City,State' }, { k: 'SC Latitude' }, { k: 'SC Longitude' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'SC Opening Time' }, { k: 'SC Closing Time' }, { k: 'SC Ops ZH' }, { k: 'SC-LH Ops ZH' }, { k: 'SC Ops CH' }, { k: 'SC-LH Ops CH' }, { k: 'SC Ops AM-1' }, { k: 'SC-LH Ops AM-1' }, { k: 'SC Ops AM-2' }, { k: 'SC-LH Ops AM-2' }]), scUploadSaving: !!st.scUploadSaving,
-      changesTemplate: () => this.downloadTemplate('Node Additions Closures Migrations', [{ k: 'LMSC Code' }, { k: 'LMDC Code' }, { k: 'Node Flag' }, { k: 'LMDC Latitude' }, { k: 'LMDC Longitude' }]),
-      nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(), nodeUploadSaving: !!st.nodeUploadSaving,
-      ingestTemplate: () => this.downloadTemplate('RLH Plan Ingestion', [{ k: 'Zone' }, { k: 'LMSC' }, { k: 'LMDC' }, { k: 'DC latitude' }, { k: 'DC longitude' }, { k: 'Volume' }, { k: 'Route Code' }, { k: 'Touch Point' }, { k: 'Vehicle Type' }, { k: 'Breakdown Distance' }, { k: 'Round Trip Distance' }, { k: 'Run ID' }]), ingestUploadSaving: !!st.ingestUploadSaving,
+      submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
+      nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
+      ingestTemplate: () => this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }]),
       scVehAvail: scAvailPager.pageRows, scAvailPager: scAvailPager, scVehAvailCountLabel: availQuery ? (availShownRows + ' vehicle row' + (availShownRows === 1 ? '' : 's') + ' across ' + scVehAvailFiltered.length + ' of ' + scVehAvailRows.length + ' SCs') : (scVehAvailTotalRows + ' vehicle rows across ' + scVehAvailRows.length + ' SCs'), availSearch: st.availSearch || '', onAvailSearch: (e) => this.setState({ availSearch: e.target.value, pgAvail: 1 }), availNoResults: scVehAvailFiltered.length === 0,
       ingTabs,
       ingPlans: (st.ingestedPlans || []).slice(0, 5).map(p => ({ name: p.name, by: p.by, date: p.date, rows: p.rows.toLocaleString('en-IN'), runId: p.runId })),
@@ -5932,18 +4923,11 @@ class NDCApp extends React.Component {
     if (!dc) return;
     this.setState({ delConfirm: null });
     if (dc.kind === 'sc') {
-      if (!supabase) { this.showToast('Supabase client not available', '#D14B4B'); return; }
-      supabase.from('sc_master').delete().eq('sc_code', dc.key).then(({ error }) => {
-        if (error) { this.showToast('Failed to remove ' + dc.key + ': ' + error.message, '#D14B4B'); return; }
-        this.loadMastersFromSupabase();
-        this.showToast(dc.key + ' removed from SC master', '#D14B4B');
-      });
+      const r = Object.assign({}, this.state.scRemoved || {}); r[dc.key] = true; this.setState({ scRemoved: r });
+      this.showToast(dc.key + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[dc.key]; this.setState({ scRemoved: rr }); });
     } else if (dc.kind === 'veh') {
-      this.deleteVehicleMasterRow(dc.key).then(({ error }) => {
-        if (error) { this.showToast('Failed to remove ' + dc.label + ': ' + error.message, '#D14B4B'); return; }
-        this.loadMastersFromSupabase();
-        this.showToast(dc.label + ' removed from vehicle master', '#D14B4B');
-      });
+      const r = Object.assign({}, this.state.vehRemoved); r[dc.key] = true; this.setState({ vehRemoved: r });
+      this.showToast(dc.label + ' removed from vehicle master', '#D14B4B', () => { const rr = Object.assign({}, this.state.vehRemoved); delete rr[dc.key]; this.setState({ vehRemoved: rr }); });
     } else if (dc.kind === 'veh-added') {
       const i = parseInt(dc.key, 10);
       const arr = (this.state.addedVehTypes || []).slice(); const removed = arr[i]; arr.splice(i, 1); this.setState({ addedVehTypes: arr });
@@ -6571,27 +5555,17 @@ class NDCApp extends React.Component {
     };
   }
 
-  openPush(code, runId) {
-    this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [], pushAddSelect: '' });
-    // Pre-select this SC's default reviewers (sc_reviewers) — real people, not local demo POCs.
-    this.loadScReviewers(code).then(reviewers => {
-      if (this.state.pushSCcode === code) this.setState({ pushReviewers: reviewers.map(r => r.id) });
-    });
-  }
+  openPush(code, runId) { const sc = this.state.data.scs.find(s => s.code === code); this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [...new Set(sc.pocs)].slice(0, 2), pushName: '', pushEmail: '' }); }
   closePush() { this.setState({ pushOpen: false }); }
-  togglePushReviewer(id) { const cur = this.state.pushReviewers.slice(); const i = cur.indexOf(id); i >= 0 ? cur.splice(i, 1) : cur.push(id); this.setState({ pushReviewers: cur }); }
-  // Adds one more reviewer picked from the full Ops Lead directory (not this SC's defaults) — tags
-  // this plan only, per decision: doesn't change the SC's standing default list.
-  addPushReviewerById(id) { if (!id) return; const cur = this.state.pushReviewers.slice(); if (cur.indexOf(id) < 0) cur.push(id); this.setState({ pushReviewers: cur, pushAddSelect: '' }); }
-  removeReviewer(id) { this.setState({ pushReviewers: this.state.pushReviewers.filter(x => x !== id) }); }
+  togglePushReviewer(n) { const cur = this.state.pushReviewers.slice(); const i = cur.indexOf(n); i >= 0 ? cur.splice(i, 1) : cur.push(n); this.setState({ pushReviewers: cur }); }
+  addManualReviewer() { const n = (this.state.pushName || '').trim(); if (!n) return; const cur = this.state.pushReviewers.slice(); if (cur.indexOf(n) < 0) cur.push(n); this.setState({ pushReviewers: cur, pushName: '', pushEmail: '' }); }
+  removeReviewer(n) { this.setState({ pushReviewers: this.state.pushReviewers.filter(x => x !== n) }); }
   openFinDirect(code, runId) { this.setState({ finDirectOpen: true, finDirectSCcode: code, pushSCcode: code, pushRunId: runId || null, pushReviewers: [] }); }
   doPush(finaliseDirect) {
     const st = this.state, d = st.data, code = st.pushSCcode;
     const targetStatus = finaliseDirect ? 'Finalised' : 'Pushed';
     const sc = d.scs.find(s => s.code === code);
-    const reviewerIds = (st.pushReviewers || []).slice();
-    const directory = st.opsLeadDirectory || [];
-    const reviewers = reviewerIds.map(id => { const p = directory.find(x => x.id === id); return (p && (p.display_name || p.email)) || id; });
+    const reviewers = (st.pushReviewers || []).slice();
     // Resolve the chosen run EXPLICITLY: the run the planner picked on the card, else the
     // balanced HW-0.5 run, else any run for this SC. The chosen run's HW + metrics flow into the plan.
     const run = (st.pushRunId && d.runs.find(r => r.id === st.pushRunId)) || d.runs.find(r => r.scCode === code && r.hw === 0.5) || d.runs.find(r => r.scCode === code);
@@ -6601,33 +5575,8 @@ class NDCApp extends React.Component {
     const alignStatus = Object.assign({}, st.alignStatus);
     const idx = plans.findIndex(p => p.scCode === code);
     let plan = idx >= 0 ? plans[idx] : null;
-    const wasNewPlan = idx < 0;
-    // RLH Plan Ingestion (Mode 2) — a validated ingested plan for this SC always takes priority
-    // over a Network Map run: it's real, not a candidate to pick between. Build the real per-row
-    // volume/cps/util via computeHypotheticalPlan (single source of truth), then attach the
-    // workflow fields (ops/planner/fb) every row needs, matching the existing row shape exactly.
-    const ingested = (st.ingestedRlhPlans || {})[code];
-    const computed = (ingested && sc) ? this.computeIngestedRunMetrics(ingested) : null;
-    const ingestedRows = computed ? computed.rows : null, ingestedMetrics = computed ? computed.metrics : null;
-    if (plan && ingested && sc) {
-      // Existing plan for this SC, and a fresh validated ingestion is available for it — the
-      // ingested file always wins over whatever was there before (re-ingestion supersedes a prior
-      // push, mirroring the "existing plan, re-push against the chosen run" case below).
-      const reviewerNamesNext = reviewers.length ? reviewers : plan.reviewerNames;
-      plan = Object.assign({}, plan, { hw: null, rows: ingestedRows, pushedBy: this.plannerPersonaName(), reviewerNames: reviewerNamesNext,
-        submittedReviewers: finaliseDirect ? reviewerNamesNext.slice() : [],
-        fileBaseName: ingested.fileBaseName, metrics: ingestedMetrics });
-      plans[idx] = plan;
-      alignStatus[plan.id] = targetStatus;
-      if (plan.remote) this.showToast('Re-pushed locally \u2014 re-push isn\u2019t yet persisted to Supabase for an already-pushed plan', '#C77B00');
-    } else if (ingested && sc) {
-      // Brand new plan straight from a validated ingested file — no Network Map run involved at all.
-      const newPlanReviewers = reviewers.length ? reviewers : [];
-      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: null, status: targetStatus, rows: ingestedRows, pushedBy: this.plannerPersonaName(), sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], fileBaseName: ingested.fileBaseName, metrics: ingestedMetrics };
-      plans.push(plan);
-    } else if (plan && run && sc) {
-      // existing plan for this SC — re-push it for fresh Ops review against the CHOSEN run:
-
+    if (plan && run && sc) {
+      // existing plan for this SC \u2014 re-push it for fresh Ops review against the CHOSEN run:
       // rebuild rows + metrics + HW from that run so the pushed plan reflects the picked run, not the seed.
       const VEHN = ['TATA ACE / 7ft', 'Bolero / 8ft', 'TATA 407 / 10ft', '14ft Trailer'];
       const rowCount = Math.min(Math.max(run.routes, 6), 13);
@@ -6639,7 +5588,7 @@ class NDCApp extends React.Component {
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
       const reviewerNamesNext = reviewers.length ? reviewers : plan.reviewerNames;
-      plan = Object.assign({}, plan, { hw: runHw, rows, pushedBy: this.plannerPersonaName(), reviewerNames: reviewerNamesNext,
+      plan = Object.assign({}, plan, { hw: runHw, rows, pushedBy: 'Pranita Sapkal', reviewerNames: reviewerNamesNext,
         // A re-push restarts the alignment cycle — old submissions no longer apply. Finalise Directly
         // deliberately bypasses the alignment loop by product decision, so it's not a "gap", not a
         // missed submission — treat every assigned reviewer as covered rather than flagging it.
@@ -6647,9 +5596,6 @@ class NDCApp extends React.Component {
         metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } });
       plans[idx] = plan;
       alignStatus[plan.id] = targetStatus;
-      // Re-pushing an already-Supabase-backed plan isn't wired to persist remotely yet (status can
-      // only change via acknowledge/finalise/unfreeze) — flag it plainly instead of silently no-op'ing.
-      if (plan.remote) this.showToast('Re-pushed locally \u2014 re-push isn\u2019t yet persisted to Supabase for an already-pushed plan', '#C77B00');
     } else if (run && sc) {
       // synthesize a real plan so it surfaces for the Ops Lead and in the planner pipeline
       const VEHN = ['TATA ACE / 7ft', 'Bolero / 8ft', 'TATA 407 / 10ft', '14ft Trailer'];
@@ -6661,28 +5607,17 @@ class NDCApp extends React.Component {
         const dcs = []; for (let k = 0; k < tp; k++) dcs.push(sc.cityCode + (101 + j * 7 + k));
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
-      const newPlanReviewers = reviewers.length ? reviewers : [];
-      const fileBaseName = this.generateIngestFileName(code);
-      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: this.plannerPersonaName(), sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], fileBaseName, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } };
+      const newPlanReviewers = reviewers.length ? reviewers : [...new Set(sc.pocs)].slice(0, 2);
+      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } };
       plans.push(plan);
     }
     const pushed = Object.assign({}, st.pushedSCs); pushed[code] = true;
     // Land on the alignment LIST (L1), not the freshly-pushed plan's blank "waiting for feedback" detail.
     // Reset the filter to All so the just-pushed/finalised plan is guaranteed visible in the list.
     this.setState({ data: Object.assign({}, d, { plans }), alignStatus, pushedSCs: pushed, pushOpen: false, finDirectOpen: false, pushRunId: null, view: 'align', opsPlanId: plan ? plan.id : st.opsPlanId, alignPlanId: null, alignFilter: 'Pending Feedback', alignPage: 0 });
-    // Persist a genuinely new (not-yet-remote), normal (non-Finalise-Direct) push to Supabase.
-    if (plan && wasNewPlan && !finaliseDirect) this.pushPlanToSupabase(plan, reviewerIds);
-    if (ingested) this.deleteIngestedRlhPlanDraft(code);
-    // File-naming convention: stage-1 snapshot ({name}) on every new push. Finalise Directly skips
-    // straight to stage-3 ({name}_FINALISED) since there's no Ops feedback stage to pass through.
-    if (plan && wasNewPlan && plan.fileBaseName) {
-      this.saveSnapshot(plan.id, 'ingested', plan.fileBaseName, plan);
-      if (finaliseDirect) this.saveSnapshot(plan.id, 'finalised', plan.fileBaseName + '_FINALISED', plan);
-    }
-    const runTxt = ingested ? ingested.fileBaseName : (run ? (run.runId || run.id) : code);
-    const hwOrIngestedTxt = ingested ? 'Ingested plan' : hwTxt;
+    const runTxt = run ? (run.runId || run.id) : code;
     if (finaliseDirect) this.showToast('Finalised ' + runTxt + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E');
-    else this.showToast('Pushed ' + runTxt + ' (' + hwOrIngestedTxt + ') to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
+    else this.showToast('Pushed ' + runTxt + ' (' + hwTxt + ') to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
   }
 
   decideRow(planId, idx, val) { const a = Object.assign({}, this.state.alignDecisions); a[planId] = Object.assign({}, a[planId]); a[planId][idx] = val; this.setState({ alignDecisions: a }); }
@@ -6746,7 +5681,7 @@ class NDCApp extends React.Component {
   setAlignRemark(planId, idx, val) { const a = Object.assign({}, this.state.alignRemarks); a[planId] = Object.assign({}, a[planId]); a[planId][idx] = val; this.setState({ alignRemarks: a }); }
   // Master–detail: which flagged route is open in the detail pane (per plan).
   setAlignRoute(planId, idx) { const a = Object.assign({}, this.state.alignRouteSel || {}); a[planId] = idx; this.setState({ alignRouteSel: a }); }
-  confirmAck() { const id = this.state.ackPlanId; const s = Object.assign({}, this.state.alignStatus); s[id] = 'Acknowledged'; this.setState({ alignStatus: s, ackOpen: false }); const plan = (this.state.data.plans || []).find(p => p.id === id); if (plan && plan.remote) this.acknowledgePlanRemote(id); this.showToast(id + ' acknowledged \u2014 plan frozen & reviewers locked', '#1E6FB8'); }
+  confirmAck() { const id = this.state.ackPlanId; const s = Object.assign({}, this.state.alignStatus); s[id] = 'Acknowledged'; this.setState({ alignStatus: s, ackOpen: false }); this.showToast(id + ' acknowledged \u2014 plan frozen & reviewers locked', '#1E6FB8'); }
   // confirmUnfreeze() — the inverse of confirmAck(). Reverts status to 'In Alignment' (NOT 'Pushed' —
   // submitted feedback stays fully visible/intact, this just reopens Ops Lead editing and clears the
   // Planner's own Accept/Reject calls, which were made against a feedback set that may now change).
@@ -6760,10 +5695,6 @@ class NDCApp extends React.Component {
     const alignFieldDec = Object.assign({}, this.state.alignFieldDec);
     Object.keys(alignFieldDec).forEach(k => { if (k.indexOf(id + ':') === 0) delete alignFieldDec[k]; });
     this.setState({ alignStatus: s, alignDecisions, alignDcDecisions, alignFieldDec, unfreezeOpen: false, unfreezePlanId: null });
-    // unfreeze_plan (the RPC) also resets every tagged reviewer's submitted flag server-side, and is
-    // only callable from 'acknowledged' — matching this local reset exactly for a real plan.
-    const plan = (this.state.data.plans || []).find(p => p.id === id);
-    if (plan && plan.remote) this.unfreezePlanRemote(id);
     this.showToast(id + ' unfrozen \u2014 reopened for Ops Lead editing, decisions reset', '#C77B00');
   }
   confirmFin() {
@@ -6786,9 +5717,9 @@ class NDCApp extends React.Component {
         const util = vehRecord.cap ? Math.min(0.98, +(rt.volume / vehRecord.cap).toFixed(2)) : (prior ? prior.util : 0.7);
         return {
           routeCode: rt.routeCode, veh: rt.vehName, vehTp: vehRecord.tp || (prior ? prior.vehTp : 7),
-          tp: rt.dcCodes.length, dcs: rt.dcRecords, rtDist: Math.round(rt.distance), returnLeg: rt.returnLeg,
-          breakdownTat: (prior && prior.breakdownTat != null) ? prior.breakdownTat : +(rt.distance / 42).toFixed(1),
-          outCutoff: (prior && prior.outCutoff != null) ? prior.outCutoff : '23:00',
+          tp: rt.dcCodes.length, dcs: rt.dcCodes, rtDist: Math.round(rt.distance),
+          breakdownTat: prior ? prior.breakdownTat : +(rt.distance / 42).toFixed(1),
+          outCutoff: prior ? prior.outCutoff : '23:00',
           oLat: scLat, oLng: scLng, volume: rt.volume, util, cps: rt.cps,
           ops: 'Aligned', planner: 'Accept', fb: null, proposedBy: null,
         };
@@ -6805,35 +5736,12 @@ class NDCApp extends React.Component {
       const clr = (obj) => { const c = Object.assign({}, obj); delete c[id]; return c; };
       this.setState({ opsRowFb: clr(this.state.opsRowFb), opsRowDec: clr(this.state.opsRowDec), alignDecisions: clr(this.state.alignDecisions), alignDcDecisions: clr(this.state.alignDcDecisions) });
     }
-    const s = Object.assign({}, this.state.alignStatus); s[id] = 'Finalised'; const fb = Object.assign({}, this.state.alignFinalisedBy); fb[id] = this.plannerPersonaName(); this.setState({ alignStatus: s, alignFinalisedBy: fb, finOpen: false });
-    if (plan && plan.remote) this.finalisePlanRemote(id);
-    if (plan && plan.fileBaseName) this.saveSnapshot(id, 'finalised', plan.fileBaseName + '_FINALISED', plan);
-    this.showToast(id + ' finalised — reordered per accepted feedback, ready for RFQ handoff', '#128A3E');
+    const s = Object.assign({}, this.state.alignStatus); s[id] = 'Finalised'; const fb = Object.assign({}, this.state.alignFinalisedBy); fb[id] = 'Pranita Sapkal'; this.setState({ alignStatus: s, alignFinalisedBy: fb, finOpen: false }); this.showToast(id + ' finalised — reordered per accepted feedback, ready for RFQ handoff', '#128A3E');
   }
 
   // LMDC cluster view — generate deterministic DC breakdown rows for a route.
   // No Math.random / Date.now: all values derived from indices and char codes.
   genDcRows(r) {
-    // Real ingested rows carry r.dcs as an array of per-DC OBJECTS (real lat/lng/volume/tp/leg-
-    // distance, built by buildIngestedRlhPlans) rather than an array of bare code strings — return
-    // them as-is, no synthesis, no jitter. `realDist`/`isReal` flow through to computeHypotheticalPlan
-    // so a real ingested leg distance is used as the route's official distance, not haversine. 2026-07-23.
-    // Object-shaped `dcs` covers two cases: a freshly-ingested row (buildIngestedRlhPlans, fields
-    // include `dist`) and a post-Finalise committed row (confirmFin's dcRecords, fields include
-    // `resolvedLeg` instead). Read whichever is present, and respect each DC's own `isReal` flag
-    // rather than assuming every object-shaped DC is real -- a legacy synthetic plan's DCs are
-    // ALSO object-shaped after Finalise (confirmFin commits dcRecords for every plan, not just
-    // ingested ones), and must keep using the ×55 legacy haversine, not the real formula.
-    if (Array.isArray(r.dcs) && r.dcs.length && typeof r.dcs[0] === 'object') {
-      return r.dcs.map((dc) => {
-        const legDist = dc.dist != null ? dc.dist : dc.resolvedLeg;
-        // Raw ingestion-shape objects (buildIngestedRlhPlans output) never carry an isReal field at
-        // all -- that shape only ever comes from real ingestion, so default true. The post-Finalise
-        // dcRecords shape DOES carry an explicit isReal (true or false) -- respect it when present.
-        const isRealFlag = (dc.isReal === undefined) ? true : !!dc.isReal;
-        return { code: dc.code, name: dc.name || dc.code, vol: dc.vol, tpOrder: dc.tpOrder, lat: dc.lat, lng: dc.lng, dist: legDist + ' km', realDist: isRealFlag ? legDist : null, isReal: isRealFlag };
-      });
-    }
     const DC_NAMES = ['Sector Hub','Market Depot','City Point','Town Centre','Zone Gateway','North Cluster','South Cluster','East Block','West Node','Central Store','Junction Hub','Metro Point','Park Depot','Ring Station','Cross Dock'];
     const dcArr = r.dcs; // array of dc-code strings e.g. ["BDQ234","BDQ567"]
     const n = dcArr.length || 1;
@@ -6851,7 +5759,7 @@ class NDCApp extends React.Component {
       const vol  = baseVol + ((charSum + i) % 3 === 0 ? 1 : 0);
       const dist = baseDist + ((charSum + i * 7) % 5);
       const nameIdx = (charSum + i * 13) % DC_NAMES.length;
-      return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km', isReal: false };
+      return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km' };
     });
   }
 
@@ -6891,12 +5799,6 @@ class NDCApp extends React.Component {
     const routeLevelVehOverride = {}; // routeCode -> new vehicle name (from a route-level cells.vehicleType change)
     const newRouteVehicle = {};       // brand-new/split route code -> chosen vehicle name
     const newRouteVehicleConflicts = {}; // brand-new route code -> Set-like map of distinct vehicle choices seen (merge conflict detector)
-    // Real ingested rows carry a real, ground-truth return leg (Round Trip Distance - last
-    // Breakdown Distance) — keyed here by original route code so the route-building step below
-    // can use it directly instead of a haversine estimate, as long as nothing has moved the DC
-    // that was originally last on that route. 2026-07-23.
-    const returnLegByOrigRoute = {};
-    plan.rows.forEach(row => { if (row.returnLeg != null) returnLegByOrigRoute[row.routeCode] = row.returnLeg; });
 
     plan.rows.forEach((row, idx) => {
       originalVehByCode[row.routeCode] = row.veh;
@@ -6915,12 +5817,6 @@ class NDCApp extends React.Component {
           if (!newRouteVehicleConflicts[ov.routeCode]) newRouteVehicleConflicts[ov.routeCode] = {};
           newRouteVehicleConflicts[ov.routeCode][chosenVeh] = true;
         }
-        // A real ingested leg distance (dc.realDist) is ground truth -- it wins whenever there's
-        // no genuine Ops-feedback override for this DC. userDistanceIsIngested distinguishes the
-        // two sources so the variance-warning below only ever fires for a human-entered feedback
-        // distance, never for the file's own ground truth (real road legs routinely differ from
-        // straight-line-plus-buffer by well over 25% -- that's expected, not a data problem).
-        const ovDistance = (ov && ov.distance != null && ov.distance !== '') ? Number(ov.distance) : null;
         flatDcs.push({
           code: dc.code, name: dc.name,
           originalRouteCode: row.routeCode, originalTp: dc.tpOrder,
@@ -6928,9 +5824,7 @@ class NDCApp extends React.Component {
           tp: (ov && ov.tp != null && ov.tp !== '') ? Number(ov.tp) : dc.tpOrder,
           lat: (ov && ov.lat != null && ov.lat !== '') ? Number(ov.lat) : Number(dc.lat),
           lng: (ov && ov.lng != null && ov.lng !== '') ? Number(ov.lng) : Number(dc.lng),
-          userDistance: ovDistance != null ? ovDistance : (dc.realDist != null ? dc.realDist : null),
-          userDistanceIsIngested: ovDistance == null && dc.realDist != null,
-          isReal: !!dc.isReal,
+          userDistance: (ov && ov.distance != null && ov.distance !== '') ? Number(ov.distance) : null,
           effectiveRouteCode: targetRouteCode,
           hasOverride: !!ov,
         });
@@ -6989,19 +5883,9 @@ class NDCApp extends React.Component {
       // Legs: SC -> dcs[0] -> dcs[1] -> ... -> dcs[n-1] -> SC (return leg always calculated)
       let prevLat = scLat, prevLng = scLng, distance = 0;
       dcs.forEach((dc) => {
-        // Real ingested coordinates must never go through NDC_haversineKm's ×55 fudge factor
-        // (calibrated only for this app's fabricated, sub-degree seed coordinates) -- use the real
-        // formula (straight-line x1.25) for any DC that came from real ingestion.
-        const haversineFn = dc.isReal ? NDC_realHaversineKm : NDC_haversineKm;
-        const calcLeg = haversineFn(prevLat, prevLng, dc.lat, dc.lng);
+        const calcLeg = NDC_haversineKm(prevLat, prevLng, dc.lat, dc.lng);
         const leg = dc.userDistance != null ? dc.userDistance : calcLeg;
-        dc.resolvedLeg = +leg.toFixed(2); // real value used in the sum -- ground truth, override, or calculated
-        // Variance check only applies to a genuine Ops-feedback-entered distance. An ingested
-        // ground-truth leg is authoritative, not a guess to sanity-check against a straight-line
-        // estimate -- real roads routinely differ from that by well over 25% (confirmed against
-        // the real sample: ~22% of legitimate real legs exceed this threshold), so checking it
-        // here would just be noise on every ingested route, not a useful signal.
-        if (dc.userDistance != null && !dc.userDistanceIsIngested && calcLeg > 0) {
+        if (dc.userDistance != null && calcLeg > 0) {
           const variancePct = Math.abs(dc.userDistance - calcLeg) / calcLeg;
           if (variancePct > 0.25) {
             warnings.push({ t: dc.code + ' (route ' + code + '): entered distance ' + dc.userDistance + ' km differs from the calculated ' + calcLeg + ' km by ' + Math.round(variancePct * 100) + '% (>25%).', sev: 'warning', dcCode: dc.code, routeCode: code, unresolved: true });
@@ -7010,16 +5894,7 @@ class NDCApp extends React.Component {
         distance += leg;
         prevLat = dc.lat; prevLng = dc.lng;
       });
-      // Return leg: use the real ingested ground-truth value (Round Trip Distance - last Breakdown
-      // Distance) when this route is unmodified from ingestion -- i.e. the DC that's now last is
-      // still the SAME DC that was originally last on this exact route, untouched by any DC-level
-      // feedback override. Otherwise (a new/split route, or the last DC has moved) there's no real
-      // ground truth for this specific arrangement -- fall back to a haversine estimate, using the
-      // real formula if that last DC is itself real.
-      const lastDc = dcs[n - 1];
-      const realReturnLeg = (lastDc && !lastDc.hasOverride && lastDc.originalRouteCode === code) ? returnLegByOrigRoute[lastDc.originalRouteCode] : null;
-      const returnHaversineFn = (lastDc && lastDc.isReal) ? NDC_realHaversineKm : NDC_haversineKm;
-      const returnLeg = realReturnLeg != null ? realReturnLeg : returnHaversineFn(prevLat, prevLng, scLat, scLng);
+      const returnLeg = NDC_haversineKm(prevLat, prevLng, scLat, scLng);
       distance += returnLeg;
 
       // Distance vs vehicle limit warning
@@ -7031,7 +5906,7 @@ class NDCApp extends React.Component {
       const costPerKm = NDC_costPerKmFor(vehName, vehRecord.cap);
       const cost = distance * costPerKm;
       const cps = volume > 0 ? cost / volume : 0;
-      return { routeCode: code, isNewRoute, vehName, dcCodes: dcs.map(x => x.code), dcRecords: dcs, tpOrder: dcs.map(x => x.tp), distance: +distance.toFixed(1), returnLeg: +returnLeg.toFixed(1), volume, costPerKm, cost: +cost.toFixed(2), cps: +cps.toFixed(2) };
+      return { routeCode: code, isNewRoute, vehName, dcCodes: dcs.map(x => x.code), tpOrder: dcs.map(x => x.tp), distance: +distance.toFixed(1), returnLeg: +returnLeg.toFixed(1), volume, costPerKm, cost: +cost.toFixed(2), cps: +cps.toFixed(2) };
     });
 
     const scVolume = routes.reduce((a, r) => a + r.volume, 0);
@@ -7070,7 +5945,7 @@ class NDCApp extends React.Component {
       const vehRecord = (d.VEH || []).find(v => v.name === rt.vehName) || {};
       const util = vehRecord.cap ? Math.min(0.98, +(rt.volume / vehRecord.cap).toFixed(2)) : (prior ? prior.util : 0.7);
       const over = util > 0.9, under = util < 0.4;
-      const tat = (prior && prior.breakdownTat != null) ? (prior.breakdownTat + 'h') : (+(rt.distance / 42).toFixed(1) + 'h');
+      const tat = prior ? (prior.breakdownTat + 'h') : (+(rt.distance / 42).toFixed(1) + 'h');
       // 2026-07-14 — Route View only ever shows 2 of the 5 change flags (Vehicle Change, New Route /
       // Split) — the other 3 (DC Movement, Route Order, Distance) are DC-level concerns Route View
       // doesn't break down to, so they stay Details-only.
@@ -7158,8 +6033,11 @@ class NDCApp extends React.Component {
     // pipeline funnel removed — its counts now live in the Tier-2 filter tabs.
 
     // F2 — filter-chip labels now match the pipeline wording EXACTLY (no "Awaiting" vs "Awaiting feedback" drift).
-    // Received = any plan with feedback activity not yet finalised (In Alignment or Acknowledged);
-    // Finalised = terminal state only. This gives every plan exactly one home across the 3 tabs.
+    // Received = feedback submitted, not yet frozen (In Alignment only);
+    // Acknowledged = frozen by the Planner, per-field decisions in progress (Acknowledged only);
+    // Finalised = terminal state only. This gives every plan exactly one home across the 4 tabs.
+    // 2026-07-17 — Acknowledged split out of Feedback Received into its own tab, mirroring the
+    // Ops Lead's own 4-stage rail (To Review / Submitted / Acknowledged / Finalised).
     const FILTERS = ['Pending Feedback', 'Feedback Received', 'Acknowledged', 'Finalised'];
     const fmap = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
     const af = st.alignFilter || 'Pending Feedback';
@@ -7205,15 +6083,8 @@ class NDCApp extends React.Component {
       onClick: () => this.setState({ alignFilter: t[0], alignPage: 0, pgRoutes: 1, alignPlanId: null, alignDetailOpen: false }) }));
     if (plan) {
       const locked = ps === 'Acknowledged' || ps === 'Finalised';
-      const FIELD = { vehicleType: 'Vehicle Type' }; // route-level cells only ever carry vehicleType now (2026-07-09) — routeCode/distance/touchpoint moved to dcCells
-      // 2026-07-14 — change-flag taxonomy (Vehicle Change / DC Movement / Route Order Change /
-      // Distance Change / New Route·Split), computed from the SAME raw-proposal data the amber bar
-      // already reads (submitted r.fb, unfiltered by decision — consistent with how hasChanges/
-      // mlVehChg etc. already work) so it's one source of truth, not a parallel computation.
-      const existingRouteCodes = new Set(plan.rows.map(rr2 => rr2.routeCode));
-      const submittedFbByIdx = {};
-      plan.rows.forEach((rr3, i3) => { if (ps !== 'Pushed' && rr3.fb) submittedFbByIdx[i3] = rr3.fb; });
-      const flagsHyp = this.computeHypotheticalPlan(plan, submittedFbByIdx);
+      const HWTAG_A = { 0: 'Re-optimise', 0.5: 'Balanced', 1: 'Preserve routes' };
+      const hwLabelOfA = (hw) => hw === 0 ? 'HW 0' : hw === 0.5 ? 'HW 0.5' : 'HW 1';
       // Plan Inputs (2026-07-16) — SC details + vehicles used. Vehicle mix is tallied straight off
       // plan.rows (never merged with in-progress/proposed feedback) so it shows the ORIGINAL plan pre-
       // Finalise and automatically becomes the FINAL aligned mix post-Finalise, since plan.rows only
@@ -7223,6 +6094,15 @@ class NDCApp extends React.Component {
       const inputScCoords = plan.rows[0] ? (Number(plan.rows[0].oLat).toFixed(4) + ', ' + Number(plan.rows[0].oLng).toFixed(4)) : '—';
       const inputVehMix = {}; plan.rows.forEach(r => { inputVehMix[r.veh] = (inputVehMix[r.veh] || 0) + 1; });
       const inputVehArr = Object.keys(inputVehMix).map(k => ({ veh: k, n: inputVehMix[k] }));
+      const FIELD = { vehicleType: 'Vehicle Type' }; // route-level cells only ever carry vehicleType now (2026-07-09) — routeCode/distance/touchpoint moved to dcCells
+      // 2026-07-14 — change-flag taxonomy (Vehicle Change / DC Movement / Route Order Change /
+      // Distance Change / New Route·Split), computed from the SAME raw-proposal data the amber bar
+      // already reads (submitted r.fb, unfiltered by decision — consistent with how hasChanges/
+      // mlVehChg etc. already work) so it's one source of truth, not a parallel computation.
+      const existingRouteCodes = new Set(plan.rows.map(rr2 => rr2.routeCode));
+      const submittedFbByIdx = {};
+      plan.rows.forEach((rr3, i3) => { if (ps !== 'Pushed' && rr3.fb) submittedFbByIdx[i3] = rr3.fb; });
+      const flagsHyp = this.computeHypotheticalPlan(plan, submittedFbByIdx);
       // Validation Flags (2026-07-16) — structural errors/warnings for the always-visible section.
       // Distance-variance warnings (tagged with dcCode) are excluded here since they already have
       // their own dedicated banner (aSel.hasDistanceVariance) with route-scoped decision context.
@@ -7238,7 +6118,7 @@ class NDCApp extends React.Component {
         // Planner, even if a row carries co-reviewer-visibility demo data (r.ops/r.fb seeded for the
         // Ops Lead side's "see what another reviewer already proposed" demo, see buildSeed()'s
         // demoPushed block). Feedback only becomes visible to the Planner once it's actually "in."
-        const needsAttn = ps !== 'Pushed' && r.ops === 'Needs Change';
+        const needsAttn = ps !== 'Pushed' && ps !== 'Finalised' && r.ops === 'Needs Change';
         const manualDec = (st.alignDecisions[plan.id] && st.alignDecisions[plan.id][idx]) || null;
         // A6 — deterministic per-row CPS delta of the proposed change; |Δ| <= 0.5% auto-approves (planner can still override by rejecting).
         const cpsDeltaPct = needsAttn ? ((((idx * 37 + Math.round(r.rtDist)) % 21) - 10) / 10) : 0;
@@ -7291,8 +6171,10 @@ class NDCApp extends React.Component {
           });
           const fRouteCode = mkField('routeCode', routeChg), fTp = mkField('tp', tpChg), fLatLng = mkField('latLng', latLngChg), fDistance = mkField('distance', distChg);
           const allFields = [fRouteCode, fTp, fLatLng, fDistance].filter(f => f.has);
-          // ripple only applies to a DC that's staying put (no explicit route/tp override of its own) —
-          // an explicit hasTpChange/hasRouteCodeChange already shows its own diff, no need to double up.
+          // 2026-07-15 — >25% entered-vs-calculated distance variance now surfaces INLINE on this same
+          // Distance field entry (not a separate plan-wide decision) — accepting/rejecting the normal
+          // Distance change IS accepting-with-warning / reverting-to-calculated; see changeList below.
+          const distVariance = distChg && flagsHyp.warnings.some(w => w.dcCode === dc.code && w.unresolved);
           const rippleTp = (!tpChg && !routeChg) ? (hypTpByRoute[r.routeCode] || {})[dc.code] : null;
           const hasTpRipple = rippleTp != null && rippleTp !== dc.tpOrder;
           return Object.assign({}, dc, {
@@ -7301,7 +6183,7 @@ class NDCApp extends React.Component {
             hasTpRipple, rippleTp,
             hasLatLngChange: latLngChg, noLatLngChange: !latLngChg, proposedLatLng: pLat + ', ' + pLng, proposedLat: pLat, proposedLng: pLng,
             hasRouteCodeChange: routeChg, proposedRouteCode: routeChg ? chg.routeCode : '', isSplitProposal: routeChg && !!chg.splitVehicle,
-            hasDistChange: distChg, proposedDist: distChg ? (chg.distance + ' km') : '',
+            hasDistChange: distChg, proposedDist: distChg ? (chg.distance + ' km') : '', hasDistVariance: distVariance,
             fRouteCode, fTp, fLatLng, fDistance,
             dcCanDecide: ps === 'Acknowledged', dcDecideLocked: ps !== 'Acknowledged',
             // row-level rollups, still useful for "how many DCs still need a decision"-type counts
@@ -7335,7 +6217,7 @@ class NDCApp extends React.Component {
               const fdec = _fd[c.key] || (autoApprovable ? 'Accept' : null);
               const bucket = c.key === 'vehicleType' ? 'Vehicle Change' : 'Other';
               changeList.push({ isRoute: true, isDc: false, scopeLabel: 'This route', scopeSub: c.field,
-                changeText: c.from + ' → ' + c.to, bucket,
+                changeText: c.from + ' → ' + c.to, bucket, proposedBy: propBy,
                 whereLabel: 'Route', whereBg: '#EAEEFB', whereFg: '#2F4FC6', fieldLabel: c.field, changeVal: c.from + ' → ' + c.to,
                 rowBg: fdec === 'Accept' ? '#F5FAF6' : (fdec === 'Reject' ? '#FCF6F6' : '#FFFCF4'),
                 autoApproved: autoApprovable && !_fd[c.key],
@@ -7347,7 +6229,7 @@ class NDCApp extends React.Component {
             });
           } else {
             changeList.push({ isRoute: true, isDc: false, scopeLabel: 'This route', scopeSub: r.routeCode,
-              changeText: 'Route-level review (see remark)', bucket: 'Other',
+              changeText: 'Route-level review (see remark)', bucket: 'Other', proposedBy: propBy,
               whereLabel: 'Route', whereBg: '#EAEEFB', whereFg: '#2F4FC6', fieldLabel: 'Route-level', changeVal: 'See remark',
               rowBg: dec === 'Accept' ? '#F5FAF6' : (dec === 'Reject' ? '#FCF6F6' : '#FFFCF4'),
               autoApproved: autoApprovable,
@@ -7359,9 +6241,10 @@ class NDCApp extends React.Component {
           }
         }
         enrichedDcRows.forEach(dc => { if (!dc.hasChange) return;
-          const pushField = (f, label, valText, bucket) => {
+          const pushField = (f, label, valText, bucket, hasVariance) => {
             changeList.push({ isRoute: false, isDc: true, scopeLabel: dc.code, scopeSub: dc.name,
-              changeText: label + ': ' + valText, autoApproved: false, bucket,
+              changeText: label + ': ' + valText, autoApproved: false, bucket, proposedBy: propBy,
+              hasVariance: !!hasVariance, varianceNote: hasVariance ? 'Entered distance is >25% off the calculated leg' : '',
               whereLabel: dc.code + ' · ' + dc.name, whereBg: '#F2F5FA', whereFg: '#5A5E66', fieldLabel: label, changeVal: valText,
               rowBg: f.accepted ? '#F5FAF6' : (f.rejected ? '#FCF6F6' : '#FFFCF4'),
               accepted: f.accepted, rejected: f.rejected, undecided: f.undecided, decided: !f.undecided,
@@ -7372,7 +6255,7 @@ class NDCApp extends React.Component {
           if (dc.hasChgTp) pushField(dc.fTp, 'Touch-point order', dc.tpOrder + ' → ' + dc.chgTp, 'Route Order Change');
           if (dc.hasLatLngChange) pushField(dc.fLatLng, 'Lat/Long', '→ ' + dc.proposedLatLng, 'Other');
           if (dc.hasRouteCodeChange) pushField(dc.fRouteCode, 'Route', r.routeCode + ' → ' + dc.proposedRouteCode, existingRouteCodes.has(dc.proposedRouteCode) ? 'DC Movement' : 'New Route / Split');
-          if (dc.hasDistChange) pushField(dc.fDistance, 'Distance', dc.dist + ' → ' + dc.proposedDist, 'Distance Change');
+          if (dc.hasDistChange) pushField(dc.fDistance, 'Distance', dc.dist + ' → ' + dc.proposedDist, 'Distance Change', dc.hasDistVariance);
         });
         const changeTotal = changeList.length;
         // 2026-07-14 — route-level flag taxonomy. Each is fully independent (a route can show all 5
@@ -7392,7 +6275,7 @@ class NDCApp extends React.Component {
         return { idx, routeCode: r.routeCode, veh: r.veh, tp: r.tp, ops: (ps !== 'Pushed' ? r.ops : 'Pending'), opsChip: (ps === 'Pushed' || r.ops === 'Pending') ? '—' : r.ops, opsBg: op.bg, opsFg: op.fg, needsAttn, hasFb: !!effFb, noFb: !effFb, fbText: effFb ? effFb.remark : '', cells, dcChips, hasDcChips: dcChips.length > 0,
           proposedBy: propBy, hasProposed: !!propBy, proposedLabel: propBy ? ('Proposed by ' + propBy) : '',
           autoApproved: autoApprovable, autoApprovedLabel: 'Auto-approved · ' + (cpsDeltaPct >= 0 ? '+' : '') + cpsDeltaPct.toFixed(1) + '% CPS',
-          dcCount: r.dcs.length, rtDist: r.rtDist + ' km', cps: '₹' + Number(r.cps).toFixed(2), tat: r.breakdownTat != null ? (r.breakdownTat + 'h') : '—',
+          dcCount: r.dcs.length, rtDist: r.rtDist + ' km', cps: '₹' + Number(r.cps).toFixed(2), tat: r.breakdownTat + 'h',
           vol: aVolVal, util: aUtilVal, cap: aCapVal, routeMeta: 'Vol ' + aVolVal + ' · Util ' + aUtilVal + ' · Cap ' + aCapVal,
           mlVehTxt: r.veh, mlTpTxt: '' + r.tp, mlDcsTxt: '' + r.dcs.length, mlDistTxt: r.rtDist + ' km', mlCpsTxt: '₹' + Number(r.cps).toFixed(2), mlVolTxt: '' + aVolVal, mlUtilTxt: '' + aUtilVal,
           mlVehBg: mlVehChg ? '#FBF1DF' : 'transparent', mlVehFg: mlVehChg ? '#9A5E00' : '#5A5E66', mlVehWt: mlVehChg ? '700' : '400',
@@ -7484,6 +6367,7 @@ class NDCApp extends React.Component {
         aDcGroupHeaders.push({ routeCode: rr.routeCode, hasChanges: rr.hasChanges, remark: rr.fbText, hasRemark: !!rr.fbText, needsAttn: rr.needsAttn,
           routeFlags: rr.routeFlags, hasRouteFlags: rr.hasRouteFlags,
           routeChange, hasRouteChange: !!routeChange, vehOrig: rr.mlVehTxt,
+          proposedBy: rr.proposedBy, proposedLabel: rr.proposedLabel,
           validationErrors: routeIssues.filter(x => x.sev === 'danger').map(x => x.t),
           validationWarnings: routeIssues.filter(x => x.sev === 'warning').map(x => x.t),
           hasValidationIssues: routeIssues.length > 0,
@@ -7498,9 +6382,9 @@ class NDCApp extends React.Component {
             lat: dc.lat, lng: dc.lng, latProposed: dc.hasLatLngChange ? dc.proposedLat : '', lngProposed: dc.hasLatLngChange ? dc.proposedLng : '', hasLatLngChange: dc.hasLatLngChange, fLatLng: dc.fLatLng,
             routeCode: rr.routeCode, routeCodeProposed: dc.hasRouteCodeChange ? dc.proposedRouteCode : '', hasRouteCodeChange: dc.hasRouteCodeChange, fRouteCode: dc.fRouteCode,
             tp: dc.tpOrder, tpProposed: dc.hasChgTp ? dc.chgTp : '', hasTpChange: dc.hasChgTp, fTp: dc.fTp, hasTpRipple: dc.hasTpRipple, rippleTp: dc.rippleTp,
-            zone: plan.zone, outCutoff: plan.rows[ri].outCutoff, tat: rr.tat, inCutoff: (plan.rows[ri].outCutoff != null && plan.rows[ri].breakdownTat != null) ? addHoursA(plan.rows[ri].outCutoff, plan.rows[ri].breakdownTat) : '—',
+            zone: plan.zone, outCutoff: plan.rows[ri].outCutoff, tat: rr.tat, inCutoff: addHoursA(plan.rows[ri].outCutoff, plan.rows[ri].breakdownTat),
             vehType: rr.veh, vehTypeProposed: (routeChange && routeChange.changeVal) ? routeChange.changeVal.split(' → ')[1] : '', hasVehChange: !!routeChange,
-            rtDist: dc.dist, rtDistProposed: dc.hasDistChange ? dc.proposedDist : '', hasDistChange: dc.hasDistChange, fDistance: dc.fDistance,
+            rtDist: dc.dist, rtDistProposed: dc.hasDistChange ? dc.proposedDist : '', hasDistChange: dc.hasDistChange, fDistance: dc.fDistance, hasDistVariance: dc.hasDistVariance,
             isFirstInGroup: di === 0, isLastInGroup: di === (rr.dcRows || []).length - 1,
             hasAnyChange: dc.hasChange,
             routeIdx: ri,
@@ -7549,17 +6433,15 @@ class NDCApp extends React.Component {
         plan.rows.forEach((row, ri) => { if (idx === -1 && this.genDcRows(row).some(dc => dc.code === w.dcCode)) idx = ri; });
         const dcDec = (idx >= 0 && st.alignDcDecisions[plan.id] && st.alignDcDecisions[plan.id][idx] && st.alignDcDecisions[plan.id][idx][w.dcCode]) || {};
         const decision = dcDec.distance || null;
-        return { key: w.dcCode + '|' + w.routeCode, text: w.t, dcCode: w.dcCode, routeCode: w.routeCode, decision,
-          isAccepted: decision === 'Accept', canDecideThis: ps === 'Acknowledged',
-          onAccept: () => this.decideDcRow(plan.id, idx, w.dcCode, 'distance', 'Accept'),
-          onRevert: () => this.decideDcRow(plan.id, idx, w.dcCode, 'distance', 'Reject') };
-      }).filter(e => e.decision !== 'Reject'); // reverted -> distance now matches calculated, no longer a mismatch
-      const distanceVariancePendingCount = distanceVarianceEntries.filter(e => !e.isAccepted).length;
+        return { key: w.dcCode + '|' + w.routeCode, text: w.t, dcCode: w.dcCode, routeCode: w.routeCode, decision };
+      }).filter(e => e.decision === null); // decided ones (Accept or Reject) are resolved at route level now — banner only lists what's still outstanding
+      const distanceVariancePendingCount = distanceVarianceEntries.length;
       aSel = { exists: true, empty: false, id: plan.id, code: plan.scCode, name: plan.scName, zone: plan.zone,
         scCoords: plan.rows[0] ? (Number(plan.rows[0].oLat).toFixed(4) + ', ' + Number(plan.rows[0].oLng).toFixed(4)) : '—',
+        inputNodes: fmtInt(inputNodes), inputVolume: fmtInt(inputVolume), inputScCoords, inputVehArr, inputVehTotal: plan.rows.length,
+        hwLabel: hwLabelOfA(plan.hw), hwTag: HWTAG_A[plan.hw],
         statusLabel: STPILL[ps].l, statusBg: STPILL[ps].bg, statusFg: STPILL[ps].fg,
         hasDistanceVariance: distanceVarianceEntries.length > 0, distanceVarianceCount: distanceVariancePendingCount, distanceVarianceEntries,
-        inputNodes: fmtInt(inputNodes), inputVolume: fmtInt(inputVolume), inputScCoords, inputVehArr, inputVehTotal: plan.rows.length,
         planFlags, hasPlanFlags: planFlags.length > 0, noPlanFlags: planFlags.length === 0,
         finalWarnings: finalWarningsMsgs, finalWarningsCount: finalWarningsMsgs.length,
         hasSubmissionGap, submissionGapMsg,
@@ -7586,7 +6468,7 @@ class NDCApp extends React.Component {
           return w;
         })(),
         // Finalised-card inputs strip -- mirrors Design Review's INPUTS row (nodes / volume / HW / vehicle mix).
-        cardHwLabel: plan.hw === 0 ? 'HW 0 \u00b7 Re-optimise' : plan.hw === 0.5 ? 'HW 0.5 \u00b7 Balanced' : plan.hw === 1 ? 'HW 1 \u00b7 Preserve routes' : 'Ingested plan',
+        cardHwLabel: plan.hw === 0 ? 'HW 0 \u00b7 Re-optimise' : plan.hw === 0.5 ? 'HW 0.5 \u00b7 Balanced' : 'HW 1 \u00b7 Preserve routes',
         cardNodes: fmtInt(plan.rows.reduce((a, r) => a + r.tp, 0)), cardVolume: fmtInt(plan.rows.reduce((a, r) => a + r.volume, 0)),
         cardVehSummary: Object.entries(plan.rows.reduce((m, r) => { m[r.veh] = (m[r.veh] || 0) + 1; return m; }, {})).map(([k, v]) => k + ' \u00d7' + v).join(' \u00b7 '),
         sections: [['details', 'Plan Details'], ['route', 'Route View']].map(sx => ({ label: sx[1], active: (st.alignSection || 'details') === sx[0], color: (st.alignSection || 'details') === sx[0] ? '#003F98' : '#5A5E66', weight: (st.alignSection || 'details') === sx[0] ? '700' : '600', onClick: () => this.setState({ alignSection: sx[0] }) })),
@@ -7597,7 +6479,7 @@ class NDCApp extends React.Component {
         // deciding then happens in the (now-frozen) Acknowledged state, same as before Finalise.
         canDecide: ps === 'Acknowledged', decideLocked: ps !== 'Acknowledged', needsAckToDecide: ps === 'In Alignment',
         showActionBar: ps === 'In Alignment' || ps === 'Acknowledged',
-        metrics: [{ label: 'Routes', value: plan.metrics.routes }, { label: 'Vehicles', value: plan.metrics.vehicles }, { label: 'CPS', value: '\u20b9' + plan.metrics.cps.toFixed(2) }, { label: 'Coverage', value: pct(plan.metrics.coverage) }, { label: 'Distance', value: plan.metrics.distance.toLocaleString('en-IN') + ' km' }, { label: 'Avg TAT', value: plan.metrics.avgTat != null ? (plan.metrics.avgTat + 'h') : '—' }],
+        metrics: [{ label: 'Routes', value: plan.metrics.routes }, { label: 'Vehicles', value: plan.metrics.vehicles }, { label: 'CPS', value: '\u20b9' + plan.metrics.cps.toFixed(2) }, { label: 'Coverage', value: pct(plan.metrics.coverage) }, { label: 'Distance', value: plan.metrics.distance.toLocaleString('en-IN') + ' km' }, { label: 'Avg TAT', value: plan.metrics.avgTat + 'h' }],
         rows: rows, rowCount: rows.length, flaggedCount: flaggedRows.length, alignedCount: autoAligned, hasFlagged: flaggedRows.length > 0, noFlagged: flaggedRows.length === 0, hasAligned: autoAligned > 0, routeList: routeList, selRoute: selRoute, hasSelRoute: !!selRoute, routeCards: flaggedRows, reviewHeadline: flaggedRows.length + ' route' + (flaggedRows.length === 1 ? '' : 's') + ' need a decision', alignedNote: autoAligned + ' of ' + rows.length + ' routes already aligned — no action needed', decidedCount, acceptedCount: rows.filter(r => r.decision === 'Accept').length, rejectedCount: rows.filter(r => r.decision === 'Reject').length, allDecided,
         routeViewRows: aRouteViewRows, dcViewRows: aDcViewRows, dcGroupHeaders: aDcGroupHeaders,
         // 2026-07-10 — detailed per-field review popup, opened by clicking a route with changes.
@@ -7619,7 +6501,7 @@ class NDCApp extends React.Component {
         finBtnBg: (ps === 'Acknowledged' && allDecided && validatedClean) ? '#128A3E' : '#E6EBF2', finBtnFg: (ps === 'Acknowledged' && allDecided && validatedClean) ? '#fff' : '#5A5E66', finCursor: (ps === 'Acknowledged' && allDecided && validatedClean) ? 'pointer' : 'not-allowed',
         onAck: () => { if (!st.opsSubmitted[plan.id] && !plan.feedbackReceived) { this.showToast('At least one reviewer must submit feedback before you can acknowledge', '#C77B00'); return; } this.setState({ ackOpen: true, ackPlanId: plan.id }); }, onFin: () => { if (ps === 'Acknowledged' && allDecided) this.setState({ finOpen: true, finPlanId: plan.id, finPreviewSection: 'details' }); },
         onUnfreeze: () => { if (ps === 'Acknowledged') this.setState({ unfreezeOpen: true, unfreezePlanId: plan.id }); },
-        progressLabel: decidedCount + ' of ' + flaggedRows.length + ' flagged rows decided · ' + autoAligned + ' auto-aligned',
+        progressLabel: decidedCount + ' of ' + flaggedRows.length + ' flagged rows decided \u00b7 ' + autoAligned + ' auto-aligned',
         onAcceptAllFlagged: () => { const undecN = flaggedRows.filter(r => !r.rowFullyDecided).length; if (undecN === 0) { this.showToast('No undecided flagged changes remaining', '#5A5E66'); return; } this.setState({ acceptAllPlanOpen: true, acceptAllPlanId: plan.id }); },
         acceptAllBg: flaggedRows.some(r => !r.rowFullyDecided) ? '#fff' : '#E6EBF2', acceptAllFg: flaggedRows.some(r => !r.rowFullyDecided) ? '#128A3E' : '#8E96A3', acceptAllBd: flaggedRows.some(r => !r.rowFullyDecided) ? '#128A3E' : '#E6EBF2', acceptAllCursor: flaggedRows.some(r => !r.rowFullyDecided) ? 'pointer' : 'not-allowed', acceptAllTitle: flaggedRows.some(r => !r.rowFullyDecided) ? ('Accept all ' + flaggedRows.filter(r => !r.rowFullyDecided).length + ' undecided changes') : 'All changes decided',
         onPlanValidate: () => {
@@ -7850,20 +6732,30 @@ class NDCApp extends React.Component {
       return { routeCode: rt.routeCode, veh: rt.vehName, tpN: rt.dcCodes.length, dist: fmtInt(Math.round(rt.distance)), vol: fmtInt(rt.volume), cps: '₹' + rt.cps.toFixed(2), cap: vehRecord.cap ? fmtInt(vehRecord.cap) : '—', isNew: rt.isNewRoute,
         dcOrder, hasReorder: dcOrder.some(x => x.moved) };
     }) : [];
-    // 2026-07-15 (ported) — full-screen Finalise preview (replaces the old modal): Plan Details here
-    // is built straight from dcRecords (the SAME real per-DC records computeHypotheticalPlan already
-    // resolved -- real lat/lng/volume/distance for an ingested plan, not a re-synthesised approximation),
-    // so this table renders byte-for-byte what the real Finalised view will show afterward.
-    const finPreviewDcViewRows = [];
-    if (finPreviewHyp && finPlan) {
-      finPreviewHyp.routes.forEach((rt) => {
-        rt.dcRecords.forEach((dc, di) => {
-          finPreviewDcViewRows.push({ lmdc: dc.code, designVol: fmtInt(dc.vol), lat: dc.lat, lng: dc.lng,
-            routeCode: rt.routeCode, tp: dc.tp, zone: finPlan.zone, vehType: rt.vehName, rtDist: dc.resolvedLeg,
-            isFirstInGroup: di === 0, isLastInGroup: di === rt.dcRecords.length - 1 });
-        });
+    // 2026-07-15 — full-screen Finalise preview (replaces the old modal): build the SAME pseudo-row
+    // structure confirmFin() itself commits into plan.rows (not a separate approximation), so Details
+    // and Route View here render byte-for-byte what the real Finalised view will show afterward.
+    const finPreviewPlanRows = (finPlan && finPreviewHyp) ? (() => {
+      const priorByCode = {}; finPlan.rows.forEach(r => { priorByCode[r.routeCode] = r; });
+      const scLat = finPlan.rows[0] ? finPlan.rows[0].oLat : 0, scLng = finPlan.rows[0] ? finPlan.rows[0].oLng : 0;
+      return finPreviewHyp.routes.map((rt) => {
+        const prior = priorByCode[rt.routeCode];
+        const vehRecord = (d.VEH || []).find(v => v.name === rt.vehName) || {};
+        const util = vehRecord.cap ? Math.min(0.98, +(rt.volume / vehRecord.cap).toFixed(2)) : (prior ? prior.util : 0.7);
+        return { routeCode: rt.routeCode, veh: rt.vehName, vehTp: vehRecord.tp || (prior ? prior.vehTp : 7),
+          tp: rt.dcCodes.length, dcs: rt.dcCodes, rtDist: Math.round(rt.distance),
+          breakdownTat: prior ? prior.breakdownTat : +(rt.distance / 42).toFixed(1),
+          outCutoff: prior ? prior.outCutoff : '23:00', oLat: scLat, oLng: scLng, volume: rt.volume, util, cps: rt.cps };
       });
-    }
+    })() : [];
+    const finPreviewDcViewRows = [];
+    finPreviewPlanRows.forEach((row, ri) => {
+      this.genDcRows(row).forEach((dc, di) => {
+        finPreviewDcViewRows.push({ lmdc: dc.code, designVol: fmtInt(dc.vol), lat: dc.lat, lng: dc.lng,
+          routeCode: row.routeCode, tp: dc.tpOrder, zone: finPlan.zone, vehType: row.veh, rtDist: dc.dist,
+          isFirstInGroup: di === 0, isLastInGroup: di === this.genDcRows(row).length - 1, routeIdx: ri });
+      });
+    });
     const finPreviewSection = (st.finPreviewSection || 'details');
     const finOrigDistance = finPlan ? finPlan.metrics.distance : 0;
     const finNewDistance = finPreviewHyp ? Math.round(finPreviewHyp.routes.reduce((a, r) => a + r.distance, 0)) : 0;
@@ -8045,7 +6937,7 @@ class NDCApp extends React.Component {
     // §10 O2 — attribute this proposed change to the current reviewer so co-reviewers + the planner
     // see "Change proposed by <name>". Ops Lead persona is now switchable (opsPersonaName()), not
     // hardcoded, so more-than-one-reviewer scenarios can be simulated on the same plan.
-    const reviewerName = st.persona === 'planner' ? this.plannerPersonaName() : this.opsPersonaName();
+    const reviewerName = st.persona === 'planner' ? 'Pranita Sapkal' : this.opsPersonaName();
     const fb = { cells, dcCells, dcCount, remark: (st.ncRemark || '').trim() || 'Needs change', by: reviewerName };
     const a = Object.assign({}, st.opsRowFb); a[r.planId] = Object.assign({}, a[r.planId]); a[r.planId][r.idx] = fb;
     // mirror the attribution onto the live row so the Ops-Lead row indicator updates immediately
@@ -8079,15 +6971,6 @@ class NDCApp extends React.Component {
     const at = String(now.getDate()).padStart(2, '0') + ' ' + MON[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     const s = Object.assign({}, st.opsSubmitted); s[planId] = { by: this.opsPersonaName(), at: at };
     this.setState({ data: Object.assign({}, d, { plans }), alignStatus, opsSubmitted: s });
-    // Persist to Supabase for a real (Supabase-backed) plan — writes each Needs-Change row's latest
-    // feedback (row_id = routeCode) and flips this reviewer's plan_reviewer_status.submitted.
-    const updatedPlan = plans.find(p => p.id === planId);
-    if (updatedPlan && updatedPlan.remote) {
-      const feedbackByRoute = {};
-      updatedPlan.rows.forEach(r => { if (r.ops === 'Needs Change' && r.fb) feedbackByRoute[r.routeCode] = r.fb; });
-      this.submitFeedbackToSupabase(updatedPlan, feedbackByRoute);
-      if (updatedPlan.fileBaseName) this.saveSnapshot(planId, 'feedback', updatedPlan.fileBaseName + '_FEEDBACK', updatedPlan);
-    }
     this.showToast('Feedback submitted to planner · recorded ' + at, '#128A3E');
   }
 
@@ -8098,13 +6981,13 @@ class NDCApp extends React.Component {
     // Keep a plan visible after the Ops Lead submits (it flips Pushed → In Alignment) so the panel retains a
     // record — who submitted, when. D4 — also keep it after the planner acknowledges/finalises: instead of
     // vanishing, a frozen plan stays as a read-only "Locked" record so the POC sees which plans are closed.
-    const assigned = d.plans.filter(p => { const s = st.alignStatus[p.id] || p.status; return s === 'Pushed' || !!st.opsSubmitted[p.id] || s === 'Acknowledged' || s === 'Finalised'; });
+    const assigned = d.plans.filter(p => { const s = st.alignStatus[p.id] || p.status; return s === 'Pushed' || (p.submittedReviewers || []).length > 0 || s === 'Acknowledged' || s === 'Finalised'; });
     const selfName = this.opsPersonaName(); // current acting Ops-Lead persona; co-reviewers = everyone else on the plan
     // Ops-Lead status of a plan (drives the rail filter segment + the card pill).
     // Four states tied directly to plan lifecycle + this reviewer's own submission --
     // replaces the old row-progress-based "In progress" bucket for a cleaner mental model.
     const opsStatusOf = (p) => {
-      const subInfo = st.opsSubmitted[p.id]; const sub = !!subInfo;
+      const sub = (p.submittedReviewers || []).indexOf(selfName) >= 0;
       const eS = (st.alignStatus && st.alignStatus[p.id]) || p.status;
       if (eS === 'Finalised') return 'Finalised';
       if (eS === 'Acknowledged') return 'Acknowledged';
@@ -8123,8 +7006,9 @@ class NDCApp extends React.Component {
     const latestOpsId = assigned.length > 0 ? assigned[0].id : null;
     const SP = { 'Finalised': { bg: '#E7F4EC', fg: '#128A3E' }, 'Acknowledged': { bg: '#E7F0F8', fg: '#1E6FB8' }, 'Submitted': { bg: '#E7F4EC', fg: '#128A3E' }, 'To Review': { bg: '#F2F5FA', fg: '#5A5E66' } };
     const allOpsPlans = assigned.map(p => {
-      const subInfo = st.opsSubmitted[p.id]; const sub = !!subInfo;
-      const subBy = (subInfo && subInfo.by) || selfName; const subAt = (subInfo && subInfo.at) || '';
+      const sub = (p.submittedReviewers || []).indexOf(selfName) >= 0;
+      const subInfo = st.opsSubmitted[p.id];
+      const subBy = selfName; const subAt = (subInfo && subInfo.by === selfName && subInfo.at) || '';
       const dec = st.opsRowDec[p.id] || {};
       const done = p.rows.filter((r, i) => dec[i] && dec[i] !== 'Pending').length;
       // §10 O2 — co-reviewer awareness: count rows already carrying a change proposed by SOMEONE ELSE, so the
@@ -8154,8 +7038,9 @@ class NDCApp extends React.Component {
     if (plan) {
       const dec = st.opsRowDec[plan.id] || {};
       const OP = { 'Aligned': { bg: '#E7F4EC', fg: '#128A3E' }, 'Needs Change': { bg: '#FBF1DF', fg: '#C77B00' } };
-      const subInfoSel = st.opsSubmitted[plan.id]; const submitted = !!subInfoSel;
-      const subBySel = (subInfoSel && subInfoSel.by) || this.opsPersonaName(); const subAtSel = (subInfoSel && subInfoSel.at) || '';
+      const submitted = (plan.submittedReviewers || []).indexOf(this.opsPersonaName()) >= 0;
+      const subInfoSel = st.opsSubmitted[plan.id];
+      const subBySel = this.opsPersonaName(); const subAtSel = (subInfoSel && subInfoSel.by === this.opsPersonaName() && subInfoSel.at) || '';
       // KRD §11 — editing locks only when the planner acknowledges; submitted-but-not-acknowledged rows stay editable.
       const planStatus = st.alignStatus[plan.id] || plan.status;
       const planLocked = planStatus === 'Acknowledged' || planStatus === 'Finalised';
@@ -8165,27 +7050,6 @@ class NDCApp extends React.Component {
       const opsMergedFbTop = this.effectiveFbFor(plan);
       const opsHypTop = this.computeHypotheticalPlan(plan, opsMergedFbTop);
       const opsNcRowsTop = plan.rows.filter((r, i) => dec[i] === 'Needs Change' || r.ops === 'Needs Change');
-      // Plan Inputs (2026-07-16) — same basis as the Planner side: vehicle mix is tallied off
-      // plan.rows directly, never merged with in-progress feedback, so it's the original plan
-      // pre-Finalise and the final aligned mix post-Finalise automatically.
-      const inputNodesO = plan.rows.reduce((a, r2) => a + (r2.dcs ? r2.dcs.length : 0), 0);
-      const inputVolumeO = plan.rows.reduce((a, r2) => a + (r2.volume || 0), 0);
-      const inputScCoordsO = plan.rows[0] ? (Number(plan.rows[0].oLat).toFixed(4) + ', ' + Number(plan.rows[0].oLng).toFixed(4)) : '—';
-      const inputVehMixO = {}; plan.rows.forEach(r2 => { inputVehMixO[r2.veh] = (inputVehMixO[r2.veh] || 0) + 1; });
-      const inputVehArrO = Object.keys(inputVehMixO).map(k => ({ veh: k, n: inputVehMixO[k] }));
-      // Validation Flags (2026-07-16) — structural errors/warnings off the same opsHypTop everything
-      // else in this view already reads (submitted + in-progress feedback).
-      const opsPlanFlags = []
-        .concat(opsHypTop.errors.map(e => ({ sevLabel: 'Error', sevBg: '#D14B4B', sevFg: '#fff', t: e.t })))
-        .concat(opsHypTop.warnings.map(w => ({ sevLabel: 'Warning', sevBg: '#FBF1DF', sevFg: '#C77B00', t: w.t })));
-      // 2026-07-15 — scoped exception to "no live reordering during review": when a DC leaves/joins a
-      // route, the OTHER DCs left behind get silently renumbered by the recompute engine, but that
-      // ripple was never shown until Finalise. This builds a routeCode -> {dcCode: newTp} lookup from
-      // the same opsHypTop the rest of this view already reads, purely to DISPLAY the ripple inline
-      // (strikethrough old TP -> new TP) — it does not reorder rows or touch distances early; Finalise
-      // is still the only place the reorder actually commits.
-      const hypTpByRoute = {};
-      (opsHypTop.routes || []).forEach(rt => { const m = {}; rt.dcCodes.forEach((code, i) => { m[code] = rt.tpOrder[i]; }); hypTpByRoute[rt.routeCode] = m; });
       const rows = plan.rows.map((r, idx) => { const dv = dec[idx] || 'Pending'; const op = OP[dv];
         // §10 O2 — show a co-reviewer's already-proposed change to THIS (second) reviewer, so opening
         // the plan never shows a blank slate. Prefer live submitted feedback, else the seeded row.
@@ -8220,6 +7084,19 @@ class NDCApp extends React.Component {
           dcRows: _dcRows, notEditable: planLocked, tpReorderTouched: _tpTouched, tpReorderValid: _tpValid, tpReorderMsg: _tpMsg }; });
       const alignedN = rows.filter(r => r.decision === 'Aligned').length, ncN = rows.filter(r => r.decision === 'Needs Change').length, pendN = rows.filter(r => r.decision === 'Pending').length;
       const mix = {}; plan.rows.forEach(r => { mix[r.veh] = (mix[r.veh] || 0) + 1; }); const mixArr = Object.keys(mix).map(k => ({ veh: k, n: mix[k], pctW: Math.round(mix[k] / plan.rows.length * 100) + '%' }));
+      // Plan Inputs (2026-07-16) — SC details + vehicles used, same basis as the Planner side: vehicle
+      // mix (mixArr above) is tallied off plan.rows directly, never merged with in-progress feedback,
+      // so it's the original plan pre-Finalise and the final aligned mix post-Finalise automatically.
+      const HWTAG_O = { 0: 'Re-optimise', 0.5: 'Balanced', 1: 'Preserve routes' };
+      const hwLabelOfO = (hw) => hw === 0 ? 'HW 0' : hw === 0.5 ? 'HW 0.5' : 'HW 1';
+      const inputNodesO = plan.rows.reduce((a, r2) => a + (r2.dcs ? r2.dcs.length : 0), 0);
+      const inputVolumeO = plan.rows.reduce((a, r2) => a + (r2.volume || 0), 0);
+      const inputScCoordsO = plan.rows[0] ? (Number(plan.rows[0].oLat).toFixed(4) + ', ' + Number(plan.rows[0].oLng).toFixed(4)) : '—';
+      // Validation Flags (2026-07-16) — structural errors/warnings off the same opsHypTop everything
+      // else in this view already reads (submitted + in-progress feedback).
+      const opsPlanFlags = []
+        .concat(opsHypTop.errors.map(e => ({ sevLabel: 'Error', sevBg: '#D14B4B', sevFg: '#fff', t: e.t })))
+        .concat(opsHypTop.warnings.map(w => ({ sevLabel: 'Warning', sevBg: '#FBF1DF', sevFg: '#C77B00', t: w.t })));
       // 2026-07-10 — Route View pivot (one row per route) and Details (flat DC × Route) tables,
       // matching Design Review's exact column layout, but built from this plan's REAL rows/DCs
       // rather than Design Review's synthetic RNG fill (there's no live plan data to synthesize —
@@ -8229,10 +7106,18 @@ class NDCApp extends React.Component {
       // merged submitted + in-progress feedback, already computed above) instead of only the
       // committed plan.rows, so a proposed new/split route shows up here too, not just in Details.
       const oRouteViewRows = this.buildRouteViewRows(plan, opsHypTop);
+      // 2026-07-15 — scoped exception to "no live reordering during review": when a DC leaves/joins a
+      // route, the OTHER DCs left behind get silently renumbered by the recompute engine, but that
+      // ripple was never shown until Finalise. This builds a routeCode -> {dcCode: newTp} lookup from
+      // the same opsHypTop the rest of this view already reads, purely to DISPLAY the ripple inline
+      // (strikethrough old TP -> new TP) — it does not reorder rows or touch distances early; Finalise
+      // is still the only place the reorder actually commits.
+      const hypTpByRoute = {};
+      (opsHypTop.routes || []).forEach(rt => { const m = {}; rt.dcCodes.forEach((code, i) => { m[code] = rt.tpOrder[i]; }); hypTpByRoute[rt.routeCode] = m; });
       const oDcViewRows = [];
       plan.rows.forEach((r, ri) => {
         const baseDcs = this.genDcRows(r);
-        const liveFbR = (st.opsRowFb[plan.id] || {})[ri] || r.fb;
+        const liveFbR = (planStatus === 'Finalised') ? null : ((st.opsRowFb[plan.id] || {})[ri] || r.fb);
         const dcCellsR = (liveFbR && liveFbR.dcCells) || {};
         const routeVehChanged = !!(liveFbR && liveFbR.cells && liveFbR.cells.vehicleType);
         const routeVehProposed = routeVehChanged ? liveFbR.cells.vehicleType.to : '';
@@ -8245,17 +7130,19 @@ class NDCApp extends React.Component {
           // an explicit hasTpChange/hasRouteCodeChange already shows its own diff, no need to double up.
           const rippleTp = (!hasTpChange && !hasRouteCodeChange) ? (hypTpByRoute[r.routeCode] || {})[dc.code] : null;
           const hasTpRipple = rippleTp != null && rippleTp !== dc.tpOrder;
+          const hasChangeRow = hasRouteCodeChange || hasTpChange || hasDistChange || hasLatLngChange;
+          const proposedByRow = hasChangeRow ? ((liveFbR && liveFbR.by) || r.proposedBy || this.opsPersonaName()) : '';
           oDcViewRows.push({
             hasTpRipple, rippleTp,
             lmdc: dc.code, designVol: fmtInt(dc.vol),
             lat: dc.lat, lng: dc.lng, latProposed: hasLatLngChange && ov.lat != null && ov.lat !== '' ? ov.lat : '', lngProposed: hasLatLngChange && ov.lng != null && ov.lng !== '' ? ov.lng : '', hasLatLngChange,
             routeCode: r.routeCode, routeCodeProposed: hasRouteCodeChange ? ov.routeCode : '', hasRouteCodeChange,
             tp: dc.tpOrder, tpProposed: hasTpChange ? ov.tp : '', hasTpChange,
-            zone: plan.zone, outCutoff: r.outCutoff, tat: r.breakdownTat != null ? (r.breakdownTat + 'h') : '—', inCutoff: (r.outCutoff != null && r.breakdownTat != null) ? addHours(r.outCutoff, r.breakdownTat) : '—',
+            zone: plan.zone, outCutoff: r.outCutoff, tat: r.breakdownTat + 'h', inCutoff: addHours(r.outCutoff, r.breakdownTat),
             vehType: r.veh, vehTypeProposed: routeVehProposed, hasVehChange: routeVehChanged,
             rtDist: dc.dist, rtDistProposed: hasDistChange ? (ov.distance + ' km') : '', hasDistChange,
             isFirstInGroup: di === 0, isLastInGroup: di === baseDcs.length - 1,
-            editable, hasChange: hasRouteCodeChange || hasTpChange || hasDistChange || hasLatLngChange,
+            editable, hasChange: hasChangeRow, proposedBy: proposedByRow,
             routeIdx: ri, dcCode: dc.code,
             // per-field revert — removes just this one proposed DC-level change, available while editable
             onRevertField: (field) => {
@@ -8295,7 +7182,7 @@ class NDCApp extends React.Component {
         planLocked, opsAck: planStatus === 'Acknowledged', opsFinal: planStatus === 'Finalised',
         hasSubmissionGap: (planStatus === 'Acknowledged' || planStatus === 'Finalised') && (plan.submittedReviewers || []).length < (plan.reviewerNames || []).length,
         submissionGapMsg: 'Frozen with ' + ((plan.reviewerNames || []).length - (plan.submittedReviewers || []).length) + ' of ' + (plan.reviewerNames || []).length + ' reviewers not having submitted feedback.',
-        inputNodes: fmtInt(inputNodesO), inputVolume: fmtInt(inputVolumeO), inputScCoords: inputScCoordsO, inputVehArr: inputVehArrO, inputVehTotal: plan.rows.length,
+        inputNodes: fmtInt(inputNodesO), inputVolume: fmtInt(inputVolumeO), inputScCoords: inputScCoordsO, hwLabel: hwLabelOfO(plan.hw), hwTag: HWTAG_O[plan.hw],
         planFlags: opsPlanFlags, hasPlanFlags: opsPlanFlags.length > 0, noPlanFlags: opsPlanFlags.length === 0,
         detailOpen: !!st.opsDetailOpen, showCard: !st.opsDetailOpen,
         openDetail: () => this.setState({ opsDetailOpen: true }), backToCards: () => this.setState({ opsDetailOpen: false }),
@@ -8304,7 +7191,7 @@ class NDCApp extends React.Component {
         rows, alignedN, ncN, pendN, rowCount: rows.length, allReviewed: pendN === 0, reviewLabel: (rows.length - pendN) + ' / ' + rows.length + ' reviewed',
         hasProp: oProp > 0 && !submitted, propN: oProp, propSummary: (propByNames.join(' & ') || 'A co-reviewer') + ' proposed ' + oProp + ' change' + (oProp === 1 ? '' : 's') + ' on this plan', coReviewerLabel, hasCoReviewers: coReviewerLabel.length > 0,
         submittedRecord: submitted ? ('Submitted by ' + subBySel + (subAtSel ? ' · ' + subAtSel : '')) : '',
-        metrics: [{ label: 'Routes', value: plan.metrics.routes }, { label: 'Vehicles', value: plan.metrics.vehicles }, { label: 'CPS', value: '\u20b9' + plan.metrics.cps.toFixed(2) }, { label: 'Coverage', value: pct(plan.metrics.coverage) }, { label: 'Distance', value: plan.metrics.distance.toLocaleString('en-IN') + ' km' }, { label: 'Avg TAT', value: plan.metrics.avgTat != null ? (plan.metrics.avgTat + 'h') : '—' }],
+        metrics: [{ label: 'Routes', value: plan.metrics.routes }, { label: 'Vehicles', value: plan.metrics.vehicles }, { label: 'CPS', value: '\u20b9' + plan.metrics.cps.toFixed(2) }, { label: 'Coverage', value: pct(plan.metrics.coverage) }, { label: 'Distance', value: plan.metrics.distance.toLocaleString('en-IN') + ' km' }, { label: 'Avg TAT', value: plan.metrics.avgTat + 'h' }],
         mixArr, routeViewRows: oRouteViewRows, dcViewRows: oDcViewRows, dcGroupHeaders: oDcGroupHeaders, secDetails: sec === 'details', secRoute: sec === 'route',
         sections: SECS.map(s => ({ label: s[1], active: sec === s[0], color: sec === s[0] ? '#003F98' : '#5A5E66', weight: sec === s[0] ? '700' : '600', onClick: () => this.setState({ opsSection: s[0] }) })),
         onAcceptAll: () => { if (pendN > 0) this.setState({ alignAllOpen: true, alignAllPlanId: plan.id }); }, acceptAllDisabled: pendN === 0, onReset: () => this.resetOps(plan.id), onMapView: () => this.openStandaloneMap(plan.scCode, 'Ops Alignment · Ops Lead'),
@@ -8353,10 +7240,11 @@ class NDCApp extends React.Component {
     // until Finalise, so it wouldn't show up here for a DIFFERENT DC without this: scan every route's
     // current effective feedback (submitted + in-progress, same merge Validate/Simulate read) for any
     // routeCode that isn't an existing plan.rows code, and offer those as regular options too.
+    const ncKnownCodes = (ncPlan) ? (() => { const k = {}; ncPlan.rows.forEach(r => { k[r.routeCode] = true; }); return k; })() : {};
     const ncOtherCodes = (() => {
       if (!ncPlan || !st.ncRow) return [];
       const existing = ncPlan.rows.filter((r, i) => i !== st.ncRow.idx).map(r => r.routeCode);
-      const known = {}; ncPlan.rows.forEach(r => { known[r.routeCode] = true; });
+      const known = ncKnownCodes;
       const virtual = {};
       const mergedFb = this.effectiveFbFor(ncPlan);
       Object.keys(mergedFb).forEach((idx) => {
@@ -8372,11 +7260,19 @@ class NDCApp extends React.Component {
     const ncRouteCodeOptions = [{ value: '', label: 'Keep on this route' }]
       .concat(ncOtherCodes.map(code => ({ value: code, label: 'Move to ' + code })))
       .concat([{ value: '__SPLIT__', label: 'Split this route \u2192 new route' }]);
-    const ncDcList = ncRowObj ? this.genDcRows(ncRowObj).map(dc => { const on = !!ncDcMap[dc.code]; const v = ncDcMap[dc.code] || {}; const isSplitTarget = !!v.routeCode && v.routeCode === st.ncSplitCode; return {
+    const ncDcList = ncRowObj ? this.genDcRows(ncRowObj).map(dc => { const on = !!ncDcMap[dc.code]; const v = ncDcMap[dc.code] || {}; const isSplitTarget = !!v.routeCode && v.routeCode === st.ncSplitCode;
+      // 2026-07-15 — any move into a route that isn't yet a committed plan.rows entry has no
+      // established DC order to fall back on (a fresh split, or a second/third DC joining a split
+      // that's still only pending from an earlier proposal — see the RT-02_A example this was scoped
+      // from). TP must not silently carry over the DC's OLD position in that case, and must be entered.
+      const isPendingRoute = !!v.routeCode && !ncKnownCodes[v.routeCode];
+      const tpRequired = isPendingRoute && !(v.tp && String(v.tp).trim() !== '');
+      return {
       code: dc.code, name: dc.name, curLat: (dc.lat != null ? String(dc.lat) : '—'), curLng: (dc.lng != null ? String(dc.lng) : '—'), curTp: String(dc.tpOrder != null ? dc.tpOrder : ''), curDist: String(dc.dist || '—').replace(' km', ''),
       flagged: on, notFlagged: !on,
       latVal: v.lat || '', lngVal: v.lng || '', tpVal: v.tp || '', distVal: v.distance || '', routeCodeVal: v.routeCode || '',
       isSplitTarget, splitVehicleVal: st.ncSplitVehicle || '', splitVehicleOptions: vehPool,
+      isPendingRoute, tpRequired, tpPlaceholder: isPendingRoute ? 'Required \u2014 new route' : dc.tpOrder,
       routeCodeOptions: ncRouteCodeOptions.map(o => ({ value: o.value, label: o.label, selected: o.value === (v.routeCode === st.ncSplitCode ? '__SPLIT__' : (v.routeCode || '')) })),
       toggleBg: on ? '#C77B00' : '#fff', toggleFg: on ? '#fff' : '#5A5E66', toggleBd: on ? '#C77B00' : '#E6EBF2', toggleLabel: on ? 'Flagged' : 'Flag DC',
       onToggle: () => this.toggleNcDc(dc.code, {}), // start empty — current values shown as placeholders; only edited fields become changes
@@ -8403,6 +7299,8 @@ class NDCApp extends React.Component {
       hyp.errors.filter(e => relevantCode(e.t)).forEach(e => ncWarn.push({ lead: 'Error', text: e.t, fail: true, bg: '#FAFBFD', accentBd: '3px solid #D14B4B', fg: '#D14B4B', textFg: '#5A5E66' }));
       hyp.warnings.filter(w => relevantCode(w.t)).forEach(w => ncWarn.push({ lead: 'Warning', text: w.t, fail: false, bg: '#FBF1DF', accentBd: '0', fg: '#C77B00', textFg: '#C77B00' }));
       if (!ncSplitVehiclePicked) ncWarn.push({ lead: 'Error', text: 'Pick a vehicle type for the new split route before submitting.', fail: true, bg: '#FAFBFD', accentBd: '3px solid #D14B4B', fg: '#D14B4B', textFg: '#5A5E66' });
+      const ncDcsMissingTp = ncDcList.filter(dc => dc.flagged && dc.tpRequired);
+      if (ncDcsMissingTp.length) ncWarn.push({ lead: 'Error', text: ncDcsMissingTp.map(dc => dc.code).join(', ') + ' — touch-point # required before submitting (no established order in the new route yet).', fail: true, bg: '#FAFBFD', accentBd: '3px solid #D14B4B', fg: '#D14B4B', textFg: '#5A5E66' });
     }
     const ncHasFail = ncWarn.some(w => w.fail);
     const ncRemarkFilled = !!(st.ncRemark || '').trim();  // §4 — remark is mandatory before an Ops-Lead can flag a change
@@ -8486,7 +7384,7 @@ class NDCApp extends React.Component {
     const opsIsL1 = !noneAssigned;
     const opsIsL2 = !!curId;
     const opsFilterSeg = OPSFILTERS.map(f => ({ label: f, count: allOpsPlans.filter(p => p.status === f).length, active: opsFilter === f,
-      bg: opsFilter === f ? '#003F98' : '#F2F5FA', fg: opsFilter === f ? '#fff' : '#5A5E66', weight: opsFilter === f ? '700' : '600',
+      bg: opsFilter === f ? '#003F98' : 'transparent', fg: opsFilter === f ? '#fff' : '#5A5E66', weight: opsFilter === f ? '700' : '600',
       onClick: () => this.setState({ opsFilter: f, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
     // Pagination for L1 ops plan list (~12 per page).
     const OPS_PER_PAGE = 12;
@@ -8548,6 +7446,7 @@ class NDCApp extends React.Component {
           return { veh, orig, sugg, changed, suggFg: changed ? '#C77B00' : '#5A5E66', cardBd: changed ? '2px solid #C77B00' : '1px solid #E6EBF2' };
         });
       })();
+      // Section 2: per-route reference — kept as the ORIGINAL structure with a status indicator only.
       // A true per-route proposed-CPS column isn't shown here because routes can split/merge under
       // feedback, so "this original route's new CPS" isn't always a well-defined 1:1 mapping — the
       // SC-level card above is the real number; this table is just "what's touched, and why".
@@ -8710,24 +7609,6 @@ class NDCApp extends React.Component {
   mapVals() {
     const st = this.state, d = st.data;
     const isMap = st.view === 'map';
-    // 2026-07-14 — SKELETON BUILD: this whole view is built around "the current SC" (arcs, DC
-    // markers, legend all derive from it) and was never designed to run with zero SCs. Rather than
-    // partially null-guard a dozen downstream computations, short-circuit here with a safe empty
-    // stub once at least one real SC has been ingested, this early return stops firing and the view
-    // works exactly as before.
-    if (!d.scs.length) {
-      return { isMap, mapScList: [], mapSC: null, mapSCname: '', mapSCzone: '',
-        mapZoneChips: [], mapGen: true, mapIngested: false, mapSrcGenBg: '#003F98', mapSrcGenFg: '#fff', mapSrcIngBg: '#fff', mapSrcIngFg: '#5A5E66',
-        setMapGen: () => this.setState({ mapDataSource: 'generated' }), setMapIng: () => this.setState({ mapDataSource: 'ingested' }),
-        mapW: 600, mapH: 400, scX: 300, scY: 200, arcs: [], arcLabels: [], dcMarkers: [], dcLabels: [], legend: [], mapRows: [], rowsShown: 0, routeTotal: 0, mapNoResults: true, mapHasResults: false,
-        routeOptions: [], vehOptions: [], mapRoute: 'All', mapVeh: 'All', mapSearch: '',
-        onMapRoute: () => {}, onMapVeh: () => {}, onMapSearch: () => {},
-        activeFilters: 0, hasActiveFilters: false, clearMapFilters: () => {}, goCreate: () => this.go('creation'),
-        mapPlanCards: [], hasPlanSel: false, clearMapPlan: () => {},
-        canCreate: st.persona === 'planner', isMapPerSC: true, mapEmpty: true,
-        mapEmptyMessage: 'No Sort Centres ingested yet — add one under Design Inputs → Sort Centre Master, or ingest via the data pipeline, to use the map.',
-        arrowHeads: [], showNodeCard: false, nodeCard: {}, clearHovDc: () => this.setState({ hovDcIdx: null }) };
-    }
     // toned-down (desaturated) route palette — softer than the vivid original per design feedback
     const PALETTE = ['#6E82C4', '#6BA083', '#C6A06A', '#C88585', '#7EA3C9', '#9C8AC4', '#C892AC', '#72A39C', '#C99E74', '#96A6D6', '#9BA1AE', '#8FB185'];
     const NAMEPOOL = ['North Hub', 'East Depot', 'South Yard', 'West Point', 'Central DC', 'Ring Road', 'Uptown', 'Riverside', 'Old Town', 'Midfield', 'Highland', 'Lakeside', 'Gateway', 'Junction', 'Parkside', 'Hilltop', 'Greenfield', 'Southgate', 'Northgate', 'Eastgate', 'Westgate', 'Cross Dock', 'Transit Pt', 'Outer Ring'];
@@ -8952,48 +7833,11 @@ class NDCApp extends React.Component {
     const money = (n) => '\u20b9' + (n / 100000).toFixed(1) + 'L';
     const pct = (n) => Math.round(n * 100) + '%';
     const HWTAG = { 0: 'Re-optimise', 0.5: 'Balanced', 1: 'Preserve routes' };
-    const hwLabelOf = (hw) => hw === 0 ? 'HW 0' : hw === 0.5 ? 'HW 0.5' : hw === 1 ? 'HW 1' : '—';
-    // Ingested plans ARE the plan runs in this build (no real DS-optimizer backend exists here --
-    // ingestion stands in for it). A virtual run object is synthesized per ingested SC, shaped
-    // exactly like a real d.runs entry, so every existing piece of this screen (left rail, zone
-    // filter, search, metrics card, Push/Finalise) picks it up with no further changes. hw stays
-    // null -- hwLabelOf/HWTAG already render that as "—" (fixed above), satisfying "show HW/RDR as
-    // blank/dashes" without any special-casing in the render layer itself.
-    const ingestedRunCache = {};
-    const ingestedRunFor = (code) => {
-      if (Object.prototype.hasOwnProperty.call(ingestedRunCache, code)) return ingestedRunCache[code];
-      const ingested = (st.ingestedRlhPlans || {})[code];
-      if (!ingested) { ingestedRunCache[code] = null; return null; }
-      const computed = this.computeIngestedRunMetrics(ingested);
-      const volume = computed.rows.reduce((a, r) => a + (r.volume || 0), 0);
-      const vehInput = Array.from(new Set(ingested.rows.map(r => r.veh)));
-      // Vehicles used — grouped from the real per-route vehicle assignment, for the "Vehicles
-      // used" section on the detail view (mirrors detailRun.vehByType's {name, n} shape).
-      const vehCounts = {}; computed.rows.forEach(r => { vehCounts[r.veh] = (vehCounts[r.veh] || 0) + 1; });
-      const vehByType = Object.keys(vehCounts).map(name => ({ name, n: vehCounts[name] }));
-      const run = {
-        id: 'ING-' + code, scCode: code, status: 'Completed', runNo: 1, hw: null,
-        runId: ingested.fileBaseName, triggeredAt: ingested.uploadedAt || '—', triggeredBy: ingested.uploadedBy || '—',
-        dcCount: computed.dcCount, volume, vehInput, vehByType,
-        coverage: computed.metrics.coverage, util: computed.metrics.util, cps: computed.metrics.cps,
-        routes: computed.metrics.routes, vehicles: computed.metrics.vehicles, distance: computed.metrics.distance, cost: computed.metrics.cost, avgTat: null,
-        flags: computed.flags, isIngested: true,
-        // Kept on the run object so the detail-view builder can construct a REAL route/DC
-        // breakdown from actual ingested data, instead of the RNG-fabricated one used for a
-        // regular (non-ingested) run, which has no real per-route/per-DC source to draw from.
-        ingestedComputedRows: computed.rows,
-      };
-      ingestedRunCache[code] = run;
-      return run;
-    };
+    const hwLabelOf = (hw) => hw === 0 ? 'HW 0' : hw === 0.5 ? 'HW 0.5' : 'HW 1';
     // §9 R1 — organise by RUN, not HW. An SC is reviewable once it has ≥1 completed run;
     // the detail pane lists ALL of that SC's runs in the cycle as separate plan cards (HW is one
     // parameter shown per card). completedRunsFor returns the SC's completed runs in trigger order.
-    const completedRunsFor = (code) => {
-      const real = d.runs.filter(r => r.scCode === code && r.status === 'Completed');
-      const ing = ingestedRunFor(code);
-      return (ing ? real.concat([ing]) : real).sort((a, b) => (a.runNo || 0) - (b.runNo || 0));
-    };
+    const completedRunsFor = (code) => d.runs.filter(r => r.scCode === code && r.status === 'Completed').sort((a, b) => (a.runNo || 0) - (b.runNo || 0));
     const completedSCs = d.scs.filter(s => completedRunsFor(s.code).length >= 1);
     const q = (st.reviewSearch || '').toLowerCase();
     const zf = st.reviewZone || 'All';
@@ -9059,7 +7903,7 @@ class NDCApp extends React.Component {
       const hasUtilChip = (_over + _under) > 0;
       const utilChipLabel = hasUtilChip ? (_over > 0 && _under > 0 ? _over + ' over + ' + _under + ' under-util route' + ((_over + _under) > 1 ? 's' : '') : _over > 0 ? _over + ' route' + (_over > 1 ? 's' : '') + ' over-utilised (>90%)' : _under + ' route' + (_under > 1 ? 's' : '') + ' under-utilised (<40%)') : '';
       return { id: r.id, runId: r.runId, runNo: r.runNo, triggeredAt: r.triggeredAt, triggeredBy: r.triggeredBy || '',
-        hwLabel: hwLabelOf(r.hw), hwTag: HWTAG[r.hw] || '—',
+        hwLabel: hwLabelOf(r.hw), hwTag: HWTAG[r.hw],
         pushed, pushedTag: pushed ? ((flErr + flWarn) > 0 ? 'Accepted with warnings' : 'In alignment') : '',
         pushedTagBg: (flErr + flWarn) > 0 ? '#FBF1DF' : '#E7F0F8', pushedTagFg: (flErr + flWarn) > 0 ? '#C77B00' : '#1E6FB8',
         nodes: fmtInt(r.dcCount), volume: fmtInt(r.volume), vehInput: (r.vehInput && r.vehInput.length ? r.vehInput.join(' · ') : '—'),
@@ -9072,15 +7916,14 @@ class NDCApp extends React.Component {
         cpsRefOn, cpsDeltaLabel, cpsDeltaColor, cpsDeltaTooltip,
         flagDot, flagLabel, flagBg, flagFg,
         onDownloadCsv: () => { const rows = [['Run ID', r.runId], ['Sort Centre', r.scCode], ['Historical Weight', r.hw], ['Coverage', pct(r.coverage)], ['CPS', r.cps.toFixed(2)], ['Utilisation', pct(r.util)], ['Routes', r.routes], ['Vehicles', r.vehicles], ['Distance (km)', r.distance], ['Total cost', r.cost]]; this.downloadText(r.runId + '-summary.csv', 'Metric,Value\n' + rows.map(x => x.join(',')).join('\n')); this.showToast('Plan summary downloaded · ' + r.runId, '#128A3E'); },
-        onMap: () => openRunMap(r), onDetail: () => openRunDetail(r), hasMap: !r.isIngested, hasDetail: true, onPush: () => this.openPush(r.scCode, r.id), onFinaliseDirect: () => this.openFinDirect(r.scCode, r.id) };
+        onMap: () => openRunMap(r), onDetail: () => openRunDetail(r), onPush: () => this.openPush(r.scCode, r.id), onFinaliseDirect: () => this.openFinDirect(r.scCode, r.id) };
     });
 
     // §9 R4 — full-screen plan detail opened by the detail icon. Backed by reviewDetailRunId; shows
     // the run's full metric set + a deterministic per-route breakdown (same synthesis the Map uses).
     const rdv = st.reviewDetailView || 'route';
     const rdt = st.reviewDetailTab || 'details';
-    const curIngestedRun = ingestedRunFor(curCode);
-    const detailRun = st.reviewDetailRunId ? (d.runs.find(r => r.id === st.reviewDetailRunId) || (curIngestedRun && curIngestedRun.id === st.reviewDetailRunId ? curIngestedRun : null)) : null;
+    const detailRun = st.reviewDetailRunId ? d.runs.find(r => r.id === st.reviewDetailRunId) : null;
     let reviewDetail = { open: false, metrics: [], vehArr: [], flags: [], routeRows: [], isRouteView: true, isDcView: false, dcRows: [], hasDcRows: false, sections: [], secDetails: true, secRoute: false };
     if (detailRun) {
       const dSC = d.scs.find(s => s.code === detailRun.scCode) || curSC;
@@ -9097,98 +7940,68 @@ class NDCApp extends React.Component {
         { label: 'Vehicles', value: String(detailRun.vehicles), sub: 'total deployed', hasDelta: false, valueColor: '#14171F' },
         { label: 'Distance', value: fmtInt(detailRun.distance), sub: 'km total', hasDelta: false, valueColor: '#14171F' },
         { label: 'Total cost', value: money(detailRun.cost), sub: 'RLH / cycle', hasDelta: false, valueColor: '#14171F' },
-        { label: 'Avg TAT', value: detailRun.avgTat != null ? (detailRun.avgTat + 'h') : '—', sub: 'avg route duration', hasDelta: false, valueColor: '#14171F' },
+        { label: 'Avg TAT', value: detailRun.avgTat + 'h', sub: 'avg route duration', hasDelta: false, valueColor: '#14171F' },
       ];
-      const dRouteRows = [];
-      const dcRows = [];
-      const dVEH = d.VEH || [];
       const dVbt = (detailRun.vehByType || []);
       const dVbtTotal = dVbt.reduce((a, v) => a + v.n, 0) || 1;
       const dVehArr = dVbt.map(v => ({ veh: v.name, n: v.n, pctW: Math.round(v.n / dVbtTotal * 100) + '%' }));
       const dFlags = (detailRun.flags || []).map(f => ({ t: f.t, sevLabel: f.sev === 'danger' ? 'Error' : 'Warning', sevFg: f.sev === 'danger' ? '#D14B4B' : '#C77B00', sevBg: f.sev === 'danger' ? '#FBEAEA' : '#FBF1DF' }));
-      if (detailRun.isIngested) {
-        // REAL ingested data — routes/DCs come straight from the uploaded file via
-        // computeIngestedRunMetrics (routeCode, veh, real dcs[] with real lat/lng/volume/tpOrder,
-        // real rtDist), not fabricated. Out Cutoff / In Cutoff / per-row TAT have no real source
-        // in the RLH ingestion template yet (same documented gap as elsewhere in this app) — '—'.
-        const cRows = detailRun.ingestedComputedRows || [];
-        cRows.forEach((row) => {
-          const vehRecord = dVEH.find(v => v.name === row.veh) || {};
-          const capVal = vehRecord.cap || null;
-          const over = row.util > 0.9, under = row.util < 0.4;
-          const utilFlagLabel = over ? 'Over-util' : under ? 'Under-util' : '';
-          dRouteRows.push({
-            segment: row.routeCode, tps: row.dcs.length, vol: fmtInt(Math.round(row.volume || 0)), dist: fmtInt(Math.round(row.rtDist || 0)),
-            veh: row.veh, util: Math.round((row.util || 0) * 100) + '%', utilColor: over ? '#D14B4B' : under ? '#C77B00' : '#14171F',
-            hasUtilFlag: over || under, utilFlagLabel, cap: capVal ? fmtInt(capVal) : '—',
-          });
-          row.dcs.forEach((dc, j) => {
-            dcRows.push({
-              lmdc: dc.code, designVol: fmtInt(Math.round(dc.vol || 0)), lat: Number(dc.lat).toFixed(4), lng: Number(dc.lng).toFixed(4),
-              routeCode: row.routeCode, tp: dc.tpOrder, zone: row.zone || '—',
-              outCutoff: '—', tat: '—', inCutoff: '—',
-              vehType: row.veh, rtDist: fmtInt(Math.round(row.rtDist || 0)),
-              isFirstInGroup: j === 0, isLastInGroup: j === row.dcs.length - 1,
-            });
-          });
-        });
-      } else {
-        // §P3.2 (unchanged) — a real Network-Map run has no genuine per-route/per-DC source, only
-        // an aggregate simulated metrics summary, so this deterministic RNG synthesis stands in.
-        let rs = (detailRun.id).split('').reduce((a, ch) => a + ch.charCodeAt(0), 0) * 7 + 3;
-        const RR = () => { rs = (rs * 1103515245 + 12345) & 0x7fffffff; return rs / 0x7fffffff; };
-        const cc = (dSC && dSC.cityCode) || detailRun.scCode.slice(0, 3);
-        const vpick = dVbt.filter(v => v.n > 0);
-        const VFREQ = ['Daily', 'Daily', 'Alt-day', '6×/wk'];
-        const baseLat = (dSC && dSC.lat) || 20.59, baseLng = (dSC && dSC.lng) || 78.96;
-        for (let i = 0; i < detailRun.routes; i++) {
-          const vt = vpick.length ? vpick[i % vpick.length] : { name: 'Bolero / 8ft' };
-          const vehTp = vt.name.indexOf('ACE') >= 0 ? 4 : 7;
-          const tp = Math.max(2, Math.min(vehTp + (RR() < 0.14 ? 1 : 0), Math.round(detailRun.avgTP + (RR() - 0.5))));
-          const dist = Math.round(detailRun.distance / detailRun.routes * (0.7 + RR() * 0.6));
-          const util = +Math.max(0.3, Math.min(0.98, detailRun.util * (0.8 + RR() * 0.4))).toFixed(2);
-          const over = util > 0.9, under = util < 0.4;
-          const rowVol = Math.round(detailRun.volume / detailRun.routes * (0.6 + RR() * 0.8));
-          const vehRecord = dVEH.find(v => v.name === vt.name) || {};
-          const capVal = vehRecord.cap || null;
-          const utilFlagLabel = over ? 'Over-util' : under ? 'Under-util' : '';
-          const hasUtilFlag = over || under;
-          dRouteRows.push({ lmdc: cc + '-' + (220 + i * 7), segment: cc + '-R' + String(i + 1).padStart(2, '0'), veh: vt.name.split(/[\/·]/)[0].trim(), count: 1, freq: VFREQ[i % VFREQ.length],
-            dist: fmtInt(dist), tat: +(detailRun.avgTat * (0.7 + RR() * 0.4)).toFixed(1) + 'h', cps: '₹' + (detailRun.cps * (0.9 + RR() * 0.2)).toFixed(2), tps: tp,
-            util: Math.round(util * 100) + '%', utilColor: over ? '#D14B4B' : under ? '#C77B00' : '#14171F',
-            hasUtilFlag, utilFlagLabel,
-            vol: fmtInt(rowVol), cap: capVal ? fmtInt(capVal) : '—',
-            latLng: (baseLat + (RR() - 0.5) * 0.5).toFixed(4) + ', ' + (baseLng + (RR() - 0.5) * 0.5).toFixed(4) });
-        }
-        // §P3.2 — DC × Route detail view: one row per LMDC, seeded from route data
-        const DCOUT_V = ['22:30','23:00','23:30','00:15','01:00'];
-        const DCIN_V  = ['06:00','07:00','07:30','08:00','09:00'];
-        const DCZN_V  = ['Local','Non-Local'];
-        for (let _di = 0; _di < dRouteRows.length && dcRows.length < 20; _di++) {
-          const _drt = dRouteRows[_di];
-          const _ndc = Math.max(2, Math.min(4, _drt.tps));
-          for (let _dj = 0; _dj < _ndc && dcRows.length < 20; _dj++) {
-            dcRows.push({
-              lmdc: cc + '-DC-' + String(201 + _di * 5 + _dj),
-              designVol: fmtInt(Math.max(40, Math.round((detailRun.volume / (dRouteRows.length * _ndc)) * (0.6 + RR() * 0.8)))),
-              lat: (baseLat + (RR() - 0.5) * 0.5).toFixed(4), lng: (baseLng + (RR() - 0.5) * 0.5).toFixed(4),
-              routeCode: _drt.segment,
-              tp: _drt.tps,
-              zone: DCZN_V[Math.round(RR()) % 2],
-              outCutoff: DCOUT_V[Math.floor(RR() * DCOUT_V.length)],
-              tat: _drt.tat,
-              inCutoff: DCIN_V[Math.floor(RR() * DCIN_V.length)],
-              vehType: _drt.veh,
-              rtDist: _drt.dist,
-              // Groups this route's rows into one visually-boxed block (outside border around
-              // the whole route, like the source plan sheet does) rather than a plain flat list.
-              isFirstInGroup: _dj === 0,
-              isLastInGroup: _dj === _ndc - 1,
-            });
-          }
-        }
-        if (dcRows.length) dcRows[dcRows.length - 1].isLastInGroup = true;
+      let rs = (detailRun.id).split('').reduce((a, ch) => a + ch.charCodeAt(0), 0) * 7 + 3;
+      const RR = () => { rs = (rs * 1103515245 + 12345) & 0x7fffffff; return rs / 0x7fffffff; };
+      const cc = (dSC && dSC.cityCode) || detailRun.scCode.slice(0, 3);
+      const vpick = dVbt.filter(v => v.n > 0);
+      const VFREQ = ['Daily', 'Daily', 'Alt-day', '6×/wk'];
+      const dRouteRows = [];
+      const baseLat = (dSC && dSC.lat) || 20.59, baseLng = (dSC && dSC.lng) || 78.96;
+      const dVEH = d.VEH || [];
+      for (let i = 0; i < detailRun.routes; i++) {
+        const vt = vpick.length ? vpick[i % vpick.length] : { name: 'Bolero / 8ft' };
+        const vehTp = vt.name.indexOf('ACE') >= 0 ? 4 : 7;
+        const tp = Math.max(2, Math.min(vehTp + (RR() < 0.14 ? 1 : 0), Math.round(detailRun.avgTP + (RR() - 0.5))));
+        const dist = Math.round(detailRun.distance / detailRun.routes * (0.7 + RR() * 0.6));
+        const util = +Math.max(0.3, Math.min(0.98, detailRun.util * (0.8 + RR() * 0.4))).toFixed(2);
+        const over = util > 0.9, under = util < 0.4;
+        const rowVol = Math.round(detailRun.volume / detailRun.routes * (0.6 + RR() * 0.8));
+        const vehRecord = dVEH.find(v => v.name === vt.name) || {};
+        const capVal = vehRecord.cap || null;
+        const utilFlagLabel = over ? 'Over-util' : under ? 'Under-util' : '';
+        const hasUtilFlag = over || under;
+        dRouteRows.push({ lmdc: cc + '-' + (220 + i * 7), segment: cc + '-R' + String(i + 1).padStart(2, '0'), veh: vt.name.split(/[\/·]/)[0].trim(), count: 1, freq: VFREQ[i % VFREQ.length],
+          dist: fmtInt(dist), tat: +(detailRun.avgTat * (0.7 + RR() * 0.4)).toFixed(1) + 'h', cps: '₹' + (detailRun.cps * (0.9 + RR() * 0.2)).toFixed(2), tps: tp,
+          util: Math.round(util * 100) + '%', utilColor: over ? '#D14B4B' : under ? '#C77B00' : '#14171F',
+          hasUtilFlag, utilFlagLabel,
+          vol: fmtInt(rowVol), cap: capVal ? fmtInt(capVal) : '—',
+          latLng: (baseLat + (RR() - 0.5) * 0.5).toFixed(4) + ', ' + (baseLng + (RR() - 0.5) * 0.5).toFixed(4) });
       }
+      // §P3.2 — DC × Route detail view: one row per LMDC, seeded from route data
+      const dcRows = [];
+      const DCOUT_V = ['22:30','23:00','23:30','00:15','01:00'];
+      const DCIN_V  = ['06:00','07:00','07:30','08:00','09:00'];
+      const DCZN_V  = ['Local','Non-Local'];
+      for (let _di = 0; _di < dRouteRows.length && dcRows.length < 20; _di++) {
+        const _drt = dRouteRows[_di];
+        const _ndc = Math.max(2, Math.min(4, _drt.tps));
+        for (let _dj = 0; _dj < _ndc && dcRows.length < 20; _dj++) {
+          dcRows.push({
+            lmdc: cc + '-DC-' + String(201 + _di * 5 + _dj),
+            designVol: fmtInt(Math.max(40, Math.round((detailRun.volume / (dRouteRows.length * _ndc)) * (0.6 + RR() * 0.8)))),
+            lat: (baseLat + (RR() - 0.5) * 0.5).toFixed(4), lng: (baseLng + (RR() - 0.5) * 0.5).toFixed(4),
+            routeCode: _drt.segment,
+            tp: _drt.tps,
+            zone: DCZN_V[Math.round(RR()) % 2],
+            outCutoff: DCOUT_V[Math.floor(RR() * DCOUT_V.length)],
+            tat: _drt.tat,
+            inCutoff: DCIN_V[Math.floor(RR() * DCIN_V.length)],
+            vehType: _drt.veh,
+            rtDist: _drt.dist,
+            // Groups this route's rows into one visually-boxed block (outside border around
+            // the whole route, like the source plan sheet does) rather than a plain flat list.
+            isFirstInGroup: _dj === 0,
+            isLastInGroup: _dj === _ndc - 1,
+          });
+        }
+      }
+      if (dcRows.length) dcRows[dcRows.length - 1].isLastInGroup = true;
       reviewDetail = { open: true, runId: detailRun.runId, hwLabel: hwLabelOf(detailRun.hw), hwTag: HWTAG[detailRun.hw], triggeredAt: detailRun.triggeredAt, triggeredBy: detailRun.triggeredBy || '',
         code: detailRun.scCode, name: detailRun.scName, zone: dSC ? dSC.zone : detailRun.zone, dcCount: detailRun.dcCount,
         nodes: fmtInt(detailRun.dcCount), volume: fmtInt(detailRun.volume), vehInput: (detailRun.vehInput && detailRun.vehInput.length ? detailRun.vehInput.join(' · ') : '—'),
@@ -9209,17 +8022,10 @@ class NDCApp extends React.Component {
     }
 
     const pushSC = st.pushSCcode ? d.scs.find(s => s.code === st.pushSCcode) : curSC;
-    const directory = st.opsLeadDirectory || [];
-    const dirById = {}; directory.forEach(p => { dirById[p.id] = p; });
-    const pushSelectedIds = st.pushReviewers || [];
-    const reviewersList = pushSelectedIds.map(id => {
-      const p = dirById[id]; const name = (p && (p.display_name || p.email)) || id;
-      return { id, name, initials: name.split(/[\s@.]+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase(), email: (p && p.email) || '', onRemove: () => this.removeReviewer(id) };
-    });
-    // "Add a POC" picker — any real Ops Lead not already on this plan's list. Adding here tags this
-    // plan only; it does not change the SC's standing default reviewer list (that's managed from SC Master).
-    const pushAddOptions = [{ value: '', label: directory.length ? 'Add a POC…' : 'No Ops Leads registered yet' }]
-      .concat(directory.filter(p => pushSelectedIds.indexOf(p.id) < 0).map(p => ({ value: p.id, label: (p.display_name || p.email) + (p.email ? ' \u00b7 ' + p.email : '') })));
+    const uniqPocs = pushSC ? [...new Set(pushSC.pocs)] : [];
+    const pushSelected = st.pushReviewers || [];
+    const pocChips = uniqPocs.map(n => ({ name: n, selected: pushSelected.indexOf(n) >= 0, bg: pushSelected.indexOf(n) >= 0 ? '#003F98' : '#fff', fg: pushSelected.indexOf(n) >= 0 ? '#fff' : '#5A5E66', bd: pushSelected.indexOf(n) >= 0 ? '#003F98' : '#C3C9D4', onToggle: () => this.togglePushReviewer(n) }));
+    const reviewersList = pushSelected.map(n => ({ name: n, initials: n.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase(), email: n.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '') + '@valmo.com', isPoc: uniqPocs.indexOf(n) >= 0, onRemove: () => this.removeReviewer(n) }));
 
     // P2 — Design Review left rail: surface Queued + In-Progress runs from the live runQueue
     // so the reviewer can see what is still cooking alongside the completed set.
@@ -9242,11 +8048,13 @@ class NDCApp extends React.Component {
       curCode, curName: curSC ? curSC.name : '', curZone: curSC ? curSC.zone : '', curDcCount: curSC ? curSC.dcCount : 0,
       planCards, runCountLabel: scRuns.length + ' run' + (scRuns.length === 1 ? '' : 's') + ' generated this cycle', hasPlanCards: planCards.length > 0,
       reviewDetail,
+      reviewIngestedPlans: (st.ingestedPlans || []).map(p => ({ name: p.name, rows: p.rows.toLocaleString('en-IN'), by: p.by, date: p.date, runId: p.runId, scCode: p.scCode })),
+      hasReviewIngested: (st.ingestedPlans || []).length > 0,
       reviewPushed: !!st.pushedSCs[curCode],
-      pushOpen: st.pushOpen, pushSCname: pushSC ? (pushSC.code + ' \u00b7 ' + pushSC.name) : '', reviewersList, pushAddOptions, pushAddSelect: st.pushAddSelect || '',
-      onPushAddSelect: (e) => this.addPushReviewerById(e.target.value),
-      doPush: () => this.doPush(), closePush: () => this.closePush(),
-      pushCount: pushSelectedIds.length, pushDisabled: pushSelectedIds.length === 0, pushBtnBg: pushSelectedIds.length === 0 ? '#E6EBF2' : '#003F98', pushBtnFg: pushSelectedIds.length === 0 ? '#5A5E66' : '#fff', pushCursor: pushSelectedIds.length === 0 ? 'not-allowed' : 'pointer',
+      pushOpen: st.pushOpen, pushSCname: pushSC ? (pushSC.code + ' \u00b7 ' + pushSC.name) : '', pocChips, reviewersList, pushName: st.pushName || '', pushEmail: st.pushEmail || '',
+      onPushName: (e) => this.setState({ pushName: e.target.value }), onPushEmail: (e) => this.setState({ pushEmail: e.target.value }),
+      addManualReviewer: () => this.addManualReviewer(), doPush: () => this.doPush(), closePush: () => this.closePush(),
+      pushCount: pushSelected.length, pushDisabled: pushSelected.length === 0, pushBtnBg: pushSelected.length === 0 ? '#E6EBF2' : '#003F98', pushBtnFg: pushSelected.length === 0 ? '#5A5E66' : '#fff', pushCursor: pushSelected.length === 0 ? 'not-allowed' : 'pointer',
     };
   }
 
@@ -9480,10 +8288,11 @@ class NDCApp extends React.Component {
       };
     });
     // Ops Lead 3-stage rail: To Review / In Progress / Submitted — maps to aggregate ops review state
-    const opsAssignedPlans = d.plans.filter(p => (st.alignStatus[p.id] || p.status) === 'Pushed' || !!st.opsSubmitted[p.id]);
-    const opsToReviewN   = opsAssignedPlans.filter(p => { const dec = st.opsRowDec[p.id] || {}; const done = Object.values(dec).filter(v => v !== 'Pending').length; return !st.opsSubmitted[p.id] && done === 0; }).length;
-    const opsInProgN     = opsAssignedPlans.filter(p => { const dec = st.opsRowDec[p.id] || {}; const done = Object.values(dec).filter(v => v !== 'Pending').length; return !st.opsSubmitted[p.id] && done > 0; }).length;
-    const opsSubmittedN  = opsAssignedPlans.filter(p => !!st.opsSubmitted[p.id]).length;
+    const opsSelfName = this.opsPersonaName();
+    const opsAssignedPlans = d.plans.filter(p => (st.alignStatus[p.id] || p.status) === 'Pushed' || (p.submittedReviewers || []).indexOf(opsSelfName) >= 0);
+    const opsToReviewN   = opsAssignedPlans.filter(p => { const dec = st.opsRowDec[p.id] || {}; const done = Object.values(dec).filter(v => v !== 'Pending').length; return (p.submittedReviewers || []).indexOf(opsSelfName) < 0 && done === 0; }).length;
+    const opsInProgN     = opsAssignedPlans.filter(p => { const dec = st.opsRowDec[p.id] || {}; const done = Object.values(dec).filter(v => v !== 'Pending').length; return (p.submittedReviewers || []).indexOf(opsSelfName) < 0 && done > 0; }).length;
+    const opsSubmittedN  = opsAssignedPlans.filter(p => (p.submittedReviewers || []).indexOf(opsSelfName) >= 0).length;
     // Ops active stage: submitted if most are done, in-progress if some done, to-review otherwise
     // Ops Lead rail = their slice of the shared lifecycle (Design Review → Ops Alignment → Finalise), NOT their
     // review-state (that's the Tier-2 filters below). 'Ops Alignment' is their active stage; Review is upstream
@@ -9623,20 +8432,12 @@ class NDCApp extends React.Component {
     if (opsActingPool.indexOf(this.opsPersonaName()) < 0) opsActingPool.unshift(this.opsPersonaName());
     const opsActingCurrent = this.opsPersonaName();
 
-    // 2026-07-16 — real identity, from the logged-in Supabase user + profile, replacing the
-    // hardcoded "Pranita Sapkal"/opsPersonaName() stand-ins. Falls back to the email if the
-    // profile hasn't loaded yet (brief flash on first render right after sign-in).
-    const authProfile = st.authProfile;
-    const realDisplayName = (authProfile && authProfile.display_name) || (st.authUser && st.authUser.email) || '—';
-    const realRoleLabel = planner ? 'Planner' : 'Ops Lead';
-    const realInitials = realDisplayName.split(/[\s@.]+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() || '—';
     return {
       contentPad: '28px 34px',
       isPlanner: planner, isOps: !planner,
-      personaName: realDisplayName,
-      personaRole: realRoleLabel,
-      personaInitials: realInitials,
-      onSignOut: () => this.signOut(),
+      personaName: planner ? 'Pranita Sapkal' : this.opsPersonaName(),
+      personaRole: planner ? 'Central Network Planner' : 'Ops Lead · South',
+      personaInitials: planner ? 'PS' : this.opsPersonaName().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(),
       view: st.view, isCommand: st.view === 'command', isInputs: st.view === 'inputs', isStub: !(st.view === 'command' || st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'map' || st.view === 'finalise' || st.view === 'cyclesummary'),
       ...this.creationVals(),
       ...this.reviewVals(),
@@ -9651,7 +8452,7 @@ class NDCApp extends React.Component {
       ...this.inputsVals(),
       // inputs action handlers not produced by inputsVals (kept here so they survive):
       ...this.addScVals(),
-      uploadFile: () => this.ingestRlhPlanFile(), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' }, addScReviewerIds: [] }),
+      uploadFile: () => this.ingestRlhPlan(), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' } }),
       startCreation: () => this.go('creation'), recheckAutodml: () => this.showToast('AutoDML re-check queued', '#2F4FC6'),
       moduleTitle: tt[0], moduleSubtitle: tt[1], stubIcon: STUBICON[st.view] || ICON.dash,
       navGroups, cycleName: st.designCycle || 'July 2026', cycleOpen: !!st.cycleOpen,
@@ -9666,8 +8467,8 @@ class NDCApp extends React.Component {
       freezeMiniText: daysToFreeze + 'd to freeze · ' + health.label, freezeMiniBg: health.miniBg, freezeMiniFg: health.miniFg,
       plannerSegBg: planner ? '#fff' : 'transparent', plannerSegFg: planner ? '#003F98' : '#5A5E66',
       opsSegBg: !planner ? '#fff' : 'transparent', opsSegFg: !planner ? '#003F98' : '#5A5E66',
-      showPersonaToggle: false, // 2026-07-16 — retired: identity now comes from the real login, not a toggle
-      showOpsActingSwitcher: false, // 2026-07-16 — retired: a logged-in Ops Lead reviews as themselves
+      showPersonaToggle: st.view === 'align',
+      showOpsActingSwitcher: !planner && st.view === 'align',
       opsActingCurrent, opsActingOptions: opsActingPool,
       onOpsActingChange: (e) => this.switchOpsPersona(e.target.value, st.opsPlanId),
       setPlanner: () => this.setPersona('planner'), setOps: () => this.setPersona('ops'),
@@ -9704,7 +8505,6 @@ class NDCApp extends React.Component {
 
   render() {
     if (this.standaloneMapSc) return this.renderStandaloneMap();
-    if (!this.state.authUser) return this.renderLogin();
     return View(this.renderVals(), this);
   }
 

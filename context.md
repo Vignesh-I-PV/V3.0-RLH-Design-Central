@@ -1,4 +1,4 @@
-# context.md — Network Design Central (RLH Design Central), v2.0
+# context.md — Network Design Central (RLH Design Central), v3.0
 
 This file is the one place to read before changing anything — either
 yourself, or by pasting this whole file to an AI assistant along with your
@@ -11,12 +11,12 @@ how to view it, and what to know before editing.
 
 | File | What it is | Do you edit it? |
 |---|---|---|
-| `v2.0-rlh-design-base.jsx` | All the app's code — UI + logic | **Yes** — this is the one you change |
+| `v3.0-rlh-design-base.jsx` | All the app's code — UI + logic | **Yes** — this is the one you change |
 | `index.html` | Loads React and this jsx file into a browser page | Rarely — only if you need to change fonts/CDN/page title |
 | `context.md` | This file | Update the changelog at the bottom when you make notable changes |
 
 That's it. No build step, no `npm install`, nothing to compile ahead of
-time. `index.html` reads `v2.0-rlh-design-base.jsx` fresh every time the
+time. `index.html` reads `v3.0-rlh-design-base.jsx` fresh every time the
 page loads and turns it into a working app right there in the browser.
 
 ---
@@ -176,7 +176,7 @@ plus a `vendor/` folder."
 
 ---
 
-## For whoever (or whatever AI) edits `v2.0-rlh-design-base.jsx` next
+## For whoever (or whatever AI) edits `v3.0-rlh-design-base.jsx` next
 
 ### Where this code came from
 The very first version of this app was built with a design tool that

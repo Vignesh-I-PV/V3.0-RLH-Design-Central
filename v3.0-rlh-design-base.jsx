@@ -475,7 +475,7 @@ function View(B, self) {
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 300px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
 <div style={css(`min-width:1180px;`)}>
-<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 60px 80px 72px 72px 140px 80px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>NAME</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>CITY, STATE</div>
@@ -485,6 +485,7 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>SORT CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NLH DOCKS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>RLH DOCKS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Hourly Throughput — shipments/hour this SC can process, feeds Route Scheduler's dispatch-cutoff calculation"}>HTP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
@@ -493,7 +494,7 @@ function View(B, self) {
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
-<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
@@ -503,6 +504,7 @@ function View(B, self) {
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.htp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
@@ -900,7 +902,7 @@ function View(B, self) {
 {/* Upload card */}
 <div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; border:1.5px dashed #C3C9D4; border-radius:8px; background:#FAFBFD; margin-bottom:16px;`)}>
 <div style={css(`width:40px; height:40px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"20"} height={"20"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 16V4M7 9l5-5 5 5M4 20h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1;`)}><div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>Ingest an external RLH plan</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>CSV · template enforced · validated then eligible to push for alignment</div></div>
+<div style={css(`flex:1;`)}><div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>{ingCardTitle}</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>{ingCardSub}</div></div>
 <button onClick={ingestTemplate} style={css(`height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}>Template</button>
 <button onClick={uploadFile} style={css(`height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 15px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Ingest CSV</button>
 </div>
@@ -931,8 +933,8 @@ function View(B, self) {
 {(ingNoPlans) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center;`)}>
 <div style={css(`width:44px; height:44px; border-radius:8px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.5"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5M9 13h6M9 17h4"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:13.5px; font-weight:600; color:#14171F; margin-top:12px;`)}>No external plans uploaded for this cycle.</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-top:5px; max-width:360px; line-height:1.5;`)}>Use <strong>Ingest CSV</strong> above to add an externally-built RLH plan. It will appear here once validated.</div>
+<div style={css(`font-size:13.5px; font-weight:600; color:#14171F; margin-top:12px;`)}>{ingEmptyMsg}</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:5px; max-width:360px; line-height:1.5;`)}>Use <strong>Ingest CSV</strong> above to add {(ingIsNlh) ? 'an NLH Landing Plan' : 'an externally-built RLH plan'}. It will appear here once validated.</div>
 </div>
 </>) : null}
 </div>
@@ -1019,6 +1021,14 @@ function View(B, self) {
 {(creationTierSeg || []).map((ct, __i39) => (<React.Fragment key={__i39}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
 </div>
+{/* ===== RLH sub-fork: Route Planner / Route Scheduler (2026-07-29) — only meaningful while RLH
+       is the active CTIER tier, which today is always (RLH is the only live tier). ===== */}
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+{(creationRlhSubSeg || []).map((rs, __i39b) => (<React.Fragment key={__i39b}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
+</div>
+</div>
+{(isRoutePlanner) ? (<>
 {/* ===== WIZARD VIEW (Input Selection tab) ===== */}
 {(isWizardView) ? (<>
 {/* stepper */}
@@ -1636,11 +1646,38 @@ function View(B, self) {
 {(queueInFlight) ? (<><button onClick={goReview} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
 </div>
 </>) : null}{/* end isQueueView */}
+</>) : null}{/* end isRoutePlanner (2026-07-29) */}
+{(isRouteScheduler) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:480px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
+<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Route Scheduler</div>
+<div style={css(`font-size:13px; color:#5A5E66; line-height:1.55;`)}>Adds dispatch cutoffs and travel times to an already-Finalised RLH plan, using NLH landing data. Trigger it either from here (Plan Selection) or via "Run Scheduler" on a Finalised plan in Ops Alignment.</div>
+{(activeSchedulerParent) ? (<><div style={css(`display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#EAEEFB; border-radius:999px; font-size:12px; font-weight:600; color:#003F98;`)}>Pre-selected from Ops Alignment: {activeSchedulerParent}</div></>) : null}
+<div style={css(`font-size:11.5px; font-weight:600; color:#8E96A3; letter-spacing:0.03em; margin-top:4px;`)}>WIZARD STEPS ARRIVING IN THE NEXT BUILD PASS — PLAN SELECTION · NLH LANDING PLAN SELECTION · OPERATING MODE · PREVIEW &amp; TRIGGER</div>
+</div>
+</div>
+</>) : null}
 </div>
 </>) : null}
 {/* ===== DESIGN REVIEW ===== */}
 {(isReview) ? (<>
 <div style={css(`display:flex; flex-direction:column; height:100%;`)}>
+{/* ===== Tier strip: RLH / NLH / FM Carting / SC-DC Mapping (2026-07-29) — mirrors Design
+       Creation's CTIER. Nested Route Planner / Route Scheduler fork shown while RLH is active
+       (the only live tier). ===== */}
+<div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>ROUTE PLANNING</span>
+<div style={css(`display:flex; gap:6px;`)}>
+{(reviewTierSeg || []).map((ct, __i39c) => (<React.Fragment key={__i39c}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
+</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+{(reviewRlhSubSeg || []).map((rs, __i39d) => (<React.Fragment key={__i39d}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
+</div>
+</div>
+{(isReviewRoutePlanner) ? (<>
 {/* Search SC moved into the Tier-2 tab row (right corner) — no separate search row. */}
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 {/* LEFT RAIL */}
@@ -1962,10 +1999,37 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+</>) : null}{/* end isReviewRoutePlanner (2026-07-29) */}
+{(isReviewRouteScheduler) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:480px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
+<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M9 17V9m3 8V5m3 12v-4M4 21h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Route Scheduler — Review</div>
+<div style={css(`font-size:13px; color:#5A5E66; line-height:1.55;`)}>Cutoff Plan review (dispatch cutoffs, travel times, Speed metrics) for completed Route Scheduler runs will land here once a run has been triggered.</div>
+<div style={css(`font-size:11.5px; font-weight:600; color:#8E96A3; letter-spacing:0.03em; margin-top:4px;`)}>METRICS &amp; CARD TEMPLATES ARRIVING IN A LATER PASS</div>
+</div>
+</div>
+</>) : null}
 </div>
 </>) : null}
 {/* ===== OPS ALIGNMENT · PLANNER ===== */}
 {(isAlignPlanner) ? (<>
+{/* ===== Tier strip: RLH / NLH / FM Carting / SC-DC Mapping (2026-07-29) — mirrors Design
+       Creation/Review's CTIER. Route Scheduler sub-tab is inert here for now (see note in
+       alignVals) rather than risking a content swap on this screen's more complex JSX.
+       Inserted as plain balanced sibling divs (no new outer wrapper) — Ops Alignment's existing
+       layout div right below is left completely untouched. ===== */}
+<div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>ROUTE PLANNING</span>
+<div style={css(`display:flex; gap:6px;`)}>
+{(alignTierSeg || []).map((ct, __i39e) => (<React.Fragment key={__i39e}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
+</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+{(alignRlhSubSeg || []).map((rs, __i39f) => (<React.Fragment key={__i39f}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
+</div>
+</div>
 <div style={css(`display:flex; flex-direction:row; height:100%; min-height:0;`)}>
 {/* ===== EMPTY STATE (no plans in the active filter) — full width ===== */}
 {(aSel.empty) ? (<>
@@ -2069,6 +2133,13 @@ function View(B, self) {
 {(aSel.isAck) ? (<><button onClick={aSel.onFin} title={aSel.finBlocked ? 'Decide all flagged rows first' : 'Finalise this plan'} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:none; background:${aSel.finBtnBg}; color:${aSel.finBtnFg}; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${aSel.finCursor};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Finalise plan</button><button onClick={aSel.onUnfreeze} title={"Reopen this plan for Ops Lead editing"} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #D8DEE8; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Unfreeze</button></>) : null}
 </div>
 </>) : null}
+{/* Run Scheduler (2026-07-29) — Finalised plans only, planner view only (this whole block is
+    already inside isAlignPlanner). Own action row since isFinal is explicitly excluded above. */}
+{(aSel.isFinal) ? (<>
+<div style={css(`display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:12px;`)}>
+<button onClick={aSel.onRunScheduler} title={"Send this plan to Route Scheduler"} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `background:#003F98;`, `background:#00337D;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Run Scheduler</button>
+</div>
+</>) : null}
 </div>
 </div>
 </>) : null}
@@ -2086,7 +2157,7 @@ function View(B, self) {
 <div style={css(`flex:1;`)} />
 {(aSel.canPlanSim) ? (<><button onClick={aSel.onPlanSim} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #2F4FC6; background:${aSel.planSimBtnBg}; color:${aSel.planSimBtnFg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{aSel.planSimBtnLabel}</button></>) : null}
 <button onClick={aSel.onMapView} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Map view</button>
-{(aSel.isFinal) ? (<><button onClick={aSel.onDownloadCsv} aria-label={"Download CSV"} title={"Download CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button></>) : null}
+{(aSel.isFinal) ? (<><button onClick={aSel.onDownloadCsv} aria-label={"Download CSV"} title={"Download CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button><button onClick={aSel.onRunScheduler} title={"Send this plan to Route Scheduler"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `background:#003F98;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Run Scheduler</button></>) : null}
 <button onClick={aSel.backToCards} aria-label={"Close detail"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:20px 26px;`)}>
@@ -2560,6 +2631,24 @@ function View(B, self) {
 <div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
 <button onClick={closeUnfreeze} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
 <button onClick={confirmUnfreeze} style={css(`height:38px; padding:0 18px; border:none; background:#C77B00; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#A66300;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 18px; border:none; background:#C77B00; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#A66300;`)}>Unfreeze plan</button>
+</div>
+</div>
+</div>
+</>) : null}
+{/* RUN SCHEDULER MODAL (2026-07-29) — planner-only guarded action on a Finalised RLH plan.
+    Creates a new, separate schedulerPlans entry (parentPlanId → this plan) with its own
+    lifecycle, then redirects into Design Creation's Route Scheduler fork with that plan
+    pre-selected. Never touches the parent plan's own status. */}
+{(runSchedulerOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Run Scheduler on {runSchedulerPlanName}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This sends the finalised Route &amp; Vehicle Plan to <strong>Route Scheduler</strong> to add dispatch cutoffs and travel times, using an NLH Landing Plan you'll select next. <strong style={css(`color:#003F98;`)}>This plan's Finalised status is unaffected</strong> — Route Scheduler runs as its own linked plan alongside it.</div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeRunScheduler} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmRunScheduler} style={css(`height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Run Scheduler</button>
 </div>
 </div>
 </div>
@@ -4167,7 +4256,14 @@ class NDCApp extends React.Component {
       }
       return { code: sc.code, name: sc.name + ' LMSC', zone: sc.zone, rows };
     });
-    return { scs, runs, plans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
+    // 2026-07-29 — schedulerPlans: a SEPARATE entity from `plans` (RLH Route & Vehicle Plans), by
+    // design decision. Each row is created live by "Run Scheduler" (Ops Alignment, Finalised RLH
+    // plans, planner view only) or by starting fresh from Route Scheduler's own Plan Selection step.
+    // Carries parentPlanId → the Finalised RLH plan it was scheduled from, plus its OWN independent
+    // status lifecycle (mirrors Pushed → In Alignment → Acknowledged → Finalised) so nothing about
+    // the parent RLH plan's status/meaning ever changes. Starts empty — nothing is seeded.
+    const schedulerPlans = [];
+    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   showToast(msg, dot, undoFn) { clearTimeout(this._t); this.setState({ toast: { msg, dot: dot || '#2F4FC6', undo: undoFn || null } }); this._t = setTimeout(() => this.setState({ toast: null }), undoFn ? 5200 : 3500); }
@@ -4243,6 +4339,7 @@ class NDCApp extends React.Component {
       txt('sortCap', 'Sort Capacity', true, 'shipments / day'),
       txt('nlhDocks', 'NLH Docks', true, ''),
       txt('rlhDocks', 'RLH Docks', true, ''),
+      txt('htp', 'Hourly Throughput (HTP)', false, 'shipments / hour'),
       txt('localTp', 'Local TP Limit', true, ''),
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
       tm('open', 'SC Opening Time', '06:00'),
@@ -4258,7 +4355,7 @@ class NDCApp extends React.Component {
     const sc = (this.state.data.scs || []).concat(this.state.addedScs || []).find(s => s.code === code);
     if (!sc) { this.comingSoon('Edit SC'); return; }
     const pl = sc.pocs || [];
-    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''), nlhDocks: String(sc.docks || ''), rlhDocks: '0', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00', opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '' };
+    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''), nlhDocks: String(sc.docks || ''), rlhDocks: '0', htp: sc.htp != null ? String(sc.htp) : '', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00', opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '' };
     this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null });
   }
   // C12 — functional INLINE edit for SC Vehicle Availability: per-field overlay stored as
@@ -4284,14 +4381,14 @@ class NDCApp extends React.Component {
     if (st.addScEditCode) {
       // Edit mode — apply changes to a session-edited overlay so the existing SC row reflects them.
       const edits = Object.assign({}, st.scEdits || {});
-      edits[st.addScEditCode] = { name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), pocs: pocs.length ? pocs : ['—'] };
+      edits[st.addScEditCode] = { name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, pocs: pocs.length ? pocs : ['—'] };
       // also patch any session-added SC in place
       const addedScs = (st.addedScs || []).map(s => s.code === st.addScEditCode ? Object.assign({}, s, edits[st.addScEditCode]) : s);
       this.setState({ scEdits: edits, addedScs: addedScs, addScOpen: false, addScEditCode: null, addScForm: {} });
       this.showToast('Sort Centre ' + st.addScEditCode + ' updated', '#128A3E');
       return;
     }
-    const sc = { code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), lat: 0, lng: 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs.length ? pocs : ['—'] };
+    const sc = { code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, lat: 0, lng: 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs.length ? pocs : ['—'] };
     this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
     this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
   }
@@ -4373,6 +4470,22 @@ class NDCApp extends React.Component {
     const plans = [plan].concat(this.state.ingestedPlans || []);
     this.setState({ ingestedPlans: plans, ingestionCounter: n });
     this.showToast('Plan ingested & validated · ' + plan.name, '#128A3E');
+  }
+  // ingestNlhPlan() (2026-07-29) — same synthesised-ingest pattern as ingestRlhPlan(), but writes
+  // to its own state store (ingestedNlhPlans / nlhIngestionCounter) so RLH and NLH ingestion never
+  // share or overwrite each other's data. Feeds Route Scheduler's NLH Landing Plan Selection step.
+  ingestNlhPlan() {
+    const n = (this.state.nlhIngestionCounter || 0) + 1;
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const scs = (this.state.data && this.state.data.scs) || [];
+    const scCode = scs.length ? scs[(n - 1) % scs.length].code : 'BLR-S1';
+    const rows = 40 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 161); // NLH landing plans are inbound-vehicle schedules, not per-DC route rows — a much smaller row count is realistic
+    const plan = { name: 'NLH-Landing-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCode: scCode, runId: 'NLH-ING-' + String(n).padStart(3, '0') };
+    const plans = [plan].concat(this.state.ingestedNlhPlans || []);
+    this.setState({ ingestedNlhPlans: plans, nlhIngestionCounter: n });
+    this.showToast('NLH Landing Plan ingested & validated · ' + plan.name, '#128A3E');
   }
   // C6/C7 — single node-changes upload (additions + closures + migrations in one file). OVERRIDE:
   // the latest file fully replaces all prior node-change data. Stamps the "last uploaded by" indicator.
@@ -4662,6 +4775,10 @@ class NDCApp extends React.Component {
       const h = s.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
       const nlhDocks = 3 + (h % 7);
       const rlhDocks = 2 + ((h >> 3) % 6);
+      // HTP (Hourly Throughput) — shipments/hour this SC can process. Feeds Route Scheduler's
+      // dispatch-cutoff calculation (2026-07-29). Real value if set via Add/Edit SC, else a
+      // deterministic placeholder in the same style as nlhDocks/rlhDocks above.
+      const htp = s.htp != null && s.htp !== '' ? s.htp : 800 + (h % 5) * 100;
       const localTp = 4 + (h % 3);
       const nonLocalTp = 2 + ((h >> 2) % 3);
       const openHour = 5 + (h % 3);
@@ -4670,7 +4787,7 @@ class NDCApp extends React.Component {
       const closeTime = String(closeHour).padStart(2, '0') + ':00';
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, localTp: localTp, nonLocalTp: nonLocalTp, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
+      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, htp: fmtInt(htp), localTp: localTp, nonLocalTp: nonLocalTp, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
         pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
         pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
@@ -4869,7 +4986,9 @@ class NDCApp extends React.Component {
     // pager stays hidden (<= 10); the wiring activates automatically if the avail master grows.
     const scAvailPager = this.pager(scVehAvailFiltered, st.pgAvail, 'pgAvail');
     const ing = st.ingestionTab || 'rlh';
-    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.'], ['nlh', 'NLH Plan', true, 'National Linehaul ingestion — arriving next cycle.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: t[2] ? () => this.showToast(t[1] + ' — arriving next cycle', '#1E6FB8') : () => this.setState({ ingestionTab: t[0] }) }));
+    // 2026-07-29 — NLH Plan ingestion activated (was "arriving next cycle"). Feeds Route
+    // Scheduler's NLH Landing Plan Selection step. FM Carting stays a future-cycle stub.
+    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.'], ['nlh', 'NLH Plan', false, 'Ingest an NLH Landing Plan (inbound linehaul arrivals at this LMSC) — feeds Route Scheduler\u2019s NLH Landing Plan Selection step.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: t[2] ? () => this.showToast(t[1] + ' — arriving next cycle', '#1E6FB8') : () => this.setState({ ingestionTab: t[0] }) }));
     return {
       gate,
       isVolumeTab: itab === 'volume', isNodesTab: itab === 'nodes', isMastersTab: itab === 'masters', isIngestionTab: itab === 'ingestion',
@@ -4898,18 +5017,25 @@ class NDCApp extends React.Component {
       addVehBtnBg: addVehValid ? '#003F98' : '#E6EBF2', addVehBtnFg: addVehValid ? '#fff' : '#8E96A3', addVehBtnCursor: addVehValid ? 'pointer' : 'not-allowed',
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Hourly Throughput (HTP)' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
-      ingestTemplate: () => this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }]),
+      ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),
       scVehAvail: scAvailPager.pageRows, scAvailPager: scAvailPager, scVehAvailCountLabel: availQuery ? (availShownRows + ' vehicle row' + (availShownRows === 1 ? '' : 's') + ' across ' + scVehAvailFiltered.length + ' of ' + scVehAvailRows.length + ' SCs') : (scVehAvailTotalRows + ' vehicle rows across ' + scVehAvailRows.length + ' SCs'), availSearch: st.availSearch || '', onAvailSearch: (e) => this.setState({ availSearch: e.target.value, pgAvail: 1 }), availNoResults: scVehAvailFiltered.length === 0,
       ingTabs,
-      ingPlans: (st.ingestedPlans || []).slice(0, 5).map(p => ({ name: p.name, by: p.by, date: p.date, rows: p.rows.toLocaleString('en-IN'), runId: p.runId })),
-      ingHasPlans: (st.ingestedPlans || []).length > 0,
-      ingNoPlans: !(st.ingestedPlans || []).length,
-      ingTotalRows: (st.ingestedPlans || []).reduce((a, p) => a + p.rows, 0).toLocaleString('en-IN'),
+      // 2026-07-29 — NLH Plan ingestion activated: separate store (st.ingestedNlhPlans) from RLH's
+      // (st.ingestedPlans), so the two tabs never mix data. Card copy/labels below are tab-aware.
+      ingIsNlh: ing === 'nlh',
+      ingCardTitle: ing === 'nlh' ? 'Ingest an NLH Landing Plan' : 'Ingest an external RLH plan',
+      ingCardSub: ing === 'nlh' ? 'CSV \u00b7 template enforced \u00b7 feeds Route Scheduler\u2019s NLH Landing Plan Selection step' : 'CSV \u00b7 template enforced \u00b7 validated then eligible to push for alignment',
+      ingPlans: (ing === 'nlh' ? (st.ingestedNlhPlans || []) : (st.ingestedPlans || [])).slice(0, 5).map(p => ({ name: p.name, by: p.by, date: p.date, rows: p.rows.toLocaleString('en-IN'), runId: p.runId })),
+      ingHasPlans: (ing === 'nlh' ? (st.ingestedNlhPlans || []) : (st.ingestedPlans || [])).length > 0,
+      ingNoPlans: !(ing === 'nlh' ? (st.ingestedNlhPlans || []) : (st.ingestedPlans || [])).length,
+      ingTotalRows: (ing === 'nlh' ? (st.ingestedNlhPlans || []) : (st.ingestedPlans || [])).reduce((a, p) => a + p.rows, 0).toLocaleString('en-IN'),
       ingErrors: 0,
-      ingCount: (st.ingestedPlans || []).length,
+      ingCount: (ing === 'nlh' ? (st.ingestedNlhPlans || []) : (st.ingestedPlans || [])).length,
+      ingEmptyMsg: ing === 'nlh' ? 'No NLH Landing Plans uploaded for this cycle.' : 'No external plans uploaded for this cycle.',
+      ingEmptyHint: ing === 'nlh' ? 'Ingest CSV' : 'Ingest CSV',
       delConfirmOpen: !!st.delConfirm,
       finDirectOpen: st.finDirectOpen, finDirectPlanName: (st.finDirectSCcode ? (st.finDirectSCcode + ' · ' + ((this.state.data.scs.find(s => s.code === st.finDirectSCcode) || {}).name || '')) : ''), confirmFinDirect: () => this.doPush(true), closeFinDirect: () => this.setState({ finDirectOpen: false }),
       delConfirmLabel: st.delConfirm ? st.delConfirm.label : '',
@@ -5443,16 +5569,34 @@ class NDCApp extends React.Component {
     // Network-tier placeholder selector (RLH built; NLH + FM Carting arrive in a future cycle).
     // Re-added per Vignesh's "within routing they choose FM / NLH / RLH" (sprint-connect 2026-06-30);
     // mirrors the Design-Ingestion tab pattern. RLH is the only active tier in V1.
-    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true]];
+    // 2026-07-29 — 4th peer pill added: SC-DC Mapping. Same "soon" placeholder pattern as NLH/FM
+    // Carting; this is a planning function alongside the linehaul-mode tiers, not a linehaul mode
+    // itself, but it lives in the same strip per product decision (Vignesh, prototyping-branch sync).
+    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
     const creationTierSeg = CTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: t[0] === 'RLH',
       bg: t[0] === 'RLH' ? '#EAEEFB' : '#fff', bd: t[0] === 'RLH' ? '#003F98' : '#E6EBF2',
       fg: t[0] === 'RLH' ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: t[0] === 'RLH' ? '700' : '600',
       onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
 
+    // 2026-07-29 — Route Planner / Route Scheduler fork, nested one level under RLH only (RLH is
+    // the only live CTIER tier). Route Planner = the existing 4-step wizard + Run Queue (unchanged,
+    // just relabeled/nested). Route Scheduler = new: runs only against an already-Finalised RLH
+    // plan, its own wizard + Run Queue, own DS job type. Persisted in st.creationRlhMode.
+    const creationRlhMode = st.creationRlhMode || 'planner';
+    const RLH_SUB = [['planner', 'Route Planner', 'The 4-step RLH plan-creation wizard — node selection through trigger.'], ['scheduler', 'Route Scheduler', 'Adds dispatch cutoffs & travel times to an already-Finalised RLH plan, using NLH landing data.']];
+    const creationRlhSubSeg = RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: creationRlhMode === t[0],
+      bg: creationRlhMode === t[0] ? '#003F98' : '#fff', bd: creationRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+      fg: creationRlhMode === t[0] ? '#fff' : '#5A5E66', weight: creationRlhMode === t[0] ? '700' : '600',
+      onClick: () => this.setState({ creationRlhMode: t[0] }) }));
+    const isRoutePlanner = creationRlhMode === 'planner';
+    const isRouteScheduler = creationRlhMode === 'scheduler';
+
     return {
       isCreation: st.view === 'creation', creationStep: step, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, vehAddOnly: vehAddOnly, step1HasFile: step === 1 && !!st.creationVolume, step1NoFile: step === 1 && !st.creationVolume,
       showCreationGuidelines: !!st.showCreationGuidelines, closeCreationGuidelines: () => this.setState({ showCreationGuidelines: false }),
       creationTierSeg,
+      creationRlhSubSeg, isRoutePlanner, isRouteScheduler,
+      activeSchedulerParent: (() => { const sp = (d.schedulerPlans || []).find(s => s.id === st.activeSchedulerPlanId); if (!sp) return null; const parent = d.plans.find(p => p.id === sp.parentPlanId); return parent ? (parent.scCode + ' \u00b7 ' + parent.scName) : null; })(),
       isWizardView: (st.creationView || 'wizard') === 'wizard', isQueueView: (st.creationView || 'wizard') === 'queue',
       stepper, planGroupName: planGroup.name, planGroupTriggered: planGroup.triggered, planGroupCap: planGroup.cap, planGroupPct: planGroup.pct + '%',
       scGroups, creationSelCount: sel.length, creationShown: filtered.length, creationTotal: d.scs.length, creationSearch: st.creationSearch || '',
@@ -5696,6 +5840,34 @@ class NDCApp extends React.Component {
     Object.keys(alignFieldDec).forEach(k => { if (k.indexOf(id + ':') === 0) delete alignFieldDec[k]; });
     this.setState({ alignStatus: s, alignDecisions, alignDcDecisions, alignFieldDec, unfreezeOpen: false, unfreezePlanId: null });
     this.showToast(id + ' unfrozen \u2014 reopened for Ops Lead editing, decisions reset', '#C77B00');
+  }
+  // confirmRunScheduler() (2026-07-29) — creates a NEW, separate schedulerPlans row carrying
+  // parentPlanId back to the Finalised RLH plan. Never touches plan.status or anything in
+  // this.state.data.plans — Route Scheduler's own lifecycle lives entirely in its own array,
+  // per the "separate linked entity" decision. Redirects into Design Creation's Route Scheduler
+  // fork with this new entry pre-selected.
+  confirmRunScheduler() {
+    const parentId = this.state.runSchedulerPlanId;
+    const d = this.state.data;
+    const parent = d.plans.find(p => p.id === parentId);
+    if (!parent) { this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }); return; }
+    const n = (this.state.schedulerPlanCounter || 0) + 1;
+    const newId = parentId + '-SCHED-' + String(n).padStart(2, '0');
+    const newRow = {
+      id: newId, parentPlanId: parentId, scCode: parent.scCode, scName: parent.scName,
+      status: 'Draft', // this entity's own lifecycle — independent of parent.status, which stays 'Finalised'
+      createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
+      nlhPlanId: null, cutoffs: null,
+    };
+    const schedulerPlans = (d.schedulerPlans || []).concat([newRow]);
+    this.setState({
+      data: Object.assign({}, d, { schedulerPlans }),
+      schedulerPlanCounter: n,
+      runSchedulerOpen: false, runSchedulerPlanId: null,
+      activeSchedulerPlanId: newId,
+      view: 'creation', creationRlhMode: 'scheduler', creationStep: 1, creationView: 'wizard',
+    });
+    this.showToast(parentId + ' sent to Route Scheduler \u2014 Finalised status unaffected', '#128A3E');
   }
   confirmFin() {
     const id = this.state.finPlanId;
@@ -6025,6 +6197,29 @@ class NDCApp extends React.Component {
     const eff = (p) => st.alignStatus[p.id] || p.status;
     const planner = st.persona === 'planner';
     const isAlign = st.view === 'align';
+    // 2026-07-29 — same RLH/NLH/FM Carting/SC-DC Mapping tier strip as Design Creation/Review,
+    // plus the Route Planner/Route Scheduler fork nested under RLH. Own state key (st.alignTier /
+    // st.alignRlhMode) — independent of the other two modules' choices.
+    const alignTierName = st.alignTier || 'RLH';
+    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
+    const alignTierSeg = ATIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: alignTierName === t[0],
+      bg: alignTierName === t[0] ? '#EAEEFB' : '#fff', bd: alignTierName === t[0] ? '#003F98' : '#E6EBF2',
+      fg: alignTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: alignTierName === t[0] ? '700' : '600',
+      onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
+    const alignRlhMode = st.alignRlhMode || 'planner';
+    // 2026-07-29 — Ops Alignment's existing JSX has real (non-null) ternary branches threaded
+    // through it (unlike Design Creation/Review's simpler structure), so blindly wrapping the
+    // whole existing planner view behind a new conditional here carries real risk of mismatching
+    // a branch. Until that's done carefully, Route Scheduler is shown but inert (toast, like the
+    // NLH/FM Carting/SC-DC Mapping "soon" tiles) rather than switching content — flagged plainly
+    // rather than silently pretending the swap is wired.
+    const ALIGN_RLH_SUB = [['planner', 'Route Planner', 'Row-by-row RLH route plan alignment — the existing Planner \u2194 Ops Lead freeze loop.'], ['scheduler', 'Route Scheduler', 'Alignment loop for scheduled Cutoff Plans — arriving in a later pass.']];
+    const alignRlhSubSeg = ALIGN_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: alignRlhMode === t[0],
+      bg: alignRlhMode === t[0] ? '#003F98' : '#fff', bd: alignRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+      fg: alignRlhMode === t[0] ? '#fff' : '#5A5E66', weight: alignRlhMode === t[0] ? '700' : '600',
+      onClick: t[0] === 'scheduler' ? (() => this.showToast('Route Scheduler alignment — arriving in a later build pass', '#1E6FB8')) : (() => this.setState({ alignRlhMode: t[0] })) }));
+    const isAlignRoutePlanner = alignRlhMode === 'planner';
+    const isAlignRouteScheduler = alignRlhMode === 'scheduler';
     const plans = d.plans;
     const cnt = (s) => plans.filter(p => eff(p) === s).length;
     // F2 \u2014 "Under Review" = In-Alignment plans with flagged rows still undecided (rows-in-progress).
@@ -6501,6 +6696,7 @@ class NDCApp extends React.Component {
         finBtnBg: (ps === 'Acknowledged' && allDecided && validatedClean) ? '#128A3E' : '#E6EBF2', finBtnFg: (ps === 'Acknowledged' && allDecided && validatedClean) ? '#fff' : '#5A5E66', finCursor: (ps === 'Acknowledged' && allDecided && validatedClean) ? 'pointer' : 'not-allowed',
         onAck: () => { if (!st.opsSubmitted[plan.id] && !plan.feedbackReceived) { this.showToast('At least one reviewer must submit feedback before you can acknowledge', '#C77B00'); return; } this.setState({ ackOpen: true, ackPlanId: plan.id }); }, onFin: () => { if (ps === 'Acknowledged' && allDecided) this.setState({ finOpen: true, finPlanId: plan.id, finPreviewSection: 'details' }); },
         onUnfreeze: () => { if (ps === 'Acknowledged') this.setState({ unfreezeOpen: true, unfreezePlanId: plan.id }); },
+        onRunScheduler: () => { if (ps === 'Finalised') this.setState({ runSchedulerOpen: true, runSchedulerPlanId: plan.id }); },
         progressLabel: decidedCount + ' of ' + flaggedRows.length + ' flagged rows decided \u00b7 ' + autoAligned + ' auto-aligned',
         onAcceptAllFlagged: () => { const undecN = flaggedRows.filter(r => !r.rowFullyDecided).length; if (undecN === 0) { this.showToast('No undecided flagged changes remaining', '#5A5E66'); return; } this.setState({ acceptAllPlanOpen: true, acceptAllPlanId: plan.id }); },
         acceptAllBg: flaggedRows.some(r => !r.rowFullyDecided) ? '#fff' : '#E6EBF2', acceptAllFg: flaggedRows.some(r => !r.rowFullyDecided) ? '#128A3E' : '#8E96A3', acceptAllBd: flaggedRows.some(r => !r.rowFullyDecided) ? '#128A3E' : '#E6EBF2', acceptAllCursor: flaggedRows.some(r => !r.rowFullyDecided) ? 'pointer' : 'not-allowed', acceptAllTitle: flaggedRows.some(r => !r.rowFullyDecided) ? ('Accept all ' + flaggedRows.filter(r => !r.rowFullyDecided).length + ' undecided changes') : 'All changes decided',
@@ -6682,6 +6878,7 @@ class NDCApp extends React.Component {
 
     const ackPlan = st.ackPlanId ? plans.find(p => p.id === st.ackPlanId) : null;
     const unfreezePlan = st.unfreezePlanId ? plans.find(p => p.id === st.unfreezePlanId) : null;
+    const runSchedulerPlan = st.runSchedulerPlanId ? plans.find(p => p.id === st.runSchedulerPlanId) : null;
     const finPlan = st.finPlanId ? plans.find(p => p.id === st.finPlanId) : null;
     // 2026-07-10 — the accepted/rejected count shown before Finalise must reflect EVERY decided
     // item — route-level (Vehicle Type) AND every individually-decided DC-level field (Route Code,
@@ -6791,8 +6988,10 @@ class NDCApp extends React.Component {
       alignNextPage: () => this.setState({ alignPage: Math.min(alignTotalPages - 1, alignPageSafe + 1) }),
       alignBackToList: () => this.setState({ alignPlanId: null }),
       planList: planList, alignFilterSeg, alignZoneChips, planCount: listPlans.length, aSel, alignClearFilter: () => this.setState({ alignFilter: 'Pending Feedback', alignZone: 'All', alignPage: 0 }),
+      alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
+      runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
       finOpen: st.finOpen, finPlanName: finPlan ? (finPlan.scCode + ' \u00b7 ' + finPlan.scName) : '', finAccepted: finAcceptedCount, finRejected: finRejectedCount, confirmFin: () => this.confirmFin(), closeFin: () => this.setState({ finOpen: false }),
       finPreviewDcViewRows,
       finPreviewSecDetails: finPreviewSection === 'details', finPreviewSecRoute: finPreviewSection === 'route',
@@ -7829,6 +8028,23 @@ class NDCApp extends React.Component {
 
   reviewVals() {
     const st = this.state, d = st.data;
+    // 2026-07-29 — same RLH/NLH/FM Carting/SC-DC Mapping tier strip as Design Creation (CTIER),
+    // plus the Route Planner/Route Scheduler fork nested under RLH. Independent state key from
+    // Design Creation's (st.creationRlhMode) — each module remembers its own tier/mode choice.
+    const reviewTierName = st.reviewTier || 'RLH';
+    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
+    const reviewTierSeg = RTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: reviewTierName === t[0],
+      bg: reviewTierName === t[0] ? '#EAEEFB' : '#fff', bd: reviewTierName === t[0] ? '#003F98' : '#E6EBF2',
+      fg: reviewTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: reviewTierName === t[0] ? '700' : '600',
+      onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
+    const reviewRlhMode = st.reviewRlhMode || 'planner';
+    const REV_RLH_SUB = [['planner', 'Route Planner', 'Per-run RLH route plan metrics — Coverage, CPS, Utilisation, Routes, Vehicles, Distance, Cost.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan review for scheduled runs — dispatch cutoffs & travel times.']];
+    const reviewRlhSubSeg = REV_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: reviewRlhMode === t[0],
+      bg: reviewRlhMode === t[0] ? '#003F98' : '#fff', bd: reviewRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+      fg: reviewRlhMode === t[0] ? '#fff' : '#5A5E66', weight: reviewRlhMode === t[0] ? '700' : '600',
+      onClick: () => this.setState({ reviewRlhMode: t[0] }) }));
+    const isReviewRoutePlanner = reviewRlhMode === 'planner';
+    const isReviewRouteScheduler = reviewRlhMode === 'scheduler';
     const fmtInt = (n) => n.toLocaleString('en-IN');
     const money = (n) => '\u20b9' + (n / 100000).toFixed(1) + 'L';
     const pct = (n) => Math.round(n * 100) + '%';
@@ -8039,6 +8255,7 @@ class NDCApp extends React.Component {
 
     return {
       isReview: st.view === 'review',
+      reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler,
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),
@@ -8394,6 +8611,10 @@ class NDCApp extends React.Component {
         });
       } else if (v === 'creation' && planner) {
         // Tier-2 = 2 tabs: "Input Selection" (whole 4-step wizard) + "Run Queue".
+        // 2026-07-29 — only meaningful for Route Planner today; Route Scheduler has its own
+        // wizard/queue split still to be built, so hide this strip while it's selected rather
+        // than leave two tabs pointing at state (creationView) that Route Scheduler doesn't use.
+        if ((st.creationRlhMode || 'planner') === 'planner') {
         const cv = st.creationView || 'wizard';
         const rqN = (st.runQueue || []).filter(r => r.status === 'Queued' || r.status === 'In Progress').length;
         subTabsArr = [
@@ -8404,17 +8625,13 @@ class NDCApp extends React.Component {
             rqN > 0 ? rqN : null, '#FBF1DF', '#C77B00', false,
             'Live status of DS solver runs triggered this cycle. Active runs show progress; completed runs are ready to review.', false),
         ];
+        }
       } else if (v === 'review' && planner) {
-        // RLH Route Plan (active) + SC-DC Mapping Plan (disabled/soon)
-        const rt = d.plans.length; // proxy; actual reviewTotal computed in reviewVals
-        subTabsArr = [
-          _tab('RLH Route Plan (' + rt + ')', true, () => {},
-            null, null, null, false,
-            'Per-run route plan metrics: Coverage, CPS, Utilisation, Routes, Vehicles, Distance, Cost. Compare HW variants side-by-side.', false),
-          _tab('SC-DC Mapping Plan', false, () => this.showToast('SC-DC Mapping Plan — coming soon', '#C77B00'),
-            'SOON', '#F2F5FA', '#8E96A3', true,
-            'SC-to-DC assignment summary plan — launching after Route Plan review is complete.', false),
-        ];
+        // 2026-07-29 — retired: the RLH Route Plan / SC-DC Mapping Plan split now lives as an
+        // in-content tier strip (reviewTierSeg + reviewRlhSubSeg, rendered inside the isReview
+        // block) so it can carry the same RLH/NLH/FM Carting/SC-DC Mapping shape as Design
+        // Creation's CTIER, plus the nested Route Planner/Route Scheduler fork. Leaving this empty
+        // hides the old generic Tier-2 strip so the two don't render on top of each other.
       }
       // Ops Alignment has NO Tier-2 sub-tabs — its Pending / Received / Finalised (planner) and
       // To review / In progress / Submitted / Locked (ops) filters now live in the master rail
@@ -8452,7 +8669,7 @@ class NDCApp extends React.Component {
       ...this.inputsVals(),
       // inputs action handlers not produced by inputsVals (kept here so they survive):
       ...this.addScVals(),
-      uploadFile: () => this.ingestRlhPlan(), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' } }),
+      uploadFile: () => (this.state.ingestionTab === 'nlh' ? this.ingestNlhPlan() : this.ingestRlhPlan()), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' } }),
       startCreation: () => this.go('creation'), recheckAutodml: () => this.showToast('AutoDML re-check queued', '#2F4FC6'),
       moduleTitle: tt[0], moduleSubtitle: tt[1], stubIcon: STUBICON[st.view] || ICON.dash,
       navGroups, cycleName: st.designCycle || 'July 2026', cycleOpen: !!st.cycleOpen,

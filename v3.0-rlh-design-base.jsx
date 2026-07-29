@@ -483,9 +483,9 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>ZONE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>VOL CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>SORT CAP</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Hourly Throughput — max shipments/hour this SC can process, feeds Route Scheduler's dispatch-cutoff calculation"}>HTP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NLH DOCKS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>RLH DOCKS</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Hourly Throughput — shipments/hour this SC can process, feeds Route Scheduler's dispatch-cutoff calculation"}>HTP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
@@ -502,9 +502,9 @@ function View(B, self) {
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66; white-space:nowrap;`)}>{s.zone}</span></div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.htp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.htp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
@@ -884,6 +884,15 @@ function View(B, self) {
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:-22px -28px 20px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2;`)}>
 {(ingTabs || []).map((t, __i34) => (<React.Fragment key={__i34}><button onClick={t.onClick} style={css(`display:flex; align-items:center; gap:7px; padding:6px 12px; border:1px solid ${t.bd}; background:${t.bg}; border-radius:8px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}<span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; opacity:0.7;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>{t.tip}</span></span>{(t.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EDEFF3; color:#5A5E66;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
+{(isIngComingSoon) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:center; padding:60px 40px;`)}>
+<div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
+<div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>FM Carting</div>
+<div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
+</div>
+</div>
+</>) : (<>
 {/* Ingestion summary dashboard */}
 <div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;`)}>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px;`)}>
@@ -938,6 +947,7 @@ function View(B, self) {
 </div>
 </>) : null}
 </div>
+</>)}
 </>) : null}
 </div>
 </div>
@@ -1016,7 +1026,6 @@ function View(B, self) {
                cycle. Re-added so Design Creation is future-ready for more than RLH (see the removed
                "plan-input-type selector" note at Step 1). Mirrors the Design-Ingestion tab pattern. */}
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>ROUTE PLANNING</span>
 <div style={css(`display:flex; gap:6px;`)}>
 {(creationTierSeg || []).map((ct, __i39) => (<React.Fragment key={__i39}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
@@ -1028,7 +1037,15 @@ function View(B, self) {
 {(creationRlhSubSeg || []).map((rs, __i39b) => (<React.Fragment key={__i39b}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
+{(isCreationTierRLH) ? (<>
 {(isRoutePlanner) ? (<>
+{/* Input Selection / Run Queue (2026-07-29) — moved here, nested under Route Planner specifically,
+    instead of the old generic Tier-2 strip that sat above the whole screen. Same creationView
+    state as before, just relocated. */}
+<div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<button onClick={() => this.setState({ creationView: 'wizard' })} title={"Select the LMDC volume file, configure sort centres, set HW variants, and trigger runs."} style={css(`height:30px; padding:0 13px; border:1px solid ${(st.creationView || 'wizard') === 'wizard' ? '#003F98' : '#E6EBF2'}; background:${(st.creationView || 'wizard') === 'wizard' ? '#EAEEFB' : 'transparent'}; color:${(st.creationView || 'wizard') === 'wizard' ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${(st.creationView || 'wizard') === 'wizard' ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
+<button onClick={() => this.setState({ creationView: 'queue' })} title={"Live status of DS solver runs triggered this cycle. Active runs show progress; completed runs are ready to review."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${(st.creationView || 'wizard') === 'queue' ? '#003F98' : '#E6EBF2'}; background:${(st.creationView || 'wizard') === 'queue' ? '#EAEEFB' : 'transparent'}; color:${(st.creationView || 'wizard') === 'queue' ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${(st.creationView || 'wizard') === 'queue' ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{((st.runQueue || []).filter(r => r.status === 'Queued' || r.status === 'In Progress').length > 0) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{(st.runQueue || []).filter(r => r.status === 'Queued' || r.status === 'In Progress').length}</span></>) : null}</button>
+</div>
 {/* ===== WIZARD VIEW (Input Selection tab) ===== */}
 {(isWizardView) ? (<>
 {/* stepper */}
@@ -1648,6 +1665,13 @@ function View(B, self) {
 </>) : null}{/* end isQueueView */}
 </>) : null}{/* end isRoutePlanner (2026-07-29) */}
 {(isRouteScheduler) ? (<>
+{/* Input Selection / Run Queue nested under Route Scheduler too (2026-07-29) — own state key
+    (schedulerCreationView) so it doesn't collide with Route Planner's creationView. Both tabs
+    show the same placeholder for now since the real wizard/queue split isn't built yet. */}
+<div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<button onClick={() => this.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${(st.schedulerCreationView || 'wizard') === 'wizard' ? '#003F98' : '#E6EBF2'}; background:${(st.schedulerCreationView || 'wizard') === 'wizard' ? '#EAEEFB' : 'transparent'}; color:${(st.schedulerCreationView || 'wizard') === 'wizard' ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${(st.schedulerCreationView || 'wizard') === 'wizard' ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
+<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`height:30px; padding:0 13px; border:1px solid ${(st.schedulerCreationView || 'wizard') === 'queue' ? '#003F98' : '#E6EBF2'}; background:${(st.schedulerCreationView || 'wizard') === 'queue' ? '#EAEEFB' : 'transparent'}; color:${(st.schedulerCreationView || 'wizard') === 'queue' ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${(st.schedulerCreationView || 'wizard') === 'queue' ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue</button>
+</div>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:480px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
 <div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
@@ -1658,6 +1682,17 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+</>) : (<>
+{/* Coming Soon landing (2026-07-30) — shown for any CTIER tier that isn't RLH yet (NLH, FM
+    Carting, Node Mapping). Real destination now, not a toast. */}
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
+<div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{creationTierComingSoonLabel}</div>
+<div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
+</div>
+</div>
+</>)}
 </div>
 </>) : null}
 {/* ===== DESIGN REVIEW ===== */}
@@ -1667,7 +1702,6 @@ function View(B, self) {
        Creation's CTIER. Nested Route Planner / Route Scheduler fork shown while RLH is active
        (the only live tier). ===== */}
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>ROUTE PLANNING</span>
 <div style={css(`display:flex; gap:6px;`)}>
 {(reviewTierSeg || []).map((ct, __i39c) => (<React.Fragment key={__i39c}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
@@ -1677,6 +1711,7 @@ function View(B, self) {
 {(reviewRlhSubSeg || []).map((rs, __i39d) => (<React.Fragment key={__i39d}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
+{(isReviewTierRLH) ? (<>
 {(isReviewRoutePlanner) ? (<>
 {/* Search SC moved into the Tier-2 tab row (right corner) — no separate search row. */}
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
@@ -2010,6 +2045,16 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+</>) : (<>
+{/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. */}
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
+<div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{reviewTierComingSoonLabel}</div>
+<div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
+</div>
+</div>
+</>)}
 </div>
 </>) : null}
 {/* ===== OPS ALIGNMENT · PLANNER ===== */}
@@ -2020,7 +2065,6 @@ function View(B, self) {
        Inserted as plain balanced sibling divs (no new outer wrapper) — Ops Alignment's existing
        layout div right below is left completely untouched. ===== */}
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>ROUTE PLANNING</span>
 <div style={css(`display:flex; gap:6px;`)}>
 {(alignTierSeg || []).map((ct, __i39e) => (<React.Fragment key={__i39e}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
@@ -2030,7 +2074,19 @@ function View(B, self) {
 {(alignRlhSubSeg || []).map((rs, __i39f) => (<React.Fragment key={__i39f}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
-<div style={css(`display:flex; flex-direction:row; height:100%; min-height:0;`)}>
+{/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. Additive sibling, not a
+    wrap, so the existing (riskier-to-touch) content div right below is completely untouched
+    structurally — only its own style attribute gets a CSS display toggle. */}
+{(!isAlignTierRLH) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
+<div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{alignTierComingSoonLabel}</div>
+<div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
+</div>
+</div>
+</>) : null}
+<div style={css(`display:${isAlignTierRLH ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
 {/* ===== EMPTY STATE (no plans in the active filter) — full width ===== */}
 {(aSel.empty) ? (<>
 <div style={css(`flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 40px; text-align:center;`)}>
@@ -2644,7 +2700,7 @@ function View(B, self) {
 <div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
 <div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
 <div style={css(`width:44px; height:44px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Run Scheduler on {runSchedulerPlanName}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This sends the finalised Route &amp; Vehicle Plan to <strong>Route Scheduler</strong> to add dispatch cutoffs and travel times, using an NLH Landing Plan you'll select next. <strong style={css(`color:#003F98;`)}>This plan's Finalised status is unaffected</strong> — Route Scheduler runs as its own linked plan alongside it.</div></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Run Scheduler on {runSchedulerPlanName}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This sends the finalised Route &amp; Vehicle Plan to <strong>Route Scheduler</strong> to add dispatch cutoffs and travel times, using an NLH Landing Plan you'll select next. <strong style={css(`color:#003F98;`)}>Route &amp; Vehicle Plan hereon is frozen &amp; will not change for this plan ID.</strong></div></div>
 </div>
 <div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
 <button onClick={closeRunScheduler} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
@@ -4003,7 +4059,11 @@ class NDCApp extends React.Component {
         // being forced to de-select the SC just because the seeded gap outran the droppable rows.
         const missRaw = (variant + city[1].charCodeAt(1)) % 4 === 0 ? ri(2, 9) : 0;
         const missVolDc = Math.min(missRaw, Math.max(0, 6 - zeroVolDc));
-        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.round(volume * rf(0.98, 1.4) / 1000) * 1000, volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]) });
+        // 2026-07-29 — Sort Capacity redefined: it's the number of DCs an SC can serve (a
+        // count, not a shipment-volume figure), realistically 50-250. Always >= dcCount (the SC
+        // can't be seeded already over its own capacity), with modest headroom. Volume Capacity
+        // stays a genuine shipment-volume figure — the two are separate metrics.
+        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.min(250, dcCount + ri(10, 40)), volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]) });
       }
       ci++;
       if (ci % cityArr.length === 0) zi++;
@@ -4336,10 +4396,10 @@ class NDCApp extends React.Component {
       sel('type', 'SC Type', true, opt(['LMSC', 'FMSC', 'Hybrid'])),
       sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West'])),
       txt('volCap', 'Volume Capacity', true, 'shipments / day'),
-      txt('sortCap', 'Sort Capacity', true, 'shipments / day'),
+      txt('sortCap', 'Sort Capacity', true, 'DCs it can serve, e.g. 50\u2013250'),
+      txt('htp', 'Hourly Throughput (HTP)', false, 'shipments / hour'),
       txt('nlhDocks', 'NLH Docks', true, ''),
       txt('rlhDocks', 'RLH Docks', true, ''),
-      txt('htp', 'Hourly Throughput (HTP)', false, 'shipments / hour'),
       txt('localTp', 'Local TP Limit', true, ''),
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
       tm('open', 'SC Opening Time', '06:00'),
@@ -4775,14 +4835,18 @@ class NDCApp extends React.Component {
       const h = s.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
       const nlhDocks = 3 + (h % 7);
       const rlhDocks = 2 + ((h >> 3) % 6);
-      // HTP (Hourly Throughput) — shipments/hour this SC can process. Feeds Route Scheduler's
-      // dispatch-cutoff calculation (2026-07-29). Real value if set via Add/Edit SC, else a
-      // deterministic placeholder in the same style as nlhDocks/rlhDocks above.
-      const htp = s.htp != null && s.htp !== '' ? s.htp : 800 + (h % 5) * 100;
       const localTp = 4 + (h % 3);
       const nonLocalTp = 2 + ((h >> 2) % 3);
       const openHour = 5 + (h % 3);
       const closeHour = 21 + ((h >> 4) % 3);
+      // HTP (Hourly Throughput) — MAX shipments/hour this SC can process (2026-07-29). Distinct
+      // from Sort Capacity (a DC-count) and from Volume Capacity (a daily shipment figure): HTP x
+      // operating hours is typically well above Volume Capacity, since a SC rarely runs at peak
+      // throughput every hour of the day. E.g. HTP 8,000/hr x 20 hrs = 160,000 theoretical vs. an
+      // ~80,000 Volume Capacity target — roughly 1.3-2.2x headroom, deterministic per SC.
+      const opHours = Math.max(1, closeHour - openHour);
+      const htpMultiplier = 1.3 + ((h % 10) / 10);
+      const htp = s.htp != null && s.htp !== '' ? s.htp : Math.round((s.volCap || 40000) / opHours * htpMultiplier / 100) * 100;
       const openTime = String(openHour).padStart(2, '0') + ':00';
       const closeTime = String(closeHour).padStart(2, '0') + ':00';
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -4988,7 +5052,8 @@ class NDCApp extends React.Component {
     const ing = st.ingestionTab || 'rlh';
     // 2026-07-29 — NLH Plan ingestion activated (was "arriving next cycle"). Feeds Route
     // Scheduler's NLH Landing Plan Selection step. FM Carting stays a future-cycle stub.
-    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.'], ['nlh', 'NLH Plan', false, 'Ingest an NLH Landing Plan (inbound linehaul arrivals at this LMSC) — feeds Route Scheduler\u2019s NLH Landing Plan Selection step.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: t[2] ? () => this.showToast(t[1] + ' — arriving next cycle', '#1E6FB8') : () => this.setState({ ingestionTab: t[0] }) }));
+    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['nlh', 'NLH Plan', false, 'Ingest an NLH Landing Plan (inbound linehaul arrivals at this LMSC) — feeds Route Scheduler\u2019s NLH Landing Plan Selection step.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0] }) }));
+    const isIngComingSoon = ing === 'fm';
     return {
       gate,
       isVolumeTab: itab === 'volume', isNodesTab: itab === 'nodes', isMastersTab: itab === 'masters', isIngestionTab: itab === 'ingestion',
@@ -5017,12 +5082,12 @@ class NDCApp extends React.Component {
       addVehBtnBg: addVehValid ? '#003F98' : '#E6EBF2', addVehBtnFg: addVehValid ? '#fff' : '#8E96A3', addVehBtnCursor: addVehValid ? 'pointer' : 'not-allowed',
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Hourly Throughput (HTP)' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'Hourly Throughput (HTP)' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
       ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),
       scVehAvail: scAvailPager.pageRows, scAvailPager: scAvailPager, scVehAvailCountLabel: availQuery ? (availShownRows + ' vehicle row' + (availShownRows === 1 ? '' : 's') + ' across ' + scVehAvailFiltered.length + ' of ' + scVehAvailRows.length + ' SCs') : (scVehAvailTotalRows + ' vehicle rows across ' + scVehAvailRows.length + ' SCs'), availSearch: st.availSearch || '', onAvailSearch: (e) => this.setState({ availSearch: e.target.value, pgAvail: 1 }), availNoResults: scVehAvailFiltered.length === 0,
-      ingTabs,
+      ingTabs, isIngComingSoon,
       // 2026-07-29 — NLH Plan ingestion activated: separate store (st.ingestedNlhPlans) from RLH's
       // (st.ingestedPlans), so the two tabs never mix data. Card copy/labels below are tab-aware.
       ingIsNlh: ing === 'nlh',
@@ -5296,9 +5361,11 @@ class NDCApp extends React.Component {
       vsum.distViol.forEach(t => flags.push({ t: 'Distance limit exceeded \u2014 ' + t + '. Farthest DC is out of range; add a longer-range vehicle or drop the far node.', sev: 'danger', dot: '#D14B4B', k: 'dist' }));
       // #3 \u2014 missing SC location/dock is a blocking error (manually-added SCs lack coords/docks).
       if (!s.lat || !s.lng || !s.docks) flags.push({ t: 'Missing SC location or dock data \u2014 add coordinates and RLH docks in the SC Master before triggering this SC.', sev: 'danger', dot: '#D14B4B', k: 'loc' });
-      // #4 \u2014 sort-capacity & volume-capacity breach warnings (planned volume vs the SC masters).
-      if (s.sortCap && s.volume > s.sortCap) flags.push({ t: 'Sort-capacity breach \u2014 planned volume (' + s.volume.toLocaleString('en-IN') + ') exceeds SC sort capacity (' + s.sortCap.toLocaleString('en-IN') + '). Drop nodes or raise capacity in the SC Master.', sev: 'warning', dot: '#C77B00' });
-      if (s.volCap && s.volume > s.volCap) flags.push({ t: 'Volume-capacity breach \u2014 planned volume (' + s.volume.toLocaleString('en-IN') + ') exceeds SC volume capacity (' + s.volCap.toLocaleString('en-IN') + ').', sev: 'warning', dot: '#C77B00' });
+      // #4 \u2014 sort-capacity breach (2026-07-29: Sort Capacity is a DC-count capacity, not a
+      // shipment-volume figure — compare planned DC count against it, not planned volume) and
+      // volume-capacity breach (still volume vs the Volume Capacity master, unchanged).
+      if (s.sortCap && s.dcCount > s.sortCap) flags.push({ t: 'Sort-capacity breach \u2014 number of nodes mapped (' + s.dcCount.toLocaleString('en-IN') + ') exceeds SC sort capacity (' + s.sortCap.toLocaleString('en-IN') + '). Drop nodes or raise capacity in the SC Master.', sev: 'warning', dot: '#C77B00' });
+      if (s.volCap && s.volume > s.volCap) flags.push({ t: 'Volume-capacity breach \u2014 total node volume (' + s.volume.toLocaleString('en-IN') + ') exceeds SC volume capacity (' + s.volCap.toLocaleString('en-IN') + ').', sev: 'warning', dot: '#C77B00' });
       // #5 \u2014 oversized-vehicle (under-range) warning.
       if (vsum.underUtil) flags.push({ t: 'Largest vehicle may be oversized \u2014 farthest DC (' + effFar + ' km) is under 40% of its ' + vsum.largestDist + ' km range. Consider a smaller vehicle to lift utilisation.', sev: 'warning', dot: '#C77B00', k: 'underutil' });
       // 2.6 \u2014 zero/missing-volume LMDC error (hard block).
@@ -5566,17 +5633,20 @@ class NDCApp extends React.Component {
       };
     });
 
-    // Network-tier placeholder selector (RLH built; NLH + FM Carting arrive in a future cycle).
-    // Re-added per Vignesh's "within routing they choose FM / NLH / RLH" (sprint-connect 2026-06-30);
-    // mirrors the Design-Ingestion tab pattern. RLH is the only active tier in V1.
-    // 2026-07-29 — 4th peer pill added: SC-DC Mapping. Same "soon" placeholder pattern as NLH/FM
-    // Carting; this is a planning function alongside the linehaul-mode tiers, not a linehaul mode
-    // itself, but it lives in the same strip per product decision (Vignesh, prototyping-branch sync).
-    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
-    const creationTierSeg = CTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: t[0] === 'RLH',
-      bg: t[0] === 'RLH' ? '#EAEEFB' : '#fff', bd: t[0] === 'RLH' ? '#003F98' : '#E6EBF2',
-      fg: t[0] === 'RLH' ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: t[0] === 'RLH' ? '700' : '600',
-      onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
+    // Network-tier selector (RLH built; NLH / FM Carting / Node Mapping arrive in a future cycle).
+    // 2026-07-30 — all tiers are now real, selectable destinations: clicking a not-yet-built tier
+    // navigates to it and shows a plain "Coming Soon" landing (see isCreationTierRLH below),
+    // rather than a toast that implies the tab itself isn't a real destination. Corrects the
+    // earlier approach of nesting SC-DC Mapping under RLH's own row, which mis-represented it as
+    // part of RLH — Node Mapping is its own peer tier, just not built yet.
+    const creationTierName = st.creationTier || 'RLH';
+    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const creationTierSeg = CTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: creationTierName === t[0],
+      bg: creationTierName === t[0] ? '#EAEEFB' : '#fff', bd: creationTierName === t[0] ? '#003F98' : '#E6EBF2',
+      fg: creationTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: creationTierName === t[0] ? '700' : '600',
+      onClick: () => this.setState({ creationTier: t[0] }) }));
+    const isCreationTierRLH = creationTierName === 'RLH';
+    const creationTierComingSoonLabel = creationTierName;
 
     // 2026-07-29 — Route Planner / Route Scheduler fork, nested one level under RLH only (RLH is
     // the only live CTIER tier). Route Planner = the existing 4-step wizard + Run Queue (unchanged,
@@ -5595,7 +5665,7 @@ class NDCApp extends React.Component {
       isCreation: st.view === 'creation', creationStep: step, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, vehAddOnly: vehAddOnly, step1HasFile: step === 1 && !!st.creationVolume, step1NoFile: step === 1 && !st.creationVolume,
       showCreationGuidelines: !!st.showCreationGuidelines, closeCreationGuidelines: () => this.setState({ showCreationGuidelines: false }),
       creationTierSeg,
-      creationRlhSubSeg, isRoutePlanner, isRouteScheduler,
+      creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationTierRLH, creationTierComingSoonLabel,
       activeSchedulerParent: (() => { const sp = (d.schedulerPlans || []).find(s => s.id === st.activeSchedulerPlanId); if (!sp) return null; const parent = d.plans.find(p => p.id === sp.parentPlanId); return parent ? (parent.scCode + ' \u00b7 ' + parent.scName) : null; })(),
       isWizardView: (st.creationView || 'wizard') === 'wizard', isQueueView: (st.creationView || 'wizard') === 'queue',
       stepper, planGroupName: planGroup.name, planGroupTriggered: planGroup.triggered, planGroupCap: planGroup.cap, planGroupPct: planGroup.pct + '%',
@@ -6201,17 +6271,23 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Own state key (st.alignTier /
     // st.alignRlhMode) — independent of the other two modules' choices.
     const alignTierName = st.alignTier || 'RLH';
-    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
+    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
     const alignTierSeg = ATIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: alignTierName === t[0],
       bg: alignTierName === t[0] ? '#EAEEFB' : '#fff', bd: alignTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: alignTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: alignTierName === t[0] ? '700' : '600',
-      onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
+      onClick: () => this.setState({ alignTier: t[0] }) }));
+    // 2026-07-30 — tiers are now real/selectable (Coming Soon landing instead of a toast). Ops
+    // Alignment's existing content div is toggled via CSS display (isAlignTierRLH below) rather
+    // than removed from the JSX tree, since this screen's branching ternaries make a structural
+    // wrap risky — see isAlignTierRLH usage at the content div's style attribute.
+    const isAlignTierRLH = alignTierName === 'RLH';
+    const alignTierComingSoonLabel = alignTierName;
     const alignRlhMode = st.alignRlhMode || 'planner';
     // 2026-07-29 — Ops Alignment's existing JSX has real (non-null) ternary branches threaded
     // through it (unlike Design Creation/Review's simpler structure), so blindly wrapping the
     // whole existing planner view behind a new conditional here carries real risk of mismatching
     // a branch. Until that's done carefully, Route Scheduler is shown but inert (toast, like the
-    // NLH/FM Carting/SC-DC Mapping "soon" tiles) rather than switching content — flagged plainly
+    // NLH/FM Carting/Node Mapping "soon" tiles) rather than switching content — flagged plainly
     // rather than silently pretending the swap is wired.
     const ALIGN_RLH_SUB = [['planner', 'Route Planner', 'Row-by-row RLH route plan alignment — the existing Planner \u2194 Ops Lead freeze loop.'], ['scheduler', 'Route Scheduler', 'Alignment loop for scheduled Cutoff Plans — arriving in a later pass.']];
     const alignRlhSubSeg = ALIGN_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: alignRlhMode === t[0],
@@ -6988,7 +7064,7 @@ class NDCApp extends React.Component {
       alignNextPage: () => this.setState({ alignPage: Math.min(alignTotalPages - 1, alignPageSafe + 1) }),
       alignBackToList: () => this.setState({ alignPlanId: null }),
       planList: planList, alignFilterSeg, alignZoneChips, planCount: listPlans.length, aSel, alignClearFilter: () => this.setState({ alignFilter: 'Pending Feedback', alignZone: 'All', alignPage: 0 }),
-      alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler,
+      alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler, isAlignTierRLH, alignTierComingSoonLabel,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -8032,11 +8108,13 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Independent state key from
     // Design Creation's (st.creationRlhMode) — each module remembers its own tier/mode choice.
     const reviewTierName = st.reviewTier || 'RLH';
-    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['SC-DC Mapping', 'SC-to-DC assignment planning — arriving in a future cycle', true]];
+    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
     const reviewTierSeg = RTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: reviewTierName === t[0],
       bg: reviewTierName === t[0] ? '#EAEEFB' : '#fff', bd: reviewTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: reviewTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: reviewTierName === t[0] ? '700' : '600',
-      onClick: t[2] ? (() => this.showToast(t[0] + ' planning — coming in a future cycle', '#1E6FB8')) : (() => {}) }));
+      onClick: () => this.setState({ reviewTier: t[0] }) }));
+    const isReviewTierRLH = reviewTierName === 'RLH';
+    const reviewTierComingSoonLabel = reviewTierName;
     const reviewRlhMode = st.reviewRlhMode || 'planner';
     const REV_RLH_SUB = [['planner', 'Route Planner', 'Per-run RLH route plan metrics — Coverage, CPS, Utilisation, Routes, Vehicles, Distance, Cost.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan review for scheduled runs — dispatch cutoffs & travel times.']];
     const reviewRlhSubSeg = REV_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: reviewRlhMode === t[0],
@@ -8255,7 +8333,7 @@ class NDCApp extends React.Component {
 
     return {
       isReview: st.view === 'review',
-      reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler,
+      reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler, isReviewTierRLH, reviewTierComingSoonLabel,
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),
@@ -8610,22 +8688,9 @@ class NDCApp extends React.Component {
             null, null, null, false, IT_TIP[t[0]], showDot);
         });
       } else if (v === 'creation' && planner) {
-        // Tier-2 = 2 tabs: "Input Selection" (whole 4-step wizard) + "Run Queue".
-        // 2026-07-29 — only meaningful for Route Planner today; Route Scheduler has its own
-        // wizard/queue split still to be built, so hide this strip while it's selected rather
-        // than leave two tabs pointing at state (creationView) that Route Scheduler doesn't use.
-        if ((st.creationRlhMode || 'planner') === 'planner') {
-        const cv = st.creationView || 'wizard';
-        const rqN = (st.runQueue || []).filter(r => r.status === 'Queued' || r.status === 'In Progress').length;
-        subTabsArr = [
-          _tab('Input Selection', cv === 'wizard', () => this.setState({ creationView: 'wizard' }),
-            null, null, null, false,
-            'Select the LMDC volume file, configure sort centres, set HW variants, and trigger runs.', false),
-          _tab('Run Queue', cv === 'queue', () => this.setState({ creationView: 'queue' }),
-            rqN > 0 ? rqN : null, '#FBF1DF', '#C77B00', false,
-            'Live status of DS solver runs triggered this cycle. Active runs show progress; completed runs are ready to review.', false),
-        ];
-        }
+        // 2026-07-29 — retired: Input Selection / Run Queue now nest inside Design Creation's
+        // own content, once for Route Planner and once for Route Scheduler (each fork gets its
+        // own pair), per Vignesh's request. See the isRoutePlanner/isRouteScheduler JSX blocks.
       } else if (v === 'review' && planner) {
         // 2026-07-29 — retired: the RLH Route Plan / SC-DC Mapping Plan split now lives as an
         // in-content tier strip (reviewTierSeg + reviewRlhSubSeg, rendered inside the isReview

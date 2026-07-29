@@ -1683,12 +1683,20 @@ function View(B, self) {
 </div>
 </>) : null}
 </>) : (<>
-{/* Coming Soon landing (2026-07-30) — shown for any CTIER tier that isn't RLH yet (NLH, FM
-    Carting, Node Mapping). Real destination now, not a toast. */}
+{/* Coming Soon landing (2026-07-30) — shown for any CTIER tier that isn't RLH yet. Node Mapping
+    gets its own sub-fork row (SC-DC Mapping, its one real child) mirroring RLH's Route
+    Planner/Scheduler row; NLH and FM Carting have no modules yet, so no sub-row for them. */}
+{(isCreationTierNodeMapping) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+</div>
+</div>
+</>) : null}
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
 <div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{creationTierComingSoonLabel}</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{(isCreationTierNodeMapping) ? 'SC-DC Mapping' : creationTierComingSoonLabel}</div>
 <div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
 </div>
 </div>
@@ -2046,11 +2054,19 @@ function View(B, self) {
 </div>
 </>) : null}
 </>) : (<>
-{/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. */}
+{/* Coming Soon landing (2026-07-30) — Node Mapping gets its own sub-fork row (SC-DC Mapping)
+    mirroring RLH's Route Planner/Scheduler row; NLH/FM Carting have no modules yet. */}
+{(isReviewTierNodeMapping) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+</div>
+</div>
+</>) : null}
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
 <div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{reviewTierComingSoonLabel}</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{(isReviewTierNodeMapping) ? 'SC-DC Mapping' : reviewTierComingSoonLabel}</div>
 <div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
 </div>
 </div>
@@ -2076,12 +2092,20 @@ function View(B, self) {
 </div>
 {/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. Additive sibling, not a
     wrap, so the existing (riskier-to-touch) content div right below is completely untouched
-    structurally — only its own style attribute gets a CSS display toggle. */}
+    structurally — only its own style attribute gets a CSS display toggle. Node Mapping gets its
+    own sub-fork row (SC-DC Mapping) mirroring RLH's Route Planner/Scheduler row. */}
+{(isAlignTierNodeMapping) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+</div>
+</div>
+</>) : null}
 {(!isAlignTierRLH) ? (<>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
 <div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{alignTierComingSoonLabel}</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{(isAlignTierNodeMapping) ? 'SC-DC Mapping' : alignTierComingSoonLabel}</div>
 <div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
 </div>
 </div>
@@ -2862,7 +2886,39 @@ function View(B, self) {
 </>) : null}
 {/* ===== OPS ALIGNMENT · OPS LEAD ===== */}
 {(isAlignOps) ? (<>
-<div style={css(`display:flex; flex-direction:row; height:100%; min-height:0;`)}>
+{/* ===== Tier strip (2026-07-30) — same RLH/NLH/FM Carting/Node Mapping tiers as the Planner
+       view, sharing the same state (st.alignTier) since this is one shared-state prototype, not
+       a real per-user session. RLH → Route Planner/Route Scheduler; Node Mapping → SC-DC
+       Mapping; NLH/FM Carting have no modules yet. ===== */}
+<div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+{(alignTierSeg || []).map((ct, __i39g) => (<React.Fragment key={__i39g}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
+</div>
+</div>
+{(isAlignTierRLH) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+{(alignRlhSubSeg || []).map((rs, __i39h) => (<React.Fragment key={__i39h}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{(isAlignTierNodeMapping) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+</div>
+</div>
+</>) : null}
+{(!isAlignTierRLH) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
+<div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{(isAlignTierNodeMapping) ? 'SC-DC Mapping' : alignTierComingSoonLabel}</div>
+<div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
+</div>
+</div>
+</>) : null}
+<div style={css(`display:${isAlignTierRLH ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
 {/* ===== EMPTY STATE (no plans in the active filter, or none assigned) — full width ===== */}
 {(oSel.empty) ? (<>
 <div style={css(`flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 40px; text-align:center;`)}>
@@ -5646,6 +5702,7 @@ class NDCApp extends React.Component {
       fg: creationTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: creationTierName === t[0] ? '700' : '600',
       onClick: () => this.setState({ creationTier: t[0] }) }));
     const isCreationTierRLH = creationTierName === 'RLH';
+    const isCreationTierNodeMapping = creationTierName === 'Node Mapping';
     const creationTierComingSoonLabel = creationTierName;
 
     // 2026-07-29 — Route Planner / Route Scheduler fork, nested one level under RLH only (RLH is
@@ -5665,7 +5722,7 @@ class NDCApp extends React.Component {
       isCreation: st.view === 'creation', creationStep: step, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, vehAddOnly: vehAddOnly, step1HasFile: step === 1 && !!st.creationVolume, step1NoFile: step === 1 && !st.creationVolume,
       showCreationGuidelines: !!st.showCreationGuidelines, closeCreationGuidelines: () => this.setState({ showCreationGuidelines: false }),
       creationTierSeg,
-      creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationTierRLH, creationTierComingSoonLabel,
+      creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationTierRLH, isCreationTierNodeMapping, creationTierComingSoonLabel,
       activeSchedulerParent: (() => { const sp = (d.schedulerPlans || []).find(s => s.id === st.activeSchedulerPlanId); if (!sp) return null; const parent = d.plans.find(p => p.id === sp.parentPlanId); return parent ? (parent.scCode + ' \u00b7 ' + parent.scName) : null; })(),
       isWizardView: (st.creationView || 'wizard') === 'wizard', isQueueView: (st.creationView || 'wizard') === 'queue',
       // 2026-07-30 bugfix — these were being computed directly from `st` inside JSX (render scope
@@ -6286,6 +6343,7 @@ class NDCApp extends React.Component {
     // than removed from the JSX tree, since this screen's branching ternaries make a structural
     // wrap risky — see isAlignTierRLH usage at the content div's style attribute.
     const isAlignTierRLH = alignTierName === 'RLH';
+    const isAlignTierNodeMapping = alignTierName === 'Node Mapping';
     const alignTierComingSoonLabel = alignTierName;
     const alignRlhMode = st.alignRlhMode || 'planner';
     // 2026-07-29 — Ops Alignment's existing JSX has real (non-null) ternary branches threaded
@@ -7069,7 +7127,7 @@ class NDCApp extends React.Component {
       alignNextPage: () => this.setState({ alignPage: Math.min(alignTotalPages - 1, alignPageSafe + 1) }),
       alignBackToList: () => this.setState({ alignPlanId: null }),
       planList: planList, alignFilterSeg, alignZoneChips, planCount: listPlans.length, aSel, alignClearFilter: () => this.setState({ alignFilter: 'Pending Feedback', alignZone: 'All', alignPage: 0 }),
-      alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler, isAlignTierRLH, alignTierComingSoonLabel,
+      alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler, isAlignTierRLH, isAlignTierNodeMapping, alignTierComingSoonLabel,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -8119,6 +8177,7 @@ class NDCApp extends React.Component {
       fg: reviewTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: reviewTierName === t[0] ? '700' : '600',
       onClick: () => this.setState({ reviewTier: t[0] }) }));
     const isReviewTierRLH = reviewTierName === 'RLH';
+    const isReviewTierNodeMapping = reviewTierName === 'Node Mapping';
     const reviewTierComingSoonLabel = reviewTierName;
     const reviewRlhMode = st.reviewRlhMode || 'planner';
     const REV_RLH_SUB = [['planner', 'Route Planner', 'Per-run RLH route plan metrics — Coverage, CPS, Utilisation, Routes, Vehicles, Distance, Cost.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan review for scheduled runs — dispatch cutoffs & travel times.']];
@@ -8338,7 +8397,7 @@ class NDCApp extends React.Component {
 
     return {
       isReview: st.view === 'review',
-      reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler, isReviewTierRLH, reviewTierComingSoonLabel,
+      reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler, isReviewTierRLH, isReviewTierNodeMapping, reviewTierComingSoonLabel,
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),

@@ -1030,14 +1030,15 @@ function View(B, self) {
 {(creationTierSeg || []).map((ct, __i39) => (<React.Fragment key={__i39}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
 </div>
-{/* ===== RLH sub-fork: Route Planner / Route Scheduler (2026-07-29) — only meaningful while RLH
-       is the active CTIER tier, which today is always (RLH is the only live tier). ===== */}
+{/* ===== RLH sub-fork: Route Planner / Route Scheduler (2026-07-29) — only rendered while RLH
+       is the active CTIER tier (2026-07-30 fix: this row was rendering unconditionally before,
+       showing on top of every tier including FM Carting/NLH). ===== */}
+{(isCreationTierRLH) ? (<>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <div style={css(`display:flex; gap:6px;`)}>
 {(creationRlhSubSeg || []).map((rs, __i39b) => (<React.Fragment key={__i39b}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
-{(isCreationTierRLH) ? (<>
 {(isRoutePlanner) ? (<>
 {/* Input Selection / Run Queue (2026-07-29) — moved here, nested under Route Planner specifically,
     instead of the old generic Tier-2 strip that sat above the whole screen. Same creationView
@@ -1714,12 +1715,13 @@ function View(B, self) {
 {(reviewTierSeg || []).map((ct, __i39c) => (<React.Fragment key={__i39c}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
 </div>
+{/* 2026-07-30 fix: sub-fork row now gated inside isReviewTierRLH too — was rendering unconditionally. */}
+{(isReviewTierRLH) ? (<>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <div style={css(`display:flex; gap:6px;`)}>
 {(reviewRlhSubSeg || []).map((rs, __i39d) => (<React.Fragment key={__i39d}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
-{(isReviewTierRLH) ? (<>
 {(isReviewRoutePlanner) ? (<>
 {/* Search SC moved into the Tier-2 tab row (right corner) — no separate search row. */}
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
@@ -2085,11 +2087,14 @@ function View(B, self) {
 {(alignTierSeg || []).map((ct, __i39e) => (<React.Fragment key={__i39e}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
 </div>
+{/* 2026-07-30 fix: sub-fork row now gated behind isAlignTierRLH — was rendering unconditionally. */}
+{(isAlignTierRLH) ? (<>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <div style={css(`display:flex; gap:6px;`)}>
 {(alignRlhSubSeg || []).map((rs, __i39f) => (<React.Fragment key={__i39f}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
+</>) : null}
 {/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. Additive sibling, not a
     wrap, so the existing (riskier-to-touch) content div right below is completely untouched
     structurally — only its own style attribute gets a CSS display toggle. Node Mapping gets its
@@ -2892,7 +2897,7 @@ function View(B, self) {
        Mapping; NLH/FM Carting have no modules yet. ===== */}
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <div style={css(`display:flex; gap:6px;`)}>
-{(alignTierSeg || []).map((ct, __i39g) => (<React.Fragment key={__i39g}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
+{(alignTierSegOpsLead || []).map((ct, __i39g) => (<React.Fragment key={__i39g}><button onClick={ct.onClick} title={ct.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:1px solid ${ct.bd}; background:${ct.bg}; color:${ct.fg}; font-family:inherit; font-size:12.5px; font-weight:${ct.weight}; border-radius:8px; cursor:pointer;`)}>{ct.label}{(ct.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>SOON</span></>) : null}</button></React.Fragment>))}
 </div>
 </div>
 {(isAlignTierRLH) ? (<>
@@ -7128,6 +7133,10 @@ class NDCApp extends React.Component {
       alignBackToList: () => this.setState({ alignPlanId: null }),
       planList: planList, alignFilterSeg, alignZoneChips, planCount: listPlans.length, aSel, alignClearFilter: () => this.setState({ alignFilter: 'Pending Feedback', alignZone: 'All', alignPage: 0 }),
       alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler, isAlignTierRLH, isAlignTierNodeMapping, alignTierComingSoonLabel,
+      // 2026-07-30 — Ops Lead's tier strip only ever shows RLH and Node Mapping (per Vignesh),
+      // unlike the Planner's full 4-tier strip. NLH/FM Carting aren't part of the Ops Lead's
+      // review scope at all, not just "coming soon" for them too.
+      alignTierSegOpsLead: (alignTierSeg || []).filter(t => t.label === 'RLH' || t.label === 'Node Mapping'),
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),

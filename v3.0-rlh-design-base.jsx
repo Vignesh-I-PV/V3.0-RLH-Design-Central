@@ -1667,21 +1667,230 @@ function View(B, self) {
 </>) : null}{/* end isRoutePlanner (2026-07-29) */}
 {(isRouteScheduler) ? (<>
 {/* Input Selection / Run Queue nested under Route Scheduler too (2026-07-29) — own state key
-    (schedulerCreationView) so it doesn't collide with Route Planner's creationView. Both tabs
-    show the same placeholder for now since the real wizard/queue split isn't built yet. */}
+    (schedulerCreationView) so it doesn't collide with Route Planner's creationView. */}
 <div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <button onClick={() => this.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerWizardView ? '#003F98' : '#E6EBF2'}; background:${isSchedulerWizardView ? '#EAEEFB' : 'transparent'}; color:${isSchedulerWizardView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
-<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#003F98' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#EAEEFB' : 'transparent'}; color:${isSchedulerQueueView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue</button>
+<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#003F98' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#EAEEFB' : 'transparent'}; color:${isSchedulerQueueView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(schedQueueActive) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{schedRunTotal}</span></>) : null}</button>
 </div>
-<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
-<div style={css(`max-width:480px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
-<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Route Scheduler</div>
-<div style={css(`font-size:13px; color:#5A5E66; line-height:1.55;`)}>Adds dispatch cutoffs and travel times to an already-Finalised RLH plan, using NLH landing data. Trigger it either from here (Plan Selection) or via "Run Scheduler" on a Finalised plan in Ops Alignment.</div>
-{(activeSchedulerParent) ? (<><div style={css(`display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#EAEEFB; border-radius:999px; font-size:12px; font-weight:600; color:#003F98;`)}>Pre-selected from Ops Alignment: {activeSchedulerParent}</div></>) : null}
-<div style={css(`font-size:11.5px; font-weight:600; color:#8E96A3; letter-spacing:0.03em; margin-top:4px;`)}>WIZARD STEPS ARRIVING IN THE NEXT BUILD PASS — PLAN SELECTION · NLH LANDING PLAN SELECTION · OPERATING MODE · PREVIEW &amp; TRIGGER</div>
+{(isSchedulerWizardView) ? (<>
+{/* ===== SCHEDULER STEPPER ===== */}
+<div style={css(`display:flex; align-items:center; padding:16px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+{(schedulerStepper || []).map((s, __i41) => (<React.Fragment key={__i41}>
+<div style={css(`display:flex; align-items:center; flex:${s.flex}; min-width:0;`)}>
+<button onClick={s.onClick} style={css(`display:flex; align-items:center; gap:10px; border:none; background:transparent; cursor:pointer; font-family:inherit; flex-shrink:0; padding:0;`)}>
+<span style={css(`width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:700; background:${s.numBg}; color:${s.numFg}; border:1.5px solid ${s.numBd}; box-shadow:${s.numShadow}; flex-shrink:0; transition:background 140ms, box-shadow 140ms;`)}>
+{(s.isDone) ? (<><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"2.4"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
+{(s.notDone) ? (<>{s.n}</>) : null}
+</span>
+<span style={css(`display:flex; flex-direction:column; align-items:flex-start; line-height:1.25;`)}><span style={css(`font-size:13px; font-weight:${s.labelWeight}; color:${s.labelColor}; white-space:nowrap;`)}>{s.label}</span><span style={css(`font-size:9.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:${s.subColor};`)}>{s.subLabel}</span></span>
+</button>
+{(s.hasLine) ? (<><div style={css(`flex:1; height:3px; border-radius:3px; background:${s.lineBg}; margin:0 16px; min-width:20px;`)} /></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+{/* ===== STEP BODY ===== */}
+<div style={css(`flex:1; overflow:auto; display:flex; flex-direction:column; min-height:0;`)}>
+<div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
+{(isSchedStep1) ? (<>
+<div style={css(`display:flex; gap:0; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; height:100%;`)}>
+{/* rail */}
+<aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#FAFBFD; padding:14px; overflow:auto;`)}>
+<input value={schedulerSearch} onChange={onSchedulerSearch} placeholder={"Search SC code or name"} style={css(`width:100%; height:34px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; margin-bottom:12px; box-sizing:border-box;`)} />
+<div style={css(`display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;`)}>
+{(zoneChipsStep1 || []).map((z, __i42) => (<React.Fragment key={__i42}><button onClick={z.onClick} style={css(`font-size:11.5px; padding:4px 10px; border-radius:999px; border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+</div>
+<label style={css(`display:flex; align-items:center; gap:7px; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}><input type={"checkbox"} checked={allVisibleSelected} onChange={onSelectAllVisible} style={css(`width:15px; height:15px; cursor:pointer;`)} />Select all visible</label>
+</aside>
+{/* main list */}
+<div style={css(`flex:1; overflow:auto; padding:16px 18px; background:#fff;`)}>
+{(scsWithFinalEmpty) ? (<>
+<div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:60px 20px; text-align:center;`)}>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No Finalised RLH plans yet</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:320px;`)}>Route Scheduler only runs against plans that have already reached Finalised in Ops Alignment. Finalise a plan first, then come back here.</div>
+</div>
+</>) : (<>
+{(schedulerScGroups || []).map((g, __i43) => (<React.Fragment key={__i43}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; margin-bottom:10px; overflow:hidden;`)}>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 12px; background:#FAFBFD;`)}>
+<input type={"checkbox"} checked={g.allChecked} onChange={g.onToggleAll} style={css(`width:16px; height:16px; cursor:pointer; flex-shrink:0;`)} />
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`font-size:13.5px; font-weight:600; color:#14171F;`)}>{g.code} · {g.name}</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; margin-top:1px;`)}>{g.zone} · {g.planCount} finalised plan{g.planCount === 1 ? '' : 's'}</div>
 </div>
 </div>
+{(g.plans || []).map((p, __i44) => (<React.Fragment key={__i44}>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px 9px 34px; border-top:1px solid #EEF1F6;`)}>
+<input type={"checkbox"} checked={p.checked} onChange={p.onToggle} style={css(`width:15px; height:15px; cursor:pointer; flex-shrink:0;`)} />
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{p.runId} · HW {p.hw} · {p.routes} routes</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>Finalised {p.finalisedDate}</div>
+</div>
+{(p.isPreselected) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#003F98; flex-shrink:0;`)}>Pre-selected</span></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+</React.Fragment>))}
+</>)}
+</div>
+</div>
+{/* footer summary */}
+<div style={css(`display:flex; align-items:center; padding:12px 4px 0;`)}>
+<span style={css(`font-size:12.5px; color:#5A5E66;`)}>{step1Summary}</span>
+</div>
+</>) : null}
+{(isSchedStep2) ? (<>
+<div style={css(`max-width:640px;`)}>
+<div style={css(`font-size:13px; color:#5A5E66; margin-bottom:14px; line-height:1.55;`)}>One NLH Landing Plan covers every SC (LMSC-wise) — the same file applies to all {selectedScCodesStep1.length} SC{selectedScCodesStep1.length === 1 ? '' : 's'} selected in Step 1.</div>
+<input value={schedulerNlhSearch} onChange={onSchedulerNlhSearch} placeholder={"Search by plan name"} style={css(`width:100%; height:36px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; margin-bottom:14px; box-sizing:border-box;`)} />
+{(schedulerNlhEmpty) ? (<>
+<div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:50px 20px; text-align:center; border:1px dashed #E6EBF2; border-radius:10px;`)}>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH Landing Plans ingested yet</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Ingest one under Design Inputs → Design Ingestion → NLH Plan, then come back here.</div>
+</div>
+</>) : (schedulerNlhNoResults) ? (<>
+<div style={css(`padding:30px; text-align:center; font-size:13px; color:#8E96A3;`)}>No plans match "{schedulerNlhSearch}".</div>
+</>) : (<>
+{(schedulerNlhCards || []).map((p, __i45) => (<React.Fragment key={__i45}>
+<button onClick={p.onClick} style={css(`display:flex; align-items:center; gap:12px; width:100%; text-align:left; padding:12px 14px; border:1px solid ${p.active ? '#003F98' : '#E6EBF2'}; background:${p.active ? '#EAEEFB' : '#fff'}; border-radius:9px; margin-bottom:8px; cursor:pointer; font-family:inherit;`)}>
+<div style={css(`width:34px; height:34px; border-radius:8px; background:${p.active ? '#003F98' : '#F2F5FA'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={p.active ? '#fff' : '#8E96A3'} strokeWidth={"1.8"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>{p.name}</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:1px;`)}>{p.scCount} SCs · {p.rows} rows · {p.by} · {p.date}</div>
+</div>
+{(p.active) ? (<><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
+</button>
+</React.Fragment>))}
+</>)}
+</div>
+</>) : null}
+{(isSchedStep3) ? (<>
+<div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Overall defaults</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px;`)}>Applies to all {selectedScCodesStep1.length} selected SC{selectedScCodesStep1.length === 1 ? '' : 's'} unless overridden below.</div>
+<div style={css(`display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;`)}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
+<div style={css(`display:flex; gap:5px;`)}>
+{[0, 0.5, 1].map((v, __i46) => (<React.Fragment key={__i46}><button onClick={() => onHwGlobal(v)} style={css(`flex:1; height:30px; border:1px solid ${hwGlobal === v ? '#003F98' : '#E6EBF2'}; background:${hwGlobal === v ? '#003F98' : '#fff'}; color:${hwGlobal === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+</div>
+{(hwGlobalNeedsRef) ? (<>
+{(globalRefAmbiguous) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>Multiple SCs selected — set a reference plan per SC below.</div></>) : (globalRefOptions.length === 0) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>No reference plan available yet for this SC.</div></>) : (<>
+<select value={refGlobal} onChange={(e) => onRefGlobalPick(e.target.value)} style={css(`width:100%; height:30px; margin-top:8px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:11.5px;`)}>
+<option value={""}>Pick a reference plan…</option>
+{(globalRefOptions || []).map((id, __i47) => (<option key={__i47} value={id}>{id}</option>))}
+</select>
+</>)}
+</>) : null}
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>RLH Docks</div>
+<input value={docksGlobal} onChange={onDocksGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Plan-level only — SC Master is unchanged.</div>
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Hold Time Factor (HTF)</div>
+<div style={css(`display:flex; gap:5px;`)}>
+{[0, 0.5, 1].map((v, __i48) => (<React.Fragment key={__i48}><button onClick={() => onHtfGlobal(v)} style={css(`flex:1; height:30px; border:1px solid ${htfGlobal === v ? '#003F98' : '#E6EBF2'}; background:${htfGlobal === v ? '#003F98' : '#fff'}; color:${htfGlobal === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+</div>
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Minimises hold time by weight — no reference plan needed.</div>
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>D0 Cutoff</div>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}>
+<button onClick={onD0GlobalDec} disabled={d0Global === 0} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${d0Global === 0 ? 'default' : 'pointer'}; opacity:${d0Global === 0 ? '0.4' : '1'}; font-size:15px; color:#5A5E66;`)}>−</button>
+<div style={css(`flex:1; text-align:center; font-size:14px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{d0GlobalLabel}</div>
+<button onClick={onD0GlobalInc} disabled={d0Global === 6} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${d0Global === 6 ? 'default' : 'pointer'}; opacity:${d0Global === 6 ? '0.4' : '1'}; font-size:15px; color:#5A5E66;`)}>+</button>
+</div>
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>+30 min steps from 09:00, up to 6 (12:00).</div>
+</div>
+</div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;`)}>
+<div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Per-SC overrides</div>
+{(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 0.9fr 0.9fr 0.9fr 1.1fr 0.6fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(opModeRows || []).map((r, __i50) => (<React.Fragment key={__i50}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 0.9fr 0.9fr 0.9fr 1.1fr 0.6fr; gap:8px; padding:9px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
+<div style={css(`display:flex; gap:3px;`)}>
+{[0, 0.5, 1].map((v, __i51) => (<React.Fragment key={__i51}><button onClick={() => r.onHw(v)} style={css(`flex:1; height:24px; border:1px solid ${r.hw === v ? '#003F98' : '#E6EBF2'}; background:${r.hw === v ? '#003F98' : '#fff'}; color:${r.hw === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:5px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+</div>
+<div style={css(`display:flex; gap:3px;`)}>
+{[0, 0.5, 1].map((v, __i52) => (<React.Fragment key={__i52}><button onClick={() => r.onHtf(v)} style={css(`flex:1; height:24px; border:1px solid ${r.htf === v ? '#003F98' : '#E6EBF2'}; background:${r.htf === v ? '#003F98' : '#fff'}; color:${r.htf === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:5px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+</div>
+<div style={css(`display:flex; align-items:center; gap:4px;`)}>
+<button onClick={r.onD0Dec} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>−</button>
+<span style={css(`font-size:11.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0Label}</span>
+<button onClick={r.onD0Inc} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
+</div>
+<input value={r.docks} onChange={(e) => r.onDocksChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
+{(r.needsRef) ? (<>
+<select value={r.ref} onChange={(e) => r.onRefPick(e.target.value)} style={css(`width:100%; height:26px; border:1px solid ${r.refMissing ? '#D14B4B' : '#E6EBF2'}; border-radius:5px; font-family:inherit; font-size:11px;`)}>
+<option value={""}>{r.refOptions.length === 0 ? 'None available' : 'Pick…'}</option>
+{(r.refOptions || []).map((id, __i53) => (<option key={__i53} value={id}>{id}</option>))}
+</select>
+</>) : (<><span style={css(`font-size:11px; color:#8E96A3;`)}>—</span></>)}
+<button onClick={r.onResetRow} title={"Reset to overall defaults"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{(isSchedStep4) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#EAF0FB; border:1px solid #C5D4F0; border-radius:8px; margin-bottom:16px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12.5px; color:#14171F;`)}>NLH Landing Plan: <strong>{step4NlhLabel}</strong></span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>· validation rules for this step are still being defined — none are enforced yet, so nothing below will block triggering.</span>
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.7fr 0.9fr 0.9fr 1.3fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.7fr 0.9fr 0.9fr 1.3fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.htf}</div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>—</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:10px;`)}>Triggering creates {previewRows.length} separate Route Scheduler run{previewRows.length === 1 ? '' : 's'} (one per SC), landing in Run Queue.</div>
+</>) : null}
+</div>
+{/* ===== NAV FOOTER ===== */}
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:#fff; border-top:1px solid #E6EBF2; flex-shrink:0;`)}>
+<button onClick={schedulerBack} style={css(`height:36px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerStep > 1 ? 'pointer' : 'default'}; opacity:${schedulerStep > 1 ? '1' : '0.4'};`)} disabled={schedulerStep === 1}>Back</button>
+<button onClick={isSchedStep4 ? onTriggerScheduler : schedulerNext} title={(!schedulerCanNext && isSchedStep3) ? 'Set a reference plan for every SC that needs one' : ''} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${schedulerCanNext ? '#003F98' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerCanNext ? 'pointer' : 'default'};`)}>{schedulerNextLabel}<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+</div>
+</>) : null}
+{(isSchedulerQueueView) ? (<>
+{(schedRunTotal === 0) ? (<>
+<div style={css(`flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:60px 20px; text-align:center;`)}>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No Route Scheduler runs triggered yet</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Runs you trigger from Preview &amp; Trigger will show up here — Queued, then In Progress, then Completed.</div>
+</div>
+</>) : (<>
+<div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['Run', 'Status'].map((h, __i56) => (<React.Fragment key={__i56}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(schedulerQueueRows || []).map((r, __i57) => (<React.Fragment key={__i57}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.id}</div>
+<div><span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${r.statusBg}; color:${r.statusFg};`)}>{r.statusLabel}</span></div>
+</div>
+</React.Fragment>))}
+</div>
+{(schedQueueAllDone) ? (<><button onClick={() => this.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
+</div>
+</>)}
+</>) : null}
 </>) : null}
 </>) : (<>
 {/* Coming Soon landing (2026-07-30) — shown for any CTIER tier that isn't RLH yet. Node Mapping
@@ -1866,7 +2075,7 @@ function View(B, self) {
 <span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAF3FB; color:#1E6FB8;`)}>Ingested</span>
 <span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:#E7F4EC; color:#128A3E;`)}>Validated</span>
 </div>
-<div style={css(`font-size:11px; color:#8E96A3;`)}>{ip.runId} · SC {ip.scCode} · {ip.rows} rows · {ip.by} · {ip.date}</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>{ip.runId} · {(ip.scCount != null) ? (ip.scCount + ' SCs') : ('SC ' + ip.scCode)} · {ip.rows} rows · {ip.by} · {ip.date}</div>
 </div>
 </div>
 </React.Fragment>))}
@@ -4592,18 +4801,19 @@ class NDCApp extends React.Component {
     this.setState({ ingestedPlans: plans, ingestionCounter: n });
     this.showToast('Plan ingested & validated · ' + plan.name, '#128A3E');
   }
-  // ingestNlhPlan() (2026-07-29) — same synthesised-ingest pattern as ingestRlhPlan(), but writes
-  // to its own state store (ingestedNlhPlans / nlhIngestionCounter) so RLH and NLH ingestion never
-  // share or overwrite each other's data. Feeds Route Scheduler's NLH Landing Plan Selection step.
+  // ingestNlhPlan() (2026-07-29, corrected 2026-07-30) — same synthesised-ingest pattern as
+  // ingestRlhPlan(), own state store (ingestedNlhPlans / nlhIngestionCounter). CORRECTED: an NLH
+  // Landing Plan is a single GLOBAL file covering all SCs (LMSC-wise), same shape as the RLH
+  // volume file — not tagged to one scCode. `scCount` replaces the old single `scCode` field.
   ingestNlhPlan() {
     const n = (this.state.nlhIngestionCounter || 0) + 1;
     const now = new Date();
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     const scs = (this.state.data && this.state.data.scs) || [];
-    const scCode = scs.length ? scs[(n - 1) % scs.length].code : 'BLR-S1';
-    const rows = 40 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 161); // NLH landing plans are inbound-vehicle schedules, not per-DC route rows — a much smaller row count is realistic
-    const plan = { name: 'NLH-Landing-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCode: scCode, runId: 'NLH-ING-' + String(n).padStart(3, '0') };
+    const scCount = scs.length || 80;
+    const rows = scCount * (2 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 5)); // a handful of inbound-vehicle rows per LMSC, summed across every SC the file covers
+    const plan = { name: 'NLH-Landing-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCount: scCount, runId: 'NLH-ING-' + String(n).padStart(3, '0') };
     const plans = [plan].concat(this.state.ingestedNlhPlans || []);
     this.setState({ ingestedNlhPlans: plans, nlhIngestionCounter: n });
     this.showToast('NLH Landing Plan ingested & validated · ' + plan.name, '#128A3E');
@@ -5728,7 +5938,7 @@ class NDCApp extends React.Component {
       showCreationGuidelines: !!st.showCreationGuidelines, closeCreationGuidelines: () => this.setState({ showCreationGuidelines: false }),
       creationTierSeg,
       creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationTierRLH, isCreationTierNodeMapping, creationTierComingSoonLabel,
-      activeSchedulerParent: (() => { const sp = (d.schedulerPlans || []).find(s => s.id === st.activeSchedulerPlanId); if (!sp) return null; const parent = d.plans.find(p => p.id === sp.parentPlanId); return parent ? (parent.scCode + ' \u00b7 ' + parent.scName) : null; })(),
+      ...this.schedulerVals(),
       isWizardView: (st.creationView || 'wizard') === 'wizard', isQueueView: (st.creationView || 'wizard') === 'queue',
       // 2026-07-30 bugfix — these were being computed directly from `st` inside JSX (render scope
       // has no `st`, only creationVals()'s return object), causing "ReferenceError: st is not
@@ -5978,33 +6188,254 @@ class NDCApp extends React.Component {
     this.setState({ alignStatus: s, alignDecisions, alignDcDecisions, alignFieldDec, unfreezeOpen: false, unfreezePlanId: null });
     this.showToast(id + ' unfrozen \u2014 reopened for Ops Lead editing, decisions reset', '#C77B00');
   }
-  // confirmRunScheduler() (2026-07-29) — creates a NEW, separate schedulerPlans row carrying
-  // parentPlanId back to the Finalised RLH plan. Never touches plan.status or anything in
-  // this.state.data.plans — Route Scheduler's own lifecycle lives entirely in its own array,
-  // per the "separate linked entity" decision. Redirects into Design Creation's Route Scheduler
-  // fork with this new entry pre-selected.
+  // resolveSchedulerParamsFor(code) (2026-07-30) — single source of truth for a SC's resolved
+  // operating-mode params (global default, unless overridden at the SC level). Called by both
+  // schedulerVals() (Step 3/4 preview) and triggerSchedulerRuns() (actual creation), so what's
+  // shown in preview can never drift from what actually gets baked into a triggered run.
+  resolveSchedulerParamsFor(code) {
+    const st = this.state;
+    const hwGlobal = st.schedulerHwGlobal !== undefined ? st.schedulerHwGlobal : 0;
+    const hwBySC = st.schedulerHwBySC || {};
+    const htfGlobal = st.schedulerHtfGlobal !== undefined ? st.schedulerHtfGlobal : 0;
+    const htfBySC = st.schedulerHtfBySC || {};
+    const d0Global = st.schedulerD0Global || 0;
+    const d0BySC = st.schedulerD0BySC || {};
+    const rlhDocksBySC = st.schedulerRlhDocksBySC || {};
+    const refGlobal = st.schedulerRefGlobal || '';
+    const refBySC = st.schedulerRefBySC || {};
+    // Same "demo hash" idea as SC Master's own display-only RLH Docks split — kept consistent so
+    // the default shown here matches what SC Master already shows for the same SC.
+    let h = 0; for (let i = 0; i < code.length; i++) h = (h * 31 + code.charCodeAt(i)) & 0x7fffffff;
+    const defaultDocks = 2 + ((h >> 3) % 6);
+    // RLH Docks global override (2026-07-30 fix) — typing a value in the "overall" field applies
+    // it to every selected SC's default (still overridable per-SC below), same pattern as HW/HTF/D0.
+    // Empty/unset means "use each SC's own SC Master value" (the per-SC defaultDocks above).
+    const docksGlobalOverride = st.schedulerRlhDocksGlobal;
+    const docksBase = (docksGlobalOverride !== undefined && docksGlobalOverride !== null && docksGlobalOverride !== '') ? Number(docksGlobalOverride) : defaultDocks;
+    const hw = hwBySC[code] !== undefined ? hwBySC[code] : hwGlobal;
+    const htf = htfBySC[code] !== undefined ? htfBySC[code] : htfGlobal;
+    const d0 = d0BySC[code] !== undefined ? d0BySC[code] : d0Global;
+    const docks = rlhDocksBySC[code] !== undefined ? rlhDocksBySC[code] : docksBase;
+    const ref = refBySC[code] !== undefined ? refBySC[code] : refGlobal;
+    const needsRef = hw > 0;
+    return {
+      hw, htf, d0, docks, defaultDocks, docksBase, ref, needsRef, refMissing: needsRef && !ref,
+      hwOverridden: hwBySC[code] !== undefined && hwBySC[code] !== hwGlobal,
+      htfOverridden: htfBySC[code] !== undefined && htfBySC[code] !== htfGlobal,
+      d0Overridden: d0BySC[code] !== undefined && d0BySC[code] !== d0Global,
+      docksOverridden: rlhDocksBySC[code] !== undefined && rlhDocksBySC[code] !== docksBase,
+    };
+  }
+  // fmtD0Cutoff(n) — n = number of +30min increments (0-6) on top of the 09:00 base.
+  fmtD0Cutoff(n) {
+    const totalMin = 9 * 60 + (n || 0) * 30;
+    const hh = Math.floor(totalMin / 60), mm = totalMin % 60;
+    return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+  }
+  // triggerSchedulerRuns() (2026-07-30) — the actual commit point (Step 4). Creates one
+  // schedulerPlans row PER selected Finalised RLH plan, each carrying its own resolved operating-
+  // mode params (via resolveSchedulerParamsFor, same values the preview showed) and the chosen
+  // (global) NLH plan. Never touches this.state.data.plans — separate linked entity, own lifecycle.
+  triggerSchedulerRuns() {
+    const st = this.state, d = st.data;
+    const selectedPlanIds = st.schedulerSelectedPlanIds || [];
+    const parents = d.plans.filter(p => selectedPlanIds.indexOf(p.id) >= 0);
+    if (!parents.length) return;
+    let n = this.state.schedulerPlanCounter || 0;
+    const newRows = parents.map(parent => {
+      n++;
+      const params = this.resolveSchedulerParamsFor(parent.scCode);
+      return {
+        id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
+        scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
+        status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
+        nlhPlanId: st.schedulerNlhPlanId || null,
+        hw: params.hw, htf: params.htf, d0Increments: params.d0, d0Cutoff: this.fmtD0Cutoff(params.d0),
+        rlhDocks: params.docks, refPlanId: params.ref || null,
+        cutoffs: null,
+      };
+    });
+    const schedulerPlans = (d.schedulerPlans || []).concat(newRows);
+    const CONCURRENCY = (typeof NDC_CONCURRENCY !== 'undefined') ? NDC_CONCURRENCY : 3;
+    const codes = newRows.map(r => r.id);
+    const _kept = (st.schedulerRunQueue || []).filter(r => codes.indexOf(r.id) < 0);
+    const _merged = _kept.concat(newRows.map(r => ({ id: r.id, scCode: r.scCode, status: 'Queued', ticks: 0 })));
+    let _active = _merged.filter(r => r.status === 'In Progress').length;
+    for (let i = 0; i < _merged.length && _active < CONCURRENCY; i++) { if (_merged[i].status === 'Queued') { _merged[i].status = 'In Progress'; _merged[i].ticks = 0; _active++; } }
+    this.setState({
+      data: Object.assign({}, d, { schedulerPlans }),
+      schedulerPlanCounter: n, schedulerRunQueue: _merged, schedulerCreationView: 'queue',
+    });
+    clearInterval(this._sq);
+    this._sq = setInterval(() => {
+      this.setState(s => {
+        const q = (s.schedulerRunQueue || []).map(r => Object.assign({}, r));
+        q.forEach(r => { if (r.status === 'In Progress') { r.ticks = (r.ticks || 0) + 1; if (r.ticks >= 4 + (r.scCode.charCodeAt(0) % 4)) r.status = 'Completed'; } });
+        let active = q.filter(r => r.status === 'In Progress').length;
+        for (let i = 0; i < q.length && active < CONCURRENCY; i++) { if (q[i].status === 'Queued') { q[i].status = 'In Progress'; q[i].ticks = 0; active++; } }
+        if (!q.some(r => r.status !== 'Completed')) clearInterval(this._sq);
+        return { schedulerRunQueue: q };
+      });
+    }, 520);
+    this.showToast(newRows.length + ' Route Scheduler run' + (newRows.length === 1 ? '' : 's') + ' triggered', '#128A3E');
+  }
+  // schedulerVals() (2026-07-30) — all data logic for the Route Scheduler 4-step wizard. Merged
+  // into creationVals()'s return object via spread, same compositional pattern renderVals() uses
+  // to merge creationVals()/reviewVals()/alignVals() etc.
+  schedulerVals() {
+    const st = this.state, d = st.data;
+    const step = st.schedulerStep || 1;
+    const ZONES = ['North', 'South', 'East', 'West', 'Central'];
+    const fmtIntSch = (n) => (n || 0).toLocaleString('en-IN');
+
+    const SCHED_STEPS = [[1, 'Plan Selection'], [2, 'NLH Plan Selection'], [3, 'Operating Mode'], [4, 'Preview & Trigger']];
+    const schedulerStepper = SCHED_STEPS.map((s, idx) => ({ n: s[0], label: s[1], active: s[0] === step, isDone: s[0] < step, notDone: !(s[0] < step),
+      numBg: s[0] === step ? '#003F98' : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? '#003F98' : (s[0] < step ? '#128A3E' : '#D0D5DD'),
+      numShadow: s[0] === step ? '0 0 0 4px rgba(0,63,152,0.12)' : 'none',
+      subLabel: s[0] < step ? 'Done' : (s[0] === step ? 'In progress' : 'Up next'), subColor: s[0] < step ? '#128A3E' : (s[0] === step ? '#003F98' : '#A5ABB5'),
+      labelColor: s[0] === step ? '#14171F' : (s[0] < step ? '#14171F' : '#8E96A3'), labelWeight: s[0] === step ? '700' : (s[0] < step ? '600' : '500'),
+      hasLine: idx < SCHED_STEPS.length - 1, lineBg: s[0] < step ? '#128A3E' : '#E6EBF2', flex: idx < SCHED_STEPS.length - 1 ? '1' : '0 0 auto',
+      onClick: () => { if (s[0] <= step) this.setState({ schedulerStep: s[0] }); } }));
+
+    // ===== STEP 1 — Plan Selection: only SCs with >=1 Finalised RLH plan are listable at all. =====
+    const finalisedPlans = d.plans.filter(p => p.status === 'Finalised');
+    const selectedPlanIds = st.schedulerSelectedPlanIds || [];
+    const preselectId = st.schedulerPreselectPlanId;
+    const q1 = (st.schedulerSearch || '').toLowerCase();
+    const zf1 = st.schedulerZone || 'All';
+    const scCodesWithFinal = Array.from(new Set(finalisedPlans.map(p => p.scCode)));
+    const scsWithFinal = scCodesWithFinal.map(code => d.scs.find(s => s.code === code)).filter(Boolean);
+    const zoneChipsStep1 = ['All'].concat(ZONES).map(z => ({ label: z, active: zf1 === z,
+      count: z === 'All' ? scsWithFinal.length : scsWithFinal.filter(s => s.zone === z).length,
+      onClick: () => this.setState({ schedulerZone: z }) })).filter(z => z.label === 'All' || z.count > 0);
+    const filteredScsStep1 = scsWithFinal.filter(s => (zf1 === 'All' || s.zone === zf1) && (!q1 || s.code.toLowerCase().indexOf(q1) >= 0 || s.name.toLowerCase().indexOf(q1) >= 0));
+
+    const toggleIds = (ids, id) => { const set = new Set(ids); if (set.has(id)) set.delete(id); else set.add(id); return Array.from(set); };
+    const schedulerScGroups = filteredScsStep1.map(sc => {
+      const plansForSc = finalisedPlans.filter(p => p.scCode === sc.code);
+      const checkedCount = plansForSc.filter(p => selectedPlanIds.indexOf(p.id) >= 0).length;
+      return { code: sc.code, name: sc.name, zone: sc.zone, planCount: plansForSc.length,
+        allChecked: plansForSc.length > 0 && checkedCount === plansForSc.length, someChecked: checkedCount > 0 && checkedCount < plansForSc.length,
+        onToggleAll: () => { const allOn = checkedCount === plansForSc.length; let ids = selectedPlanIds.slice();
+          plansForSc.forEach(p => { const has = ids.indexOf(p.id) >= 0; if (allOn && has) ids = ids.filter(x => x !== p.id); if (!allOn && !has) ids = ids.concat([p.id]); });
+          this.setState({ schedulerSelectedPlanIds: ids }); },
+        plans: plansForSc.map(p => ({ id: p.id, runId: 'RUN-' + p.scCode + '-01', hw: p.hw, routes: (p.rows || []).length, finalisedDate: p.sentDate,
+          checked: selectedPlanIds.indexOf(p.id) >= 0, isPreselected: p.id === preselectId,
+          onToggle: () => this.setState({ schedulerSelectedPlanIds: toggleIds(selectedPlanIds, p.id) }) })) };
+    });
+    const visiblePlanIds = []; schedulerScGroups.forEach(g => g.plans.forEach(p => visiblePlanIds.push(p.id)));
+    const allVisibleSelected = visiblePlanIds.length > 0 && visiblePlanIds.every(id => selectedPlanIds.indexOf(id) >= 0);
+    const onSelectAllVisible = () => { const ids = new Set(selectedPlanIds); if (allVisibleSelected) visiblePlanIds.forEach(id => ids.delete(id)); else visiblePlanIds.forEach(id => ids.add(id)); this.setState({ schedulerSelectedPlanIds: Array.from(ids) }); };
+
+    const selectedPlansFull = finalisedPlans.filter(p => selectedPlanIds.indexOf(p.id) >= 0);
+    const selectedScCodesStep1 = Array.from(new Set(selectedPlansFull.map(p => p.scCode)));
+    const step1Summary = selectedPlanIds.length + ' plan' + (selectedPlanIds.length === 1 ? '' : 's') + ' selected across ' + selectedScCodesStep1.length + ' SC' + (selectedScCodesStep1.length === 1 ? '' : 's');
+    const canNextScheduler1 = selectedPlanIds.length > 0;
+    const scsWithFinalEmpty = scsWithFinal.length === 0;
+
+    // ===== STEP 2 — NLH Plan Selection: one GLOBAL file for the whole batch (LMSC-wise, like the volume file). =====
+    const q2 = (st.schedulerNlhSearch || '').toLowerCase();
+    const allNlhPlans = st.ingestedNlhPlans || [];
+    const nlhPlansFiltered = allNlhPlans.filter(p => !q2 || p.name.toLowerCase().indexOf(q2) >= 0);
+    const chosenNlhRunId = st.schedulerNlhPlanId;
+    const schedulerNlhCards = nlhPlansFiltered.map(p => ({ runId: p.runId, name: p.name, rows: fmtIntSch(p.rows), scCount: p.scCount, date: p.date, by: p.by,
+      active: chosenNlhRunId === p.runId, onClick: () => this.setState({ schedulerNlhPlanId: p.runId }) }));
+    const chosenNlhPlan = allNlhPlans.find(p => p.runId === chosenNlhRunId);
+    const canNextScheduler2 = !!chosenNlhRunId;
+    const schedulerNlhNoResults = allNlhPlans.length > 0 && nlhPlansFiltered.length === 0;
+    const schedulerNlhEmpty = allNlhPlans.length === 0;
+
+    // ===== STEP 3 — Operating Mode: global default + per-SC override, for all 4 params. =====
+    const hwGlobal = st.schedulerHwGlobal !== undefined ? st.schedulerHwGlobal : 0;
+    const htfGlobal = st.schedulerHtfGlobal !== undefined ? st.schedulerHtfGlobal : 0;
+    const d0Global = st.schedulerD0Global || 0;
+    const refGlobal = st.schedulerRefGlobal || '';
+    const refOptionsFor = (code) => (d.schedulerPlans || []).filter(sp => sp.scCode === code && sp.status === 'Finalised').sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).map(sp => sp.id);
+    const opModeRows = selectedScCodesStep1.map(code => {
+      const sc = d.scs.find(s => s.code === code);
+      const p = this.resolveSchedulerParamsFor(code);
+      return Object.assign({ code, name: sc ? sc.name : code, zone: sc ? sc.zone : '', d0Label: this.fmtD0Cutoff(p.d0), refOptions: refOptionsFor(code) }, p,
+        { onHw: (v) => { const m = Object.assign({}, st.schedulerHwBySC || {}); m[code] = v; this.setState({ schedulerHwBySC: m }); },
+          onHtf: (v) => { const m = Object.assign({}, st.schedulerHtfBySC || {}); m[code] = v; this.setState({ schedulerHtfBySC: m }); },
+          onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(6, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
+          onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(0, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
+          onDocksChange: (v) => { const m = Object.assign({}, st.schedulerRlhDocksBySC || {}); m[code] = v; this.setState({ schedulerRlhDocksBySC: m }); },
+          onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
+          onResetRow: () => {
+            const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
+            const tm = Object.assign({}, st.schedulerHtfBySC || {}); delete tm[code];
+            const dm = Object.assign({}, st.schedulerD0BySC || {}); delete dm[code];
+            const rm = Object.assign({}, st.schedulerRlhDocksBySC || {}); delete rm[code];
+            const refm = Object.assign({}, st.schedulerRefBySC || {}); delete refm[code];
+            this.setState({ schedulerHwBySC: hm, schedulerHtfBySC: tm, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm });
+          } });
+    });
+    const hwGlobalNeedsRef = hwGlobal > 0;
+    const globalRefOptions = selectedScCodesStep1.length === 1 ? refOptionsFor(selectedScCodesStep1[0]) : [];
+    const globalRefAmbiguous = hwGlobalNeedsRef && selectedScCodesStep1.length > 1;
+    const anyRefMissing = opModeRows.some(r => r.refMissing);
+    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.htfOverridden || r.d0Overridden || r.docksOverridden).length;
+    const canNextScheduler3 = !anyRefMissing;
+
+    // ===== STEP 4 — Preview & Trigger. Validation rules deferred (per Vignesh, defined separately). =====
+    const previewRows = opModeRows.map(r => Object.assign({}, r));
+    const step4NlhLabel = chosenNlhPlan ? chosenNlhPlan.name : '—';
+
+    // ===== Run Queue tab (Route Scheduler's own, separate from Route Planner's runQueue) =====
+    const schedRunQueue = st.schedulerRunQueue || [];
+    const SP_LABEL = { Queued: ['Queued', '#F2F5FA', '#5A5E66'], 'In Progress': ['In Progress', '#EAF0FB', '#1E6FB8'], Completed: ['Completed', '#E7F4EC', '#128A3E'] };
+    const schedulerQueueRows = schedRunQueue.map(r => ({ id: r.id, scCode: r.scCode, statusLabel: SP_LABEL[r.status][0], statusBg: SP_LABEL[r.status][1], statusFg: SP_LABEL[r.status][2] }));
+    const schedQueueActive = schedRunQueue.some(r => r.status !== 'Completed');
+    const schedQueueAllDone = schedRunQueue.length > 0 && !schedQueueActive;
+    const schedRunTotal = schedRunQueue.length;
+
+    return {
+      schedulerStepper, schedulerStep: step,
+      isSchedStep1: step === 1, isSchedStep2: step === 2, isSchedStep3: step === 3, isSchedStep4: step === 4,
+      // Step 1
+      zoneChipsStep1, schedulerScGroups, scsWithFinalEmpty, step1Summary, canNextScheduler1, selectedScCodesStep1,
+      schedulerSearch: st.schedulerSearch || '', onSchedulerSearch: (e) => this.setState({ schedulerSearch: e.target.value }),
+      allVisibleSelected, onSelectAllVisible,
+      // Step 2
+      schedulerNlhCards, canNextScheduler2, schedulerNlhNoResults, schedulerNlhEmpty,
+      schedulerNlhSearch: st.schedulerNlhSearch || '', onSchedulerNlhSearch: (e) => this.setState({ schedulerNlhSearch: e.target.value }),
+      // Step 3
+      hwGlobal, htfGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler3,
+      docksGlobal: st.schedulerRlhDocksGlobal != null ? st.schedulerRlhDocksGlobal : '',
+      onDocksGlobal: (e) => this.setState({ schedulerRlhDocksGlobal: e.target.value }),
+      onHwGlobal: (v) => this.setState({ schedulerHwGlobal: v }),
+      onHtfGlobal: (v) => this.setState({ schedulerHtfGlobal: v }),
+      onD0GlobalInc: () => this.setState({ schedulerD0Global: Math.min(6, d0Global + 1) }),
+      onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(0, d0Global - 1) }),
+      onRefGlobalPick: (v) => this.setState({ schedulerRefGlobal: v }),
+      // Step 4
+      previewRows, step4NlhLabel,
+      onTriggerScheduler: () => this.triggerSchedulerRuns(),
+      // Run Queue tab
+      schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
+      // nav
+      schedulerBack: () => this.setState({ schedulerStep: Math.max(1, step - 1) }),
+      schedulerNext: () => { const ok = step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : step === 3 ? canNextScheduler3 : false; if (ok) this.setState({ schedulerStep: Math.min(4, step + 1) }); },
+      schedulerCanNext: step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : step === 3 ? canNextScheduler3 : true,
+      schedulerNextLabel: step === 1 ? 'NLH Plan Selection' : step === 2 ? 'Operating Mode' : step === 3 ? 'Preview & Trigger' : 'Trigger',
+    };
+  }
+  // schedulerPlans row here. Matches Route Planner's own "nothing commits until Preview & Trigger"
+  // convention — this just navigates into Route Scheduler's Plan Selection step with the plan
+  // pre-ticked (schedulerPreselectPlanId), letting the user add more plans before anything is
+  // actually created. The schedulerPlans row(s) get created in triggerSchedulerRuns() (Step 4).
   confirmRunScheduler() {
     const parentId = this.state.runSchedulerPlanId;
     const d = this.state.data;
     const parent = d.plans.find(p => p.id === parentId);
     if (!parent) { this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }); return; }
-    const n = (this.state.schedulerPlanCounter || 0) + 1;
-    const newId = parentId + '-SCHED-' + String(n).padStart(2, '0');
-    const newRow = {
-      id: newId, parentPlanId: parentId, scCode: parent.scCode, scName: parent.scName,
-      status: 'Draft', // this entity's own lifecycle — independent of parent.status, which stays 'Finalised'
-      createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
-      nlhPlanId: null, cutoffs: null,
-    };
-    const schedulerPlans = (d.schedulerPlans || []).concat([newRow]);
     this.setState({
-      data: Object.assign({}, d, { schedulerPlans }),
-      schedulerPlanCounter: n,
       runSchedulerOpen: false, runSchedulerPlanId: null,
-      activeSchedulerPlanId: newId,
-      view: 'creation', creationRlhMode: 'scheduler', creationStep: 1, creationView: 'wizard',
+      schedulerPreselectPlanId: parentId,
+      schedulerSelectedPlanIds: [parentId],
+      view: 'creation', creationRlhMode: 'scheduler', schedulerStep: 1, schedulerCreationView: 'wizard',
     });
-    this.showToast(parentId + ' sent to Route Scheduler \u2014 Finalised status unaffected', '#128A3E');
+    this.showToast(parentId + ' pre-selected in Route Scheduler \u2014 Finalised status unaffected', '#128A3E');
   }
   confirmFin() {
     const id = this.state.finPlanId;

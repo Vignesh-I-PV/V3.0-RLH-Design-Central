@@ -2259,14 +2259,80 @@ function View(B, self) {
 </>) : null}
 </>) : null}{/* end isReviewRoutePlanner (2026-07-29) */}
 {(isReviewRouteScheduler) ? (<>
-<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
-<div style={css(`max-width:480px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
-<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M9 17V9m3 8V5m3 12v-4M4 21h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Route Scheduler — Review</div>
-<div style={css(`font-size:13px; color:#5A5E66; line-height:1.55;`)}>Cutoff Plan review (dispatch cutoffs, travel times, Speed metrics) for completed Route Scheduler runs will land here once a run has been triggered.</div>
-<div style={css(`font-size:11.5px; font-weight:600; color:#8E96A3; letter-spacing:0.03em; margin-top:4px;`)}>METRICS &amp; CARD TEMPLATES ARRIVING IN A LATER PASS</div>
+<div style={css(`flex:1; display:flex; min-height:0;`)}>
+{/* LEFT RAIL */}
+<aside style={css(`width:296px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Route Scheduler Runs</span></div>
+<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
+{(reviewSchedZoneChips || []).map((z, __i60) => (<React.Fragment key={__i60}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+</div>
+<div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
+{(schedReviewEmpty) ? (<>
+<div style={css(`padding:40px 14px; text-align:center;`)}><div style={css(`font-size:12.5px; color:#8E96A3;`)}>No Route Scheduler runs yet. Trigger one from Design Creation → Route Scheduler.</div></div>
+</>) : ((schedReviewList || []).map((r, __i61) => (<React.Fragment key={__i61}>
+<div style={css(`padding:0 2px; margin-bottom:3px;`)}>
+<button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; min-width:0; text-align:left; padding:9px 10px; border:1px solid ${r.active ? '#003F98' : '#E6EBF2'}; border-radius:8px; background:${r.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
+{(r.hasWarning) ? (<><span title={"Has a warning"} style={css(`width:9px; height:9px; border-radius:50%; background:#C77B00; flex-shrink:0;`)} /></>) : (<><span style={css(`width:9px; height:9px; border-radius:50%; background:#128A3E; flex-shrink:0;`)} /></>)}
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</span></div>
+<div style={css(`font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div>
+</div>
+<div style={css(`text-align:right; flex-shrink:0;`)}>
+<span style={css(`display:inline-block; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:${r.verdictBg}; color:${r.verdictFg};`)}>{r.verdict}</span>
+<div style={css(`font-size:11px; color:#5A5E66; margin-top:3px; font-variant-numeric:tabular-nums;`)}>D0 {r.d0Pct}%</div>
+</div>
+</button>
+</div>
+</React.Fragment>)))}
+</div>
+</aside>
+{/* MAIN — selected plan card */}
+<div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
+{(!schedCard) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a run from the rail to review it.</div>
+</>) : (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedCard.code} · {schedCard.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedCard.zone} · {schedCard.id}</div></div>
+<div style={css(`display:flex; align-items:center; gap:10px;`)}>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:${schedCard.verdictBg}; color:${schedCard.verdictFg};`)}>{schedCard.verdict}</span>
+{(schedCard.canPush) ? (<><button onClick={schedCard.onPush} style={css(`height:34px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Push to Alignment</button><button onClick={schedCard.onFinaliseDirect} style={css(`height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Finalise Directly</button></>) : null}
 </div>
 </div>
+{(schedCard.hasAnyWarning) ? (<>
+<div style={css(`display:flex; flex-direction:column; gap:6px; padding:10px 14px; background:#FBF1DF; border:1px solid #F0DDB0; border-radius:8px; margin-bottom:16px;`)}>
+{(schedCard.warnD0Low) ? (<><div style={css(`font-size:12px; color:#8A5A00;`)}>⚠ D0 Landing is {schedCard.d0LandingPct}%, below the 30% threshold.</div></>) : null}
+{(schedCard.warnHoldHigh) ? (<><div style={css(`font-size:12px; color:#8A5A00;`)}>⚠ Holding Time is {schedCard.holdingTotalHours} hrs, above the 12hr threshold.</div></>) : null}
+</div>
+</>) : null}
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
+{[['RLH Route Planner Run', schedCard.parentRunId], ['NLH Plan Used', schedCard.nlhPlanName], ['SC Docks', schedCard.docks], ['HW', schedCard.hw], ['HTF', schedCard.htf], ['D0 Cutoff', schedCard.d0Label]].map((kv, __i62) => (<React.Fragment key={__i62}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>OUTPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px;`)}>
+{[['SC Connection Start Time', schedCard.connectionStartTime], ['Connection Slots', schedCard.connectionSlots], ['D0 Landing (Vol%)', schedCard.d0LandingPct + '%'], ['Holding Time (Total hrs)', schedCard.holdingTotalHours + ' hrs'], ['Lanes with Hold Time', schedCard.lanesWithHold + ' / ' + schedCard.totalLanes]].map((kv, __i63) => (<React.Fragment key={__i63}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+</>)}
+</div>
+</div>
+{(schedPushOpen || schedFinaliseDirectOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:460px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedFinaliseDirectOpen ? 'Finalise ' + schedPushScName + ' directly?' : 'Push ' + schedPushScName + ' to Alignment?'}</div>
+<div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>{schedFinaliseDirectOpen ? 'This skips Ops alignment entirely and marks the Cutoff Plan Finalised, ready for handoff. This action cannot be undone.' : ('Reviewers: ' + (schedPushReviewers.join(', ') || 'none on file') + '. They\u2019ll be able to review this Cutoff Plan in Ops Alignment.')}</div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={schedFinaliseDirectOpen ? closeSchedFinaliseDirect : closeSchedPush} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={schedFinaliseDirectOpen ? confirmSchedFinaliseDirect : confirmSchedPush} style={css(`height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>{schedFinaliseDirectOpen ? 'Finalise Directly' : 'Push to Alignment'}</button>
+</div>
+</div>
+</div>
+</>) : null}
 </>) : null}
 </>) : (<>
 {/* Coming Soon landing (2026-07-30) — Node Mapping gets its own sub-fork row (SC-DC Mapping)
@@ -2328,7 +2394,48 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
-<div style={css(`display:${isAlignTierRLH ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
+{(isAlignTierRLH && isAlignRouteScheduler) ? (<>
+<div style={css(`flex:1; display:flex; min-height:0;`)}>
+<aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
+<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
+{(schedAlignFilterSeg || []).map((f, __i64) => (<React.Fragment key={__i64}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label} · {f.count}</button></React.Fragment>))}
+</div>
+<div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
+{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i65) => (<React.Fragment key={__i65}>
+<div style={css(`padding:0 2px; margin-bottom:3px;`)}>
+<button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; text-align:left; padding:9px 10px; border:1px solid ${r.active ? '#003F98' : '#E6EBF2'}; border-radius:8px; background:${r.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
+<span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
+<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</div></div>
+<div style={css(`font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>D0 {r.d0Pct}%</div>
+</button>
+</div>
+</React.Fragment>)))}
+</div>
+</aside>
+<div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
+{(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#EAF0FB; border:1px solid #C5D4F0; border-radius:8px; margin-bottom:16px;`)}>
+<span style={css(`font-size:12.5px; color:#14171F;`)}>{schedAlignCard.code} · {schedAlignCard.name}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>· detailed feedback parameters (Needs Change, per-field decisions) are coming in a later pass — this is a read-only summary for now.</span>
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
+{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label]].map((kv, __i66) => (<React.Fragment key={__i66}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>OUTPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px;`)}>
+{[['SC Connection Start Time', schedAlignCard.connectionStartTime], ['Connection Slots', schedAlignCard.connectionSlots], ['D0 Landing (Vol%)', schedAlignCard.d0LandingPct + '%'], ['Holding Time (Total hrs)', schedAlignCard.holdingTotalHours + ' hrs'], ['Lanes with Hold Time', schedAlignCard.lanesWithHold + ' / ' + schedAlignCard.totalLanes]].map((kv, __i67) => (<React.Fragment key={__i67}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+</>)}
+</div>
+</div>
+</>) : null}
+<div style={css(`display:${(isAlignTierRLH && isAlignRoutePlanner) ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
 {/* ===== EMPTY STATE (no plans in the active filter) — full width ===== */}
 {(aSel.empty) ? (<>
 <div style={css(`flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 40px; text-align:center;`)}>
@@ -3136,7 +3243,48 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
-<div style={css(`display:${isAlignTierRLH ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
+{(isAlignTierRLH && isAlignRouteScheduler) ? (<>
+<div style={css(`flex:1; display:flex; min-height:0;`)}>
+<aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
+<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
+{(schedAlignFilterSeg || []).map((f, __i68) => (<React.Fragment key={__i68}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label} · {f.count}</button></React.Fragment>))}
+</div>
+<div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
+{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i69) => (<React.Fragment key={__i69}>
+<div style={css(`padding:0 2px; margin-bottom:3px;`)}>
+<button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; text-align:left; padding:9px 10px; border:1px solid ${r.active ? '#003F98' : '#E6EBF2'}; border-radius:8px; background:${r.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
+<span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
+<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</div></div>
+<div style={css(`font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>D0 {r.d0Pct}%</div>
+</button>
+</div>
+</React.Fragment>)))}
+</div>
+</aside>
+<div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
+{(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#EAF0FB; border:1px solid #C5D4F0; border-radius:8px; margin-bottom:16px;`)}>
+<span style={css(`font-size:12.5px; color:#14171F;`)}>{schedAlignCard.code} · {schedAlignCard.name}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>· detailed feedback parameters are coming in a later pass — read-only summary for now.</span>
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
+{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label]].map((kv, __i70) => (<React.Fragment key={__i70}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>OUTPUTS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px;`)}>
+{[['SC Connection Start Time', schedAlignCard.connectionStartTime], ['Connection Slots', schedAlignCard.connectionSlots], ['D0 Landing (Vol%)', schedAlignCard.d0LandingPct + '%'], ['Holding Time (Total hrs)', schedAlignCard.holdingTotalHours + ' hrs'], ['Lanes with Hold Time', schedAlignCard.lanesWithHold + ' / ' + schedAlignCard.totalLanes]].map((kv, __i71) => (<React.Fragment key={__i71}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+</>)}
+</div>
+</div>
+</>) : null}
+<div style={css(`display:${(isAlignTierRLH && isAlignRoutePlanner) ? 'flex' : 'none'}; flex-direction:row; height:100%; min-height:0;`)}>
 {/* ===== EMPTY STATE (no plans in the active filter, or none assigned) — full width ===== */}
 {(oSel.empty) ? (<>
 <div style={css(`flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 40px; text-align:center;`)}>
@@ -6074,6 +6222,52 @@ class NDCApp extends React.Component {
   addManualReviewer() { const n = (this.state.pushName || '').trim(); if (!n) return; const cur = this.state.pushReviewers.slice(); if (cur.indexOf(n) < 0) cur.push(n); this.setState({ pushReviewers: cur, pushName: '', pushEmail: '' }); }
   removeReviewer(n) { this.setState({ pushReviewers: this.state.pushReviewers.filter(x => x !== n) }); }
   openFinDirect(code, runId) { this.setState({ finDirectOpen: true, finDirectSCcode: code, pushSCcode: code, pushRunId: runId || null, pushReviewers: [] }); }
+  // buildSchedCard(sp, includeActions) (2026-07-30) — shared card-shape builder, used by both
+  // Design Review and Ops Alignment so the two never drift apart on what a "card" shows.
+  // includeActions=true wires the Push/Finalise-Direct handlers (Design Review only).
+  buildSchedCard(sp, includeActions) {
+    const st = this.state, d = st.data;
+    if (!sp) return null;
+    const SCHED_VERDICT = { Draft: ['Draft', '#F2F5FA', '#5A5E66'], Pushed: ['Pushed', '#EAF0FB', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
+    const parentSp = d.plans.find(p => p.id === sp.parentPlanId);
+    const m = this.computeSchedulerMetricsFor(sp) || {};
+    const nlhP = (st.ingestedNlhPlans || []).find(p => p.runId === sp.nlhPlanId);
+    const vv = SCHED_VERDICT[sp.status] || SCHED_VERDICT.Draft;
+    const card = {
+      id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone,
+      status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
+      parentRunId: parentSp ? ('RUN-' + parentSp.scCode + '-01') : '\u2014',
+      nlhPlanName: nlhP ? nlhP.name : '\u2014',
+      docks: sp.rlhDocks, hw: sp.hw, htf: sp.htf, d0Label: sp.d0Cutoff,
+      connectionStartTime: m.connectionStartTime, connectionSlots: m.connectionSlots,
+      d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours, lanesWithHold: m.lanesWithHold, totalLanes: m.totalLanes,
+      warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, hasAnyWarning: m.warnD0Low || m.warnHoldHigh,
+      isDraft: sp.status === 'Draft', isFinalised: sp.status === 'Finalised', canPush: sp.status === 'Draft',
+    };
+    if (includeActions) {
+      card.onPush = () => this.setState({ schedPushOpen: true, schedPushPlanId: sp.id });
+      card.onFinaliseDirect = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
+    }
+    return card;
+  }
+  // Directly. Simpler than RLH's doPush: a schedulerPlans row is already fully formed at Trigger
+  // time (no separate run-vs-plan promotion needed), so this just flips status + reviewer fields.
+  // Reviewer pool = the SC's own POCs (SC Master), same list RLH uses — confirmed by Vignesh.
+  doSchedPush(finaliseDirect) {
+    const st = this.state, d = st.data;
+    const spId = st.schedPushPlanId || st.schedFinaliseDirectPlanId;
+    const idx = (d.schedulerPlans || []).findIndex(sp => sp.id === spId);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    const sc = d.scs.find(s => s.code === sp.scCode);
+    const targetStatus = finaliseDirect ? 'Finalised' : 'Pushed';
+    const reviewers = sc ? [...new Set(sc.pocs)].slice(0, 2) : [];
+    const schedulerPlans = d.schedulerPlans.slice();
+    schedulerPlans[idx] = Object.assign({}, sp, { status: targetStatus, reviewerNames: reviewers, submittedReviewers: finaliseDirect ? reviewers.slice() : [], pushedBy: 'Pranita Sapkal', sentDate: 'Today' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });
+    if (finaliseDirect) this.showToast('Finalised ' + spId + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E');
+    else this.showToast('Pushed ' + spId + ' to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
+  }
   doPush(finaliseDirect) {
     const st = this.state, d = st.data, code = st.pushSCcode;
     const targetStatus = finaliseDirect ? 'Finalised' : 'Pushed';
@@ -6558,6 +6752,61 @@ class NDCApp extends React.Component {
     });
   }
 
+  // computeSchedulerMetricsFor(sp) (2026-07-30) — single source of truth for Route Scheduler's
+  // Design Review / Ops Alignment output metrics, per Vignesh's corrected formulas:
+  //   - SC Connection Start Time = earliest dispatch across all routes in the parent RLH plan.
+  //   - Number of Connection Slots = count of DISTINCT dispatch times (30-min grid).
+  //   - D0 Landing (Vol%) = volume-weighted % of DCs whose landing time is on/before D0 Cutoff.
+  //   - Holding Time (Total hrs) = SUM of per-route hold time across every route.
+  //   - Number of Lanes with Hold Time = count of routes with hold time > 0.
+  // All synthetic (this prototype has no real DS scheduling output), but internally consistent:
+  // a later D0 Cutoff or higher HTF measurably improves the numbers, not just randomly.
+  // Assumed constants (flagged, not hidden): average travel speed 30 km/h for landing-time calc
+  // (dist_km × 2 = minutes); dispatch spread is a 150-min window centred just before D0 Cutoff;
+  // base hold time is a 0-50min per-route draw with the bottom 12min floored to zero.
+  computeSchedulerMetricsFor(sp) {
+    const st = this.state, d = st.data;
+    const parent = d.plans.find(p => p.id === sp.parentPlanId);
+    if (!parent) return null;
+    const routes = parent.rows || [];
+    const cutoffMin = 9 * 60 + (sp.d0Increments || 0) * 30;
+    const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
+    const seed = sp.id;
+    const htf = sp.htf || 0;
+    const routeInfo = routes.map(r => {
+      const dispatchMin = cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
+      const baseHold = hash(r.routeCode + seed + 'h') % 50;
+      const rawHold = Math.max(0, baseHold - 12); // floors ~24% of routes to exactly zero hold
+      const holdMin = Math.round(rawHold * (1 - 0.4 * htf)); // HTF=1 cuts hold time by 40%
+      return { route: r, dispatchMin, holdMin };
+    });
+    const connectionStartMin = routeInfo.length ? Math.min.apply(null, routeInfo.map(x => x.dispatchMin)) : cutoffMin;
+    const slotSet = {}; routeInfo.forEach(x => { slotSet[Math.round(x.dispatchMin / 30) * 30] = true; });
+    const connectionSlots = Object.keys(slotSet).length;
+    const holdingTotalMin = routeInfo.reduce((a, x) => a + x.holdMin, 0);
+    const holdingTotalHours = holdingTotalMin / 60;
+    const lanesWithHold = routeInfo.filter(x => x.holdMin > 0).length;
+    let onTimeVol = 0, totalVol = 0;
+    routeInfo.forEach(({ route, dispatchMin }) => {
+      this.genDcRows(route).forEach(dc => {
+        const distKm = parseFloat(dc.dist) || 0;
+        const travelMin = distKm * 2; // ~30 km/h assumed average
+        const landingMin = dispatchMin + travelMin;
+        totalVol += dc.vol;
+        if (landingMin <= cutoffMin) onTimeVol += dc.vol;
+      });
+    });
+    const d0LandingPct = totalVol > 0 ? (onTimeVol / totalVol * 100) : 0;
+    const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
+    return {
+      connectionStartTime: fmtTime(connectionStartMin), connectionSlots,
+      d0LandingPct: Math.round(d0LandingPct * 10) / 10,
+      holdingTotalHours: Math.round(holdingTotalHours * 10) / 10,
+      lanesWithHold, totalLanes: routes.length,
+      warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
+    };
+  }
+
   // ===== Ops Feedback recompute engine (2026-07-09) =====================================
   // computeHypotheticalPlan() is the single source of truth behind Validate, Simulate, and
   // Finalise for a plan under Ops feedback. It NEVER mutates plan.rows itself -- it takes the
@@ -6837,17 +7086,16 @@ class NDCApp extends React.Component {
     const isAlignTierNodeMapping = alignTierName === 'Node Mapping';
     const alignTierComingSoonLabel = alignTierName;
     const alignRlhMode = st.alignRlhMode || 'planner';
-    // 2026-07-29 — Ops Alignment's existing JSX has real (non-null) ternary branches threaded
-    // through it (unlike Design Creation/Review's simpler structure), so blindly wrapping the
-    // whole existing planner view behind a new conditional here carries real risk of mismatching
-    // a branch. Until that's done carefully, Route Scheduler is shown but inert (toast, like the
-    // NLH/FM Carting/Node Mapping "soon" tiles) rather than switching content — flagged plainly
-    // rather than silently pretending the swap is wired.
-    const ALIGN_RLH_SUB = [['planner', 'Route Planner', 'Row-by-row RLH route plan alignment — the existing Planner \u2194 Ops Lead freeze loop.'], ['scheduler', 'Route Scheduler', 'Alignment loop for scheduled Cutoff Plans — arriving in a later pass.']];
+    // 2026-07-30 — Route Scheduler alignment is now real (list/filter/card-summary level; deep
+    // feedback loop still deferred per Vignesh). Uses the same safe technique as the tier-level
+    // Coming Soon panels: the EXISTING (riskier, branchy) Route Planner content div gets a CSS
+    // display toggle rather than being structurally wrapped, and the new content renders as a
+    // plain additive sibling — nothing about the existing Route Planner alignment JSX is touched.
+    const ALIGN_RLH_SUB = [['planner', 'Route Planner', 'Row-by-row RLH route plan alignment — the existing Planner \u2194 Ops Lead freeze loop.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan alignment — list/card level for now, detailed feedback parameters coming next.']];
     const alignRlhSubSeg = ALIGN_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: alignRlhMode === t[0],
       bg: alignRlhMode === t[0] ? '#003F98' : '#fff', bd: alignRlhMode === t[0] ? '#003F98' : '#E6EBF2',
       fg: alignRlhMode === t[0] ? '#fff' : '#5A5E66', weight: alignRlhMode === t[0] ? '700' : '600',
-      onClick: t[0] === 'scheduler' ? (() => this.showToast('Route Scheduler alignment — arriving in a later build pass', '#1E6FB8')) : (() => this.setState({ alignRlhMode: t[0] })) }));
+      onClick: () => this.setState({ alignRlhMode: t[0] }) }));
     const isAlignRoutePlanner = alignRlhMode === 'planner';
     const isAlignRouteScheduler = alignRlhMode === 'scheduler';
     const plans = d.plans;
@@ -7610,6 +7858,25 @@ class NDCApp extends React.Component {
     const alignHasPrev = alignPageSafe > 0;
     const alignHasNext = alignPageSafe < alignTotalPages - 1;
 
+    // ===== Route Scheduler — Ops Alignment (2026-07-30) — list/filter/card-summary level only.
+    // Detailed feedback parameters (Needs Change, per-field decisions) are a later pass; for now
+    // this mirrors RLH's status-filtered list + read-only card, using the new metrics. Shared
+    // between Planner and Ops Lead (both personas see the same filtered list; deep actions differ
+    // only once the feedback loop itself is built). =====
+    const schedAlignFilter = st.schedAlignFilter || 'Pending Feedback';
+    const SCHED_FILTER_MAP = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
+    const allSchedPlansA = d.schedulerPlans || [];
+    const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label,
+      count: allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
+      onClick: () => this.setState({ schedAlignFilter: label, schedAlignPlanId: null }) }));
+    const schedAlignListRaw = allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
+    const curSchedAlignId = st.schedAlignPlanId || (schedAlignListRaw[0] && schedAlignListRaw[0].id);
+    const schedAlignList = schedAlignListRaw.map(sp => { const m = this.computeSchedulerMetricsFor(sp) || {};
+      return { id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone, d0Pct: m.d0LandingPct, hasWarning: m.warnD0Low || m.warnHoldHigh,
+        active: curSchedAlignId === sp.id, onClick: () => this.setState({ schedAlignPlanId: sp.id }) }; });
+    const schedAlignEmpty = schedAlignList.length === 0;
+    const schedAlignCard = this.buildSchedCard(allSchedPlansA.find(sp => sp.id === curSchedAlignId), false);
+
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
       alignIsL1, alignIsL2,
       alignPage: alignPageSafe, alignTotalPages, alignShowPager,
@@ -7623,6 +7890,7 @@ class NDCApp extends React.Component {
       // unlike the Planner's full 4-tier strip. NLH/FM Carting aren't part of the Ops Lead's
       // review scope at all, not just "coming soon" for them too.
       alignTierSegOpsLead: (alignTierSeg || []).filter(t => t.label === 'RLH' || t.label === 'Node Mapping'),
+      schedAlignFilterSeg, schedAlignList, schedAlignEmpty, schedAlignCard,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -8890,9 +9158,39 @@ class NDCApp extends React.Component {
     const rqNoQueue = !rqHasQueue;
     const rqShowProg   = rqProgN > 0;
 
+    // ===== Route Scheduler — Design Review (2026-07-30) =====
+    const SCHED_ZONES = ['North', 'South', 'East', 'West', 'Central'];
+    const schedZoneName = st.reviewSchedZone || 'All';
+    const allSchedPlans = d.schedulerPlans || [];
+    const reviewSchedZoneChips = ['All'].concat(SCHED_ZONES).map(z => ({ label: z, active: schedZoneName === z,
+      count: z === 'All' ? allSchedPlans.length : allSchedPlans.filter(sp => sp.zone === z).length,
+      onClick: () => this.setState({ reviewSchedZone: z, reviewSchedPlanId: null }) })).filter(z => z.label === 'All' || z.count > 0);
+    const filteredSchedPlans = allSchedPlans.filter(sp => schedZoneName === 'All' || sp.zone === schedZoneName);
+    const SCHED_VERDICT = { Draft: ['Draft', '#F2F5FA', '#5A5E66'], Pushed: ['Pushed', '#EAF0FB', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
+    const curSchedId = st.reviewSchedPlanId || (filteredSchedPlans[0] && filteredSchedPlans[0].id);
+    const schedReviewList = filteredSchedPlans.map(sp => {
+      const vv = SCHED_VERDICT[sp.status] || SCHED_VERDICT.Draft;
+      const m = this.computeSchedulerMetricsFor(sp) || {};
+      return { id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
+        d0Pct: m.d0LandingPct, active: curSchedId === sp.id, hasWarning: m.warnD0Low || m.warnHoldHigh,
+        onClick: () => this.setState({ reviewSchedPlanId: sp.id }) };
+    });
+    const schedReviewEmpty = schedReviewList.length === 0;
+    const curSchedPlan = allSchedPlans.find(sp => sp.id === curSchedId);
+    let schedCard = this.buildSchedCard(curSchedPlan, true);
+    const schedPushPlan = allSchedPlans.find(sp => sp.id === (st.schedPushPlanId || st.schedFinaliseDirectPlanId));
+    const schedPushScName = schedPushPlan ? (schedPushPlan.scCode + ' \u00b7 ' + schedPushPlan.scName) : '';
+    const schedPushReviewers = (() => { if (!schedPushPlan) return []; const sc = d.scs.find(s => s.code === schedPushPlan.scCode); return sc ? [...new Set(sc.pocs)].slice(0, 2) : []; })();
+
     return {
       isReview: st.view === 'review',
       reviewTierSeg, reviewRlhSubSeg, isReviewRoutePlanner, isReviewRouteScheduler, isReviewTierRLH, isReviewTierNodeMapping, reviewTierComingSoonLabel,
+      reviewSchedZoneChips, schedReviewList, schedReviewEmpty, schedCard,
+      schedPushOpen: !!st.schedPushOpen, schedFinaliseDirectOpen: !!st.schedFinaliseDirectOpen, schedPushScName, schedPushReviewers,
+      closeSchedPush: () => this.setState({ schedPushOpen: false, schedPushPlanId: null }),
+      closeSchedFinaliseDirect: () => this.setState({ schedFinaliseDirectOpen: false, schedFinaliseDirectPlanId: null }),
+      confirmSchedPush: () => this.doSchedPush(false),
+      confirmSchedFinaliseDirect: () => this.doSchedPush(true),
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),

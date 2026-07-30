@@ -1838,23 +1838,27 @@ function View(B, self) {
 </div>
 </>) : null}
 {(isSchedStep4) ? (<>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#EAF0FB; border:1px solid #C5D4F0; border-radius:8px; margin-bottom:16px;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:${step4Blocked ? '#FBEAEA' : '#EAF0FB'}; border:1px solid ${step4Blocked ? '#F0C6C6' : '#C5D4F0'}; border-radius:8px; margin-bottom:16px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={step4Blocked ? '#D14B4B' : '#1E6FB8'} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12.5px; color:#14171F;`)}>NLH Landing Plan: <strong>{step4NlhLabel}</strong></span>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>· validation rules for this step are still being defined — none are enforced yet, so nothing below will block triggering.</span>
+{(step4ErrorCount > 0) ? (<><span style={css(`font-size:12px; font-weight:700; color:#D14B4B;`)}>· {step4ErrorCount} SC{step4ErrorCount === 1 ? '' : 's'} blocked</span></>) : null}
+{(step4WarningCount > 0) ? (<><span style={css(`font-size:12px; font-weight:700; color:#C77B00;`)}>· {step4WarningCount} volume warning{step4WarningCount === 1 ? '' : 's'}</span></>) : null}
+{(step4ErrorCount === 0 && step4WarningCount === 0) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>· clean — ready to trigger</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.7fr 0.9fr 0.9fr 1.3fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.6fr 0.8fr 0.8fr 2fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
 {['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.7fr 0.9fr 0.9fr 1.3fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.6fr 0.8fr 0.8fr 2fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.htf}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
-<div style={css(`font-size:11.5px; color:#8E96A3;`)}>—</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px;`)}>
+{(r.flags && r.flags.length > 0) ? (r.flags.map((f, __i56) => (<React.Fragment key={__i56}><div style={css(`display:flex; align-items:flex-start; gap:5px; font-size:11px; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'};`)}><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:${f.sev === 'error' ? '#FBEAEA' : '#FBF1DF'}; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'}; flex-shrink:0; margin-top:1px;`)}>{f.sev === 'error' ? 'ERROR' : 'WARNING'}</span><span>{f.text}</span></div></React.Fragment>))) : (<><span style={css(`font-size:11px; color:#128A3E;`)}>Clean</span></>)}
+</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -1864,7 +1868,7 @@ function View(B, self) {
 {/* ===== NAV FOOTER ===== */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:#fff; border-top:1px solid #E6EBF2; flex-shrink:0;`)}>
 <button onClick={schedulerBack} style={css(`height:36px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerStep > 1 ? 'pointer' : 'default'}; opacity:${schedulerStep > 1 ? '1' : '0.4'};`)} disabled={schedulerStep === 1}>Back</button>
-<button onClick={isSchedStep4 ? onTriggerScheduler : schedulerNext} title={(!schedulerCanNext && isSchedStep3) ? 'Set a reference plan for every SC that needs one' : ''} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${schedulerCanNext ? '#003F98' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerCanNext ? 'pointer' : 'default'};`)}>{schedulerNextLabel}<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={isSchedStep4 ? onTriggerScheduler : schedulerNext} disabled={!schedulerCanNext} title={(!schedulerCanNext && isSchedStep3) ? 'Set a reference plan for every SC that needs one' : (!schedulerCanNext && isSchedStep4) ? 'Every selected SC needs NLH landing data in the selected file before you can trigger' : ''} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${schedulerCanNext ? '#003F98' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerCanNext ? 'pointer' : 'default'};`)}>{schedulerNextLabel}<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 </>) : null}
@@ -4801,19 +4805,37 @@ class NDCApp extends React.Component {
     this.setState({ ingestedPlans: plans, ingestionCounter: n });
     this.showToast('Plan ingested & validated · ' + plan.name, '#128A3E');
   }
-  // ingestNlhPlan() (2026-07-29, corrected 2026-07-30) — same synthesised-ingest pattern as
-  // ingestRlhPlan(), own state store (ingestedNlhPlans / nlhIngestionCounter). CORRECTED: an NLH
-  // Landing Plan is a single GLOBAL file covering all SCs (LMSC-wise), same shape as the RLH
-  // volume file — not tagged to one scCode. `scCount` replaces the old single `scCode` field.
+  // ingestNlhPlan() (2026-07-29, corrected 2026-07-30, extended 2026-07-30) — same synthesised-
+  // ingest pattern as ingestRlhPlan(), own state store. Global file, LMSC-wise, covering a subset
+  // of SCs (not all — real files have gaps, which is exactly what validation rule #1 checks for).
+  // Now also carries a per-SC landing-volume figure (volumeBySC), needed for validation rule #2
+  // (NLH landing volume vs. RLH plan volume, >5% variance). Both synthesised deterministically off
+  // each SC's real seeded volume so the numbers are usually close but sometimes genuinely off.
   ingestNlhPlan() {
     const n = (this.state.nlhIngestionCounter || 0) + 1;
     const now = new Date();
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     const scs = (this.state.data && this.state.data.scs) || [];
-    const scCount = scs.length || 80;
-    const rows = scCount * (2 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 5)); // a handful of inbound-vehicle rows per LMSC, summed across every SC the file covers
-    const plan = { name: 'NLH-Landing-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCount: scCount, runId: 'NLH-ING-' + String(n).padStart(3, '0') };
+    const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
+    // Coverage: each file leaves out a realistic slice of SCs (~8-25%) rather than covering 100%,
+    // so "no NLH data for this SC" (validation rule #1) has something real to catch.
+    const coveragePct = 75 + (hash('cov' + n) % 18); // 75-92% of SCs covered
+    const scCodes = scs.filter(s => (hash(s.code + n) % 100) < coveragePct).map(s => s.code);
+    // Per-SC landing volume: mostly within ~4% of the SC's real volume, but a deliberate subset
+    // (~1 in 4 SCs) drifts 6-14% off, so validation rule #2's >5% warning has real cases to fire on.
+    const volumeBySC = {};
+    scCodes.forEach(code => {
+      const sc = scs.find(s => s.code === code);
+      const baseVol = sc ? sc.volume : 30000;
+      const h2 = hash(code + 'vol' + n);
+      const isDrift = (h2 % 4) === 0;
+      const pct = isDrift ? (6 + (h2 % 9)) : (h2 % 5); // drift: 6-14%, normal: 0-4%
+      const sign = (h2 % 2) === 0 ? 1 : -1;
+      volumeBySC[code] = Math.round(baseVol * (1 + sign * pct / 100));
+    });
+    const rows = scCodes.length * (2 + Math.floor(((n * 1103515245 + 12345) & 0x7fffffff) % 5)); // a handful of inbound-vehicle rows per LMSC covered
+    const plan = { name: 'NLH-Landing-' + n + '.csv', rows: rows, by: 'Pranita Sapkal', date: date, status: 'Validated', errors: 0, scCount: scCodes.length, scCodes: scCodes, volumeBySC: volumeBySC, runId: 'NLH-ING-' + String(n).padStart(3, '0') };
     const plans = [plan].concat(this.state.ingestedNlhPlans || []);
     this.setState({ ingestedNlhPlans: plans, nlhIngestionCounter: n });
     this.showToast('NLH Landing Plan ingested & validated · ' + plan.name, '#128A3E');
@@ -6241,6 +6263,14 @@ class NDCApp extends React.Component {
     const selectedPlanIds = st.schedulerSelectedPlanIds || [];
     const parents = d.plans.filter(p => selectedPlanIds.indexOf(p.id) >= 0);
     if (!parents.length) return;
+    // Defensive re-check of validation rule #1 (blocking) — the button above isn't a real HTML
+    // `disabled`, just styled to look inert, so this guard is what actually stops the trigger.
+    const chosenNlh = (st.ingestedNlhPlans || []).find(p => p.runId === st.schedulerNlhPlanId);
+    const uncovered = parents.filter(p => !(chosenNlh && chosenNlh.scCodes && chosenNlh.scCodes.indexOf(p.scCode) >= 0));
+    if (!chosenNlh || uncovered.length > 0) {
+      this.showToast('Blocked \u2014 ' + (uncovered.length || parents.length) + ' SC' + ((uncovered.length || parents.length) === 1 ? '' : 's') + ' missing NLH landing data', '#D14B4B');
+      return;
+    }
     let n = this.state.schedulerPlanCounter || 0;
     const newRows = parents.map(parent => {
       n++;
@@ -6377,9 +6407,34 @@ class NDCApp extends React.Component {
     const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.htfOverridden || r.d0Overridden || r.docksOverridden).length;
     const canNextScheduler3 = !anyRefMissing;
 
-    // ===== STEP 4 — Preview & Trigger. Validation rules deferred (per Vignesh, defined separately). =====
-    const previewRows = opModeRows.map(r => Object.assign({}, r));
+    // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30):
+    // #1 (Blocking) — every selected SC must have landing data in the chosen NLH file.
+    // #2 (Warning)  — NLH landing volume vs. the RLH plan's SC volume can't vary by >5%. =====
+    const previewRows = opModeRows.map(r => {
+      const sc = d.scs.find(s => s.code === r.code);
+      const rlhVol = sc ? sc.volume : 0;
+      const hasNlhCoverage = !!(chosenNlhPlan && chosenNlhPlan.scCodes && chosenNlhPlan.scCodes.indexOf(r.code) >= 0);
+      const nlhVol = hasNlhCoverage ? (chosenNlhPlan.volumeBySC || {})[r.code] : null;
+      const flags = [];
+      if (!chosenNlhPlan) {
+        // Shouldn't normally happen (Step 2 requires a pick to advance), but stay honest if reached directly.
+        flags.push({ sev: 'error', text: 'No NLH Landing Plan selected.' });
+      } else if (!hasNlhCoverage) {
+        flags.push({ sev: 'error', text: 'No NLH landing data for this SC in the selected file.' });
+      } else {
+        const pctDiff = rlhVol > 0 ? Math.abs(nlhVol - rlhVol) / rlhVol * 100 : 0;
+        if (pctDiff > 5) {
+          flags.push({ sev: 'warning', text: 'NLH landing volume (' + nlhVol.toLocaleString('en-IN') + ') differs from RLH plan volume (' + rlhVol.toLocaleString('en-IN') + ') by ' + pctDiff.toFixed(1) + '% (>5%).' });
+        }
+      }
+      const hasError = flags.some(f => f.sev === 'error');
+      const hasWarning = flags.some(f => f.sev === 'warning');
+      return Object.assign({}, r, { rlhVol, nlhVol, flags, hasError, hasWarning });
+    });
     const step4NlhLabel = chosenNlhPlan ? chosenNlhPlan.name : '—';
+    const step4ErrorCount = previewRows.filter(r => r.hasError).length;
+    const step4WarningCount = previewRows.filter(r => r.hasWarning).length;
+    const step4Blocked = step4ErrorCount > 0;
 
     // ===== Run Queue tab (Route Scheduler's own, separate from Route Planner's runQueue) =====
     const schedRunQueue = st.schedulerRunQueue || [];
@@ -6409,14 +6464,14 @@ class NDCApp extends React.Component {
       onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(0, d0Global - 1) }),
       onRefGlobalPick: (v) => this.setState({ schedulerRefGlobal: v }),
       // Step 4
-      previewRows, step4NlhLabel,
+      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked,
       onTriggerScheduler: () => this.triggerSchedulerRuns(),
       // Run Queue tab
       schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
       // nav
       schedulerBack: () => this.setState({ schedulerStep: Math.max(1, step - 1) }),
       schedulerNext: () => { const ok = step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : step === 3 ? canNextScheduler3 : false; if (ok) this.setState({ schedulerStep: Math.min(4, step + 1) }); },
-      schedulerCanNext: step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : step === 3 ? canNextScheduler3 : true,
+      schedulerCanNext: step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : step === 3 ? canNextScheduler3 : !step4Blocked,
       schedulerNextLabel: step === 1 ? 'NLH Plan Selection' : step === 2 ? 'Operating Mode' : step === 3 ? 'Preview & Trigger' : 'Trigger',
     };
   }

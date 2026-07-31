@@ -2047,7 +2047,9 @@ function View(B, self) {
 <span style={css(`font-size:12px; color:#5A5E66;`)}>— {runCountLabel}</span>
 <div style={css(`flex:1;`)} />
 {/* Push is per-run now (button on each run card); SC-level badge shows once any run is pushed. */}
-{(reviewPushed) ? (<><span style={css(`display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 14px; border-radius:8px; background:#E7F0F8; color:#1E6FB8; font-size:12.5px; font-weight:600;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Pushed to alignment</span></>) : null}
+{/* 2026-07-31 — removed the SC-level "Pushed to alignment" badge: an SC can have multiple runs,
+    only one of which may actually be pushed, so a blanket per-SC badge was misleading. Per-run
+    status now shows correctly on each run card below instead (see planCards' pushed tag). */}
 </div>
 </div>
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
@@ -2351,7 +2353,8 @@ function View(B, self) {
 <span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plans generated</span>
 <span style={css(`font-size:12px; color:#5A5E66;`)}>— {schedRunCountLabel}</span>
 <div style={css(`flex:1;`)} />
-{(schedAnyPushed) ? (<><span style={css(`display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 14px; border-radius:8px; background:#E7F0F8; color:#1E6FB8; font-size:12.5px; font-weight:600;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Pushed to alignment</span></>) : null}
+{/* 2026-07-31 — removed the SC-level "Pushed to alignment" badge; per-run status shows on each
+    Cutoff Plan card below instead (schedRunCards' own verdict pill). */}
 </div>
 </div>
 {/* one card per run (mirrors planCards) */}
@@ -2381,23 +2384,36 @@ function View(B, self) {
 <span><span style={css(`color:#8E96A3;`)}>D0 Cutoff</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.d0Label}</strong></span>
 <span><span style={css(`color:#8E96A3;`)}>Local / Non-Local Speed</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.localSpeed} / {c.nonLocalSpeed} km/h</strong></span>
 </div>
-{/* colored 5-tile output metrics grid */}
-<div style={css(`display:grid; grid-template-columns:repeat(5, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.connectionStartTime}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Connection Start</div></div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.connectionSlots}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Connection Slots</div></div>
+{/* colored 3-tile output metrics grid (Connection Start/Slots/Dock Util moved into the
+    slot-wise list below, 2026-07-31 — see computeSchedulerMetricsFor's slotBreakdown note) */}
+<div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
 </div>
-{/* bottom row: flag chip + actions (gated on canPush, like the reviewer flow) */}
+{/* slot-wise dispatch breakdown (2026-07-31) — carries Connection Start/Slots and per-slot dock
+    utilisation implicitly (first chip's time = Connection Start, chip count = Connection Slots).
+    Per-slot % is what lets a reviewer tell honest tail-end slack apart from an actually-idle
+    earlier slot — a single network-wide average couldn't make that distinction. */}
+{(c.hasSlotBreakdown) ? (<>
+<div style={css(`margin-top:10px;`)}>
+<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>SLOT-WISE DISPATCH</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:6px;`)}>
+{(c.slotBreakdown || []).map((s, __iSlot1) => (<React.Fragment key={__iSlot1}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:6px; font-size:10.5px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{/* bottom row: flag chip + actions — "retain push directly irrespective" (2026-07-31):
+    Push to alignment only makes sense pre-push (Draft), but Finalise Directly stays available
+    at every stage right up until the plan is actually Finalised. */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px solid #F4F5F8;`)}>
 <span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
-{(c.canPush) ? (<>
+{(c.canFinaliseDirect) ? (<>
 <div style={css(`display:flex; gap:8px;`)}>
-<button onClick={c.onPush} aria-label={"Push this Cutoff Plan to Ops Alignment"} style={css(`display:inline-flex; align-items:center; justify-content:center; gap:7px; height:34px; padding:0 13px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#0A5C5F;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; justify-content:center; gap:7px; height:34px; padding:0 13px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`, `background:#0A5C5F;`)}>Push to alignment<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+{(c.canPushToAlignment) ? (<><button onClick={c.onPush} aria-label={"Push this Cutoff Plan to Ops Alignment"} style={css(`display:inline-flex; align-items:center; justify-content:center; gap:7px; height:34px; padding:0 13px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#0A5C5F;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; justify-content:center; gap:7px; height:34px; padding:0 13px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`, `background:#0A5C5F;`)}>Push to alignment<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
 <button onClick={c.onFinaliseDirect} aria-label={"Finalise this Cutoff Plan directly without Ops alignment"} style={css(`display:inline-flex; align-items:center; justify-content:center; height:34px; padding:0 13px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; justify-content:center; height:34px; padding:0 13px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`, `border-color:#C77B00; color:#C77B00;`)}>Finalise directly</button>
 </div>
-</>) : (<><span style={css(`font-size:11px; color:#8E96A3;`)}>See Ops Alignment for this Cutoff Plan's status.</span></>)}
+</>) : (<><span style={css(`font-size:11px; color:#8E96A3;`)}>Finalised — see Ops Alignment for this Cutoff Plan's status.</span></>)}
 </div>
 </div>
 </div>
@@ -2457,12 +2473,16 @@ function View(B, self) {
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.connectionStartTime}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>SC Connection Start Time</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.connectionSlots}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Connection Slots</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${reviewSchedDetail.d0Color}; line-height:1;`)}>{reviewSchedDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${reviewSchedDetail.holdColor}; line-height:1;`)}>{reviewSchedDetail.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lanesWithHold} / {reviewSchedDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
 </div>
+{(reviewSchedDetail.hasSlotBreakdown) ? (<>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
+{(reviewSchedDetail.slotBreakdown || []).map((s, __iSlot2) => (<React.Fragment key={__iSlot2}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(reviewSchedDetail.hasFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:18px;`)}>
@@ -2557,16 +2577,49 @@ function View(B, self) {
 </aside>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
 {(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
-{/* 2026-07-31 — re-skinned to match Design Review's visual language (accent-bar headers, colored
-    metric values, Validation Flags section). Still deliberately read-only/list-level — no
-    Needs-Change/Accept-Reject mechanics added, per the stated scope cut (see 04_Rule_Engine.md). */}
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code} · {schedAlignCard.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedAlignCard.zone} · {schedAlignCard.id}</div></div>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
+<div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>Route Scheduler</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{schedAlignCard.verdict}</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-weight:600; color:#0D7377;`)}>{schedAlignCard.code}</span>
 </div>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px; margin-bottom:16px;`)}>
-<span style={css(`font-size:12px; color:#0A5C5F;`)}>Detailed feedback parameters (Needs Change, per-field decisions) are coming in a later pass — this is a read-only summary for now.</span>
+{/* identity header — mirrors RLH's L3 card (code/name/zone/coords/module-tag/status) (2026-07-31) */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code}</span>
+<span style={css(`font-size:14px; color:#5A5E66;`)}>{schedAlignCard.name}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{schedAlignCard.zone} Zone</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{schedAlignCard.scCoords}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
 </div>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:7px;`)}>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{schedAlignCard.isFinalised ? 'Finalised' : 'Pushed'} {schedAlignCard.sentDate}</span>
+{(schedAlignCard.hasReviewers) ? (<>
+<span style={css(`width:3px; height:3px; border-radius:50%; background:#C3C9D4;`)} />
+<span style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
+{(schedAlignCard.opsLeads || []).map((ol, __iOl1) => (<React.Fragment key={__iOl1}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
+</>) : null}
+</div>
+</div>
+<button onClick={schedAlignCard.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`width:34px; height:34px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `border-color:#E6EBF2; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+{/* lifecycle status banner — mirrors RLH's isPushed/needsAck/isAck/isFinal banners, adapted for
+    Scheduler's own 5-status enum + the deliberate "read-only for now" scope cut (2026-07-31) */}
+{(schedAlignCard.isPushedState) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Awaiting Ops feedback. Detailed per-field decisions (Needs Change, Accept/Reject) aren't collected yet for Route Scheduler — this is a read-only summary for now.</span></div>
+</>) : null}
+{(schedAlignCard.isAcknowledged) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#EAEEFB; border:1px solid #C5CDEF; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops review acknowledged. No further editing exists yet for Route Scheduler.</span></div>
+</>) : null}
+{(schedAlignCard.isFinalised && !schedAlignCard.isFinalDirect) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan is <strong>finalised & frozen</strong>, ready for handoff.</span></div>
+</>) : null}
+{(schedAlignCard.isFinalDirect) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#F0EDFB; border:1px solid #D6CCF0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan was <strong>finalised without alignment</strong> — Ops review was skipped.</span></div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Inputs</span></div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:18px;`)}>
 {[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW · HTF', schedAlignCard.hw + ' · ' + schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i66) => (<React.Fragment key={__i66}>
@@ -2575,12 +2628,16 @@ function View(B, self) {
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.connectionStartTime}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>SC Connection Start Time</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.connectionSlots}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Connection Slots</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.d0Color}; line-height:1;`)}>{schedAlignCard.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.holdColor}; line-height:1;`)}>{schedAlignCard.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.lanesWithHold} / {schedAlignCard.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
 </div>
+{(schedAlignCard.hasSlotBreakdown) ? (<>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
+{(schedAlignCard.slotBreakdown || []).map((s, __iSlot3) => (<React.Fragment key={__iSlot3}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(schedAlignCard.hasFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px;`)}>
@@ -3423,14 +3480,46 @@ function View(B, self) {
 </aside>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
 {(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
-{/* 2026-07-31 — re-skinned to match Design Review's visual language; still read-only/list-level. */}
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code} · {schedAlignCard.name}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedAlignCard.zone} · {schedAlignCard.id}</div></div>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
+<div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>Route Scheduler</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{schedAlignCard.verdict}</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-weight:600; color:#0D7377;`)}>{schedAlignCard.code}</span>
 </div>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px; margin-bottom:16px;`)}>
-<span style={css(`font-size:12px; color:#0A5C5F;`)}>Detailed feedback parameters are coming in a later pass — this is a read-only summary for now.</span>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code}</span>
+<span style={css(`font-size:14px; color:#5A5E66;`)}>{schedAlignCard.name}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{schedAlignCard.zone} Zone</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{schedAlignCard.scCoords}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
 </div>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:7px;`)}>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{schedAlignCard.isFinalised ? 'Finalised' : 'Pushed'} {schedAlignCard.sentDate}</span>
+{(schedAlignCard.hasReviewers) ? (<>
+<span style={css(`width:3px; height:3px; border-radius:50%; background:#C3C9D4;`)} />
+<span style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
+{(schedAlignCard.opsLeads || []).map((ol, __iOl2) => (<React.Fragment key={__iOl2}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
+</>) : null}
+</div>
+</div>
+<button onClick={schedAlignCard.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`width:34px; height:34px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `border-color:#E6EBF2; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+{(schedAlignCard.isPushedState) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Awaiting Ops feedback. Detailed per-field decisions (Needs Change, Accept/Reject) aren't collected yet for Route Scheduler — this is a read-only summary for now.</span></div>
+</>) : null}
+{(schedAlignCard.isAcknowledged) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#EAEEFB; border:1px solid #C5CDEF; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops review acknowledged. No further editing exists yet for Route Scheduler.</span></div>
+</>) : null}
+{(schedAlignCard.isFinalised && !schedAlignCard.isFinalDirect) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan is <strong>finalised & frozen</strong>, ready for handoff.</span></div>
+</>) : null}
+{(schedAlignCard.isFinalDirect) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#F0EDFB; border:1px solid #D6CCF0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan was <strong>finalised without alignment</strong> — Ops review was skipped.</span></div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Inputs</span></div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:18px;`)}>
 {[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW · HTF', schedAlignCard.hw + ' · ' + schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i70) => (<React.Fragment key={__i70}>
@@ -3439,12 +3528,16 @@ function View(B, self) {
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.connectionStartTime}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>SC Connection Start Time</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.connectionSlots}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Connection Slots</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.d0Color}; line-height:1;`)}>{schedAlignCard.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.holdColor}; line-height:1;`)}>{schedAlignCard.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.lanesWithHold} / {schedAlignCard.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
 </div>
+{(schedAlignCard.hasSlotBreakdown) ? (<>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
+{(schedAlignCard.slotBreakdown || []).map((s, __iSlot4) => (<React.Fragment key={__iSlot4}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(schedAlignCard.hasFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px;`)}>
@@ -6458,41 +6551,65 @@ class NDCApp extends React.Component {
     if (!sp) return null;
     const SCHED_VERDICT = { Draft: ['Draft', '#F2F5FA', '#5A5E66'], Pushed: ['Pushed', '#EAF0FB', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
     const parentSp = d.plans.find(p => p.id === sp.parentPlanId);
+    const sc = d.scs.find(s => s.code === sp.scCode);
     const m = this.computeSchedulerMetricsFor(sp) || {};
     const nlhP = (st.ingestedNlhPlans || []).find(p => p.runId === sp.nlhPlanId);
-    const vv = SCHED_VERDICT[sp.status] || SCHED_VERDICT.Draft;
+    // 2026-07-31 — a plan Finalised via "Finalise Directly" is tracked distinctly from one that went
+    // through the full alignment loop, so the card can say "Pushed Without Alignment" instead of a
+    // plain "Finalised" that would imply Ops actually reviewed it. See doSchedPush().
+    const isFinalDirect = sp.status === 'Finalised' && !!sp.finalisedDirect;
+    const vv = isFinalDirect ? ['Pushed Without Alignment', '#F0EDFB', '#5B4FA0'] : (SCHED_VERDICT[sp.status] || SCHED_VERDICT.Draft);
     // Flags list mirrors RLH's reviewDetail.flags shape ({sevLabel,sevBg,sevFg,t}) so the same
     // "Validation Flags" section markup can be reused verbatim for Route Scheduler (2026-07-31).
     const flags = [];
     if (m.warnD0Low) flags.push({ sevLabel: 'WARNING', sevBg: '#FBF1DF', sevFg: '#C77B00', t: 'D0 Landing is ' + m.d0LandingPct + '%, below the 30% threshold.' });
     if (m.warnHoldHigh) flags.push({ sevLabel: 'WARNING', sevBg: '#FBF1DF', sevFg: '#C77B00', t: 'Holding Time is ' + m.holdingTotalHours + ' hrs, above the 12hr threshold.' });
+    // Reviewer chips — mirrors RLH's opsLeads shape exactly (plan.reviewerNames/submittedReviewers →
+    // {name, done, mark, statusText, initials, chipBg, chipFg}) so Ops Alignment's card can reuse the
+    // same reviewer-chip markup RLH's does, just fed from schedulerPlans' own fields (2026-07-31).
+    const reviewerNames = sp.reviewerNames || [];
+    const submittedReviewersList = sp.submittedReviewers || [];
+    const opsLeads = reviewerNames.map((nm) => {
+      const done = submittedReviewersList.indexOf(nm) >= 0;
+      const initials = nm.split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+      return { name: nm, done, pending: !done, mark: done ? '\u2713' : '\u23f3', statusText: done ? 'Submitted' : 'Not-Submitted', initials,
+        chipBg: done ? '#E7F4EC' : '#F2F5FA', chipFg: done ? '#128A3E' : '#5A5E66' };
+    });
     const card = {
       id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone,
-      createdAt: sp.createdAt, createdBy: sp.createdBy || '',
+      scCoords: sc ? (Number(sc.lat).toFixed(4) + ', ' + Number(sc.lng).toFixed(4)) : '\u2014',
+      createdAt: sp.createdAt, createdBy: sp.createdBy || '', sentDate: sp.sentDate || sp.createdAt, pushedBy: sp.pushedBy || sp.createdBy || '',
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
+      isFinalDirect, reviewerNames, opsLeads, hasReviewers: opsLeads.length > 0,
       parentRunId: parentSp ? ('RUN-' + parentSp.scCode + '-01') : '\u2014',
       nlhPlanName: nlhP ? nlhP.name : '\u2014',
       docks: sp.rlhDocks, hw: sp.hw, htf: sp.htf, d0Label: sp.d0Cutoff, localSpeed: sp.localSpeed, nonLocalSpeed: sp.nonLocalSpeed,
       connectionStartTime: m.connectionStartTime, connectionSlots: m.connectionSlots,
       d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours, lanesWithHold: m.lanesWithHold, totalLanes: m.totalLanes,
+      dockUtilPct: m.dockUtilPct, slotBreakdown: m.slotBreakdown || [], hasSlotBreakdown: (m.slotBreakdown || []).length > 0,
       d0Color: m.warnD0Low ? '#D14B4B' : '#14171F', holdColor: m.warnHoldHigh ? '#D14B4B' : '#14171F',
       warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, hasAnyWarning: m.warnD0Low || m.warnHoldHigh,
       flags, hasFlags: flags.length > 0, noFlags: flags.length === 0,
       flagLabel: flags.length ? (flags.length + ' warning' + (flags.length === 1 ? '' : 's')) : 'No flags',
       flagBg: flags.length ? '#FBF1DF' : '#E7F4EC', flagFg: flags.length ? '#C77B00' : '#128A3E', flagDot: flags.length ? '#C77B00' : '#128A3E',
-      isDraft: sp.status === 'Draft', isFinalised: sp.status === 'Finalised', canPush: sp.status === 'Draft',
+      isDraft: sp.status === 'Draft', isPushedState: sp.status === 'Pushed' || sp.status === 'In Alignment',
+      isAcknowledged: sp.status === 'Acknowledged', isFinalised: sp.status === 'Finalised',
+      // 2026-07-31 — "retain push directly irrespective": Finalise Directly stays available at every
+      // stage right up until the plan is actually Finalised (not gated to Draft-only like before).
+      // Push to Alignment only makes sense pre-push, so that one stays Draft-only.
+      canPush: sp.status === 'Draft', canPushToAlignment: sp.status === 'Draft', canFinaliseDirect: sp.status !== 'Finalised',
+    };
+    card.onDownloadCsv = () => {
+      const head = 'Field,Value\n';
+      const rows = [['SC', sp.scCode + ' - ' + sp.scName], ['Status', sp.status], ['RLH Route Planner Run', card.parentRunId], ['NLH Plan Used', card.nlhPlanName], ['SC Docks', sp.rlhDocks], ['HW', sp.hw], ['HTF', sp.htf], ['D0 Cutoff', sp.d0Cutoff], ['Local Speed', sp.localSpeed + ' km/h'], ['Non-Local Speed', sp.nonLocalSpeed + ' km/h'], ['SC Connection Start Time', m.connectionStartTime], ['Connection Slots', m.connectionSlots], ['Dock Utilisation', m.dockUtilPct + '%'], ['D0 Landing (Vol%)', m.d0LandingPct + '%'], ['Holding Time (Total hrs)', m.holdingTotalHours], ['Lanes with Hold Time', m.lanesWithHold + ' / ' + m.totalLanes]].concat((m.slotBreakdown || []).map(s => ['Slot ' + s.time, s.used + ' / ' + s.docks + ' (' + s.pct + '%)']));
+      const body = rows.map(r => r.join(',')).join('\n');
+      this.downloadText(sp.id + '-cutoff-plan.csv', head + body);
+      this.showToast('Cutoff Plan downloaded · ' + sp.id, '#128A3E');
     };
     if (includeActions) {
       card.onPush = () => this.setState({ schedPushOpen: true, schedPushPlanId: sp.id });
       card.onFinaliseDirect = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
       card.onDetail = () => this.setState({ reviewSchedDetailId: sp.id });
-      card.onDownloadCsv = () => {
-        const head = 'Field,Value\n';
-        const rows = [['SC', sp.scCode + ' - ' + sp.scName], ['Status', sp.status], ['RLH Route Planner Run', card.parentRunId], ['NLH Plan Used', card.nlhPlanName], ['SC Docks', sp.rlhDocks], ['HW', sp.hw], ['HTF', sp.htf], ['D0 Cutoff', sp.d0Cutoff], ['Local Speed', sp.localSpeed + ' km/h'], ['Non-Local Speed', sp.nonLocalSpeed + ' km/h'], ['SC Connection Start Time', m.connectionStartTime], ['Connection Slots', m.connectionSlots], ['D0 Landing (Vol%)', m.d0LandingPct + '%'], ['Holding Time (Total hrs)', m.holdingTotalHours], ['Lanes with Hold Time', m.lanesWithHold + ' / ' + m.totalLanes]];
-        const body = rows.map(r => r.join(',')).join('\n');
-        this.downloadText(sp.id + '-cutoff-plan.csv', head + body);
-        this.showToast('Cutoff Plan downloaded · ' + sp.id, '#128A3E');
-      };
     }
     return card;
   }
@@ -6509,7 +6626,7 @@ class NDCApp extends React.Component {
     const targetStatus = finaliseDirect ? 'Finalised' : 'Pushed';
     const reviewers = sc ? [...new Set(sc.pocs)].slice(0, 2) : [];
     const schedulerPlans = d.schedulerPlans.slice();
-    schedulerPlans[idx] = Object.assign({}, sp, { status: targetStatus, reviewerNames: reviewers, submittedReviewers: finaliseDirect ? reviewers.slice() : [], pushedBy: 'Pranita Sapkal', sentDate: 'Today' });
+    schedulerPlans[idx] = Object.assign({}, sp, { status: targetStatus, reviewerNames: reviewers, submittedReviewers: finaliseDirect ? reviewers.slice() : [], pushedBy: 'Pranita Sapkal', sentDate: 'Today', finalisedDirect: !!finaliseDirect });
     this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });
     if (finaliseDirect) this.showToast('Finalised ' + spId + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E');
     else this.showToast('Pushed ' + spId + ' to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
@@ -6542,6 +6659,11 @@ class NDCApp extends React.Component {
       }
       const reviewerNamesNext = reviewers.length ? reviewers : plan.reviewerNames;
       plan = Object.assign({}, plan, { hw: runHw, rows, pushedBy: 'Pranita Sapkal', reviewerNames: reviewerNamesNext,
+        // 2026-07-31 — sourceRunId + finalisedDirect: an SC can have several runs (HW variants),
+        // but only ONE `plans[SC]` object exists at a time — this records WHICH run is the one
+        // currently promoted, so each run's own card can show its own correct status instead of
+        // every card for the SC showing the same blanket "Pushed" tag.
+        sourceRunId: run.id, finalisedDirect: !!finaliseDirect,
         // A re-push restarts the alignment cycle — old submissions no longer apply. Finalise Directly
         // deliberately bypasses the alignment loop by product decision, so it's not a "gap", not a
         // missed submission — treat every assigned reviewer as covered rather than flagging it.
@@ -6561,7 +6683,7 @@ class NDCApp extends React.Component {
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
       const newPlanReviewers = reviewers.length ? reviewers : [...new Set(sc.pocs)].slice(0, 2);
-      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } };
+      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], sourceRunId: run.id, finalisedDirect: !!finaliseDirect, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost } };
       plans.push(plan);
     }
     const pushed = Object.assign({}, st.pushedSCs); pushed[code] = true;
@@ -7079,11 +7201,27 @@ class NDCApp extends React.Component {
     });
     const d0LandingPct = totalVol > 0 ? (onTimeVol / totalVol * 100) : 0;
     const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
+    // 2026-07-31 — Slot Breakdown + Dock Utilisation. Groups every route into its 30-min dispatch
+    // slot (same rounding used for connectionSlots) and counts how many routes/vehicles departed in
+    // each slot against the SC's dock capacity. Dock Utilisation = total routes / (slots used × docks)
+    // — a simple network-wide average, NOT a "gap detection" metric: a plan that's 100% full in early
+    // slots and thin in the last one (real, honest tail-end slack from finite volume) reads identically
+    // to one with genuine idle docks mid-sequence. The per-slot list is what lets a reviewer actually
+    // see which shape they're looking at — the aggregate number alone can't distinguish the two.
+    const docks = sp.rlhDocks || 0;
+    const slotCounts = {};
+    routeInfo.forEach(x => { const slot = Math.round(x.dispatchMin / 30) * 30; slotCounts[slot] = (slotCounts[slot] || 0) + 1; });
+    const slotBreakdown = Object.keys(slotCounts).map(Number).sort((a, b) => a - b).map(slot => ({
+      time: fmtTime(slot), used: slotCounts[slot], docks, full: slotCounts[slot] >= docks,
+      pct: docks > 0 ? Math.round(slotCounts[slot] / docks * 100) : 0,
+    }));
+    const dockUtilPct = (connectionSlots > 0 && docks > 0) ? (routes.length / (connectionSlots * docks) * 100) : 0;
     return {
       connectionStartTime: fmtTime(connectionStartMin), connectionSlots,
       d0LandingPct: Math.round(d0LandingPct * 10) / 10,
       holdingTotalHours: Math.round(holdingTotalHours * 10) / 10,
       lanesWithHold, totalLanes: routes.length,
+      docksForUtil: docks, slotBreakdown, dockUtilPct: Math.round(dockUtilPct * 10) / 10,
       warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
     };
   }
@@ -9211,6 +9349,10 @@ class NDCApp extends React.Component {
 
   reviewVals() {
     const st = this.state, d = st.data;
+    // eff(p) mirrors alignVals'/opsVals' own resolver — the plan's true current status is
+    // st.alignStatus[p.id], falling back to p.status; needed here (2026-07-31) so a run card can
+    // show the CORRECT per-run push status instead of a blanket SC-level flag.
+    const eff = (p) => st.alignStatus[p.id] || p.status;
     // 2026-07-29 — same RLH/NLH/FM Carting/SC-DC Mapping tier strip as Design Creation (CTIER),
     // plus the Route Planner/Route Scheduler fork nested under RLH. Independent state key from
     // Design Creation's (st.creationRlhMode) — each module remembers its own tier/mode choice.
@@ -9279,7 +9421,19 @@ class NDCApp extends React.Component {
       const flagLabel = flErr ? (flErr + flWarn) + ' validation flag' + ((flErr + flWarn) === 1 ? '' : 's') : flWarn ? flWarn + ' warning' + (flWarn === 1 ? '' : 's') : 'No flags';
       const flagBg = flErr ? '#FBEAEA' : flWarn ? '#FBF1DF' : '#E7F4EC';
       const flagFg = flErr ? '#D14B4B' : flWarn ? '#C77B00' : '#128A3E';
-      const pushed = !!st.pushedSCs[r.scCode];
+      // 2026-07-31 — fixed: this used to be `!!st.pushedSCs[r.scCode]`, an SC-level flag that made
+      // EVERY run card for an SC show the same "pushed" tag even though only ONE run's data is ever
+      // actually promoted into d.plans[SC] (an SC can have multiple runs, but only one active plan).
+      // Now matches plan.sourceRunId against THIS run specifically, and reflects the plan's real
+      // status (+ whether it was Finalised via "Finalise Directly", which reads as "Pushed Without
+      // Alignment" rather than a plain "Finalised" that would wrongly imply Ops actually reviewed it).
+      const srcPlan = d.plans.find(p => p.scCode === r.scCode);
+      const isChosenRun = !!(srcPlan && srcPlan.sourceRunId === r.id);
+      const planStatus = isChosenRun ? eff(srcPlan) : null;
+      const isFinalDirect = isChosenRun && planStatus === 'Finalised' && !!srcPlan.finalisedDirect;
+      const PUSH_TAG = { Pushed: ['Pushed', '#E7F0F8', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
+      const pushTagInfo = isFinalDirect ? ['Pushed Without Alignment', '#F0EDFB', '#5B4FA0'] : (isChosenRun ? (PUSH_TAG[planStatus] || null) : null);
+      const pushed = !!pushTagInfo;
       // RDR — Route Disruption Rate: % of routes changed vs the historic plan; only meaningful when HW>0 (uses a historic plan).
       const rdrOn = r.hw > 0;
       const rdrPct = rdrOn ? (r.hw >= 1 ? 6 + ((r.runNo || 1) * 7) % 10 : 16 + ((r.runNo || 1) * 11) % 16) : 0;
@@ -9306,8 +9460,7 @@ class NDCApp extends React.Component {
       const utilChipLabel = hasUtilChip ? (_over > 0 && _under > 0 ? _over + ' over + ' + _under + ' under-util route' + ((_over + _under) > 1 ? 's' : '') : _over > 0 ? _over + ' route' + (_over > 1 ? 's' : '') + ' over-utilised (>90%)' : _under + ' route' + (_under > 1 ? 's' : '') + ' under-utilised (<40%)') : '';
       return { id: r.id, runId: r.runId, runNo: r.runNo, triggeredAt: r.triggeredAt, triggeredBy: r.triggeredBy || '',
         hwLabel: hwLabelOf(r.hw), hwTag: HWTAG[r.hw],
-        pushed, pushedTag: pushed ? ((flErr + flWarn) > 0 ? 'Accepted with warnings' : 'In alignment') : '',
-        pushedTagBg: (flErr + flWarn) > 0 ? '#FBF1DF' : '#E7F0F8', pushedTagFg: (flErr + flWarn) > 0 ? '#C77B00' : '#1E6FB8',
+        pushed, pushedTag: pushed ? pushTagInfo[0] : '', pushedTagBg: pushed ? pushTagInfo[1] : '', pushedTagFg: pushed ? pushTagInfo[2] : '',
         nodes: fmtInt(r.dcCount), volume: fmtInt(r.volume), vehInput: (r.vehInput && r.vehInput.length ? r.vehInput.join(' · ') : '—'),
         scCoords: curSC ? (Number(curSC.lat).toFixed(4) + ', ' + Number(curSC.lng).toFixed(4)) : '—',
         coverage: pct(r.coverage), util: pct(r.util), cps: '₹' + r.cps.toFixed(2), routes: String(r.routes), vehicles: String(r.vehicles), distance: fmtInt(r.distance) + ' km',

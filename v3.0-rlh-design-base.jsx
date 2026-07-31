@@ -475,7 +475,7 @@ function View(B, self) {
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 300px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
 <div style={css(`min-width:1180px;`)}>
-<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 68px 76px 72px 72px 140px 80px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>NAME</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>CITY, STATE</div>
@@ -488,13 +488,15 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>RLH DOCKS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
-<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 68px 76px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:90px 130px 160px 90px 80px 90px 90px 70px 70px 70px 60px 80px 68px 76px 72px 72px 140px 80px; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
@@ -507,6 +509,8 @@ function View(B, self) {
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localSpeed}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalSpeed}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.closeTime}</div>
 <div style={css(`padding:10px 10px;`)}>
@@ -601,19 +605,21 @@ function View(B, self) {
 {(g.addForm.tpWarn) ? (<><div style={css(`margin-top:10px; font-size:11.5px; color:#C77B00; display:inline-flex; align-items:center; gap:5px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{g.addForm.tpWarnText}</div></>) : null}
 </div>
 </>) : null}
-<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1fr 0.95fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.8fr 0.9fr 0.85fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>VEHICLES</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>TP LIMIT</div>
+<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LOCAL SPD</div>
+<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>NON-LOCAL SPD</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ZONE FEASIBILITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>WITHIN LIMIT</div>
 <div />
 </div>
 <div style={css(`max-height:138px; overflow-y:auto;`)}>
 {(g.rows || []).map((r, __i21) => (<React.Fragment key={__i21}>
-<div style={css(`display:grid; grid-template-columns:1.6fr 1.1fr 1.1fr 0.95fr 0.85fr 1fr 0.95fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.8fr 0.9fr 0.85fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.t}</div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><select value={r.draftType} onChange={r.onDraftType} style={css(`width:100%; height:30px; padding:0 6px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto; box-sizing:border-box;`)}>{(r.typeOpts || []).map((to, __i19) => (<React.Fragment key={__i19}><option value={to.value}>{to.label}</option></React.Fragment>))}</select></div></>) : null}
@@ -629,6 +635,9 @@ function View(B, self) {
 {/* TP LIMIT */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:#F2F5FA; color:#14171F;`)}>{r.tp}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><input type={"number"} min={"0"} value={r.draftTp} onInput={r.onDraftTp} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
+{/* LOCAL / NON-LOCAL SPEED (2026-07-30) — defaults from Vehicle Master, overridable per-SC here. */}
+<div style={css(`padding:11px 14px; text-align:right; font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.localSpeed}</div>
+<div style={css(`padding:11px 14px; text-align:right; font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.nonLocalSpeed}</div>
 {/* ZONE FEASIBILITY */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:${r.zfBg}; color:${r.zfFg};`)}>{r.zf}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center;`)}>{(r.zfChips || []).map((zc, __i20) => (<React.Fragment key={__i20}><button onClick={zc.onSelect} style={css(`height:26px; padding:0 8px; border:1px solid ${zc.bd}; background:${zc.bg}; color:${zc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)}>{zc.label}</button></React.Fragment>))}</div></>) : null}
@@ -716,17 +725,19 @@ function View(B, self) {
 </>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 {/* 1.8 Vehicle Master — sticky header */}
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr 84px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 1.1fr 84px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY (SHIPMENTS)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT (KMS)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>TOUCH POINT LIMIT</div>
+<div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)} title={"Route Scheduler's default local-zone travel speed for this vehicle type"}>LOCAL SPD (KM/H)</div>
+<div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)} title={"Route Scheduler's default non-local-zone travel speed for this vehicle type"}>NON-LOCAL SPD (KM/H)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LH FEASIBILITY</div>
 <div style={css(`padding:10px 14px;`)} />
 </div>
 <div style={css(`max-height:360px; overflow-y:auto;`)}>
 {(vehMaster || []).map((v, __i27) => (<React.Fragment key={__i27}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr 84px; align-items:center; border-top:1px solid #EEF1F6; background:${v.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 1.1fr 84px; align-items:center; border-top:1px solid #EEF1F6; background:${v.editing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(v.notEditing) ? (<><div style={css(`padding:13px 14px; font-size:13px; font-weight:700; color:#14171F;`)}>{v.name}</div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><input value={v.draftVtype} onInput={v.onDraftVtype} placeholder={"Vehicle type"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:700; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
@@ -739,6 +750,9 @@ function View(B, self) {
 {/* TOUCH POINT LIMIT */}
 {(v.notEditing) ? (<><div style={css(`padding:13px 14px; display:flex; flex-direction:column; align-items:center; gap:3px;`)}><span style={css(`display:inline-flex; min-width:28px; height:24px; align-items:center; justify-content:center; padding:0 9px; border-radius:999px; background:${v.tpOverCap ? '#FBF1DF' : '#EAF1FB'}; color:${v.tpOverCap ? '#C77B00' : '#1E6FB8'}; font-size:12.5px; font-weight:700;`)}>{v.tp}</span>{(v.tpOverCap) ? (<><span style={css(`font-size:9.5px; font-weight:600; color:#C77B00;`)}>⚠ over 7 (RLH)</span></>) : null}</div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><input type={"number"} min={"0"} value={v.draftTp} onInput={v.onDraftTp} placeholder={"0"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
+{/* LOCAL / NON-LOCAL SPEED (2026-07-30) — read-only here; edit at SC Master for the actual per-SC override Route Scheduler uses. */}
+<div style={css(`padding:13px 14px; text-align:right; font-size:13px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{v.localSpeed}</div>
+<div style={css(`padding:13px 14px; text-align:right; font-size:13px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{v.nonLocalSpeed}</div>
 {/* LH FEASIBILITY */}
 {(v.notEditing) ? (<><div style={css(`padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px;`)}>{(v.feas || []).map((lf, __i25) => (<React.Fragment key={__i25}><span style={css(`padding:3px 10px; border-radius:6px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{lf}</span></React.Fragment>))}</div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; flex-wrap:wrap; gap:5px; align-items:center;`)}>{(v.evFeasChips || []).map((fc, __i26) => (<React.Fragment key={__i26}><button onClick={fc.onToggle} style={css(`height:26px; padding:0 9px; border:1px solid ${fc.bd}; background:${fc.bg}; color:${fc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{fc.label}</button></React.Fragment>))}</div></>) : null}
@@ -1039,6 +1053,15 @@ function View(B, self) {
 {(creationRlhSubSeg || []).map((rs, __i39b) => (<React.Fragment key={__i39b}><button onClick={rs.onClick} title={rs.sub} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${rs.bd}; background:${rs.bg}; color:${rs.fg}; font-family:inherit; font-size:12.5px; font-weight:${rs.weight}; border-radius:7px; cursor:pointer;`)}>{rs.label}</button></React.Fragment>))}
 </div>
 </div>
+{(isCreationNeutral) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:460px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
+<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAEEFB; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M12 3l1.7 4.1L18 9l-4.3 1.9L12 15l-1.7-4.1L6 9l4.3-1.9L12 3zM18.5 14l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Choose Route Planner or Route Scheduler</div>
+<div style={css(`font-size:13px; color:#5A5E66; line-height:1.55;`)}>Route Planner creates a new RLH route & vehicle plan from scratch. Route Scheduler adds dispatch cutoffs and travel times to an already-Finalised plan. Pick one above to continue.</div>
+</div>
+</div>
+</>) : null}
 {(isRoutePlanner) ? (<>
 {/* Input Selection / Run Queue (2026-07-29) — moved here, nested under Route Planner specifically,
     instead of the old generic Tier-2 strip that sat above the whole screen. Same creationView
@@ -1669,8 +1692,8 @@ function View(B, self) {
 {/* Input Selection / Run Queue nested under Route Scheduler too (2026-07-29) — own state key
     (schedulerCreationView) so it doesn't collide with Route Planner's creationView. */}
 <div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<button onClick={() => this.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerWizardView ? '#003F98' : '#E6EBF2'}; background:${isSchedulerWizardView ? '#EAEEFB' : 'transparent'}; color:${isSchedulerWizardView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
-<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#003F98' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#EAEEFB' : 'transparent'}; color:${isSchedulerQueueView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(schedQueueActive) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{schedRunTotal}</span></>) : null}</button>
+<button onClick={() => this.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerWizardView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerWizardView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerWizardView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
+<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerQueueView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(schedQueueActive) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{schedRunTotal}</span></>) : null}</button>
 </div>
 {(isSchedulerWizardView) ? (<>
 {/* ===== SCHEDULER STEPPER ===== */}
@@ -1766,7 +1789,7 @@ function View(B, self) {
 {(isSchedStep3) ? (<>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Overall defaults</div>
 <div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px;`)}>Applies to all {selectedScCodesStep1.length} selected SC{selectedScCodesStep1.length === 1 ? '' : 's'} unless overridden below.</div>
-<div style={css(`display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(6,1fr); gap:14px; margin-bottom:20px;`)}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
 <div style={css(`display:flex; gap:5px;`)}>
@@ -1785,6 +1808,16 @@ function View(B, self) {
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>RLH Docks</div>
 <input value={docksGlobal} onChange={onDocksGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Plan-level only — SC Master is unchanged.</div>
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Local Speed (km/h)</div>
+<input value={localSpeedGlobal} onChange={onLocalSpeedGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Speed for local-zone DCs — feeds D0 Landing %.</div>
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Non-Local Speed (km/h)</div>
+<input value={nonLocalSpeedGlobal} onChange={onNonLocalSpeedGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Speed for non-local-zone DCs — feeds D0 Landing %.</div>
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Hold Time Factor (HTF)</div>
@@ -1808,11 +1841,11 @@ function View(B, self) {
 {(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 0.9fr 0.9fr 0.9fr 1.1fr 0.6fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.7fr 0.7fr 0.8fr 0.9fr 0.5fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Local Spd', 'Non-Local Spd', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(opModeRows || []).map((r, __i50) => (<React.Fragment key={__i50}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr 0.9fr 0.9fr 0.9fr 1.1fr 0.6fr; gap:8px; padding:9px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.7fr 0.7fr 0.8fr 0.9fr 0.5fr; gap:8px; padding:9px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
 <div style={css(`display:flex; gap:3px;`)}>
 {[0, 0.5, 1].map((v, __i51) => (<React.Fragment key={__i51}><button onClick={() => r.onHw(v)} style={css(`flex:1; height:24px; border:1px solid ${r.hw === v ? '#003F98' : '#E6EBF2'}; background:${r.hw === v ? '#003F98' : '#fff'}; color:${r.hw === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:5px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
@@ -1826,6 +1859,8 @@ function View(B, self) {
 <button onClick={r.onD0Inc} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
 </div>
 <input value={r.docks} onChange={(e) => r.onDocksChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
+<input value={r.localSpeed} onChange={(e) => r.onLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
+<input value={r.nonLocalSpeed} onChange={(e) => r.onNonLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 {(r.needsRef) ? (<>
 <select value={r.ref} onChange={(e) => r.onRefPick(e.target.value)} style={css(`width:100%; height:26px; border:1px solid ${r.refMissing ? '#D14B4B' : '#E6EBF2'}; border-radius:5px; font-family:inherit; font-size:11px;`)}>
 <option value={""}>{r.refOptions.length === 0 ? 'None available' : 'Pick…'}</option>
@@ -1868,7 +1903,7 @@ function View(B, self) {
 {/* ===== NAV FOOTER ===== */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:#fff; border-top:1px solid #E6EBF2; flex-shrink:0;`)}>
 <button onClick={schedulerBack} style={css(`height:36px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerStep > 1 ? 'pointer' : 'default'}; opacity:${schedulerStep > 1 ? '1' : '0.4'};`)} disabled={schedulerStep === 1}>Back</button>
-<button onClick={isSchedStep4 ? onTriggerScheduler : schedulerNext} disabled={!schedulerCanNext} title={(!schedulerCanNext && isSchedStep3) ? 'Set a reference plan for every SC that needs one' : (!schedulerCanNext && isSchedStep4) ? 'Every selected SC needs NLH landing data in the selected file before you can trigger' : ''} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${schedulerCanNext ? '#003F98' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerCanNext ? 'pointer' : 'default'};`)}>{schedulerNextLabel}<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={isSchedStep4 ? onTriggerScheduler : schedulerNext} disabled={!schedulerCanNext} title={(!schedulerCanNext && isSchedStep3) ? 'Set a reference plan for every SC that needs one' : (!schedulerCanNext && isSchedStep4) ? 'Every selected SC needs NLH landing data in the selected file before you can trigger' : ''} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${schedulerCanNext ? '#0D7377' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${schedulerCanNext ? 'pointer' : 'default'};`)}>{schedulerNextLabel}<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 </>) : null}
@@ -2306,7 +2341,7 @@ function View(B, self) {
 </>) : null}
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
 <div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
-{[['RLH Route Planner Run', schedCard.parentRunId], ['NLH Plan Used', schedCard.nlhPlanName], ['SC Docks', schedCard.docks], ['HW', schedCard.hw], ['HTF', schedCard.htf], ['D0 Cutoff', schedCard.d0Label]].map((kv, __i62) => (<React.Fragment key={__i62}>
+{[['RLH Route Planner Run', schedCard.parentRunId], ['NLH Plan Used', schedCard.nlhPlanName], ['SC Docks', schedCard.docks], ['HW', schedCard.hw], ['HTF', schedCard.htf], ['D0 Cutoff', schedCard.d0Label], ['Local Speed', schedCard.localSpeed + ' km/h'], ['Non-Local Speed', schedCard.nonLocalSpeed + ' km/h']].map((kv, __i62) => (<React.Fragment key={__i62}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
 </React.Fragment>))}
 </div>
@@ -2421,7 +2456,7 @@ function View(B, self) {
 </div>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
 <div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
-{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label]].map((kv, __i66) => (<React.Fragment key={__i66}>
+{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i66) => (<React.Fragment key={__i66}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
 </React.Fragment>))}
 </div>
@@ -3270,7 +3305,7 @@ function View(B, self) {
 </div>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>INPUTS</div>
 <div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;`)}>
-{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label]].map((kv, __i70) => (<React.Fragment key={__i70}>
+{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW', schedAlignCard.hw], ['HTF', schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i70) => (<React.Fragment key={__i70}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{kv[0]}</div><div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-top:3px;`)}>{kv[1]}</div></div>
 </React.Fragment>))}
 </div>
@@ -4341,8 +4376,18 @@ class NDCApp extends React.Component {
     const _qp = new URLSearchParams(window.location.search);
     this.standaloneMapSc = _qp.get('standaloneMap');
     this.standaloneMapMode = _qp.get('mapMode') || '';
+    // 2026-07-30 — built once up front so the seeded demo NLH plan below can reference real SC
+    // codes (needed so validation rule #1 has something real to check if this demo file is ever
+    // re-selected live, rather than crashing on a null/placeholder scCodes list).
+    const _seedForNlh = this.buildSeed();
+    const _demoNlhScCodes = (_seedForNlh.scs || []).slice(0, Math.ceil((_seedForNlh.scs || []).length * 0.8)).map(s => s.code);
     this.state = {
       persona: 'planner',
+      // 2026-07-30 — one seeded demo NLH Landing Plan so Route Scheduler's dummy schedulerPlans
+      // (below, in genData) have a real file to point at instead of showing "—" for NLH Plan Used.
+      // Covers a generous majority of SCs (demo-only coverage number, not tied to real scCodes) so
+      // it reads as plausible without needing per-SC volume/coverage math for a seed record.
+      ingestedNlhPlans: [{ name: 'NLH-Landing-DEMO.csv', rows: 186, by: 'Pranita Sapkal', date: '24 Jul · 09:10', status: 'Validated', errors: 0, scCount: _demoNlhScCodes.length, scCodes: _demoNlhScCodes, volumeBySC: {}, runId: 'NLH-ING-DEMO' }],
       // 2026-07-14 — lets the Ops Lead view be "acted" as any of a plan's assigned reviewers instead
       // of always being hardcoded to Rahul Sharma, so more-than-one-reviewer scenarios can actually be
       // simulated (submit as A, switch to B, submit differently, see the co-reviewer overlay update).
@@ -4415,7 +4460,7 @@ class NDCApp extends React.Component {
       mapSC: null, mapDataSource: 'generated', mapRoute: 'All', mapVeh: 'All', mapSearch: '', mapZone: 'All', runMapOpen: false, hovDcIdx: null,
       reviewRoutesOpen: false, reviewDetailRunId: null, reviewDetailView: 'route',
       pgAutodml: 1, pgScMaster: 1, pgRoutes: 1, pgAvail: 1,
-      data: this.buildSeed(),
+      data: _seedForNlh,
     };
     // §9 — do NOT pre-select sort centres; the planner selects their own on Step 1 (selectedSCs stays [] from initial state).
     this.state.reviewSC = this.state.data.scs[0].code;
@@ -4431,15 +4476,19 @@ class NDCApp extends React.Component {
     const rf = (a, b) => a + R() * (b - a);
     const pick = (arr) => arr[Math.floor(R() * arr.length)];
 
+    // Local Speed / Non-Local Speed (km/h) added 2026-07-30 — Route Scheduler's base default
+    // travel speed per vehicle type, for local- vs. non-local-zone DCs. SC Vehicle Availability
+    // can override per-SC; SC Master carries a further per-SC blanket value Route Scheduler
+    // actually defaults from. Larger/highway-oriented vehicles get a bigger non-local/local gap.
     const VEH = [
-      { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'] },
-      { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'] },
-      { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'] },
-      { name: '17ft / MCV',      tp: 6, cap: 5000,  caps: [4800, 5000, 5200],  dist: 700,  feas: ['NLH', 'RLH'] },
-      { name: '19ft / MCV',      tp: 5, cap: 6500,  caps: [6300, 6500, 6700],  dist: 800,  feas: ['NLH', 'RLH'] },
-      { name: '22ft / LCV',      tp: 4, cap: 8000,  caps: [7800, 8000, 8200],  dist: 900,  feas: ['NLH', 'RLH'] },
-      { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'] },
-      { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'] },
+      { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'], localSpeed: 20, nonLocalSpeed: 30 },
+      { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'], localSpeed: 22, nonLocalSpeed: 34 },
+      { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'], localSpeed: 24, nonLocalSpeed: 38 },
+      { name: '17ft / MCV',      tp: 6, cap: 5000,  caps: [4800, 5000, 5200],  dist: 700,  feas: ['NLH', 'RLH'], localSpeed: 25, nonLocalSpeed: 40 },
+      { name: '19ft / MCV',      tp: 5, cap: 6500,  caps: [6300, 6500, 6700],  dist: 800,  feas: ['NLH', 'RLH'], localSpeed: 26, nonLocalSpeed: 42 },
+      { name: '22ft / LCV',      tp: 4, cap: 8000,  caps: [7800, 8000, 8200],  dist: 900,  feas: ['NLH', 'RLH'], localSpeed: 27, nonLocalSpeed: 44 },
+      { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'], localSpeed: 24, nonLocalSpeed: 45 },
+      { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'], localSpeed: 22, nonLocalSpeed: 48 },
     ];
 
     const NAMES = ['Aarti Nair','Rahul Sharma','Imran Khan','Deepa Rao','Suresh Menon','Neha Tiwari','Vivek Pillai','Karthik Varma','Pooja Gupta','Sandeep Lal','Megha Bose','Arjun Desai'];
@@ -4734,6 +4783,7 @@ class NDCApp extends React.Component {
           vehicleCount: ri(2, 6),                          // per-SC override
           tpLimit: v.tp,                                   // canonical TP limit (ACE 4 · others 7)
           zoneFeas: ZFEAS[Math.floor(R() * ZFEAS.length)], // per-SC override
+          localSpeed: v.localSpeed, nonLocalSpeed: v.nonLocalSpeed, // 2026-07-30 — per-SC override of the Vehicle Master default
         });
       }
       return { code: sc.code, name: sc.name + ' LMSC', zone: sc.zone, rows };
@@ -4744,14 +4794,36 @@ class NDCApp extends React.Component {
     // Carries parentPlanId → the Finalised RLH plan it was scheduled from, plus its OWN independent
     // status lifecycle (mirrors Pushed → In Alignment → Acknowledged → Finalised) so nothing about
     // the parent RLH plan's status/meaning ever changes. Starts empty — nothing is seeded.
-    const schedulerPlans = [];
+    // 2026-07-30 — seeded with dummy data (5 of the 7 Finalised RLH plans get a Route Scheduler
+    // run, spanning all 5 lifecycle stages) so Design Review/Ops Alignment for Route Scheduler
+    // aren't blank on first load. The other 2 Finalised plans stay unscheduled, so Step 1's
+    // "Plan Selection" list still has something fresh to pick from.
+    const _finalisedForSeed = plans.filter(p => p.status === 'Finalised').slice(0, 5);
+    const _seedStatuses = ['Draft', 'Pushed', 'In Alignment', 'Acknowledged', 'Finalised'];
+    const schedulerPlans = _finalisedForSeed.map((p, i) => {
+      const hh = p.scCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const hw = [0, 0.5, 1][hh % 3], htf = [0, 0.5, 1][(hh >> 2) % 3];
+      const d0Increments = (hh >> 4) % 5;
+      const status = _seedStatuses[i % _seedStatuses.length];
+      const sc = scs.find(s => s.code === p.scCode);
+      return {
+        id: p.id + '-SCHED-DEMO' + (i + 1), parentPlanId: p.id, scCode: p.scCode, scName: p.scName, zone: p.zone,
+        status, createdAt: '2' + (4 + i) + ' Jul 2026', createdBy: 'Pranita Sapkal',
+        nlhPlanId: 'NLH-ING-DEMO',
+        hw, htf, d0Increments, d0Cutoff: (() => { const m = 9 * 60 + d0Increments * 30; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); })(),
+        rlhDocks: 2 + ((hh >> 3) % 6),
+        localSpeed: sc && sc.localSpeed != null ? sc.localSpeed : 22 + (hh % 8),
+        nonLocalSpeed: sc && sc.nonLocalSpeed != null ? sc.nonLocalSpeed : 32 + ((hh >> 5) % 10),
+        refPlanId: null, cutoffs: null,
+      };
+    });
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   showToast(msg, dot, undoFn) { clearTimeout(this._t); this.setState({ toast: { msg, dot: dot || '#2F4FC6', undo: undoFn || null } }); this._t = setTimeout(() => this.setState({ toast: null }), undoFn ? 5200 : 3500); }
   runUndo() { const t = this.state.toast; clearTimeout(this._t); this.setState({ toast: null }); if (t && t.undo) t.undo(); }
   // C8a — entering Creation always starts at step 1 so re-entry never resumes mid-wizard.
-  go(view) { if (view === 'creation' && this.state.view !== 'creation') this.setState({ view, creationStep: 1, fixReturnStep: null, focusSC: null, creationView: 'wizard', showCreationGuidelines: true }); else this.setState({ view }); }
+  go(view) { if (view === 'creation' && this.state.view !== 'creation') this.setState({ view, creationStep: 1, fixReturnStep: null, focusSC: null, creationView: 'wizard', creationRlhMode: 'none' }); else this.setState({ view }); }
   setPersona(p) { this.setState({ persona: p, view: p === 'ops' ? 'align' : 'inputs' }); }
   // Current "acting" Ops Lead identity — defaults to Rahul Sharma (the original single hardcoded
   // persona) so nothing changes until the person deliberately switches who they're simulating.
@@ -4824,6 +4896,8 @@ class NDCApp extends React.Component {
       txt('rlhDocks', 'RLH Docks', true, ''),
       txt('localTp', 'Local TP Limit', true, ''),
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
+      txt('localSpeed', 'Local Speed (km/h)', false, 'e.g. 25'),
+      txt('nonLocalSpeed', 'Non-Local Speed (km/h)', false, 'e.g. 38'),
       tm('open', 'SC Opening Time', '06:00'),
       tm('close', 'SC Closing Time', '22:00'),
     ];
@@ -4863,14 +4937,14 @@ class NDCApp extends React.Component {
     if (st.addScEditCode) {
       // Edit mode — apply changes to a session-edited overlay so the existing SC row reflects them.
       const edits = Object.assign({}, st.scEdits || {});
-      edits[st.addScEditCode] = { name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, pocs: pocs.length ? pocs : ['—'] };
+      edits[st.addScEditCode] = { name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, localSpeed: f.localSpeed !== '' && f.localSpeed != null ? num(f.localSpeed) : null, nonLocalSpeed: f.nonLocalSpeed !== '' && f.nonLocalSpeed != null ? num(f.nonLocalSpeed) : null, pocs: pocs.length ? pocs : ['—'] };
       // also patch any session-added SC in place
       const addedScs = (st.addedScs || []).map(s => s.code === st.addScEditCode ? Object.assign({}, s, edits[st.addScEditCode]) : s);
       this.setState({ scEdits: edits, addedScs: addedScs, addScOpen: false, addScEditCode: null, addScForm: {} });
       this.showToast('Sort Centre ' + st.addScEditCode + ' updated', '#128A3E');
       return;
     }
-    const sc = { code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, lat: 0, lng: 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs.length ? pocs : ['—'] };
+    const sc = { code: code, name: (f.name || '').trim() || code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, zone: f.zone || 'South', dcCount: 0, volume: num(f.volCap), sortCap: num(f.sortCap), volCap: num(f.volCap), docks: num(f.nlhDocks) + num(f.rlhDocks), htp: f.htp !== '' && f.htp != null ? num(f.htp) : null, localSpeed: f.localSpeed !== '' && f.localSpeed != null ? num(f.localSpeed) : null, nonLocalSpeed: f.nonLocalSpeed !== '' && f.nonLocalSpeed != null ? num(f.nonLocalSpeed) : null, lat: 0, lng: 0, hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0, pocs: pocs.length ? pocs : ['—'] };
     this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
     this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
   }
@@ -5278,6 +5352,10 @@ class NDCApp extends React.Component {
       const rlhDocks = 2 + ((h >> 3) % 6);
       const localTp = 4 + (h % 3);
       const nonLocalTp = 2 + ((h >> 2) % 3);
+      // Local Speed / Non-Local Speed (2026-07-30) — km/h, Route Scheduler's default travel speed
+      // for local- vs. non-local-zone DCs. Real value if edited via Add/Edit SC, else deterministic.
+      const localSpeed = s.localSpeed != null && s.localSpeed !== '' ? s.localSpeed : 22 + (h % 8);
+      const nonLocalSpeed = s.nonLocalSpeed != null && s.nonLocalSpeed !== '' ? s.nonLocalSpeed : 32 + ((h >> 5) % 10);
       const openHour = 5 + (h % 3);
       const closeHour = 21 + ((h >> 4) % 3);
       // HTP (Hourly Throughput) — MAX shipments/hour this SC can process (2026-07-29). Distinct
@@ -5292,7 +5370,7 @@ class NDCApp extends React.Component {
       const closeTime = String(closeHour).padStart(2, '0') + ':00';
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, htp: fmtInt(htp), localTp: localTp, nonLocalTp: nonLocalTp, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
+      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks, nlhDocks: nlhDocks, rlhDocks: rlhDocks, htp: fmtInt(htp), localTp: localTp, nonLocalTp: nonLocalTp, localSpeed: localSpeed, nonLocalSpeed: nonLocalSpeed, openTime: openTime, closeTime: closeTime, dcCount: s.dcCount,
         pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
         pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
@@ -5317,10 +5395,10 @@ class NDCApp extends React.Component {
         onToggle: () => { const cur = ((this.state.editVehDraft || {}).feas || []); const next = cur.indexOf(opt) >= 0 ? cur.filter(x => x !== opt) : cur.concat([opt]); evSetDraft({ feas: next }); } };
     });
     const vehMasterBase = (d.VEH || []).filter(v => !vehRemoved[v.name]).map(v => {
-      const eff = Object.assign({ capacity: v.cap, dist: v.dist, tp: v.tp, localTp: v.localTp, nonLocalTp: v.nonLocalTp, feas: v.feas }, vehEdits[v.name] || {});
+      const eff = Object.assign({ capacity: v.cap, dist: v.dist, tp: v.tp, localTp: v.localTp, nonLocalTp: v.nonLocalTp, localSpeed: v.localSpeed, nonLocalSpeed: v.nonLocalSpeed, feas: v.feas }, vehEdits[v.name] || {});
       const editing = evName === v.name;
       const tpOverCap = (eff.feas || []).indexOf('RLH') >= 0 && Number(eff.tp) > 7;
-      return { name: v.name, capacity: (eff.capacity === '' || eff.capacity == null) ? '—' : String(eff.capacity), dist: (eff.dist === '' || eff.dist == null) ? '—' : Number(eff.dist).toLocaleString('en-IN'), tp: eff.tp, feas: (eff.feas && eff.feas.length ? eff.feas : ['—']), tpOverCap,
+      return { name: v.name, capacity: (eff.capacity === '' || eff.capacity == null) ? '—' : String(eff.capacity), dist: (eff.dist === '' || eff.dist == null) ? '—' : Number(eff.dist).toLocaleString('en-IN'), tp: eff.tp, localSpeed: eff.localSpeed, nonLocalSpeed: eff.nonLocalSpeed, feas: (eff.feas && eff.feas.length ? eff.feas : ['—']), tpOverCap,
         editing: editing, notEditing: !editing,
         draftCap: evDraft.capacity || '', draftDist: evDraft.dist || '', draftTp: evDraft.tp || '', draftVtype: evDraft.vtype || '',
         evFeasChips: editing ? evFeasChips : [],
@@ -5435,6 +5513,8 @@ class NDCApp extends React.Component {
         const zf = ovObj.zf != null ? ovObj.zf : (r.zoneFeas || 'Both');
         const cap = ovObj.cap != null ? ovObj.cap : r.capacity;
         const dist = ovObj.dist != null ? ovObj.dist : r.distanceLimit;
+        const localSpeed = ovObj.localSpeed != null ? ovObj.localSpeed : r.localSpeed;
+        const nonLocalSpeed = ovObj.nonLocalSpeed != null ? ovObj.nonLocalSpeed : r.nonLocalSpeed;
         const distNum = parseInt(String(dist).replace(/[^0-9]/g, ''), 10) || 0;
         const displayType = ovObj.type != null ? ovObj.type : r.vehicleType;
         const vmTp = vmTpFor(displayType); const tpExceeds = tp > vmTp; const cntExceeds = cnt > VMMAXCOUNT; const exceeds = tpExceeds || cntExceeds;
@@ -5447,7 +5527,7 @@ class NDCApp extends React.Component {
         const zfChips = ZF_OPTS.map(z => ({ label: z, active: draftZf === z, bg: draftZf === z ? draftZfBg : '#F2F5FA', fg: draftZf === z ? draftZfFg : '#5A5E66', bd: draftZf === z ? draftZfFg : '#E6EBF2', onSelect: () => eadSet({ zf: z }) }));
         const typeOpts = VEHMA.map(x => ({ value: x.name, label: x.name, selected: x.name === (rowEditing ? (ead.type || displayType) : displayType) }));
         return {
-          t: displayType, cap: cap, dist: distNum + ' km', cnt: cnt, tp: tp, zf: zf, zfBg: zfBg, zfFg: zfFg,
+          t: displayType, cap: cap, dist: distNum + ' km', cnt: cnt, tp: tp, localSpeed: localSpeed, nonLocalSpeed: nonLocalSpeed, zf: zf, zfBg: zfBg, zfFg: zfFg,
           vmLabel: exceeds ? (cntExceeds ? 'Exceeds limit' : '\u26a0 TP over master') : 'OK', vmBg: exceeds ? (cntExceeds ? '#FBEAEA' : '#FBF1DF') : '#E7F4EC', vmFg: exceeds ? (cntExceeds ? '#D14B4B' : '#C77B00') : '#128A3E',
           rowEditing: rowEditing, rowNotEditing: !rowEditing,
           draftType: rowEditing ? (ead.type || displayType) : displayType,
@@ -5523,7 +5603,7 @@ class NDCApp extends React.Component {
       addVehBtnBg: addVehValid ? '#003F98' : '#E6EBF2', addVehBtnFg: addVehValid ? '#fff' : '#8E96A3', addVehBtnCursor: addVehValid ? 'pointer' : 'not-allowed',
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'Hourly Throughput (HTP)' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'Hourly Throughput (HTP)' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
       ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),
@@ -5742,10 +5822,10 @@ class NDCApp extends React.Component {
     const _ve = st.vehEdits || {}, _vr = st.vehRemoved || {};
     const VEHM = (d.VEH || []).filter(v => !_vr[v.name]).map(v => {
       const ov = _ve[v.name] || {};
-      return Object.assign({}, v, { cap: ov.capacity != null ? ov.capacity : v.cap, dist: ov.dist != null ? ov.dist : v.dist, tp: ov.hardCap != null ? ov.hardCap : v.tp, feas: ov.feas ? ov.feas : v.feas });
+      return Object.assign({}, v, { cap: ov.capacity != null ? ov.capacity : v.cap, dist: ov.dist != null ? ov.dist : v.dist, tp: ov.hardCap != null ? ov.hardCap : v.tp, feas: ov.feas ? ov.feas : v.feas, localSpeed: ov.localSpeed != null ? ov.localSpeed : v.localSpeed, nonLocalSpeed: ov.nonLocalSpeed != null ? ov.nonLocalSpeed : v.nonLocalSpeed });
     }).concat((st.addedVehTypes || []).map(v => {
       const ov = _ve[v.name] || {};
-      return { name: v.name, cap: ov.capacity != null ? ov.capacity : (v.capacity || v.cap || 2000), dist: ov.dist != null ? ov.dist : (v.dist || 600), tp: ov.hardCap != null ? ov.hardCap : (v.tp || 7), feas: ov.feas ? ov.feas : (v.feas || ['RLH']) };
+      return { name: v.name, cap: ov.capacity != null ? ov.capacity : (v.capacity || v.cap || 2000), dist: ov.dist != null ? ov.dist : (v.dist || 600), tp: ov.hardCap != null ? ov.hardCap : (v.tp || 7), feas: ov.feas ? ov.feas : (v.feas || ['RLH']), localSpeed: ov.localSpeed != null ? ov.localSpeed : (v.localSpeed || 24), nonLocalSpeed: ov.nonLocalSpeed != null ? ov.nonLocalSpeed : (v.nonLocalSpeed || 38) };
     }));
     const vehMeta = (name) => VEHM.find(x => x.name === name) || VEHM[0] || { name: name, cap: 2000, tp: 7, dist: 600 };
     const vehDistOf = (name) => { const v = VEHM.find(x => x.name === name); return v ? v.dist : 600; };
@@ -6094,20 +6174,29 @@ class NDCApp extends React.Component {
     // the only live CTIER tier). Route Planner = the existing 4-step wizard + Run Queue (unchanged,
     // just relabeled/nested). Route Scheduler = new: runs only against an already-Finalised RLH
     // plan, its own wizard + Run Queue, own DS job type. Persisted in st.creationRlhMode.
-    const creationRlhMode = st.creationRlhMode || 'planner';
+    // 2026-07-30 — landing on Design Creation no longer auto-selects Route Planner (which used to
+    // immediately show Input Selection + the "Before you start" popup). It now lands neutral
+    // ('none') and waits for an explicit click into Route Planner or Route Scheduler; the
+    // guidelines popup fires only when that click actually happens, not on arrival.
+    const creationRlhMode = st.creationRlhMode || 'none';
+    // 2026-07-30 — Route Scheduler gets its own accent (teal, #0D7377) instead of reusing Route
+    // Planner's navy, so the two read as visually distinct rather than "the same button twice."
+    // Applied consistently everywhere this fork appears (Design Creation, Design Review, Ops
+    // Alignment) and inside Route Scheduler's own stepper/buttons below.
     const RLH_SUB = [['planner', 'Route Planner', 'The 4-step RLH plan-creation wizard — node selection through trigger.'], ['scheduler', 'Route Scheduler', 'Adds dispatch cutoffs & travel times to an already-Finalised RLH plan, using NLH landing data.']];
-    const creationRlhSubSeg = RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: creationRlhMode === t[0],
-      bg: creationRlhMode === t[0] ? '#003F98' : '#fff', bd: creationRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+    const creationRlhSubSeg = RLH_SUB.map(t => { const accent = t[0] === 'scheduler' ? '#0D7377' : '#003F98'; return { label: t[1], sub: t[2], active: creationRlhMode === t[0],
+      bg: creationRlhMode === t[0] ? accent : '#fff', bd: creationRlhMode === t[0] ? accent : '#E6EBF2',
       fg: creationRlhMode === t[0] ? '#fff' : '#5A5E66', weight: creationRlhMode === t[0] ? '700' : '600',
-      onClick: () => this.setState({ creationRlhMode: t[0] }) }));
+      onClick: () => this.setState(t[0] === 'planner' ? { creationRlhMode: t[0], showCreationGuidelines: true } : { creationRlhMode: t[0] }) }; });
     const isRoutePlanner = creationRlhMode === 'planner';
     const isRouteScheduler = creationRlhMode === 'scheduler';
+    const isCreationNeutral = creationRlhMode === 'none';
 
     return {
       isCreation: st.view === 'creation', creationStep: step, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, vehAddOnly: vehAddOnly, step1HasFile: step === 1 && !!st.creationVolume, step1NoFile: step === 1 && !st.creationVolume,
       showCreationGuidelines: !!st.showCreationGuidelines, closeCreationGuidelines: () => this.setState({ showCreationGuidelines: false }),
       creationTierSeg,
-      creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationTierRLH, isCreationTierNodeMapping, creationTierComingSoonLabel,
+      creationRlhSubSeg, isRoutePlanner, isRouteScheduler, isCreationNeutral, isCreationTierRLH, isCreationTierNodeMapping, creationTierComingSoonLabel,
       ...this.schedulerVals(),
       isWizardView: (st.creationView || 'wizard') === 'wizard', isQueueView: (st.creationView || 'wizard') === 'queue',
       // 2026-07-30 bugfix — these were being computed directly from `st` inside JSX (render scope
@@ -6238,7 +6327,7 @@ class NDCApp extends React.Component {
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
       parentRunId: parentSp ? ('RUN-' + parentSp.scCode + '-01') : '\u2014',
       nlhPlanName: nlhP ? nlhP.name : '\u2014',
-      docks: sp.rlhDocks, hw: sp.hw, htf: sp.htf, d0Label: sp.d0Cutoff,
+      docks: sp.rlhDocks, hw: sp.hw, htf: sp.htf, d0Label: sp.d0Cutoff, localSpeed: sp.localSpeed, nonLocalSpeed: sp.nonLocalSpeed,
       connectionStartTime: m.connectionStartTime, connectionSlots: m.connectionSlots,
       d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours, lanesWithHold: m.lanesWithHold, totalLanes: m.totalLanes,
       warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, hasAnyWarning: m.warnD0Low || m.warnHoldHigh,
@@ -6428,6 +6517,21 @@ class NDCApp extends React.Component {
     // Empty/unset means "use each SC's own SC Master value" (the per-SC defaultDocks above).
     const docksGlobalOverride = st.schedulerRlhDocksGlobal;
     const docksBase = (docksGlobalOverride !== undefined && docksGlobalOverride !== null && docksGlobalOverride !== '') ? Number(docksGlobalOverride) : defaultDocks;
+    // Local Speed / Non-Local Speed (2026-07-30) — same global-override + per-SC-override pattern
+    // as RLH Docks. Default comes from the actual SC Master value if set, else the same synthetic
+    // formula SC Master's own table uses for that SC (so the two stay consistent).
+    const st2 = this.state; const d2 = st2.data;
+    const sc = (d2 && d2.scs) ? d2.scs.find(s => s.code === code) : null;
+    const defaultLocalSpeed = sc && sc.localSpeed != null && sc.localSpeed !== '' ? sc.localSpeed : (22 + (h % 8));
+    const defaultNonLocalSpeed = sc && sc.nonLocalSpeed != null && sc.nonLocalSpeed !== '' ? sc.nonLocalSpeed : (32 + ((h >> 5) % 10));
+    const localSpeedGlobalOverride = st.schedulerLocalSpeedGlobal;
+    const nonLocalSpeedGlobalOverride = st.schedulerNonLocalSpeedGlobal;
+    const localSpeedBase = (localSpeedGlobalOverride !== undefined && localSpeedGlobalOverride !== null && localSpeedGlobalOverride !== '') ? Number(localSpeedGlobalOverride) : defaultLocalSpeed;
+    const nonLocalSpeedBase = (nonLocalSpeedGlobalOverride !== undefined && nonLocalSpeedGlobalOverride !== null && nonLocalSpeedGlobalOverride !== '') ? Number(nonLocalSpeedGlobalOverride) : defaultNonLocalSpeed;
+    const localSpeedBySC = st.schedulerLocalSpeedBySC || {};
+    const nonLocalSpeedBySC = st.schedulerNonLocalSpeedBySC || {};
+    const localSpeed = localSpeedBySC[code] !== undefined ? localSpeedBySC[code] : localSpeedBase;
+    const nonLocalSpeed = nonLocalSpeedBySC[code] !== undefined ? nonLocalSpeedBySC[code] : nonLocalSpeedBase;
     const hw = hwBySC[code] !== undefined ? hwBySC[code] : hwGlobal;
     const htf = htfBySC[code] !== undefined ? htfBySC[code] : htfGlobal;
     const d0 = d0BySC[code] !== undefined ? d0BySC[code] : d0Global;
@@ -6436,10 +6540,13 @@ class NDCApp extends React.Component {
     const needsRef = hw > 0;
     return {
       hw, htf, d0, docks, defaultDocks, docksBase, ref, needsRef, refMissing: needsRef && !ref,
+      localSpeed, nonLocalSpeed, defaultLocalSpeed, defaultNonLocalSpeed,
       hwOverridden: hwBySC[code] !== undefined && hwBySC[code] !== hwGlobal,
       htfOverridden: htfBySC[code] !== undefined && htfBySC[code] !== htfGlobal,
       d0Overridden: d0BySC[code] !== undefined && d0BySC[code] !== d0Global,
       docksOverridden: rlhDocksBySC[code] !== undefined && rlhDocksBySC[code] !== docksBase,
+      localSpeedOverridden: localSpeedBySC[code] !== undefined && localSpeedBySC[code] !== localSpeedBase,
+      nonLocalSpeedOverridden: nonLocalSpeedBySC[code] !== undefined && nonLocalSpeedBySC[code] !== nonLocalSpeedBase,
     };
   }
   // fmtD0Cutoff(n) — n = number of +30min increments (0-6) on top of the 09:00 base.
@@ -6476,6 +6583,7 @@ class NDCApp extends React.Component {
         nlhPlanId: st.schedulerNlhPlanId || null,
         hw: params.hw, htf: params.htf, d0Increments: params.d0, d0Cutoff: this.fmtD0Cutoff(params.d0),
         rlhDocks: params.docks, refPlanId: params.ref || null,
+        localSpeed: params.localSpeed, nonLocalSpeed: params.nonLocalSpeed,
         cutoffs: null,
       };
     });
@@ -6514,9 +6622,9 @@ class NDCApp extends React.Component {
 
     const SCHED_STEPS = [[1, 'Plan Selection'], [2, 'NLH Plan Selection'], [3, 'Operating Mode'], [4, 'Preview & Trigger']];
     const schedulerStepper = SCHED_STEPS.map((s, idx) => ({ n: s[0], label: s[1], active: s[0] === step, isDone: s[0] < step, notDone: !(s[0] < step),
-      numBg: s[0] === step ? '#003F98' : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? '#003F98' : (s[0] < step ? '#128A3E' : '#D0D5DD'),
-      numShadow: s[0] === step ? '0 0 0 4px rgba(0,63,152,0.12)' : 'none',
-      subLabel: s[0] < step ? 'Done' : (s[0] === step ? 'In progress' : 'Up next'), subColor: s[0] < step ? '#128A3E' : (s[0] === step ? '#003F98' : '#A5ABB5'),
+      numBg: s[0] === step ? '#0D7377' : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? '#0D7377' : (s[0] < step ? '#128A3E' : '#D0D5DD'),
+      numShadow: s[0] === step ? '0 0 0 4px rgba(13,115,119,0.14)' : 'none',
+      subLabel: s[0] < step ? 'Done' : (s[0] === step ? 'In progress' : 'Up next'), subColor: s[0] < step ? '#128A3E' : (s[0] === step ? '#0D7377' : '#A5ABB5'),
       labelColor: s[0] === step ? '#14171F' : (s[0] < step ? '#14171F' : '#8E96A3'), labelWeight: s[0] === step ? '700' : (s[0] < step ? '600' : '500'),
       hasLine: idx < SCHED_STEPS.length - 1, lineBg: s[0] < step ? '#128A3E' : '#E6EBF2', flex: idx < SCHED_STEPS.length - 1 ? '1' : '0 0 auto',
       onClick: () => { if (s[0] <= step) this.setState({ schedulerStep: s[0] }); } }));
@@ -6584,6 +6692,8 @@ class NDCApp extends React.Component {
           onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(6, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(0, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
           onDocksChange: (v) => { const m = Object.assign({}, st.schedulerRlhDocksBySC || {}); m[code] = v; this.setState({ schedulerRlhDocksBySC: m }); },
+          onLocalSpeedChange: (v) => { const m = Object.assign({}, st.schedulerLocalSpeedBySC || {}); m[code] = v; this.setState({ schedulerLocalSpeedBySC: m }); },
+          onNonLocalSpeedChange: (v) => { const m = Object.assign({}, st.schedulerNonLocalSpeedBySC || {}); m[code] = v; this.setState({ schedulerNonLocalSpeedBySC: m }); },
           onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
@@ -6591,7 +6701,9 @@ class NDCApp extends React.Component {
             const dm = Object.assign({}, st.schedulerD0BySC || {}); delete dm[code];
             const rm = Object.assign({}, st.schedulerRlhDocksBySC || {}); delete rm[code];
             const refm = Object.assign({}, st.schedulerRefBySC || {}); delete refm[code];
-            this.setState({ schedulerHwBySC: hm, schedulerHtfBySC: tm, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm });
+            const lsm = Object.assign({}, st.schedulerLocalSpeedBySC || {}); delete lsm[code];
+            const nlsm = Object.assign({}, st.schedulerNonLocalSpeedBySC || {}); delete nlsm[code];
+            this.setState({ schedulerHwBySC: hm, schedulerHtfBySC: tm, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm, schedulerLocalSpeedBySC: lsm, schedulerNonLocalSpeedBySC: nlsm });
           } });
     });
     const hwGlobalNeedsRef = hwGlobal > 0;
@@ -6652,6 +6764,10 @@ class NDCApp extends React.Component {
       hwGlobal, htfGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler3,
       docksGlobal: st.schedulerRlhDocksGlobal != null ? st.schedulerRlhDocksGlobal : '',
       onDocksGlobal: (e) => this.setState({ schedulerRlhDocksGlobal: e.target.value }),
+      localSpeedGlobal: st.schedulerLocalSpeedGlobal != null ? st.schedulerLocalSpeedGlobal : '',
+      onLocalSpeedGlobal: (e) => this.setState({ schedulerLocalSpeedGlobal: e.target.value }),
+      nonLocalSpeedGlobal: st.schedulerNonLocalSpeedGlobal != null ? st.schedulerNonLocalSpeedGlobal : '',
+      onNonLocalSpeedGlobal: (e) => this.setState({ schedulerNonLocalSpeedGlobal: e.target.value }),
       onHwGlobal: (v) => this.setState({ schedulerHwGlobal: v }),
       onHtfGlobal: (v) => this.setState({ schedulerHtfGlobal: v }),
       onD0GlobalInc: () => this.setState({ schedulerD0Global: Math.min(6, d0Global + 1) }),
@@ -6761,9 +6877,11 @@ class NDCApp extends React.Component {
   //   - Number of Lanes with Hold Time = count of routes with hold time > 0.
   // All synthetic (this prototype has no real DS scheduling output), but internally consistent:
   // a later D0 Cutoff or higher HTF measurably improves the numbers, not just randomly.
-  // Assumed constants (flagged, not hidden): average travel speed 30 km/h for landing-time calc
-  // (dist_km × 2 = minutes); dispatch spread is a 150-min window centred just before D0 Cutoff;
-  // base hold time is a 0-50min per-route draw with the bottom 12min floored to zero.
+  // 2026-07-30 — travel time now uses the plan's actual resolved Local Speed / Non-Local Speed
+  // (from resolveSchedulerParamsFor, persisted on sp), not a flat assumed speed. Each DC is
+  // classified Local/Non-Local by the same deterministic-hash convention the existing DC×Route
+  // detail view already uses (DCZN_V) — dispatch spread is a 150-min window centred just before
+  // D0 Cutoff; base hold time is a 0-50min per-route draw with the bottom 12min floored to zero.
   computeSchedulerMetricsFor(sp) {
     const st = this.state, d = st.data;
     const parent = d.plans.find(p => p.id === sp.parentPlanId);
@@ -6787,10 +6905,16 @@ class NDCApp extends React.Component {
     const holdingTotalHours = holdingTotalMin / 60;
     const lanesWithHold = routeInfo.filter(x => x.holdMin > 0).length;
     let onTimeVol = 0, totalVol = 0;
+    // Local Speed / Non-Local Speed (2026-07-30) — each DC is classified Local/Non-Local the same
+    // deterministic-hash way the existing DC×Route detail view already does (DCZN_V), so travel
+    // time now differs by DC rather than a single flat assumed speed.
+    const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
     routeInfo.forEach(({ route, dispatchMin }) => {
       this.genDcRows(route).forEach(dc => {
+        const isLocal = (hash(dc.code + seed) % 2) === 0;
+        const speed = isLocal ? localSpeed : nonLocalSpeed;
         const distKm = parseFloat(dc.dist) || 0;
-        const travelMin = distKm * 2; // ~30 km/h assumed average
+        const travelMin = speed > 0 ? (distKm / speed) * 60 : distKm * 2;
         const landingMin = dispatchMin + travelMin;
         totalVol += dc.vol;
         if (landingMin <= cutoffMin) onTimeVol += dc.vol;
@@ -7092,10 +7216,10 @@ class NDCApp extends React.Component {
     // display toggle rather than being structurally wrapped, and the new content renders as a
     // plain additive sibling — nothing about the existing Route Planner alignment JSX is touched.
     const ALIGN_RLH_SUB = [['planner', 'Route Planner', 'Row-by-row RLH route plan alignment — the existing Planner \u2194 Ops Lead freeze loop.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan alignment — list/card level for now, detailed feedback parameters coming next.']];
-    const alignRlhSubSeg = ALIGN_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: alignRlhMode === t[0],
-      bg: alignRlhMode === t[0] ? '#003F98' : '#fff', bd: alignRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+    const alignRlhSubSeg = ALIGN_RLH_SUB.map(t => { const accent = t[0] === 'scheduler' ? '#0D7377' : '#003F98'; return { label: t[1], sub: t[2], active: alignRlhMode === t[0],
+      bg: alignRlhMode === t[0] ? accent : '#fff', bd: alignRlhMode === t[0] ? accent : '#E6EBF2',
       fg: alignRlhMode === t[0] ? '#fff' : '#5A5E66', weight: alignRlhMode === t[0] ? '700' : '600',
-      onClick: () => this.setState({ alignRlhMode: t[0] }) }));
+      onClick: () => this.setState({ alignRlhMode: t[0] }) }; });
     const isAlignRoutePlanner = alignRlhMode === 'planner';
     const isAlignRouteScheduler = alignRlhMode === 'scheduler';
     const plans = d.plans;
@@ -8944,10 +9068,10 @@ class NDCApp extends React.Component {
     const reviewTierComingSoonLabel = reviewTierName;
     const reviewRlhMode = st.reviewRlhMode || 'planner';
     const REV_RLH_SUB = [['planner', 'Route Planner', 'Per-run RLH route plan metrics — Coverage, CPS, Utilisation, Routes, Vehicles, Distance, Cost.'], ['scheduler', 'Route Scheduler', 'Cutoff Plan review for scheduled runs — dispatch cutoffs & travel times.']];
-    const reviewRlhSubSeg = REV_RLH_SUB.map(t => ({ label: t[1], sub: t[2], active: reviewRlhMode === t[0],
-      bg: reviewRlhMode === t[0] ? '#003F98' : '#fff', bd: reviewRlhMode === t[0] ? '#003F98' : '#E6EBF2',
+    const reviewRlhSubSeg = REV_RLH_SUB.map(t => { const accent = t[0] === 'scheduler' ? '#0D7377' : '#003F98'; return { label: t[1], sub: t[2], active: reviewRlhMode === t[0],
+      bg: reviewRlhMode === t[0] ? accent : '#fff', bd: reviewRlhMode === t[0] ? accent : '#E6EBF2',
       fg: reviewRlhMode === t[0] ? '#fff' : '#5A5E66', weight: reviewRlhMode === t[0] ? '700' : '600',
-      onClick: () => this.setState({ reviewRlhMode: t[0] }) }));
+      onClick: () => this.setState({ reviewRlhMode: t[0] }) }; });
     const isReviewRoutePlanner = reviewRlhMode === 'planner';
     const isReviewRouteScheduler = reviewRlhMode === 'scheduler';
     const fmtInt = (n) => n.toLocaleString('en-IN');

@@ -2560,8 +2560,10 @@ function View(B, self) {
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 <aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
 <div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
-<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(schedAlignFilterSeg || []).map((f, __i64) => (<React.Fragment key={__i64}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label} · {f.count}</button></React.Fragment>))}
+<div style={css(`padding:10px 12px 8px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+{(schedAlignFilterSeg || []).map((f, __i64) => (<React.Fragment key={__i64}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+</div>
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
 {(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i65) => (<React.Fragment key={__i65}>
@@ -2663,10 +2665,11 @@ function View(B, self) {
 {/* ===== MASTER RAIL: SC / plan list (persistent, like Design Review) ===== */}
 {(alignIsL1) ? (<>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
-{/* filter segment (moved off the top tab-strip into the rail) */}
+{/* 2026-08-03 — 2x2 icon grid (Pending/Received top row, Acknowledged/Finalised bottom row)
+    replaces the old 1-row-of-4 flex:1 strip, which truncated every label. */}
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
-<div style={css(`display:flex; gap:3px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`flex:1; min-width:0; height:29px; border:none; border-radius:6px; background:${fs.bg}; color:${fs.fg}; font-family:inherit; font-size:11px; font-weight:${fs.weight}; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{fs.short} {fs.count}</button></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+{(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label} {fs.count}</span></button></React.Fragment>))}
 </div>
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
@@ -3463,8 +3466,10 @@ function View(B, self) {
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 <aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
 <div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
-<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(schedAlignFilterSeg || []).map((f, __i68) => (<React.Fragment key={__i68}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label} · {f.count}</button></React.Fragment>))}
+<div style={css(`padding:10px 12px 8px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+{(schedAlignFilterSeg || []).map((f, __i68) => (<React.Fragment key={__i68}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+</div>
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
 {(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i69) => (<React.Fragment key={__i69}>
@@ -3563,8 +3568,8 @@ function View(B, self) {
 {(opsIsL1) ? (<>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
-<div style={css(`display:flex; gap:3px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`flex:1; min-width:0; height:29px; border:none; border-radius:6px; background:${fs.bg}; color:${fs.fg}; font-family:inherit; font-size:11px; font-weight:${fs.weight}; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{fs.label} {fs.count}</button></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label} {fs.count}</span></button></React.Fragment>))}
 </div>
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
@@ -5120,7 +5125,7 @@ class NDCApp extends React.Component {
       txt('name', 'SC Name', false, 'e.g. Bengaluru'),
       txt('city', 'SC City, State', false, 'e.g. Bengaluru, KA'),
       sel('type', 'SC Type', true, opt(['LMSC', 'FMSC', 'Hybrid'])),
-      sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West'])),
+      sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West', 'Central'])),
       txt('volCap', 'Volume Capacity', true, 'shipments / day'),
       txt('sortCap', 'Sort Capacity', true, 'DCs it can serve, e.g. 50\u2013250'),
       txt('htp', 'Hourly Throughput (HTP)', false, 'shipments / hour'),
@@ -5461,7 +5466,7 @@ class NDCApp extends React.Component {
     const volFilesShown = volumeFiles.length, volFilesTotal = allVol.length;
     const q = (st.inputsSearch || '').toLowerCase();
     const zf = st.inputsZone || 'All';
-    const zoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
+    const zoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
     const nstep = st.nodeStep || 'active';
     const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
@@ -6439,7 +6444,7 @@ class NDCApp extends React.Component {
       stepper, planGroupName: planGroup.name, planGroupTriggered: planGroup.triggered, planGroupCap: planGroup.cap, planGroupPct: planGroup.pct + '%',
       scGroups, creationSelCount: sel.length, creationShown: filtered.length, creationTotal: d.scs.length, creationSearch: st.creationSearch || '',
       onCreationSearch: (e) => this.setState({ creationSearch: e.target.value }),
-      creationZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ creationZone: z }) })),
+      creationZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ creationZone: z }) })),
       // G8 — union with existing selection (never drop SCs picked under a different zone/search filter). Capped.
       selectAllSCs: () => { const cur = new Set(sel); let hit = false; filtered.forEach(s => { if (cur.has(s.code)) return; if (cur.size >= SC_CAP) { hit = true; return; } cur.add(s.code); }); if (hit) this.showToast('Plan group is capped at ' + SC_CAP + ' SCs — added up to the cap', '#C77B00'); this.setState({ selectedSCs: [...cur] }); }, clearAllSCs: () => this.setState({ selectedSCs: [] }),
       volOptions, selectedVolume: st.creationVolume,
@@ -7539,7 +7544,7 @@ class NDCApp extends React.Component {
     // 2026-07-10 — zone filter, mirroring Design Review's zone-chip row, applied after the status filter.
     const alignZone = st.alignZone || 'All';
     listPlans = listPlans.filter(p => alignZone === 'All' || p.zone === alignZone);
-    const alignZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === alignZone, bg: z === alignZone ? '#003F98' : '#fff', fg: z === alignZone ? '#fff' : '#5A5E66', bd: z === alignZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ alignZone: z, alignPage: 0, alignPlanId: null, alignDetailOpen: false }) }));
+    const alignZoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === alignZone, bg: z === alignZone ? '#003F98' : '#fff', fg: z === alignZone ? '#fff' : '#5A5E66', bd: z === alignZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ alignZone: z, alignPage: 0, alignPlanId: null, alignDetailOpen: false }) }));
     // Master-detail: keep the explicit selection if it is in the current filtered list,
     // otherwise auto-select the first plan so the detail pane is never blank (like Design Review).
     const curId = (st.alignPlanId && plans.some(p => p.id === st.alignPlanId)) ? st.alignPlanId : (listPlans.length > 0 ? listPlans[0].id : null);
@@ -7570,7 +7575,12 @@ class NDCApp extends React.Component {
     // Rail filter segment (replaces the old top Tier-2 filter tab-strip for Ops Alignment).
     const PSEG = [['Pending Feedback', 'Pending'], ['Feedback Received', 'Received'], ['Acknowledged', 'Acknowledged'], ['Finalised', 'Finalised']];
     const segCount = (label) => plans.filter(p => eff(p) === fmap[label]).length;
-    const alignFilterSeg = PSEG.map(t => ({ label: t[0], short: t[1], count: segCount(t[0]), active: af === t[0],
+    // 2026-08-03 — ICON_FOR + the 2x2 grid layout (Pending/Received top row, Acknowledged/Finalised
+    // bottom row) replace the old 1-row-of-4 flex:1 strip, which truncated every label ("Pendin...",
+    // "Receive..." etc. per product feedback). Same icon set + layout now used on RLH's Ops Lead view
+    // and both Route Scheduler personas, for cross-tab synchrony.
+    const ICON_FOR = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
+    const alignFilterSeg = PSEG.map(t => ({ label: t[0], short: t[1], count: segCount(t[0]), active: af === t[0], icon: ICON_FOR[t[0]],
       bg: af === t[0] ? '#003F98' : 'transparent', fg: af === t[0] ? '#fff' : '#5A5E66', weight: af === t[0] ? '700' : '600',
       onClick: () => this.setState({ alignFilter: t[0], alignPage: 0, pgRoutes: 1, alignPlanId: null, alignDetailOpen: false }) }));
     if (plan) {
@@ -8284,8 +8294,9 @@ class NDCApp extends React.Component {
     // only once the feedback loop itself is built). =====
     const schedAlignFilter = st.schedAlignFilter || 'Pending Feedback';
     const SCHED_FILTER_MAP = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
+    const SCHED_SEG_ICON = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
     const allSchedPlansA = d.schedulerPlans || [];
-    const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label,
+    const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label, icon: SCHED_SEG_ICON[label],
       count: allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
       onClick: () => this.setState({ schedAlignFilter: label, schedAlignPlanId: null }) }));
     const schedAlignListRaw = allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
@@ -8518,7 +8529,7 @@ class NDCApp extends React.Component {
     // 2026-07-10 — zone filter, mirroring Design Review's zone-chip row, applied after the status filter.
     const opsZone = st.opsZone || 'All';
     filteredAssigned = filteredAssigned.filter(p => opsZone === 'All' || p.zone === opsZone);
-    const opsZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === opsZone, bg: z === opsZone ? '#003F98' : '#fff', fg: z === opsZone ? '#fff' : '#5A5E66', bd: z === opsZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ opsZone: z, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
+    const opsZoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === opsZone, bg: z === opsZone ? '#003F98' : '#fff', fg: z === opsZone ? '#fff' : '#5A5E66', bd: z === opsZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ opsZone: z, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
     // Master-detail: keep the explicit selection if it's in the filtered list, else auto-select the first
     // so the detail pane is never blank (mirrors Design Review + the planner side).
     const curId = (st.opsPlanId && assigned.some(p => p.id === st.opsPlanId)) ? st.opsPlanId : (filteredAssigned.length > 0 ? filteredAssigned[0].id : null);
@@ -8544,6 +8555,7 @@ class NDCApp extends React.Component {
     // Reviewer states — To Review / Submitted / Acknowledged / Finalised (plan-lifecycle-tied, see opsStatusOf).
     const opsCnt = (s) => allOpsPlans.filter(p => p.status === s).length;
     const OPSFILTERS = ['To Review', 'Submitted', 'Acknowledged', 'Finalised'];
+    const OPS_ICON_FOR = { 'To Review': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Submitted': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
     const opsPlans = allOpsPlans.filter(p => p.status === opsFilter && (opsZone === 'All' || p.zone === opsZone));
 
     const plan = d.plans.find(p => p.id === curId);
@@ -8903,7 +8915,7 @@ class NDCApp extends React.Component {
     // selected (curId null on an empty filter → no detail main → no orphaned sticky action bar).
     const opsIsL1 = !noneAssigned;
     const opsIsL2 = !!curId;
-    const opsFilterSeg = OPSFILTERS.map(f => ({ label: f, count: allOpsPlans.filter(p => p.status === f).length, active: opsFilter === f,
+    const opsFilterSeg = OPSFILTERS.map(f => ({ label: f, count: allOpsPlans.filter(p => p.status === f).length, active: opsFilter === f, icon: OPS_ICON_FOR[f],
       bg: opsFilter === f ? '#003F98' : 'transparent', fg: opsFilter === f ? '#fff' : '#5A5E66', weight: opsFilter === f ? '700' : '600',
       onClick: () => this.setState({ opsFilter: f, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
     // Pagination for L1 ops plan list (~12 per page).
@@ -9254,7 +9266,7 @@ class NDCApp extends React.Component {
     const gen = st.mapDataSource === 'generated';
 
     return { isMap, mapScList: scList, mapSC: curCode, mapSCname: sc.name, mapSCzone: sc.zone,
-      mapZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ mapZone: z }) })),
+      mapZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ mapZone: z }) })),
       mapGen: gen, mapIngested: !gen, mapSrcGenBg: gen ? '#003F98' : '#fff', mapSrcGenFg: gen ? '#fff' : '#5A5E66', mapSrcIngBg: !gen ? '#003F98' : '#fff', mapSrcIngFg: !gen ? '#fff' : '#5A5E66', setMapGen: () => this.setState({ mapDataSource: 'generated' }), setMapIng: () => this.setState({ mapDataSource: 'ingested' }),
       mapW: W, mapH: H, scX: scPt.x, scY: scPt.y, arcs, arcLabels, dcMarkers, dcLabels, legend, mapRows: rows, rowsShown: rows.length, routeTotal: routes.length, mapNoResults: rows.length === 0, mapHasResults: rows.length > 0,
       routeOptions, vehOptions, mapRoute: fRoute, mapVeh: fVeh, mapSearch: st.mapSearch || '',
@@ -9658,7 +9670,7 @@ class NDCApp extends React.Component {
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),
-      reviewZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ reviewZone: z }) })),
+      reviewZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ reviewZone: z }) })),
       reviewShown: listSCs.length, reviewTotal: completedSCs.length,
       rqProgN, rqDoneN, rqHasQueue, rqNoQueue, rqShowProg,
       curCode, curName: curSC ? curSC.name : '', curZone: curSC ? curSC.zone : '', curDcCount: curSC ? curSC.dcCount : 0,

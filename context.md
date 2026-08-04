@@ -1219,3 +1219,113 @@ RNG-based approximation. Read the method's own comment block first; the short ve
      free-floating pill-per-segment style (each its own grey pill,
      `flex-wrap`, no shared track). Both rails are now visually identical;
      with the Planner's new 4th segment they line up 1:1.
+- **2026-08-03** — Session covering four areas: Route Scheduler's Design
+  Review/Ops Alignment rebuilt for structural parity with Route Planner,
+  a Slot-Wise Dispatch metric replacing an aggregate Dock Utilisation
+  figure, a real per-plan (not per-SC) push-status bug fixed on both
+  RLH and Route Scheduler, and a zone-filter/status-filter consistency
+  pass across the whole app.
+  1. **Route Scheduler's Design Review rebuilt to match Route Planner
+     1:1** (previously flat: one rail row per `schedulerPlans` record,
+     no SC grouping, no full-screen detail, navy Push/Finalise buttons
+     despite the app's own teal-for-Scheduler design-system rule). Rail
+     now groups **by SC** (`schedReviewList`, one row per SC, "N runs"
+     subtitle), mirroring `reviewList`'s shape — this matters because an
+     SC *can* have more than one Route Scheduler run (re-triggered later),
+     and the old flat rail would have shown that as two disconnected rows
+     for the same SC rather than one grouped entry. Main pane gained an
+     SC header card + one card per run (`schedRunCards`, via
+     `buildSchedCard`) with identity/HW-HTF tag, download + expand icons,
+     an inputs strip, a colored metrics grid, a flag chip, and Push/
+     Finalise actions — plus a full-screen detail overlay
+     (`reviewSchedDetail`) with Cutoff Plan Inputs/Outputs/Validation
+     Flags sections, all in teal (`#0D7377`), fixing the stray navy
+     buttons along the way. Verified in jsdom by injecting a genuine
+     second run onto one SC and confirming it collapses into one rail
+     row ("2 runs") with 2 cards, not two duplicate rows.
+  2. **Ops Alignment's Cutoff Plan card rebuilt to mirror Route Planner's
+     actual L3 card** — breadcrumb, identity header (SC coords + "Route
+     Scheduler" module tag + status badge), reviewer chips (`opsLeads`,
+     same shape as RLH's — added `reviewerNames`/`submittedReviewers`
+     read-through to `buildSchedCard`), a download icon, and status-aware
+     lifecycle banners (awaiting / acknowledged / finalised / finalised-
+     without-alignment). Applied identically to both the Planner-persona
+     and Ops Lead-persona copies of this block. Still deliberately
+     read-only/list-level — no Needs-Change/Accept-Reject mechanics added;
+     that scope cut from the prior session stands.
+  3. **New metric: Slot-Wise Dispatch + Dock Utilisation**, added to
+     `computeSchedulerMetricsFor`. Per-slot: groups every route into its
+     30-min dispatch slot and shows `HH:MM · used/docks · pct%` — the
+     point being that a single network-wide utilisation average can't
+     distinguish honest tail-end slack (finite volume, nothing wrong)
+     from a genuinely idle early slot while a later one is full; the
+     per-slot list is what lets a reviewer actually see which shape
+     they're looking at. Went through two iterations: first added an
+     aggregate "Dock Utilisation" tile (`routes / (slots × docks)`)
+     alongside the slot list; second pass removed that aggregate tile
+     per product feedback and moved the percentage inline onto each slot
+     chip instead, and also removed the now-redundant Connection Start
+     Time / Connection Slots tiles everywhere (that info is implicit in
+     the slot list's first entry / entry count). Verified against real
+     seed data: slot-used sum matches total routes, and a manual
+     recompute of the utilisation formula matches the function's output
+     exactly.
+  4. **Fixed: push/finalise status was tracked per-SC, not per-plan** —
+     on both RLH and Route Scheduler. An SC can have multiple runs (RLH)
+     or, over time, multiple scheduler runs, but only ever one thing is
+     actually "the pushed one" at a time; the old code stamped a blanket
+     per-SC flag (`pushedSCs[code]`) onto *every* run card for that SC,
+     so all of an SC's run cards showed the same "Pushed" tag even when
+     only one run's data had actually been promoted. Fixed by having
+     `doPush()` record `sourceRunId` on the RLH plan object (which run is
+     currently the promoted one) and `planCards` matching each run
+     against it — only the actually-chosen run's card gets a status tag
+     now. Verified against SC DELS (5 completed runs): pushing one run
+     tags only that run's card; the other 4 stay untagged.
+     - Also removed the SC-level "Pushed to alignment" header badge in
+       both Design Review modes (RLH and Scheduler) for the same reason —
+       misleading at SC granularity once multiple runs/plans are possible.
+     - Also added: a plan/run Finalised via **Finalise Directly** is now
+       tracked distinctly (`finalisedDirect` flag, set in `doPush()` and
+       `doSchedPush()`) from one that went through the full alignment
+       loop — the card reads **"Pushed Without Alignment"** (violet)
+       instead of a plain green "Finalised" that would wrongly imply Ops
+       actually reviewed it. Applies to both RLH and Route Scheduler.
+     - Also changed: "Finalise Directly" now stays available at every
+       non-terminal status ("retain push directly irrespective" — it used
+       to disappear for Route Scheduler runs the moment they left Draft).
+       "Push to Alignment" still only makes sense pre-push, so that one
+       stays Draft-only.
+  5. **Zone-filter gap: "Central" was missing from 7 of 9 zone-chip
+     lists app-wide**, not just the two screens flagged. `Central` is a
+     genuine zone in the seed data (`Z` array) with 7 real SCs (JLRS,
+     GWLS, PABS, UJNS, PAB2, UJN2, RPRS) — all reachable via "All" but
+     with no dedicated chip anywhere except Route Scheduler's Design
+     Review (already correct from the prior session). The hardcoded
+     4-zone literal (`['North','South','East','West']`) had been
+     copy-pasted into Design Inputs' zone filter, SC Master's filter
+     dropdown, Design Creation, RLH Ops Alignment (both personas), the
+     Network Map, and RLH Design Review. Fixed all 7 rather than just
+     the two screenshotted, since it was the identical bug everywhere.
+     Verified programmatically post-fix (chip presence checked across
+     all the above, not just eyeballed).
+  6. **Ops Alignment's 4-stage status filter restyled from a cramped
+     1-row-of-4 strip to a 2×2 icon grid** (Pending Feedback + Received
+     Feedback on top, Acknowledged + Finalised below) — the old
+     `flex:1` strip forced every label through `text-overflow:ellipsis`
+     ("Pendin...", "Receive...", "Acknow...", "Finalise..."). Each stage
+     now carries a small icon (clock / inbox / lock / checkmark — reusing
+     shapes already established elsewhere in the app, not new
+     iconography) so labels never truncate regardless of rail width.
+     Applied identically to all 4 places this filter exists — RLH
+     Planner, RLH Ops Lead, and both persona copies of Route Scheduler's
+     Ops Alignment — navy for RLH, teal for Scheduler, matching the
+     existing branding split. RLH's two personas keep their own existing
+     label wording (`Pending Feedback`/`Feedback Received` for the
+     Planner vs. `To Review`/`Submitted` for Ops Lead) — that asymmetry
+     predates this session and wasn't flagged as a problem, only the
+     layout/truncation was.
+  - Companion docs (`01_Complete_Context.md`, `02_Logics_and_Formulae.md`,
+    `03_Validation_Rules.md`, `04_Rule_Engine.md`, `05_Core_Flows.md`,
+    `PROJECT_CONTEXT.md`) have **not** been updated to reflect any of the
+    above yet — flagged to the user twice this session, still open.

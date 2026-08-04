@@ -1789,7 +1789,7 @@ function View(B, self) {
 {(isSchedStep3) ? (<>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Overall defaults</div>
 <div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px;`)}>Applies to all {selectedScCodesStep1.length} selected SC{selectedScCodesStep1.length === 1 ? '' : 's'} unless overridden below.</div>
-<div style={css(`display:grid; grid-template-columns:repeat(6,1fr); gap:14px; margin-bottom:20px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;`)}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
 <div style={css(`display:flex; gap:5px;`)}>
@@ -1803,21 +1803,6 @@ function View(B, self) {
 </select>
 </>)}
 </>) : null}
-</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>RLH Docks</div>
-<input value={docksGlobal} onChange={onDocksGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Plan-level only — SC Master is unchanged.</div>
-</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Local Speed (km/h)</div>
-<input value={localSpeedGlobal} onChange={onLocalSpeedGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Speed for local-zone DCs — feeds D0 Landing %.</div>
-</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Non-Local Speed (km/h)</div>
-<input value={nonLocalSpeedGlobal} onChange={onNonLocalSpeedGlobal} type={"number"} min={"0"} placeholder={"Use SC Master value"} style={css(`width:100%; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>Speed for non-local-zone DCs — feeds D0 Landing %.</div>
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Hold Time Factor (HTF)</div>
@@ -2397,10 +2382,21 @@ function View(B, self) {
     earlier slot — a single network-wide average couldn't make that distinction. */}
 {(c.hasSlotBreakdown) ? (<>
 <div style={css(`margin-top:10px;`)}>
-<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>SLOT-WISE DISPATCH</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px;`)}>
-{(c.slotBreakdown || []).map((s, __iSlot1) => (<React.Fragment key={__iSlot1}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:6px; font-size:10.5px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+<details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
+<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</summary>
+<div>
+{(c.slotBreakdown || []).map((s, __iSlot1) => (<React.Fragment key={__iSlot1}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 9px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
+<span style={css(`font-size:10px; color:#5A5E66;`)}>{s.used}/{s.docks} docks</span>
+<span style={css(`font-size:10.5px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
 </div>
+</React.Fragment>))}
+</div>
+</details>
 </div>
 </>) : null}
 {/* bottom row: flag chip + actions — "retain push directly irrespective" (2026-07-31):
@@ -2478,10 +2474,21 @@ function View(B, self) {
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lanesWithHold} / {reviewSchedDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
 </div>
 {(reviewSchedDetail.hasSlotBreakdown) ? (<>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
-{(reviewSchedDetail.slotBreakdown || []).map((s, __iSlot2) => (<React.Fragment key={__iSlot2}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+<details style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px; background:#fff;`)}>
+<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#FAFBFD; font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>
+<span>SLOT-WISE DISPATCH · {reviewSchedDetail.slotBreakdown.length} slot{reviewSchedDetail.slotBreakdown.length === 1 ? '' : 's'}</span>
+<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</summary>
+<div>
+{(reviewSchedDetail.slotBreakdown || []).map((s, __iSlot2) => (<React.Fragment key={__iSlot2}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
+<span style={css(`font-size:13px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{s.used}/{s.docks} docks in this slot</span>
+<span style={css(`font-size:13px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
 </div>
+</React.Fragment>))}
+</div>
+</details>
 </>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(reviewSchedDetail.hasFlags) ? (<>
@@ -2558,97 +2565,108 @@ function View(B, self) {
 </>) : null}
 {(isAlignTierRLH && isAlignRouteScheduler) ? (<>
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
-<aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
-<div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
-<div style={css(`padding:10px 12px 8px;`)}>
+<aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`padding:12px 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(schedAlignFilterSeg || []).map((f, __i64) => (<React.Fragment key={__i64}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+{(schedAlignFilterSeg || []).map((f, __iA1) => (<React.Fragment key={__iA1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
 </div>
 </div>
-<div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
-{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i65) => (<React.Fragment key={__i65}>
-<div style={css(`padding:0 2px; margin-bottom:3px;`)}>
-<button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; text-align:left; padding:9px 10px; border:1px solid ${r.active ? '#003F98' : '#E6EBF2'}; border-radius:8px; background:${r.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
+<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
+{(schedAlignZoneChips || []).map((z, __iA2) => (<React.Fragment key={__iA2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+</div>
+<div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedAlignPlanCountLabel}</div>
+<div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
+{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter.</div></>) : ((schedAlignList || []).map((r, __iA3) => (<React.Fragment key={__iA3}>
+<button onClick={r.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${r.active ? '#0D7377' : '#E6EBF2'}; border-radius:9px; background:${r.active ? '#E9F5F5' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
 <span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
-<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</div></div>
-<div style={css(`font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>D0 {r.d0Pct}%</div>
+<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66; margin-left:6px;`)}>{r.zone}</span><div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div></div>
+<span style={css(`font-size:10.5px; color:#8E96A3; flex-shrink:0;`)}>{r.runCountLabel}</span>
 </button>
-</div>
 </React.Fragment>)))}
 </div>
 </aside>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
-{(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
+{(!hasCurSchedAlignSC) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a plan from the rail.</div></>) : (<>
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>Route Scheduler</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{schedAlignCard.verdict}</span>
-<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-weight:600; color:#0D7377;`)}>{schedAlignCard.code}</span>
+<span style={css(`font-weight:600; color:#0D7377;`)}>{curSchedAlignCode}</span>
 </div>
-{/* identity header — mirrors RLH's L3 card (code/name/zone/coords/module-tag/status) (2026-07-31) */}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
-<div style={css(`flex:1; min-width:0;`)}>
+{/* SC identity header — mirrors Design Review's SC header block, so identity isn't repeated on
+    every card below it (2026-08-04, brings the plan card to parity with Design Review's) */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; margin-bottom:16px;`)}>
 <div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code}</span>
-<span style={css(`font-size:14px; color:#5A5E66;`)}>{schedAlignCard.name}</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{schedAlignCard.zone} Zone</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{schedAlignCard.scCoords}</span>
+<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{curSchedAlignCode}</span>
+<span style={css(`font-size:14px; color:#5A5E66;`)}>{curSchedAlignName}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{curSchedAlignZone} Zone</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{curSchedAlignCoords}</span>
 <span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
 </div>
-<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:7px;`)}>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>{schedAlignCard.isFinalised ? 'Finalised' : 'Pushed'} {schedAlignCard.sentDate}</span>
-{(schedAlignCard.hasReviewers) ? (<>
-<span style={css(`width:3px; height:3px; border-radius:50%; background:#C3C9D4;`)} />
-<span style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
-{(schedAlignCard.opsLeads || []).map((ol, __iOl1) => (<React.Fragment key={__iOl1}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
-</>) : null}
+<div style={css(`font-size:13px; color:#5A5E66; margin-top:8px;`)}>Every run for this SC in the current filter is shown below — read-only for now; the detailed feedback loop isn't built yet.</div>
 </div>
+{(!hasSchedAlignRunCards) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No runs match this filter for this SC.</div></>) : null}
+{/* one card per run — reuses the SAME visual template as Design Review's run cards (2026-08-04
+    fix), just without push/finalise actions (those only ever happen from Design Review) */}
+<div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
+{(schedAlignRunCards || []).map((c, __iA4) => (<React.Fragment key={__iA4}>
+<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
+<div style={css(`min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · HTF {c.htf}</span>
 </div>
-<button onClick={schedAlignCard.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`width:34px; height:34px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `border-color:#E6EBF2; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
-{/* lifecycle status banner — mirrors RLH's isPushed/needsAck/isAck/isFinal banners, adapted for
-    Scheduler's own 5-status enum + the deliberate "read-only for now" scope cut (2026-07-31) */}
-{(schedAlignCard.isPushedState) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Awaiting Ops feedback. Detailed per-field decisions (Needs Change, Accept/Reject) aren't collected yet for Route Scheduler — this is a read-only summary for now.</span></div>
-</>) : null}
-{(schedAlignCard.isAcknowledged) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#EAEEFB; border:1px solid #C5CDEF; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops review acknowledged. No further editing exists yet for Route Scheduler.</span></div>
-</>) : null}
-{(schedAlignCard.isFinalised && !schedAlignCard.isFinalDirect) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan is <strong>finalised & frozen</strong>, ready for handoff.</span></div>
-</>) : null}
-{(schedAlignCard.isFinalDirect) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#F0EDFB; border:1px solid #D6CCF0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan was <strong>finalised without alignment</strong> — Ops review was skipped.</span></div>
-</>) : null}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Inputs</span></div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:18px;`)}>
-{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW · HTF', schedAlignCard.hw + ' · ' + schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i66) => (<React.Fragment key={__i66}>
-<div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>{kv[0]}</div><div style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{kv[1]}</div></div>
+<button onClick={c.onDownloadCsv} aria-label={"Download this Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
+<span><span style={css(`color:#8E96A3;`)}>RLH Run</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.parentRunId}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>NLH Plan</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.nlhPlanName}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>SC Docks</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.docks}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>D0 Cutoff</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.d0Label}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>Local / Non-Local Speed</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.localSpeed} / {c.nonLocalSpeed} km/h</strong></span>
+</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
+</div>
+{(c.hasSlotBreakdown) ? (<>
+<div style={css(`margin-top:10px;`)}>
+<details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
+<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</summary>
+<div>
+{(c.slotBreakdown || []).map((s, __iA5) => (<React.Fragment key={__iA5}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 9px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
+<span style={css(`font-size:10px; color:#5A5E66;`)}>{s.used}/{s.docks} docks</span>
+<span style={css(`font-size:10.5px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
+</div>
 </React.Fragment>))}
 </div>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.d0Color}; line-height:1;`)}>{schedAlignCard.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.holdColor}; line-height:1;`)}>{schedAlignCard.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.lanesWithHold} / {schedAlignCard.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
-</div>
-{(schedAlignCard.hasSlotBreakdown) ? (<>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
-{(schedAlignCard.slotBreakdown || []).map((s, __iSlot3) => (<React.Fragment key={__iSlot3}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</details>
 </div>
 </>) : null}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
-{(schedAlignCard.hasFlags) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px;`)}>
-<div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
-{(schedAlignCard.flags || []).map((fl, __i67) => (<React.Fragment key={__i67}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
-</div>
+{/* bottom row — flag chip + reviewer chips + lifecycle status text; no push/finalise buttons here,
+    since those only ever happen from Design Review (2026-08-04) */}
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px solid #F4F5F8;`)}>
+<span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
+{(c.hasReviewers) ? (<>
+<div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
+{(c.opsLeads || []).map((ol, __iA6) => (<React.Fragment key={__iA6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
-{(schedAlignCard.noFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this run.</div></>) : null}
+</div>
+{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>Ops review acknowledged.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting Ops feedback.</div></>)}
+</div>
+</React.Fragment>))}
+</div>
 </>)}
 </div>
 </div>
@@ -3464,94 +3482,108 @@ function View(B, self) {
 </>) : null}
 {(isAlignTierRLH && isAlignRouteScheduler) ? (<>
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
-<aside style={css(`width:250px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
-<div style={css(`padding:13px 16px 9px;`)}><span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>Cutoff Plans</span></div>
-<div style={css(`padding:10px 12px 8px;`)}>
+<aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`padding:12px 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(schedAlignFilterSeg || []).map((f, __i68) => (<React.Fragment key={__i68}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+{(schedAlignFilterSeg || []).map((f, __iB1) => (<React.Fragment key={__iB1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
 </div>
 </div>
-<div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
-{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Cutoff Plans in this filter.</div></>) : ((schedAlignList || []).map((r, __i69) => (<React.Fragment key={__i69}>
-<div style={css(`padding:0 2px; margin-bottom:3px;`)}>
-<button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; text-align:left; padding:9px 10px; border:1px solid ${r.active ? '#003F98' : '#E6EBF2'}; border-radius:8px; background:${r.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
+<div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
+{(schedAlignZoneChips || []).map((z, __iB2) => (<React.Fragment key={__iB2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+</div>
+<div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedAlignPlanCountLabel}</div>
+<div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
+{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter.</div></>) : ((schedAlignList || []).map((r, __iB3) => (<React.Fragment key={__iB3}>
+<button onClick={r.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${r.active ? '#0D7377' : '#E6EBF2'}; border-radius:9px; background:${r.active ? '#E9F5F5' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
 <span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
-<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</div></div>
-<div style={css(`font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>D0 {r.d0Pct}%</div>
+<div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66; margin-left:6px;`)}>{r.zone}</span><div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div></div>
+<span style={css(`font-size:10.5px; color:#8E96A3; flex-shrink:0;`)}>{r.runCountLabel}</span>
 </button>
-</div>
 </React.Fragment>)))}
 </div>
 </aside>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
-{(!schedAlignCard) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a Cutoff Plan from the rail.</div></>) : (<>
+{(!hasCurSchedAlignSC) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a plan from the rail.</div></>) : (<>
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>Route Scheduler</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{schedAlignCard.verdict}</span>
-<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-weight:600; color:#0D7377;`)}>{schedAlignCard.code}</span>
+<span style={css(`font-weight:600; color:#0D7377;`)}>{curSchedAlignCode}</span>
 </div>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
-<div style={css(`flex:1; min-width:0;`)}>
+{/* SC identity header — mirrors Design Review's SC header block, so identity isn't repeated on
+    every card below it (2026-08-04, brings the plan card to parity with Design Review's) */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; margin-bottom:16px;`)}>
 <div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{schedAlignCard.code}</span>
-<span style={css(`font-size:14px; color:#5A5E66;`)}>{schedAlignCard.name}</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{schedAlignCard.zone} Zone</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{schedAlignCard.scCoords}</span>
+<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{curSchedAlignCode}</span>
+<span style={css(`font-size:14px; color:#5A5E66;`)}>{curSchedAlignName}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{curSchedAlignZone} Zone</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{curSchedAlignCoords}</span>
 <span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignCard.verdictBg}; color:${schedAlignCard.verdictFg};`)}>{schedAlignCard.verdict}</span>
 </div>
-<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:7px;`)}>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>{schedAlignCard.isFinalised ? 'Finalised' : 'Pushed'} {schedAlignCard.sentDate}</span>
-{(schedAlignCard.hasReviewers) ? (<>
-<span style={css(`width:3px; height:3px; border-radius:50%; background:#C3C9D4;`)} />
-<span style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
-{(schedAlignCard.opsLeads || []).map((ol, __iOl2) => (<React.Fragment key={__iOl2}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
-</>) : null}
+<div style={css(`font-size:13px; color:#5A5E66; margin-top:8px;`)}>Every run for this SC in the current filter is shown below — read-only for now; the detailed feedback loop isn't built yet.</div>
 </div>
+{(!hasSchedAlignRunCards) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No runs match this filter for this SC.</div></>) : null}
+{/* one card per run — reuses the SAME visual template as Design Review's run cards (2026-08-04
+    fix), just without push/finalise actions (those only ever happen from Design Review) */}
+<div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
+{(schedAlignRunCards || []).map((c, __iB4) => (<React.Fragment key={__iB4}>
+<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
+<div style={css(`min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · HTF {c.htf}</span>
 </div>
-<button onClick={schedAlignCard.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`width:34px; height:34px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `border-color:#E6EBF2; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
-{(schedAlignCard.isPushedState) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Awaiting Ops feedback. Detailed per-field decisions (Needs Change, Accept/Reject) aren't collected yet for Route Scheduler — this is a read-only summary for now.</span></div>
-</>) : null}
-{(schedAlignCard.isAcknowledged) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#EAEEFB; border:1px solid #C5CDEF; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>Ops review acknowledged. No further editing exists yet for Route Scheduler.</span></div>
-</>) : null}
-{(schedAlignCard.isFinalised && !schedAlignCard.isFinalDirect) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#E7F4EC; border:1px solid #BFE3CC; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan is <strong>finalised & frozen</strong>, ready for handoff.</span></div>
-</>) : null}
-{(schedAlignCard.isFinalDirect) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:16px; background:#F0EDFB; border:1px solid #D6CCF0; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>This Cutoff Plan was <strong>finalised without alignment</strong> — Ops review was skipped.</span></div>
-</>) : null}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Inputs</span></div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:18px;`)}>
-{[['RLH Route Planner Run', schedAlignCard.parentRunId], ['NLH Plan Used', schedAlignCard.nlhPlanName], ['SC Docks', schedAlignCard.docks], ['HW · HTF', schedAlignCard.hw + ' · ' + schedAlignCard.htf], ['D0 Cutoff', schedAlignCard.d0Label], ['Local Speed', schedAlignCard.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignCard.nonLocalSpeed + ' km/h']].map((kv, __i70) => (<React.Fragment key={__i70}>
-<div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>{kv[0]}</div><div style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{kv[1]}</div></div>
+<button onClick={c.onDownloadCsv} aria-label={"Download this Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
+<span><span style={css(`color:#8E96A3;`)}>RLH Run</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.parentRunId}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>NLH Plan</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.nlhPlanName}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>SC Docks</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.docks}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>D0 Cutoff</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.d0Label}</strong></span>
+<span><span style={css(`color:#8E96A3;`)}>Local / Non-Local Speed</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.localSpeed} / {c.nonLocalSpeed} km/h</strong></span>
+</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
+</div>
+{(c.hasSlotBreakdown) ? (<>
+<div style={css(`margin-top:10px;`)}>
+<details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
+<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</summary>
+<div>
+{(c.slotBreakdown || []).map((s, __iB5) => (<React.Fragment key={__iB5}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 9px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
+<span style={css(`font-size:10px; color:#5A5E66;`)}>{s.used}/{s.docks} docks</span>
+<span style={css(`font-size:10.5px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
+</div>
 </React.Fragment>))}
 </div>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.d0Color}; line-height:1;`)}>{schedAlignCard.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignCard.holdColor}; line-height:1;`)}>{schedAlignCard.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignCard.lanesWithHold} / {schedAlignCard.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
-</div>
-{(schedAlignCard.hasSlotBreakdown) ? (<>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SLOT-WISE DISPATCH</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px;`)}>
-{(schedAlignCard.slotBreakdown || []).map((s, __iSlot4) => (<React.Fragment key={__iSlot4}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; background:${s.full ? '#E9F5F5' : '#F7F8FB'}; color:${s.full ? '#0D7377' : '#5A5E66'}; border:1px solid ${s.full ? '#BFE0E0' : '#EEF1F6'};`)}>{s.time} · {s.used}/{s.docks} · {s.pct}%</span></React.Fragment>))}
+</details>
 </div>
 </>) : null}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
-{(schedAlignCard.hasFlags) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px;`)}>
-<div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
-{(schedAlignCard.flags || []).map((fl, __i71) => (<React.Fragment key={__i71}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
-</div>
+{/* bottom row — flag chip + reviewer chips + lifecycle status text; no push/finalise buttons here,
+    since those only ever happen from Design Review (2026-08-04) */}
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px solid #F4F5F8;`)}>
+<span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
+{(c.hasReviewers) ? (<>
+<div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
+{(c.opsLeads || []).map((ol, __iB6) => (<React.Fragment key={__iB6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
-{(schedAlignCard.noFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this run.</div></>) : null}
+</div>
+{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>Ops review acknowledged.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting Ops feedback.</div></>)}
+</div>
+</React.Fragment>))}
+</div>
 </>)}
 </div>
 </div>
@@ -4732,10 +4764,9 @@ class NDCApp extends React.Component {
 
     const Z = [
       { z: 'North', cities: [['Delhi','DEL'],['Gurugram','GGN'],['Noida','NOI'],['Jaipur','JAI'],['Lucknow','LKO'],['Kanpur','KNP'],['Chandigarh','CHD'],['Ludhiana','LDH'],['Agra','AGR'],['Meerut','MRT'],['Amritsar','ASR'],['Dehradun','DDN']], lat: [26.5, 30.8], lng: [74.5, 80.5] },
-      { z: 'West', cities: [['Mumbai','BOM'],['Pune','PNQ'],['Ahmedabad','AMD'],['Surat','STV'],['Nagpur','NAG'],['Nashik','ISK'],['Rajkot','RAJ'],['Vadodara','BDQ'],['Indore','IDR'],['Bhopal','BHO'],['Thane','TNA']], lat: [18.4, 23.6], lng: [70.0, 77.2] },
+      { z: 'West', cities: [['Mumbai','BOM'],['Pune','PNQ'],['Ahmedabad','AMD'],['Surat','STV'],['Nagpur','NAG'],['Nashik','ISK'],['Rajkot','RAJ'],['Vadodara','BDQ'],['Indore','IDR'],['Bhopal','BHO'],['Thane','TNA'],['Gwalior','GWL'],['Ujjain','UJN']], lat: [18.4, 23.6], lng: [70.0, 77.2] },
       { z: 'South', cities: [['Bengaluru','BLR'],['Chennai','MAA'],['Hyderabad','HYD'],['Coimbatore','CJB'],['Kochi','COK'],['Madurai','IXM'],['Mysuru','MYS'],['Vijayawada','VGA'],['Vizag','VTZ'],['Trichy','TRZ'],['Salem','SXV']], lat: [9.5, 17.6], lng: [75.5, 83.2] },
-      { z: 'East', cities: [['Kolkata','CCU'],['Patna','PAT'],['Bhubaneswar','BBI'],['Ranchi','IXR'],['Guwahati','GAU'],['Siliguri','IXB'],['Cuttack','CTC'],['Durgapur','RDP'],['Asansol','ASN']], lat: [21.5, 27.2], lng: [83.5, 92.0] },
-      { z: 'Central', cities: [['Raipur','RPR'],['Jabalpur','JLR'],['Gwalior','GWL'],['Bilaspur','PAB'],['Ujjain','UJN']], lat: [21.5, 26.5], lng: [78.0, 83.5] },
+      { z: 'East', cities: [['Kolkata','CCU'],['Patna','PAT'],['Bhubaneswar','BBI'],['Ranchi','IXR'],['Guwahati','GAU'],['Siliguri','IXB'],['Cuttack','CTC'],['Durgapur','RDP'],['Asansol','ASN'],['Raipur','RPR'],['Jabalpur','JLR'],['Bilaspur','PAB']], lat: [21.5, 27.2], lng: [83.5, 92.0] },
     ];
 
     const scs = [];
@@ -4972,7 +5003,7 @@ class NDCApp extends React.Component {
     ];
     const migrations = [
       { dc: 'JAI-410', name: 'Vaishali Nagar', from: 'JAIS', to: 'JAI2', zone: 'North' },
-      { dc: 'IDR-233', name: 'Vijay Nagar', from: 'IDRS', to: 'BHOS', zone: 'Central' },
+      { dc: 'IDR-233', name: 'Vijay Nagar', from: 'IDRS', to: 'BHOS', zone: 'West' },
       { dc: 'NAG-090', name: 'Wardha Road', from: 'NAGS', to: 'NAG2', zone: 'West' },
     ];
     // Unified node changes list for the redesigned Additions/Closures/Migrations table (fix 1.6).
@@ -5125,7 +5156,7 @@ class NDCApp extends React.Component {
       txt('name', 'SC Name', false, 'e.g. Bengaluru'),
       txt('city', 'SC City, State', false, 'e.g. Bengaluru, KA'),
       sel('type', 'SC Type', true, opt(['LMSC', 'FMSC', 'Hybrid'])),
-      sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West', 'Central'])),
+      sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West'])),
       txt('volCap', 'Volume Capacity', true, 'shipments / day'),
       txt('sortCap', 'Sort Capacity', true, 'DCs it can serve, e.g. 50\u2013250'),
       txt('htp', 'Hourly Throughput (HTP)', false, 'shipments / hour'),
@@ -5466,7 +5497,7 @@ class NDCApp extends React.Component {
     const volFilesShown = volumeFiles.length, volFilesTotal = allVol.length;
     const q = (st.inputsSearch || '').toLowerCase();
     const zf = st.inputsZone || 'All';
-    const zoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
+    const zoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
     const nstep = st.nodeStep || 'active';
     const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
@@ -5925,7 +5956,7 @@ class NDCApp extends React.Component {
     const q = (st.creationSearch || '').toLowerCase();
     const zf = st.creationZone || 'All';
     const filtered = d.scs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
-    const ZONES = ['North', 'South', 'East', 'West', 'Central'];
+    const ZONES = ['North', 'South', 'East', 'West'];
     const scGroups = ZONES.map(z => {
       const list = filtered.filter(s => s.zone === z);
       const selN = list.filter(s => selSet[s.code]).length;
@@ -6444,7 +6475,7 @@ class NDCApp extends React.Component {
       stepper, planGroupName: planGroup.name, planGroupTriggered: planGroup.triggered, planGroupCap: planGroup.cap, planGroupPct: planGroup.pct + '%',
       scGroups, creationSelCount: sel.length, creationShown: filtered.length, creationTotal: d.scs.length, creationSearch: st.creationSearch || '',
       onCreationSearch: (e) => this.setState({ creationSearch: e.target.value }),
-      creationZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ creationZone: z }) })),
+      creationZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ creationZone: z }) })),
       // G8 — union with existing selection (never drop SCs picked under a different zone/search filter). Capped.
       selectAllSCs: () => { const cur = new Set(sel); let hit = false; filtered.forEach(s => { if (cur.has(s.code)) return; if (cur.size >= SC_CAP) { hit = true; return; } cur.add(s.code); }); if (hit) this.showToast('Plan group is capped at ' + SC_CAP + ' SCs — added up to the cap', '#C77B00'); this.setState({ selectedSCs: [...cur] }); }, clearAllSCs: () => this.setState({ selectedSCs: [] }),
       volOptions, selectedVolume: st.creationVolume,
@@ -6796,22 +6827,16 @@ class NDCApp extends React.Component {
     // the default shown here matches what SC Master already shows for the same SC.
     let h = 0; for (let i = 0; i < code.length; i++) h = (h * 31 + code.charCodeAt(i)) & 0x7fffffff;
     const defaultDocks = 2 + ((h >> 3) % 6);
-    // RLH Docks global override (2026-07-30 fix) — typing a value in the "overall" field applies
-    // it to every selected SC's default (still overridable per-SC below), same pattern as HW/HTF/D0.
-    // Empty/unset means "use each SC's own SC Master value" (the per-SC defaultDocks above).
-    const docksGlobalOverride = st.schedulerRlhDocksGlobal;
-    const docksBase = (docksGlobalOverride !== undefined && docksGlobalOverride !== null && docksGlobalOverride !== '') ? Number(docksGlobalOverride) : defaultDocks;
-    // Local Speed / Non-Local Speed (2026-07-30) — same global-override + per-SC-override pattern
-    // as RLH Docks. Default comes from the actual SC Master value if set, else the same synthetic
-    // formula SC Master's own table uses for that SC (so the two stay consistent).
+    // RLH Docks / Local Speed / Non-Local Speed (2026-08-04) — these are SC-level factors, not
+    // plan-level ones, so there's no "overall default" tier for them anymore: resolution is just
+    // per-SC override (below) falling back straight to the SC's own default/SC Master value.
+    const docksBase = defaultDocks;
     const st2 = this.state; const d2 = st2.data;
     const sc = (d2 && d2.scs) ? d2.scs.find(s => s.code === code) : null;
     const defaultLocalSpeed = sc && sc.localSpeed != null && sc.localSpeed !== '' ? sc.localSpeed : (22 + (h % 8));
     const defaultNonLocalSpeed = sc && sc.nonLocalSpeed != null && sc.nonLocalSpeed !== '' ? sc.nonLocalSpeed : (32 + ((h >> 5) % 10));
-    const localSpeedGlobalOverride = st.schedulerLocalSpeedGlobal;
-    const nonLocalSpeedGlobalOverride = st.schedulerNonLocalSpeedGlobal;
-    const localSpeedBase = (localSpeedGlobalOverride !== undefined && localSpeedGlobalOverride !== null && localSpeedGlobalOverride !== '') ? Number(localSpeedGlobalOverride) : defaultLocalSpeed;
-    const nonLocalSpeedBase = (nonLocalSpeedGlobalOverride !== undefined && nonLocalSpeedGlobalOverride !== null && nonLocalSpeedGlobalOverride !== '') ? Number(nonLocalSpeedGlobalOverride) : defaultNonLocalSpeed;
+    const localSpeedBase = defaultLocalSpeed;
+    const nonLocalSpeedBase = defaultNonLocalSpeed;
     const localSpeedBySC = st.schedulerLocalSpeedBySC || {};
     const nonLocalSpeedBySC = st.schedulerNonLocalSpeedBySC || {};
     const localSpeed = localSpeedBySC[code] !== undefined ? localSpeedBySC[code] : localSpeedBase;
@@ -6901,7 +6926,7 @@ class NDCApp extends React.Component {
   schedulerVals() {
     const st = this.state, d = st.data;
     const step = st.schedulerStep || 1;
-    const ZONES = ['North', 'South', 'East', 'West', 'Central'];
+    const ZONES = ['North', 'South', 'East', 'West'];
     const fmtIntSch = (n) => (n || 0).toLocaleString('en-IN');
 
     const SCHED_STEPS = [[1, 'Plan Selection'], [2, 'NLH Plan Selection'], [3, 'Operating Mode'], [4, 'Preview & Trigger']];
@@ -7046,12 +7071,6 @@ class NDCApp extends React.Component {
       schedulerNlhSearch: st.schedulerNlhSearch || '', onSchedulerNlhSearch: (e) => this.setState({ schedulerNlhSearch: e.target.value }),
       // Step 3
       hwGlobal, htfGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler3,
-      docksGlobal: st.schedulerRlhDocksGlobal != null ? st.schedulerRlhDocksGlobal : '',
-      onDocksGlobal: (e) => this.setState({ schedulerRlhDocksGlobal: e.target.value }),
-      localSpeedGlobal: st.schedulerLocalSpeedGlobal != null ? st.schedulerLocalSpeedGlobal : '',
-      onLocalSpeedGlobal: (e) => this.setState({ schedulerLocalSpeedGlobal: e.target.value }),
-      nonLocalSpeedGlobal: st.schedulerNonLocalSpeedGlobal != null ? st.schedulerNonLocalSpeedGlobal : '',
-      onNonLocalSpeedGlobal: (e) => this.setState({ schedulerNonLocalSpeedGlobal: e.target.value }),
       onHwGlobal: (v) => this.setState({ schedulerHwGlobal: v }),
       onHtfGlobal: (v) => this.setState({ schedulerHtfGlobal: v }),
       onD0GlobalInc: () => this.setState({ schedulerD0Global: Math.min(6, d0Global + 1) }),
@@ -7544,7 +7563,7 @@ class NDCApp extends React.Component {
     // 2026-07-10 — zone filter, mirroring Design Review's zone-chip row, applied after the status filter.
     const alignZone = st.alignZone || 'All';
     listPlans = listPlans.filter(p => alignZone === 'All' || p.zone === alignZone);
-    const alignZoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === alignZone, bg: z === alignZone ? '#003F98' : '#fff', fg: z === alignZone ? '#fff' : '#5A5E66', bd: z === alignZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ alignZone: z, alignPage: 0, alignPlanId: null, alignDetailOpen: false }) }));
+    const alignZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === alignZone, bg: z === alignZone ? '#003F98' : '#fff', fg: z === alignZone ? '#fff' : '#5A5E66', bd: z === alignZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ alignZone: z, alignPage: 0, alignPlanId: null, alignDetailOpen: false }) }));
     // Master-detail: keep the explicit selection if it is in the current filtered list,
     // otherwise auto-select the first plan so the detail pane is never blank (like Design Review).
     const curId = (st.alignPlanId && plans.some(p => p.id === st.alignPlanId)) ? st.alignPlanId : (listPlans.length > 0 ? listPlans[0].id : null);
@@ -8287,25 +8306,45 @@ class NDCApp extends React.Component {
     const alignHasPrev = alignPageSafe > 0;
     const alignHasNext = alignPageSafe < alignTotalPages - 1;
 
-    // ===== Route Scheduler — Ops Alignment (2026-07-30) — list/filter/card-summary level only.
-    // Detailed feedback parameters (Needs Change, per-field decisions) are a later pass; for now
-    // this mirrors RLH's status-filtered list + read-only card, using the new metrics. Shared
-    // between Planner and Ops Lead (both personas see the same filtered list; deep actions differ
-    // only once the feedback loop itself is built). =====
+    // ===== Route Scheduler — Ops Alignment (2026-07-30; rail regrouped by SC 2026-08-04 to match
+    // Route Planner's own Ops Alignment rail — see 01_Complete_Context.md) — list/filter/card-
+    // summary level only. Detailed feedback parameters (Needs Change, per-field decisions) are a
+    // later pass; for now this mirrors RLH's status-filtered, SC-grouped list + read-only cards,
+    // using the new metrics. Shared between Planner and Ops Lead (both personas see the same
+    // filtered list; deep actions differ only once the feedback loop itself is built). =====
     const schedAlignFilter = st.schedAlignFilter || 'Pending Feedback';
     const SCHED_FILTER_MAP = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
     const SCHED_SEG_ICON = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
     const allSchedPlansA = d.schedulerPlans || [];
     const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label, icon: SCHED_SEG_ICON[label],
       count: allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
-      onClick: () => this.setState({ schedAlignFilter: label, schedAlignPlanId: null }) }));
-    const schedAlignListRaw = allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
-    const curSchedAlignId = st.schedAlignPlanId || (schedAlignListRaw[0] && schedAlignListRaw[0].id);
-    const schedAlignList = schedAlignListRaw.map(sp => { const m = this.computeSchedulerMetricsFor(sp) || {};
-      return { id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone, d0Pct: m.d0LandingPct, hasWarning: m.warnD0Low || m.warnHoldHigh,
-        active: curSchedAlignId === sp.id, onClick: () => this.setState({ schedAlignPlanId: sp.id }) }; });
+      onClick: () => this.setState({ schedAlignFilter: label, schedAlignSC: null }) }));
+    // Rail groups BY SC (mirrors Route Planner's own rail, which lists one row per SC/plan) rather
+    // than one flat row per schedulerPlans record — an SC with 2+ runs in the same status now
+    // collapses into one rail entry with N cards below it, not N disconnected rows.
+    const ALIGN_SCHED_ZONES = ['North', 'South', 'East', 'West'];
+    const schedAlignZone = st.schedAlignZone || 'All';
+    const schedRunsForScA = (code) => allSchedPlansA.filter(sp => sp.scCode === code && sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
+    const schedAlignSCsWithRuns = d.scs.filter(s => schedRunsForScA(s.code).length >= 1);
+    const schedAlignZoneChips = ['All'].concat(ALIGN_SCHED_ZONES).map(z => ({ label: z, active: schedAlignZone === z,
+      count: z === 'All' ? schedAlignSCsWithRuns.length : schedAlignSCsWithRuns.filter(s => s.zone === z).length,
+      onClick: () => this.setState({ schedAlignZone: z, schedAlignSC: null }) })).filter(z => z.label === 'All' || z.count > 0);
+    const listSchedAlignSCs = schedAlignSCsWithRuns.filter(s => schedAlignZone === 'All' || s.zone === schedAlignZone);
+    const curSchedAlignCode = (st.schedAlignSC && listSchedAlignSCs.find(s => s.code === st.schedAlignSC)) ? st.schedAlignSC : (listSchedAlignSCs[0] && listSchedAlignSCs[0].code);
+    const curSchedAlignSC = d.scs.find(s => s.code === curSchedAlignCode);
+    const schedAlignList = listSchedAlignSCs.map(s => {
+      const rs = schedRunsForScA(s.code);
+      const anyWarn = rs.some(sp => { const mm = this.computeSchedulerMetricsFor(sp) || {}; return mm.warnD0Low || mm.warnHoldHigh; });
+      return { code: s.code, name: s.name, zone: s.zone, runCountLabel: rs.length + ' run' + (rs.length === 1 ? '' : 's'),
+        active: s.code === curSchedAlignCode, hasWarning: anyWarn,
+        onClick: () => this.setState({ schedAlignSC: s.code }) };
+    });
     const schedAlignEmpty = schedAlignList.length === 0;
-    const schedAlignCard = this.buildSchedCard(allSchedPlansA.find(sp => sp.id === curSchedAlignId), false);
+    // Main pane — one card per run for the selected SC, built from the SAME buildSchedCard() Design
+    // Review uses (includeActions=false here since Push/Finalise only happen from Design Review),
+    // so Ops Alignment's card can never visually drift from Design Review's (2026-08-04 fix).
+    const schedAlignRunCards = curSchedAlignSC ? schedRunsForScA(curSchedAlignCode).map(sp => this.buildSchedCard(sp, false)) : [];
+    const schedAlignPlanCountLabel = schedAlignList.length + ' SC' + (schedAlignList.length === 1 ? '' : 's');
 
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
       alignIsL1, alignIsL2,
@@ -8320,7 +8359,11 @@ class NDCApp extends React.Component {
       // unlike the Planner's full 4-tier strip. NLH/FM Carting aren't part of the Ops Lead's
       // review scope at all, not just "coming soon" for them too.
       alignTierSegOpsLead: (alignTierSeg || []).filter(t => t.label === 'RLH' || t.label === 'Node Mapping'),
-      schedAlignFilterSeg, schedAlignList, schedAlignEmpty, schedAlignCard,
+      schedAlignFilterSeg, schedAlignZoneChips, schedAlignList, schedAlignEmpty, schedAlignPlanCountLabel,
+      curSchedAlignSC, hasCurSchedAlignSC: !!curSchedAlignSC, curSchedAlignCode,
+      curSchedAlignName: curSchedAlignSC ? curSchedAlignSC.name : '', curSchedAlignZone: curSchedAlignSC ? curSchedAlignSC.zone : '',
+      curSchedAlignCoords: curSchedAlignSC ? (Number(curSchedAlignSC.lat).toFixed(4) + ', ' + Number(curSchedAlignSC.lng).toFixed(4)) : '\u2014',
+      schedAlignRunCards, hasSchedAlignRunCards: schedAlignRunCards.length > 0,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -8529,7 +8572,7 @@ class NDCApp extends React.Component {
     // 2026-07-10 — zone filter, mirroring Design Review's zone-chip row, applied after the status filter.
     const opsZone = st.opsZone || 'All';
     filteredAssigned = filteredAssigned.filter(p => opsZone === 'All' || p.zone === opsZone);
-    const opsZoneChips = ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === opsZone, bg: z === opsZone ? '#003F98' : '#fff', fg: z === opsZone ? '#fff' : '#5A5E66', bd: z === opsZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ opsZone: z, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
+    const opsZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === opsZone, bg: z === opsZone ? '#003F98' : '#fff', fg: z === opsZone ? '#fff' : '#5A5E66', bd: z === opsZone ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ opsZone: z, opsPage: 0, opsPlanId: null, opsDetailOpen: false }) }));
     // Master-detail: keep the explicit selection if it's in the filtered list, else auto-select the first
     // so the detail pane is never blank (mirrors Design Review + the planner side).
     const curId = (st.opsPlanId && assigned.some(p => p.id === st.opsPlanId)) ? st.opsPlanId : (filteredAssigned.length > 0 ? filteredAssigned[0].id : null);
@@ -9266,7 +9309,7 @@ class NDCApp extends React.Component {
     const gen = st.mapDataSource === 'generated';
 
     return { isMap, mapScList: scList, mapSC: curCode, mapSCname: sc.name, mapSCzone: sc.zone,
-      mapZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ mapZone: z }) })),
+      mapZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ mapZone: z }) })),
       mapGen: gen, mapIngested: !gen, mapSrcGenBg: gen ? '#003F98' : '#fff', mapSrcGenFg: gen ? '#fff' : '#5A5E66', mapSrcIngBg: !gen ? '#003F98' : '#fff', mapSrcIngFg: !gen ? '#fff' : '#5A5E66', setMapGen: () => this.setState({ mapDataSource: 'generated' }), setMapIng: () => this.setState({ mapDataSource: 'ingested' }),
       mapW: W, mapH: H, scX: scPt.x, scY: scPt.y, arcs, arcLabels, dcMarkers, dcLabels, legend, mapRows: rows, rowsShown: rows.length, routeTotal: routes.length, mapNoResults: rows.length === 0, mapHasResults: rows.length > 0,
       routeOptions, vehOptions, mapRoute: fRoute, mapVeh: fVeh, mapSearch: st.mapSearch || '',
@@ -9612,7 +9655,7 @@ class NDCApp extends React.Component {
     // Today's seed data has exactly 1 run/SC, so this only becomes visually obvious once an SC is
     // scheduled a second time — but the OLD flat-list rail would have shown that as two disconnected
     // rows for the same SC rather than one grouped entry, which is the gap this fixes.
-    const SCHED_ZONES = ['North', 'South', 'East', 'West', 'Central'];
+    const SCHED_ZONES = ['North', 'South', 'East', 'West'];
     const schedZoneName = st.reviewSchedZone || 'All';
     const allSchedPlans = d.schedulerPlans || [];
     const SCHED_VERDICT = { Draft: ['Draft', '#F2F5FA', '#5A5E66'], Pushed: ['Pushed', '#EAF0FB', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
@@ -9670,7 +9713,7 @@ class NDCApp extends React.Component {
       hasCurSC: !!curSC, noCurSC: !curSC, reviewListEmpty: reviewList.length === 0, hasReviewList: reviewList.length > 0,
       reviewClearSearch: () => this.setState({ reviewSearch: '', reviewZone: 'All' }),
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),
-      reviewZoneChips: ['All', 'North', 'South', 'East', 'West', 'Central'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ reviewZone: z }) })),
+      reviewZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ reviewZone: z }) })),
       reviewShown: listSCs.length, reviewTotal: completedSCs.length,
       rqProgN, rqDoneN, rqHasQueue, rqNoQueue, rqShowProg,
       curCode, curName: curSC ? curSC.name : '', curZone: curSC ? curSC.zone : '', curDcCount: curSC ? curSC.dcCount : 0,

@@ -2499,6 +2499,91 @@ function View(B, self) {
 </div>
 </>) : null}
 {(reviewSchedDetail.noFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:18px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this run.</div></>) : null}
+{/* Plan Details / Route View / Dock Schedule — mirrors RLH's own Plan Details section (2026-08-04) */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Details</span></div>
+<div style={css(`display:flex; gap:22px; border-bottom:1px solid #E6EBF2; margin-bottom:18px;`)}>
+{(reviewSchedDetail.sections || []).map((t, __iRSD1) => (<React.Fragment key={__iRSD1}>
+<button onClick={t.onClick} style={css(`position:relative; padding:0 0 12px; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}{(t.active) ? (<><span style={css(`position:absolute; left:0; right:0; bottom:0; height:3px; background:#0D7377; border-radius:3px 3px 0 0;`)} /></>) : null}</button>
+</React.Fragment>))}
+</div>
+{(reviewSchedDetail.secDetails) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:1180px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; background:#E6EBF2;`)}>
+{['LMDC', 'DESIGN VOL', 'LAT', 'LNG', 'ROUTE CODE', 'TP', 'ZONE', 'VEHICLE TYPE', 'BREAKDOWN DIST', 'RT DIST (KM)', 'CUTOFF TIME', 'BREAKDOWN TAT', 'HOLD TIME'].map((h, __iRSDh1) => (<React.Fragment key={__iRSDh1}><div style={css(`padding:10px 10px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(reviewSchedDetail.dcRows || []).map((r, __iRSD2) => (<React.Fragment key={__iRSD2}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; align-items:center; border-left:2px solid #8E96A3; border-right:2px solid #8E96A3; border-top:${r.isFirstInGroup ? '2px solid #8E96A3' : '1px solid #F4F5F8'}; border-bottom:${r.isLastInGroup ? '2px solid #8E96A3' : 'none'}; margin-top:${r.isFirstInGroup ? '6px' : '0'};`)}>
+<div style={css(`padding:10px 10px; font-size:11.5px; font-weight:600; color:#0D7377;`)}>{r.lmdc}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.designVol}</div>
+<div style={css(`padding:10px 10px; font-size:10.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.lat}</div>
+<div style={css(`padding:10px 10px; font-size:10.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.lng}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F;`)}>{r.routeCode}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{r.tp}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66;`)}>{r.zone}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F;`)}>{r.vehType}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.breakdownDist}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.roundTripDist}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.breakdownTat}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{(reviewSchedDetail.secRoute) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:980px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; background:#E6EBF2;`)}>
+{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME'].map((h, __iRSDh2) => (<React.Fragment key={__iRSDh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(reviewSchedDetail.routeRows || []).map((r, __iRSD3) => (<React.Fragment key={__iRSD3}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`padding:11px 12px; font-size:12px; font-weight:600; color:#0D7377;`)}>{r.segment}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; text-align:center;`)}>{r.tps}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.vol}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dist}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F;`)}>{r.veh}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.util}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.cap}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT (travel + hold + service time at each stop, plus the return leg) isn't computed yet — pending real DS output.</div>
+</div>
+</>) : null}
+{(reviewSchedDetail.secDock) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;`)}>
+<div style={css(`display:flex; gap:24px;`)}>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Docks</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockCount}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Routes departing</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockTotalDeparted}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest hour</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockBusyLabel}</div></div>
+</div>
+<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+<button onClick={reviewSchedDetail.onGranHour} style={css(`border:none; background:${reviewSchedDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${reviewSchedDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By hour</button>
+<button onClick={reviewSchedDetail.onGranSlot} style={css(`border:none; background:${!reviewSchedDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${!reviewSchedDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By 30-min slot</button>
+</div>
+</div>
+{(reviewSchedDetail.hasDockSchedule) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`display:grid; grid-template-columns:70px ${(reviewSchedDetail.dockCols || []).map(() => '1fr').join(' ')}; min-width:${70 + (reviewSchedDetail.dockCols || []).length * 80}px;`)}>
+<div style={css(`padding:6px 8px; border-bottom:1px solid #E6EBF2;`)} />
+{(reviewSchedDetail.dockCols || []).map((c, __iRSDc1) => (<React.Fragment key={__iRSDc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:#5A5E66; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums;`)}>{c.label}</div></React.Fragment>))}
+{(reviewSchedDetail.dockRows || []).map((row, __iRSDr1) => (<React.Fragment key={__iRSDr1}>
+<div style={css(`padding:8px; font-size:12px; font-weight:600; color:#14171F; border-bottom:1px solid #EEF1F6;`)}>{row.label}</div>
+{(row.cells || []).map((cell, __iRSDc2) => (<React.Fragment key={__iRSDc2}>
+<div style={css(`padding:4px; min-height:40px; border-bottom:1px solid #EEF1F6; border-left:1px solid #EEF1F6; display:flex; flex-direction:column; gap:3px;`)}>
+{(cell.items || []).map((it, __iRSDi1) => (<React.Fragment key={__iRSDi1}><div style={css(`background:#E9F5F5; color:#0D7377; font-size:10.5px; padding:2px 6px; border-radius:5px; white-space:nowrap;`)}>{it.routeCode}</div></React.Fragment>))}
+</div>
+</React.Fragment>))}
+</React.Fragment>))}
+</div>
+</div>
+</>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
+</>) : null}
 </div>
 </div>
 </>) : null}
@@ -2619,7 +2704,10 @@ function View(B, self) {
 </div>
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
+<div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
 <button onClick={c.onDownloadCsv} aria-label={"Download this Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onOpenAlignDetail} aria-label={"Open full Cutoff Plan detail"} title={"Open full Cutoff Plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
 </div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
 <span><span style={css(`color:#8E96A3;`)}>RLH Run</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.parentRunId}</strong></span>
@@ -3536,7 +3624,10 @@ function View(B, self) {
 </div>
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
+<div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
 <button onClick={c.onDownloadCsv} aria-label={"Download this Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onOpenAlignDetail} aria-label={"Open full Cutoff Plan detail"} title={"Open full Cutoff Plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
 </div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
 <span><span style={css(`color:#8E96A3;`)}>RLH Run</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.parentRunId}</strong></span>
@@ -4260,6 +4351,147 @@ function View(B, self) {
 <button onClick={openFullMap} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}>Open full Network Map<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={runMapClose} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Done</button>
 </div>
+</div>
+</div></>) : null}
+{/* OPS ALIGNMENT — ROUTE SCHEDULER DETAIL OVERLAY (2026-08-04, shared by both personas, mirrors
+    Design Review's reviewSchedDetail — read-only, no push/finalise actions here) */}
+{(schedAlignDetail.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:90; background:#F4F5F8; display:flex; flex-direction:column;`)}>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:14px 26px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<button onClick={schedAlignDetail.close} aria-label={"Back to Cutoff Plans"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Back</button>
+<div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:16px; font-weight:700; color:#0D7377;`)}>{schedAlignDetail.id}</span>
+<span style={css(`font-size:14px; color:#14171F;`)}>{schedAlignDetail.code} · {schedAlignDetail.name}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{schedAlignDetail.zone} Zone</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignDetail.verdictBg}; color:${schedAlignDetail.verdictFg};`)}>{schedAlignDetail.verdict}</span>
+</div>
+<div style={css(`flex:1;`)} />
+<button onClick={schedAlignDetail.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
+<button onClick={schedAlignDetail.close} aria-label={"Close detail"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`flex:1; overflow-y:auto; padding:22px 26px;`)}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Inputs</span></div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:20px 36px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:18px;`)}>
+{[['RLH Route Planner Run', schedAlignDetail.parentRunId], ['NLH Plan Used', schedAlignDetail.nlhPlanName], ['SC Docks', schedAlignDetail.docks], ['HW · HTF', schedAlignDetail.hw + ' · ' + schedAlignDetail.htf], ['D0 Cutoff', schedAlignDetail.d0Label], ['Local Speed', schedAlignDetail.localSpeed + ' km/h'], ['Non-Local Speed', schedAlignDetail.nonLocalSpeed + ' km/h']].map((kv, __iSAD1) => (<React.Fragment key={__iSAD1}>
+<div><div style={css(`font-size:10.5px; color:#5A5E66;`)}>{kv[0]}</div><div style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{kv[1]}</div></div>
+</React.Fragment>))}
+</div>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.d0Color}; line-height:1;`)}>{schedAlignDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.holdColor}; line-height:1;`)}>{schedAlignDetail.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lanesWithHold} / {schedAlignDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
+</div>
+{(schedAlignDetail.hasSlotBreakdown) ? (<>
+<details style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px; background:#fff;`)}>
+<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#FAFBFD; font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>
+<span>SLOT-WISE DISPATCH · {schedAlignDetail.slotBreakdown.length} slot{schedAlignDetail.slotBreakdown.length === 1 ? '' : 's'}</span>
+<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</summary>
+<div>
+{(schedAlignDetail.slotBreakdown || []).map((s, __iSADSlot) => (<React.Fragment key={__iSADSlot}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
+<span style={css(`font-size:13px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{s.used}/{s.docks} docks in this slot</span>
+<span style={css(`font-size:13px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
+</div>
+</React.Fragment>))}
+</div>
+</details>
+</>) : null}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
+{(schedAlignDetail.hasFlags) ? (<>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:18px;`)}>
+<div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
+{(schedAlignDetail.flags || []).map((fl, __iSAD2) => (<React.Fragment key={__iSAD2}><div style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; background:#F7F8FB; border:1px solid #EEF1F6; border-radius:8px;`)}><span style={css(`display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${fl.sevBg}; color:${fl.sevFg}; flex-shrink:0;`)}>{fl.sevLabel}</span><span style={css(`font-size:12.5px; color:#5A5E66;`)}>{fl.t}</span></div></React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{(schedAlignDetail.noFlags) ? (<><div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:8px; margin-bottom:18px; font-size:12.5px; color:#128A3E;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>No validation flags on this run.</div></>) : null}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Plan Details</span></div>
+<div style={css(`display:flex; gap:22px; border-bottom:1px solid #E6EBF2; margin-bottom:18px;`)}>
+{(schedAlignDetail.sections || []).map((t, __iSAD3) => (<React.Fragment key={__iSAD3}>
+<button onClick={t.onClick} style={css(`position:relative; padding:0 0 12px; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}{(t.active) ? (<><span style={css(`position:absolute; left:0; right:0; bottom:0; height:3px; background:#0D7377; border-radius:3px 3px 0 0;`)} /></>) : null}</button>
+</React.Fragment>))}
+</div>
+{(schedAlignDetail.secDetails) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:1180px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; background:#E6EBF2;`)}>
+{['LMDC', 'DESIGN VOL', 'LAT', 'LNG', 'ROUTE CODE', 'TP', 'ZONE', 'VEHICLE TYPE', 'BREAKDOWN DIST', 'RT DIST (KM)', 'CUTOFF TIME', 'BREAKDOWN TAT', 'HOLD TIME'].map((h, __iSADh1) => (<React.Fragment key={__iSADh1}><div style={css(`padding:10px 10px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(schedAlignDetail.dcRows || []).map((r, __iSAD4) => (<React.Fragment key={__iSAD4}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; align-items:center; border-left:2px solid #8E96A3; border-right:2px solid #8E96A3; border-top:${r.isFirstInGroup ? '2px solid #8E96A3' : '1px solid #F4F5F8'}; border-bottom:${r.isLastInGroup ? '2px solid #8E96A3' : 'none'}; margin-top:${r.isFirstInGroup ? '6px' : '0'};`)}>
+<div style={css(`padding:10px 10px; font-size:11.5px; font-weight:600; color:#0D7377;`)}>{r.lmdc}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.designVol}</div>
+<div style={css(`padding:10px 10px; font-size:10.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.lat}</div>
+<div style={css(`padding:10px 10px; font-size:10.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.lng}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F;`)}>{r.routeCode}</div>
+<div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{r.tp}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66;`)}>{r.zone}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F;`)}>{r.vehType}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.breakdownDist}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.roundTripDist}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.breakdownTat}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{(schedAlignDetail.secRoute) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:980px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; background:#E6EBF2;`)}>
+{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME'].map((h, __iSADh2) => (<React.Fragment key={__iSADh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+</div>
+{(schedAlignDetail.routeRows || []).map((r, __iSAD5) => (<React.Fragment key={__iSAD5}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`padding:11px 12px; font-size:12px; font-weight:600; color:#0D7377;`)}>{r.segment}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; text-align:center;`)}>{r.tps}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.vol}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dist}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F;`)}>{r.veh}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.util}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.cap}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT (travel + hold + service time at each stop, plus the return leg) isn't computed yet — pending real DS output.</div>
+</div>
+</>) : null}
+{(schedAlignDetail.secDock) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;`)}>
+<div style={css(`display:flex; gap:24px;`)}>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Docks</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockCount}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Routes departing</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockTotalDeparted}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest hour</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockBusyLabel}</div></div>
+</div>
+<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+<button onClick={schedAlignDetail.onGranHour} style={css(`border:none; background:${schedAlignDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${schedAlignDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By hour</button>
+<button onClick={schedAlignDetail.onGranSlot} style={css(`border:none; background:${!schedAlignDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${!schedAlignDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By 30-min slot</button>
+</div>
+</div>
+{(schedAlignDetail.hasDockSchedule) ? (<>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`display:grid; grid-template-columns:70px ${(schedAlignDetail.dockCols || []).map(() => '1fr').join(' ')}; min-width:${70 + (schedAlignDetail.dockCols || []).length * 80}px;`)}>
+<div style={css(`padding:6px 8px; border-bottom:1px solid #E6EBF2;`)} />
+{(schedAlignDetail.dockCols || []).map((c, __iSADc1) => (<React.Fragment key={__iSADc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:#5A5E66; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums;`)}>{c.label}</div></React.Fragment>))}
+{(schedAlignDetail.dockRows || []).map((row, __iSADr1) => (<React.Fragment key={__iSADr1}>
+<div style={css(`padding:8px; font-size:12px; font-weight:600; color:#14171F; border-bottom:1px solid #EEF1F6;`)}>{row.label}</div>
+{(row.cells || []).map((cell, __iSADc2) => (<React.Fragment key={__iSADc2}>
+<div style={css(`padding:4px; min-height:40px; border-bottom:1px solid #EEF1F6; border-left:1px solid #EEF1F6; display:flex; flex-direction:column; gap:3px;`)}>
+{(cell.items || []).map((it, __iSADi1) => (<React.Fragment key={__iSADi1}><div style={css(`background:#E9F5F5; color:#0D7377; font-size:10.5px; padding:2px 6px; border-radius:5px; white-space:nowrap;`)}>{it.routeCode}</div></React.Fragment>))}
+</div>
+</React.Fragment>))}
+</React.Fragment>))}
+</div>
+</div>
+</>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
+</>) : null}
 </div>
 </div>
 </>) : null}
@@ -6642,10 +6874,12 @@ class NDCApp extends React.Component {
       this.downloadText(sp.id + '-cutoff-plan.csv', head + body);
       this.showToast('Cutoff Plan downloaded · ' + sp.id, '#128A3E');
     };
+    card.onOpenReviewDetail = () => this.setState({ reviewSchedDetailId: sp.id });
+    card.onOpenAlignDetail = () => this.setState({ schedAlignDetailId: sp.id });
     if (includeActions) {
       card.onPush = () => this.setState({ schedPushOpen: true, schedPushPlanId: sp.id });
       card.onFinaliseDirect = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
-      card.onDetail = () => this.setState({ reviewSchedDetailId: sp.id });
+      card.onDetail = card.onOpenReviewDetail;
     }
     return card;
   }
@@ -7171,21 +7405,17 @@ class NDCApp extends React.Component {
     });
   }
 
-  // computeSchedulerMetricsFor(sp) (2026-07-30) — single source of truth for Route Scheduler's
-  // Design Review / Ops Alignment output metrics, per Vignesh's corrected formulas:
-  //   - SC Connection Start Time = earliest dispatch across all routes in the parent RLH plan.
-  //   - Number of Connection Slots = count of DISTINCT dispatch times (30-min grid).
-  //   - D0 Landing (Vol%) = volume-weighted % of DCs whose landing time is on/before D0 Cutoff.
-  //   - Holding Time (Total hrs) = SUM of per-route hold time across every route.
-  //   - Number of Lanes with Hold Time = count of routes with hold time > 0.
-  // All synthetic (this prototype has no real DS scheduling output), but internally consistent:
-  // a later D0 Cutoff or higher HTF measurably improves the numbers, not just randomly.
-  // 2026-07-30 — travel time now uses the plan's actual resolved Local Speed / Non-Local Speed
-  // (from resolveSchedulerParamsFor, persisted on sp), not a flat assumed speed. Each DC is
-  // classified Local/Non-Local by the same deterministic-hash convention the existing DC×Route
-  // detail view already uses (DCZN_V) — dispatch spread is a 150-min window centred just before
-  // D0 Cutoff; base hold time is a 0-50min per-route draw with the bottom 12min floored to zero.
-  computeSchedulerMetricsFor(sp) {
+  // schedulerRouteDcInfo(sp) (2026-08-04) — the shared per-route/per-DC synthesis behind BOTH
+  // computeSchedulerMetricsFor() (plan-wide aggregates) and computeSchedulerDetailTables() (the
+  // Plan Details / Route View / Dock Schedule tabs) — factored out so the two can never drift.
+  // Hold time is now drawn PER-DC, not once per route: hold happens at the destination LMDC while
+  // it unloads (e.g. a vehicle lands at 04:30 but the dock only unloads at 05:00 — that 30-min gap
+  // is hold time), so it has no bearing on dispatch and can genuinely vary stop-to-stop along a
+  // route. A route's own hold time is just the sum of its DCs'. (Per-DC range is scaled down from
+  // the old per-route range so route-level totals stay the same rough order of magnitude — with
+  // ~5-7 DCs/route, summing N per-DC draws would otherwise inflate totals well past the old
+  // per-route single-draw numbers.)
+  schedulerRouteDcInfo(sp) {
     const st = this.state, d = st.data;
     const parent = d.plans.find(p => p.id === sp.parentPlanId);
     if (!parent) return null;
@@ -7194,13 +7424,35 @@ class NDCApp extends React.Component {
     const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
     const seed = sp.id;
     const htf = sp.htf || 0;
+    const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
+    const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
     const routeInfo = routes.map(r => {
       const dispatchMin = cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
-      const baseHold = hash(r.routeCode + seed + 'h') % 50;
-      const rawHold = Math.max(0, baseHold - 12); // floors ~24% of routes to exactly zero hold
-      const holdMin = Math.round(rawHold * (1 - 0.4 * htf)); // HTF=1 cuts hold time by 40%
-      return { route: r, dispatchMin, holdMin };
+      let routeHoldMin = 0;
+      const dcInfo = this.genDcRows(r).map((dc) => {
+        const isLocal = (hash(dc.code + seed) % 2) === 0;
+        const speed = isLocal ? localSpeed : nonLocalSpeed;
+        // breakdown_distance — reuses genDcRows' own per-DC distance (already the field Route
+        // Planner's Plan Details shows as "RT DIST (KM)"), so this stays consistent with what
+        // Route Planner already displays for the same DC rather than inventing a second number.
+        const breakdownDistKm = parseFloat(dc.dist) || 0;
+        const travelMin = speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2;
+        const landingMin = dispatchMin + travelMin;
+        // Per-DC hold draw — 0-14, floored below 4 (~33% of DCs land at exactly zero hold).
+        const baseHold = hash(dc.code + r.routeCode + seed + 'h') % 15;
+        const rawHold = Math.max(0, baseHold - 4);
+        const holdMin = Math.round(rawHold * (1 - 0.4 * htf)); // HTF=1 cuts hold time by 40%
+        routeHoldMin += holdMin;
+        return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), landingMin, holdMin };
+      });
+      return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin };
     });
+    return { parent, routes, cutoffMin, seed, htf, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash };
+  }
+  computeSchedulerMetricsFor(sp) {
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return null;
+    const { routes, cutoffMin, routeInfo, fmtTime } = info;
     const connectionStartMin = routeInfo.length ? Math.min.apply(null, routeInfo.map(x => x.dispatchMin)) : cutoffMin;
     const slotSet = {}; routeInfo.forEach(x => { slotSet[Math.round(x.dispatchMin / 30) * 30] = true; });
     const connectionSlots = Object.keys(slotSet).length;
@@ -7208,23 +7460,13 @@ class NDCApp extends React.Component {
     const holdingTotalHours = holdingTotalMin / 60;
     const lanesWithHold = routeInfo.filter(x => x.holdMin > 0).length;
     let onTimeVol = 0, totalVol = 0;
-    // Local Speed / Non-Local Speed (2026-07-30) — each DC is classified Local/Non-Local the same
-    // deterministic-hash way the existing DC×Route detail view already does (DCZN_V), so travel
-    // time now differs by DC rather than a single flat assumed speed.
-    const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
-    routeInfo.forEach(({ route, dispatchMin }) => {
-      this.genDcRows(route).forEach(dc => {
-        const isLocal = (hash(dc.code + seed) % 2) === 0;
-        const speed = isLocal ? localSpeed : nonLocalSpeed;
-        const distKm = parseFloat(dc.dist) || 0;
-        const travelMin = speed > 0 ? (distKm / speed) * 60 : distKm * 2;
-        const landingMin = dispatchMin + travelMin;
+    routeInfo.forEach(({ dcInfo }) => {
+      dcInfo.forEach(({ dc, landingMin }) => {
         totalVol += dc.vol;
         if (landingMin <= cutoffMin) onTimeVol += dc.vol;
       });
     });
     const d0LandingPct = totalVol > 0 ? (onTimeVol / totalVol * 100) : 0;
-    const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
     // 2026-07-31 — Slot Breakdown + Dock Utilisation. Groups every route into its 30-min dispatch
     // slot (same rounding used for connectionSlots) and counts how many routes/vehicles departed in
     // each slot against the SC's dock capacity. Dock Utilisation = total routes / (slots used × docks)
@@ -7247,6 +7489,133 @@ class NDCApp extends React.Component {
       lanesWithHold, totalLanes: routes.length,
       docksForUtil: docks, slotBreakdown, dockUtilPct: Math.round(dockUtilPct * 10) / 10,
       warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
+    };
+  }
+  // computeSchedulerDetailTables(sp) (2026-08-04) — Plan Details / Route View / Dock Schedule, the
+  // three tabs behind Route Scheduler's "view detail" (mirrors Route Planner's own Plan Details /
+  // Route View pair, per the DS Output template — see PROJECT files). Columns follow that template:
+  //   Plan Details (one row per LMDC): lm_location, lat/lng, design_volume, route_code, touch_point,
+  //     Zone (Local/Non-Local), vehicle_type, breakdown_distance, round_trip_distance, cutoff_time
+  //     (repeats per route — it's a dispatch-time property, not a per-DC one), breakdown_tat,
+  //     hold_time (genuinely varies per DC), landing_time.
+  //   Route View (one row per route): route_code, count_of_nodes, total_route_volume,
+  //     total_route_distance, route_vehicle_type, utilisation, vehicle_capacity, cutoff_time,
+  //     hold_time (sum across the route's DCs), round_trip_tat.
+  //   round_trip_tat is intentionally shown WITHOUT a computed value for now (per Vignesh: sum of
+  //     travel times + hold time + service time at each DC + the return leg — no computation yet,
+  //     just the column) — rendered as "—" rather than inventing a number.
+  //   Dock Schedule (one row per LMDC × its route's dock/slot): which dock a route departs from,
+  //     assigned sequentially from Dock-1 in dispatch order within each slot — vehicle-to-dock
+  //     assignment isn't DS-driven, so this is a simple round-robin, not modeled further.
+  computeSchedulerDetailTables(sp) {
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return { dcRows: [], routeRows: [], dockSchedule: { docks: [], cols: [], cells: {} } };
+    const { routeInfo, fmtTime } = info;
+    const d = this.state.data;
+    const dcRows = [];
+    routeInfo.forEach(({ route, dispatchMin, dcInfo }) => {
+      dcInfo.forEach(({ dc, isLocal, breakdownDistKm, breakdownTatHrs, landingMin, holdMin }, i) => {
+        dcRows.push({
+          lmdc: dc.code, designVol: dc.vol, lat: dc.lat, lng: dc.lng,
+          routeCode: route.routeCode, tp: dc.tpOrder, zone: isLocal ? 'Local' : 'Non-Local', vehType: route.veh,
+          breakdownDist: breakdownDistKm, roundTripDist: route.rtDist,
+          cutoffTime: fmtTime(dispatchMin), breakdownTat: breakdownTatHrs, holdTimeMin: holdMin, landingTime: fmtTime(Math.round(landingMin)),
+          isFirstInGroup: i === 0, isLastInGroup: i === dcInfo.length - 1,
+        });
+      });
+    });
+    const routeRows = routeInfo.map(({ route, dispatchMin, dcInfo, holdMin }) => {
+      const vehRecord = (d.VEH || []).find(v => v.name === route.veh) || {};
+      return {
+        routeCode: route.routeCode, tps: dcInfo.length, vol: route.volume, dist: route.rtDist,
+        veh: route.veh, util: Math.round((route.util || 0) * 100) + '%',
+        cap: vehRecord.cap ? Math.round(vehRecord.cap) : '\u2014',
+        cutoffTime: fmtTime(dispatchMin), holdTimeHrs: +(holdMin / 60).toFixed(1),
+      };
+    });
+    // Dock Schedule — sequential Dock-1, Dock-2… assignment, round-robin WITHIN each dispatch slot
+    // (so routes leaving at the same time never collide on one dock; the same dock is reused across
+    // different slots through the day). Hold time has no bearing here — it happens at destination.
+    const docks = Math.max(1, sp.rlhDocks || 1);
+    const bySlot = {};
+    routeInfo.forEach(({ route, dispatchMin }) => {
+      const slot = Math.round(dispatchMin / 30) * 30;
+      (bySlot[slot] = bySlot[slot] || []).push(route);
+    });
+    const cells = {};
+    const colSet = {};
+    Object.keys(bySlot).map(Number).sort((a, b) => a - b).forEach(slot => {
+      bySlot[slot].forEach((route, i) => {
+        const dockNum = (i % docks) + 1;
+        const key = dockNum + ':' + slot;
+        (cells[key] = cells[key] || []).push({ routeCode: route.routeCode, vehType: route.veh, vol: route.volume });
+        colSet[slot] = true;
+      });
+    });
+    const cols = Object.keys(colSet).map(Number).sort((a, b) => a - b).map(slot => ({ min: slot, label: fmtTime(slot) }));
+    const dockList = []; for (let i = 1; i <= docks; i++) dockList.push(i);
+    return { dcRows, routeRows, dockSchedule: { docks: dockList, cols, cells, fmtTime } };
+  }
+  // buildSchedDetailView(sp, tabStateKey) (2026-08-04) — render-ready wrapper around
+  // computeSchedulerDetailTables(), shared verbatim by Design Review's full detail overlay and
+  // Ops Alignment's own detail overlay so the two tab sets can never drift apart. tabStateKey is
+  // the this.state key each caller uses for its own active-tab selection (they're different
+  // screens, so they need separate state, same shape RLH's reviewDetailTab/... would use).
+  buildSchedDetailView(sp, tabStateKey) {
+    const st = this.state;
+    const tables = this.computeSchedulerDetailTables(sp);
+    const tab = st[tabStateKey] || 'details';
+    const dcRows = tables.dcRows.map(r => ({
+      lmdc: r.lmdc, designVol: r.designVol, lat: r.lat, lng: r.lng, routeCode: r.routeCode, tp: r.tp,
+      zone: r.zone, vehType: r.vehType, breakdownDist: r.breakdownDist + ' km', roundTripDist: r.roundTripDist + ' km',
+      cutoffTime: r.cutoffTime, breakdownTat: r.breakdownTat + ' h', holdTime: r.holdTimeMin + ' min', landingTime: r.landingTime,
+      isFirstInGroup: r.isFirstInGroup, isLastInGroup: r.isLastInGroup,
+    }));
+    const routeRows = tables.routeRows.map(r => ({
+      segment: r.routeCode, tps: r.tps, vol: r.vol, dist: r.dist + ' km', veh: r.veh, util: r.util, cap: r.cap,
+      cutoffTime: r.cutoffTime, holdTime: r.holdTimeHrs + ' h',
+    }));
+    // Dock Schedule — hour view aggregates the native 30-min slots into hourly buckets (multiple
+    // chips per cell if >1 route left that dock within the hour); slot view shows the raw 30-min
+    // grid the rest of the engine already works in.
+    const ds = tables.dockSchedule;
+    const granKey = tabStateKey + 'Gran';
+    const gran = st[granKey] || 'hour';
+    const step = gran === 'hour' ? 60 : 30;
+    const colSet = {};
+    ds.cols.forEach(c => { colSet[Math.floor(c.min / step) * step] = true; });
+    const dockCols = Object.keys(colSet).map(Number).sort((a, b) => a - b).map(min => ({ min, label: ds.fmtTime(min) }));
+    const dockCells = {};
+    ds.docks.forEach(dock => {
+      ds.cols.forEach(c => {
+        const items = ds.cells[dock + ':' + c.min] || [];
+        if (!items.length) return;
+        const bucket = Math.floor(c.min / step) * step;
+        const key = dock + ':' + bucket;
+        dockCells[key] = (dockCells[key] || []).concat(items);
+      });
+    });
+    const dockRows = ds.docks.map(dock => ({
+      dock, label: 'Dock ' + dock,
+      cells: dockCols.map(c => ({ items: dockCells[dock + ':' + c.min] || [] })),
+    }));
+    let totalDeparted = 0, busyLabel = '\u2014', busyN = 0;
+    const perCol = {};
+    ds.docks.forEach(dock => dockCols.forEach(c => {
+      const n = (dockCells[dock + ':' + c.min] || []).length;
+      totalDeparted += n; perCol[c.min] = (perCol[c.min] || 0) + n;
+    }));
+    dockCols.forEach(c => { if (perCol[c.min] > busyN) { busyN = perCol[c.min]; busyLabel = c.label; } });
+    return {
+      dcRows, hasDcRows: dcRows.length > 0,
+      routeRows, hasRouteRows: routeRows.length > 0,
+      dockCount: ds.docks.length, dockCols, dockRows, hasDockSchedule: ds.docks.length > 0 && dockCols.length > 0,
+      dockTotalDeparted: totalDeparted, dockBusyLabel: busyLabel,
+      granIsHour: gran === 'hour', onGranHour: () => this.setState({ [granKey]: 'hour' }), onGranSlot: () => this.setState({ [granKey]: 'slot' }),
+      sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule']].map(t => ({
+        label: t[1], active: tab === t[0], color: tab === t[0] ? '#0D7377' : '#5A5E66', weight: tab === t[0] ? '700' : '600',
+        onClick: () => this.setState({ [tabStateKey]: t[0] }) })),
+      secDetails: tab === 'details', secRoute: tab === 'route', secDock: tab === 'dock',
     };
   }
 
@@ -8346,6 +8715,16 @@ class NDCApp extends React.Component {
     const schedAlignRunCards = curSchedAlignSC ? schedRunsForScA(curSchedAlignCode).map(sp => this.buildSchedCard(sp, false)) : [];
     const schedAlignPlanCountLabel = schedAlignList.length + ' SC' + (schedAlignList.length === 1 ? '' : 's');
 
+    // Full-screen detail overlay for Ops Alignment (2026-08-04) — same shape as Design Review's
+    // reviewSchedDetail, opened via a run card's "view detail" icon in either persona view. Shared
+    // single overlay (not duplicated per persona) since it's read-only either way — rendered once
+    // near the other top-level modals (delConfirmOpen/runMapOpen), not inside isAlignPlanner/isAlignOps.
+    let schedAlignDetail = { open: false };
+    if (st.schedAlignDetailId) {
+      const dsp = allSchedPlansA.find(sp => sp.id === st.schedAlignDetailId);
+      if (dsp) schedAlignDetail = Object.assign({ open: true, close: () => this.setState({ schedAlignDetailId: null }) }, this.buildSchedCard(dsp, false), this.buildSchedDetailView(dsp, 'schedAlignDetailTab'));
+    }
+
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
       alignIsL1, alignIsL2,
       alignPage: alignPageSafe, alignTotalPages, alignShowPager,
@@ -8363,7 +8742,7 @@ class NDCApp extends React.Component {
       curSchedAlignSC, hasCurSchedAlignSC: !!curSchedAlignSC, curSchedAlignCode,
       curSchedAlignName: curSchedAlignSC ? curSchedAlignSC.name : '', curSchedAlignZone: curSchedAlignSC ? curSchedAlignSC.zone : '',
       curSchedAlignCoords: curSchedAlignSC ? (Number(curSchedAlignSC.lat).toFixed(4) + ', ' + Number(curSchedAlignSC.lng).toFixed(4)) : '\u2014',
-      schedAlignRunCards, hasSchedAlignRunCards: schedAlignRunCards.length > 0,
+      schedAlignRunCards, hasSchedAlignRunCards: schedAlignRunCards.length > 0, schedAlignDetail,
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -9688,7 +10067,7 @@ class NDCApp extends React.Component {
     let reviewSchedDetail = { open: false };
     if (st.reviewSchedDetailId) {
       const dsp = allSchedPlans.find(sp => sp.id === st.reviewSchedDetailId);
-      if (dsp) reviewSchedDetail = Object.assign({ open: true, close: () => this.setState({ reviewSchedDetailId: null }) }, this.buildSchedCard(dsp, true));
+      if (dsp) reviewSchedDetail = Object.assign({ open: true, close: () => this.setState({ reviewSchedDetailId: null }) }, this.buildSchedCard(dsp, true), this.buildSchedDetailView(dsp, 'reviewSchedDetailTab'));
     }
 
     const schedPushPlan = allSchedPlans.find(sp => sp.id === (st.schedPushPlanId || st.schedFinaliseDirectPlanId));

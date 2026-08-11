@@ -469,15 +469,8 @@ function View(B, self) {
 </div>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{scShown}</strong> of <strong style={css(`color:#14171F;`)}>{scTotal}</strong> SCs</span>
-<button onClick={onToggleScRlhCols} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid ${scShowRlhCols ? '#0D7377' : '#E6EBF2'}; background:${scShowRlhCols ? '#E9F5F5' : '#fff'}; color:${scShowRlhCols ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid ${scShowRlhCols ? '#0D7377' : '#E6EBF2'}; background:${scShowRlhCols ? '#E9F5F5' : '#fff'}; color:${scShowRlhCols ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={scShowRlhCols ? "M18 15l-6-6-6 6" : "M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{scShowRlhCols ? 'Hide' : 'Show'} RLH Parameters</button>
 <button onClick={addSc} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add SC</button>
 </div>
-{/* RLH Parameters are SC-level facts but only relevant when tuning RLH — collapsed by default so
-    the core table stays scannable across many SCs; toggled inline rather than a separate tab so
-    a single row's core + RLH data are still directly comparable side by side (2026-08-05). */}
-{(scShowRlhCols) ? (<>
-<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:13px; padding:8px 12px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px; font-size:11.5px; color:#0D7377;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Showing RLH-specific parameters (HTP, RLH Docks, Local/Non-Local TP &amp; Speed) alongside the core columns.</div>
-</>) : null}
 {/* 1.7 SC Master — full template columns; 1.8 freeze header via sticky; overflow-x:auto for wide table */}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 300px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
@@ -491,16 +484,24 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>VOL CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>SORT CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Latitude, Longitude"}>COORDINATES</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"NLH-specific \u2014 slated to move into its own NLH Master section later"}>NLH DOCKS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
-{(scShowRlhCols) ? (<>
+<div style={css(`padding:5px; display:flex; align-items:center; justify-content:center;`)}>
+<button onClick={onToggleScRlh} aria-label={scRlhOpen ? "Collapse RLH-specific columns" : "Expand RLH-specific columns"} title={scRlhOpen ? "Collapse RLH-specific columns" : "Expand RLH-specific columns"} style={css(`width:24px; height:24px; border-radius:50%; border:1px solid ${scRlhOpen ? '#0D7377' : '#C3C9D4'}; background:${scRlhOpen ? '#0D7377' : '#fff'}; color:${scRlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:${scRlhOpen ? '#fff' : '#0D7377'};`)} onMouseLeave={(e) => hoverOff(e, `width:24px; height:24px; border-radius:50%; border:1px solid ${scRlhOpen ? '#0D7377' : '#C3C9D4'}; background:${scRlhOpen ? '#0D7377' : '#fff'}; color:${scRlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`, `border-color:#0D7377; color:${scRlhOpen ? '#fff' : '#0D7377'};`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}>{(scRlhOpen) ? (<><path d={"M5 12h14"} strokeLinecap={"round"} /></>) : (<><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></>)}</svg></button>
+</div>
+{(scRlhOpen) ? (<>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Hourly Throughput — max shipments/hour this SC can process, feeds Route Scheduler's dispatch-cutoff calculation"}>HTP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>RLH DOCKS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>NON-LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
+</>) : null}
+<div style={css(`padding:5px; display:flex; align-items:center; justify-content:center;`)}>
+<button onClick={onToggleScNlh} aria-label={scNlhOpen ? "Collapse NLH-specific columns" : "Expand NLH-specific columns"} title={scNlhOpen ? "Collapse NLH-specific columns" : "Expand NLH-specific columns"} style={css(`width:24px; height:24px; border-radius:50%; border:1px solid ${scNlhOpen ? '#5A5E66' : '#C3C9D4'}; background:${scNlhOpen ? '#5A5E66' : '#fff'}; color:${scNlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:24px; height:24px; border-radius:50%; border:1px solid ${scNlhOpen ? '#5A5E66' : '#C3C9D4'}; background:${scNlhOpen ? '#5A5E66' : '#fff'}; color:${scNlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`, `border-color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}>{(scNlhOpen) ? (<><path d={"M5 12h14"} strokeLinecap={"round"} /></>) : (<><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></>)}</svg></button>
+</div>
+{(scNlhOpen) ? (<>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EDEFF3;`)} title={"NLH-specific \u2014 slated to move into its own NLH Master section later"}>NLH DOCKS</div>
 </>) : null}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px;`)} />
@@ -515,16 +516,20 @@ function View(B, self) {
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.coords}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.closeTime}</div>
-{(scShowRlhCols) ? (<>
+<div />
+{(scRlhOpen) ? (<>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.htp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.rlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.nonLocalTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.localSpeed}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.nonLocalSpeed}</div>
+</>) : null}
+<div />
+{(scNlhOpen) ? (<>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F4F5F7;`)}>{s.nlhDocks}</div>
 </>) : null}
 <div style={css(`padding:10px 10px;`)}>
 <button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.pocSummary}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -775,6 +780,81 @@ function View(B, self) {
 </div>
 </React.Fragment>))}
 </div>{/* /max-height Vehicle Master body */}
+</div>
+</>) : null}
+{(isLmdcMaster) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:13px;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={lmdcSearch} onInput={onLmdcSearch} placeholder={"Search LMDC or LMSC code…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:190px;`)} />
+</div>
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)}>
+{(lmdcZoneChips || []).map((z, __i41) => (<React.Fragment key={__i41}>
+<button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label}</button>
+</React.Fragment>))}
+</div>
+<div style={css(`flex:1;`)} />
+<span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{lmdcShown}</strong> of <strong style={css(`color:#14171F;`)}>{lmdcTotal}</strong> LMDCs</span>
+<input ref={lmdcFileInputRef} type={"file"} accept={".csv"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
+<button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
+<button onClick={triggerLmdcUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
+</div>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
+<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. Only Open/Close, D0 Cutoff, Max Vehicle Size and Unloading Time can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
+</div>
+<div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
+<div style={css(`flex:1; min-height:0; overflow:auto;`)}>
+<div style={css(`min-width:1280px;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 80px 80px 90px 160px 130px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMSC</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>CAPACITY</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LMSC ACTIVE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>OPEN</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>CLOSE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>D0 CUTOFF</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap; background:#DFF1F1;`)}>MAX VEHICLE SIZE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>UNLOADING TIME (MIN)</div>
+<div style={css(`padding:9px 10px;`)} />
+</div>
+{(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 80px 80px 90px 160px 130px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#5A5E66; white-space:nowrap;`)}>{l.lmscCode}</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
+<div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
+<div style={css(`padding:10px 10px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${l.active ? '#E7F4EC' : '#FBEAEA'}; color:${l.active ? '#128A3E' : '#D14B4B'}; white-space:nowrap;`)}>{l.statusLabel}</span></div>
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.open}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftOpen} onInput={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.close}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftClose} onInput={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.d0Cutoff}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftD0} onInput={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#F2FAFA;`)}>{l.maxVehicle}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.unloadMin}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"number"} min={"0"} value={l.draftUnload} onInput={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end;`)}><button onClick={l.onEdit} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; display:flex; gap:4px; justify-content:flex-end;`)}><button onClick={l.onSaveRow} title={"Save"} aria-label={"Save " + l.code} style={css(`width:28px; height:28px; border:none; background:#003F98; color:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={l.onCancelRow} title={"Cancel"} aria-label={"Cancel editing " + l.code} style={css(`width:28px; height:28px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button></div></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+</div>
+{(lmdcPager.showPager) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-top:1px solid #E6EBF2; background:#fff; flex-shrink:0;`)}>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{lmdcPager.rangeLabel}</span>
+<div style={css(`display:flex; align-items:center; gap:4px;`)}>
+<button onClick={lmdcPager.onPrev} aria-label={"Previous page"} style={css(`width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:1px solid #E6EBF2; border-radius:8px; background:#fff; color:#5A5E66; cursor:${lmdcPager.prevCursor}; opacity:${lmdcPager.prevOpacity};`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+{(lmdcPager.pageButtons || []).map((pb, __i44) => (<React.Fragment key={__i44}>
+{(pb.gap) ? (<><span style={css(`padding:0 6px; font-size:12px; color:#8E96A3;`)}>{pb.n}</span></>) : null}
+{(pb.notGap) ? (<><button onClick={pb.onClick} style={css(`min-width:28px; height:28px; padding:0 8px; border:none; background:transparent; color:${pb.color}; font-family:inherit; font-size:12.5px; font-weight:${pb.weight}; cursor:pointer;`)}>{pb.n}</button></>) : null}
+</React.Fragment>))}
+<button onClick={lmdcPager.onNext} aria-label={"Next page"} style={css(`width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:1px solid #E6EBF2; border-radius:8px; background:#fff; color:#5A5E66; cursor:${lmdcPager.nextCursor}; opacity:${lmdcPager.nextOpacity};`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+</div>
+</>) : null}
 </div>
 </>) : null}
 </>) : null}
@@ -4941,6 +5021,7 @@ class NDCApp extends React.Component {
       toast: null,
       inputsTab: 'volume',
       mastersTab: 'sc',
+      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '',
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5360,7 +5441,34 @@ class NDCApp extends React.Component {
         refPlanId: null, cutoffs: null,
       };
     });
-    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
+    // LMDC Master (2026-08-06) — one row per LMDC across every SC's dcCount, generated once here
+    // so it's a stable master independent of any RLH plan's own route generation (genDcRows()
+    // only ever exists inside a plan's routes, not as a standalone identity, so it can't serve as
+    // "every LMDC" on its own). Core fields (code, location, capacity, LMSC link status) are
+    // read-only and deterministic per code, same synthetic-but-consistent spirit as the rest of
+    // this prototype. The 5 editable fields get sensible defaults here; real edits live in
+    // st.lmdcEdits (session overlay, same pattern as SC Master's scEdits) or a CSV upload matched
+    // by LMDC Code — this array itself is never mutated.
+    const lmdcs = [];
+    scs.forEach(sc => {
+      const n = sc.dcCount || 0;
+      for (let i = 0; i < n; i++) {
+        const code = sc.cityCode + '-' + (100 + i);
+        let h = 0; for (let k = 0; k < code.length; k++) h = (h * 31 + code.charCodeAt(k)) >>> 0;
+        const capacity = (h % 100) < 3 ? 0 : 3000 + (h % 9000); // ~3% zero-capacity, matching AutoDML's old ratio
+        const active = (h % 100) >= 4; // ~4% inactive LMSC link, matching AutoDML's old ratio
+        const latJit = (((h >> 3) % 400) - 200) / 2000; // +/- 0.1deg jitter around the SC's own coords
+        const lngJit = (((h >> 9) % 400) - 200) / 2000;
+        const vehIdx = h % VEH.length;
+        lmdcs.push({
+          code, lmscCode: sc.code, zone: sc.zone,
+          lat: +(sc.lat + latJit).toFixed(4), lng: +(sc.lng + lngJit).toFixed(4),
+          capacity, active,
+          open: '06:00', close: '22:00', d0Cutoff: '09:00', maxVehicle: VEH[vehIdx].name, unloadMin: 10 + (h % 21),
+        });
+      }
+    });
+    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   showToast(msg, dot, undoFn) { clearTimeout(this._t); this.setState({ toast: { msg, dot: dot || '#2F4FC6', undo: undoFn || null } }); this._t = setTimeout(() => this.setState({ toast: null }), undoFn ? 5200 : 3500); }
@@ -5549,6 +5657,72 @@ class NDCApp extends React.Component {
     const sc = Object.assign({ code: code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, dcCount: 0, volume: num(f.volCap), hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0 }, patch, { lat: lat != null ? lat : 0, lng: lng != null ? lng : 0 });
     this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
     this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
+  }
+  // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
+  // fields into st.lmdcEdits, keyed by LMDC Code — never mutates d.lmdcs itself.
+  saveLmdcEdit(code) {
+    const st = this.state;
+    const f = st.lmdcEditDraft || {};
+    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
+    const edits = Object.assign({}, st.lmdcEdits || {});
+    edits[code] = Object.assign({}, edits[code], { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin) });
+    this.setState({ lmdcEdits: edits, lmdcEditCode: null, lmdcEditDraft: {} });
+    this.showToast(code + ' updated', '#128A3E');
+  }
+  // handleLmdcCsvUpload(e) (2026-08-06) — reads a CSV, matches rows by LMDC Code against the real
+  // master list, and applies ONLY the 5 editable fields present in that row into st.lmdcEdits.
+  // Non-matching codes are skipped and counted; core fields (location/capacity/status) in the
+  // uploaded file, if present, are ignored — this master is the source of truth for those, not
+  // the upload. This is the first real (non-stubbed) file-upload/parse flow in the app.
+  handleLmdcCsvUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result || '');
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
+        const splitCsvLine = (line) => {
+          const out = []; let cur = ''; let inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const c = line[i];
+            if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; }
+            else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; }
+          }
+          out.push(cur);
+          return out.map(s => s.trim());
+        };
+        const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
+        const idx = (name) => headers.indexOf(name);
+        const codeIdx = idx('lmdc code');
+        if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
+        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)');
+        const validCodes = {}; (this.state.data.lmdcs || []).forEach(l => { validCodes[l.code] = true; });
+        const edits = Object.assign({}, this.state.lmdcEdits || {});
+        let matched = 0, skipped = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const cols = splitCsvLine(lines[i]);
+          const code = (cols[codeIdx] || '').trim();
+          if (!code || !validCodes[code]) { skipped++; continue; }
+          const patch = {};
+          if (openIdx >= 0 && cols[openIdx]) patch.open = cols[openIdx];
+          if (closeIdx >= 0 && cols[closeIdx]) patch.close = cols[closeIdx];
+          if (d0Idx >= 0 && cols[d0Idx]) patch.d0Cutoff = cols[d0Idx];
+          if (vehIdx >= 0 && cols[vehIdx]) patch.maxVehicle = cols[vehIdx];
+          if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n)) patch.unloadMin = n; }
+          if (Object.keys(patch).length === 0) { skipped++; continue; }
+          edits[code] = Object.assign({}, edits[code], patch);
+          matched++;
+        }
+        this.setState({ lmdcEdits: edits });
+        this.showToast('LMDC Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : ''), matched > 0 ? '#128A3E' : '#C77B00');
+      } catch (err) {
+        this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
+      }
+    };
+    reader.readAsText(file);
   }
   submitAddVeh() {
     const st = this.state; const f = st.addVehForm || {};
@@ -5960,7 +6134,45 @@ class NDCApp extends React.Component {
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
         rowEdit: () => this.openScEdit(s.code), rowDelete: () => { const r = Object.assign({}, this.state.scRemoved || {}); r[s.code] = true; this.setState({ scRemoved: r }); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[s.code]; this.setState({ scRemoved: rr }); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
     });
-    // C13 — Vehicle Master derives from the canonical d.VEH fleet (unified source of truth).
+    // ===== LMDC Master (2026-08-06) =====================================================
+    // Search + zone filter + pagination over d.lmdcs (thousands of rows — generated once in
+    // buildSeed(), never regenerated here). Edits overlay (st.lmdcEdits, keyed by LMDC Code)
+    // applies on top, same pattern as SC Master's scEdits. Inline row-edit (not a modal) for the
+    // 5 editable fields, mirroring Vehicle Master's own inline edit/save/cancel pattern.
+    const lmdcEdits = st.lmdcEdits || {};
+    const lq = (st.lmdcSearch || '').toLowerCase();
+    const lz = st.lmdcZone || 'All';
+    const lmdcFiltered = (d.lmdcs || []).filter(l => (lz === 'All' || l.zone === lz) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || l.lmscCode.toLowerCase().indexOf(lq) >= 0));
+    const lmdcZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === lz, bg: z === lz ? '#003F98' : '#fff', fg: z === lz ? '#fff' : '#5A5E66', bd: z === lz ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ lmdcZone: z, pgLmdc: 1 }) }));
+    const lmdcPager = this.pager(lmdcFiltered, st.pgLmdc, 'pgLmdc');
+    const lmdcEditCode = st.lmdcEditCode;
+    const lmdcDraft = st.lmdcEditDraft || {};
+    const ldSet = (k) => (e) => { const v = e && e.target ? e.target.value : e; this.setState({ lmdcEditDraft: Object.assign({}, this.state.lmdcEditDraft, { [k]: v }) }); };
+    const lmdcRows = lmdcPager.pageRows.map(l0 => {
+      const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
+      const editing = lmdcEditCode === l.code;
+      return {
+        code: l.code, lmscCode: l.lmscCode, coords: l.lat.toFixed(4) + ', ' + l.lng.toFixed(4),
+        capacity: l.capacity > 0 ? fmtInt(l.capacity) : '0', zeroCap: l.capacity === 0,
+        active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
+        open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
+        editing, notEditing: !editing,
+        draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
+        onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin) } }),
+        onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
+        onSaveRow: () => this.saveLmdcEdit(l.code),
+      };
+    });
+    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min)';
+    const downloadLmdcCsv = () => {
+      const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+      const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
+        return [l.code, l.lmscCode, l.capacity, l.active ? 'Active' : 'Inactive', l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
+      this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
+      this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
+    };
+    const lmdcVehNames = (d.VEH || []).map(v => v.name);
     // vehEdits / vehRemoved / addedVehTypes are applied over the same base so Master edits
     // flow through to Design Creation automatically.
     const vehRemoved = st.vehRemoved || {};
@@ -6172,10 +6384,11 @@ class NDCApp extends React.Component {
       autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
       zoneChips, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
-      scShowRlhCols: !!st.scShowRlhCols, onToggleScRlhCols: () => this.setState({ scShowRlhCols: !st.scShowRlhCols }),
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 80px 68px 68px' + (st.scShowRlhCols ? ' 70px 70px 60px 80px 68px 76px' : '') + ' 140px 80px',
-      isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail',
-      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.']].map(t => ({ label: t[1] + ' (' + t[2] + ')', tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
+      scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
+      scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 70px 60px 80px 68px 76px' : '') + ' 40px' + (st.scNlhOpen ? ' 80px' : '') + ' 140px 80px',
+      isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
+      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.'], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Every LMDC across the network, one row per DC — location/capacity/status from AutoDML & Node Inputs; a few operating parameters editable here.']].map(t => ({ label: t[1] + ' (' + t[2] + ')', tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
       scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
       addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
       addVehOpen: !!st.addVehOpen,
@@ -6189,6 +6402,12 @@ class NDCApp extends React.Component {
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
       scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'Hourly Throughput (HTP)' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneChips,
+      lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
+      lmdcVehNames, downloadLmdcCsv,
+      triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
+      lmdcFileInputRef: (el) => { this.lmdcFileInputEl = el; },
+      onLmdcFileChange: (e) => this.handleLmdcCsvUpload(e),
       changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
       ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),

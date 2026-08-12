@@ -803,6 +803,18 @@ function View(B, self) {
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
 <span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. Only Open/Close, D0 Cutoff, Max Vehicle Size and Unloading Time can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
 </div>
+{(hasLmdcUploadErrors) ? (<>
+<div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{lmdcUploadErrors.length} row{lmdcUploadErrors.length === 1 ? '' : 's'} flagged — nothing from these rows was applied</span></div>
+<button onClick={closeLmdcUploadErrors} aria-label={"Dismiss"} style={css(`width:24px; height:24px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
+{(lmdcUploadErrors || []).slice(0, 20).map((er, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
+{(lmdcUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {lmdcUploadErrors.length - 20} more</div></>) : null}
+</div>
+</div>
+</>) : null}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
 <div style={css(`min-width:1280px;`)}>
@@ -822,20 +834,20 @@ function View(B, self) {
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
 <div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 80px 80px 90px 160px 130px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#5A5E66; white-space:nowrap;`)}>{l.lmscCode}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:${l.pending ? '#8E96A3' : '#5A5E66'}; font-style:${l.pending ? 'italic' : 'normal'}; white-space:nowrap;`)}>{l.lmscCode}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
 <div style={css(`padding:10px 10px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${l.active ? '#E7F4EC' : '#FBEAEA'}; color:${l.active ? '#128A3E' : '#D14B4B'}; white-space:nowrap;`)}>{l.statusLabel}</span></div>
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.open}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftOpen} onInput={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.close}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftClose} onInput={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.d0Cutoff}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"time"} value={l.draftD0} onInput={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftClose} onChange={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i46) => (<React.Fragment key={__i46}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA; color:${l.d0Cutoff === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.d0Cutoff === 'Default' ? 'italic' : 'normal'};`)}>{l.d0Cutoff}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftD0} onChange={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcD0Options || []).map((d0, __i47) => (<React.Fragment key={__i47}><option value={d0}>{d0}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#F2FAFA;`)}>{l.maxVehicle}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.unloadMin}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><input type={"number"} min={"0"} value={l.draftUnload} onInput={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end;`)}><button onClick={l.onEdit} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; display:flex; gap:4px; justify-content:flex-end;`)}><button onClick={l.onSaveRow} title={"Save"} aria-label={"Save " + l.code} style={css(`width:28px; height:28px; border:none; background:#003F98; color:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={l.onCancelRow} title={"Cancel"} aria-label={"Cancel editing " + l.code} style={css(`width:28px; height:28px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button></div></>) : null}
 </div>
@@ -1984,28 +1996,49 @@ function View(B, self) {
 <div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:${step4Blocked ? '#FBEAEA' : '#EAF0FB'}; border:1px solid ${step4Blocked ? '#F0C6C6' : '#C5D4F0'}; border-radius:8px; margin-bottom:16px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={step4Blocked ? '#D14B4B' : '#1E6FB8'} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12.5px; color:#14171F;`)}>NLH Landing Plan: <strong>{step4NlhLabel}</strong></span>
-{(step4ErrorCount > 0) ? (<><span style={css(`font-size:12px; font-weight:700; color:#D14B4B;`)}>· {step4ErrorCount} SC{step4ErrorCount === 1 ? '' : 's'} blocked</span></>) : null}
+{(step4ErrorCount > 0) ? (<><span style={css(`font-size:12px; font-weight:700; color:#D14B4B;`)}>· {step4ErrorCount} plan{step4ErrorCount === 1 ? '' : 's'} blocked</span></>) : null}
 {(step4WarningCount > 0) ? (<><span style={css(`font-size:12px; font-weight:700; color:#C77B00;`)}>· {step4WarningCount} volume warning{step4WarningCount === 1 ? '' : 's'}</span></>) : null}
 {(step4ErrorCount === 0 && step4WarningCount === 0) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>· clean — ready to trigger</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.6fr 0.8fr 0.8fr 2fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['SC', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:28px 1.1fr 0.5fr 0.5fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['', 'SC / Plan', 'HW', 'HTF', 'D0 Cutoff', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.6fr 0.8fr 0.8fr 2fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
-<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
+<div style={css(`display:grid; grid-template-columns:28px 1.1fr 0.5fr 0.5fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
+<button onClick={r.onToggleExpand} aria-label={r.expanded ? 'Collapse DC list' : 'Expand DC list'} title={r.expanded ? 'Collapse DC list' : 'Expand DC list'} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={r.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone} · {r.planId}</div></div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.htf}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
+<div style={css(`display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dcTotal}</span>
+{(r.hasCustomized) ? (<><span style={css(`display:inline-flex; padding:1px 7px; border-radius:999px; font-size:9.5px; font-weight:700; background:#E9F5F5; color:#0D7377; white-space:nowrap;`)}>{r.customizedCount} customized</span></>) : null}
+</div>
 <div style={css(`display:flex; flex-direction:column; gap:4px;`)}>
 {(r.flags && r.flags.length > 0) ? (r.flags.map((f, __i56) => (<React.Fragment key={__i56}><div style={css(`display:flex; align-items:flex-start; gap:5px; font-size:11px; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'};`)}><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:${f.sev === 'error' ? '#FBEAEA' : '#FBF1DF'}; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'}; flex-shrink:0; margin-top:1px;`)}>{f.sev === 'error' ? 'ERROR' : 'WARNING'}</span><span>{f.text}</span></div></React.Fragment>))) : (<><span style={css(`font-size:11px; color:#128A3E;`)}>Clean</span></>)}
 </div>
 </div>
+{(r.hasDcRows) ? (<>
+<div style={css(`padding:0 12px 12px 50px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; padding:10px 0 6px;`)}>DCs IN THIS PLAN — READ ONLY, MATCHED AGAINST LMDC MASTER</div>
+<div style={css(`max-height:220px; overflow-y:auto; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
+{(r.planDcRows || []).map((dc, __i57) => (<React.Fragment key={__i57}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 11px; border-top:1px solid #F4F5F8;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; min-width:0;`)}>
+<span style={css(`font-size:11.5px; font-weight:600; color:#003F98; white-space:nowrap;`)}>{dc.code}</span>
+<span style={css(`font-size:10.5px; color:#8E96A3; white-space:nowrap;`)}>{dc.routeCode}</span>
+</div>
+{(dc.customized) ? (<><span style={css(`font-size:10.5px; color:#0D7377; text-align:right;`)} title={dc.overriddenSummary}>Customized \u00b7 {dc.overriddenSummary}</span></>) : (<><span style={css(`font-size:10.5px; color:#8E96A3;`)}>Default</span></>)}
+</div>
 </React.Fragment>))}
 </div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:10px;`)}>Triggering creates {previewRows.length} separate Route Scheduler run{previewRows.length === 1 ? '' : 's'} (one per SC), landing in Run Queue.</div>
+</div>
+</>) : null}
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:10px;`)}>Triggering creates {previewRows.length} separate Route Scheduler run{previewRows.length === 1 ? '' : 's'} (one per selected plan), landing in Run Queue.</div>
 </>) : null}
 </div>
 {/* ===== NAV FOOTER ===== */}
@@ -5021,7 +5054,7 @@ class NDCApp extends React.Component {
       toast: null,
       inputsTab: 'volume',
       mastersTab: 'sc',
-      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '',
+      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '', lmdcUploadErrors: [],
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5164,6 +5197,49 @@ class NDCApp extends React.Component {
       if (ci % cityArr.length === 0) zi++;
     }
 
+    // ===== Canonical DC pool (2026-08-08) ==================================================
+    // One shared pool of DC identities per SC, seeded HERE — before plans/routes exist — so every
+    // downstream consumer (AutoDML, Node Additions, LMDC Master, Route Planner's own route
+    // generation, Route Scheduler) references the SAME DC codes. Previously routes drew
+    // independent random codes (cityCode + random 3-digit, no hyphen) while AutoDML/LMDC Master
+    // used a different numbering entirely — the two could never actually refer to the same DC, so
+    // a per-DC match (e.g. Route Scheduler's LMDC-level D0 Cutoff override) could never fire for
+    // real. Code format matches AutoDML's own long-standing native scheme (cityCode + '-' + N).
+    const dcPoolBySC = {};
+    scs.forEach(sc => {
+      const pool = [];
+      for (let i = 0; i < (sc.dcCount || 0); i++) {
+        const code = sc.cityCode + '-' + (300 + i);
+        let h = 0; for (let k = 0; k < code.length; k++) h = (h * 31 + code.charCodeAt(k)) >>> 0;
+        const latJit = (((h >> 3) % 400) - 200) / 2000; // +/- 0.1deg jitter around the SC's own coords
+        const lngJit = (((h >> 9) % 400) - 200) / 2000;
+        pool.push({ code, scCode: sc.code, zone: sc.zone, lat: +(sc.lat + latJit).toFixed(4), lng: +(sc.lng + lngJit).toFixed(4), capacity: 3000 + (h % 9000), linkStatus: 'active', secondSc: null });
+      }
+      dcPoolBySC[sc.code] = pool;
+    });
+    // Exactly 14 inactive-link / 6 zero-capacity / 9 multi-mapped — the same fixed counts Node
+    // Inputs' AutoDML tab has always shown — now flagged onto real pool DCs (autodmlDetails below
+    // becomes a genuine filtered view of this pool) instead of disconnected hand-authored strings.
+    scs.slice(0, 14).forEach(sc => { const p = dcPoolBySC[sc.code]; if (p && p[0]) p[0].linkStatus = 'inactive'; });
+    scs.slice(6, 12).forEach(sc => { const p = dcPoolBySC[sc.code]; if (p && p[1]) { p[1].linkStatus = 'zerocap'; p[1].capacity = 0; } });
+    scs.slice(2, 11).forEach((sc, i) => { const p = dcPoolBySC[sc.code]; if (p && p[2]) { p[2].linkStatus = 'multi'; p[2].secondSc = scs[(i + 25) % scs.length].code; } });
+    // Deterministic per-SC shuffle (Fisher-Yates on the SAME seeded R() stream) + a running pointer,
+    // so route generation below draws a genuine, non-repeating SUBSET of each SC's real pool instead
+    // of inventing new codes — "Route Planner may use all of a SC's DCs or a subset" (2026-08-07).
+    const dcPoolQueueBySC = {};
+    Object.keys(dcPoolBySC).forEach(code => {
+      const arr = dcPoolBySC[code].slice();
+      for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
+      dcPoolQueueBySC[code] = { arr, ptr: 0 };
+    });
+    const nextPoolDcCode = (sc) => {
+      const q = dcPoolQueueBySC[sc.code];
+      if (!q || !q.arr.length) return sc.cityCode + '-' + ri(300, 999); // fallback; shouldn't normally happen
+      if (q.ptr >= q.arr.length) q.ptr = 0; // wrap if a plan needs more DC-slots than the pool has
+      const dc = q.arr[q.ptr]; q.ptr++;
+      return dc.code;
+    };
+
     const HW = [0, 0.5, 1];
     const runs = [];
     // §9 — a run is ONE triggered DS job for ONE SC. HW is just a parameter on the run, not the
@@ -5257,7 +5333,7 @@ class NDCApp extends React.Component {
         const veh = pick([VEH[0], VEH[1], VEH[1], VEH[2], VEH[2], VEH[3]]);
         const tp = ri(2, veh.tp + (R() < 0.16 ? 1 : 0));
         const dcs = [];
-        for (let k = 0; k < tp; k++) dcs.push(sc.cityCode + ri(101, 989));
+        for (let k = 0; k < tp; k++) dcs.push(nextPoolDcCode(sc));
         let ops = 'Pending', planner = null, fb = null, proposedBy = null;
         if (status !== 'Pushed') {
           const r = R();
@@ -5327,17 +5403,20 @@ class NDCApp extends React.Component {
       if (fr.dcs && fr.dcs.length) { fr.fb.dcCells = {}; fr.fb.dcCells[fr.dcs[0]] = { tp: '2' }; if (fr.dcs.length > 1) fr.fb.dcCells[fr.dcs[1]] = { lat: (fr.oLat + 0.02).toFixed(4), lng: (fr.oLng - 0.01).toFixed(4) }; fr.fb.dcCount = Object.keys(fr.fb.dcCells).length; }
     }
 
-    const autodml = [
-      { key: 'inactive', label: 'Link active but node is inactive', count: 14, sev: 'warning' },
-      { key: 'zerocap', label: 'Link active but LMDC has zero capacity', count: 6, sev: 'danger' },
-      { key: 'multi', label: 'LMDC mapped to more than one SC', count: 9, sev: 'warning' },
-    ];
-    const dcCode = (sc, i) => sc.cityCode + '-' + (300 + i);
+    // AutoDML (2026-08-08) — now a genuine FILTERED VIEW of the canonical pool's linkStatus flags,
+    // not a disconnected hand-authored list. Node Inputs' AutoDML tab still shows only these
+    // warning cases (unchanged UX); LMDC Master shows the full pool including everything healthy.
+    const allPoolDcs = []; Object.keys(dcPoolBySC).forEach(code => { dcPoolBySC[code].forEach(dc => allPoolDcs.push(dc)); });
     const autodmlDetails = {
-      inactive: scs.slice(0, 14).map((sc, i) => ({ link: sc.code + ' \u2192 ' + dcCode(sc, i), detail: 'LMDC node flagged inactive in AutoDML', zone: sc.zone })),
-      zerocap: scs.slice(6, 12).map((sc, i) => ({ link: sc.code + ' \u2192 ' + dcCode(sc, i + 20), detail: 'LMDC sort / handling capacity = 0', zone: sc.zone })),
-      multi: scs.slice(2, 11).map((sc, i) => ({ link: dcCode(sc, i + 40) + ' \u2194 ' + sc.code + ' + ' + scs[(i + 25) % scs.length].code, detail: 'DC mapped to two SCs', zone: sc.zone })),
+      inactive: allPoolDcs.filter(dc => dc.linkStatus === 'inactive').map(dc => ({ link: dc.scCode + ' \u2192 ' + dc.code, detail: 'LMDC node flagged inactive in AutoDML', zone: dc.zone })),
+      zerocap: allPoolDcs.filter(dc => dc.linkStatus === 'zerocap').map(dc => ({ link: dc.scCode + ' \u2192 ' + dc.code, detail: 'LMDC sort / handling capacity = 0', zone: dc.zone })),
+      multi: allPoolDcs.filter(dc => dc.linkStatus === 'multi').map(dc => ({ link: dc.code + ' \u2194 ' + dc.scCode + ' + ' + dc.secondSc, detail: 'DC mapped to two SCs', zone: dc.zone })),
     };
+    const autodml = [
+      { key: 'inactive', label: 'Link active but node is inactive', count: autodmlDetails.inactive.length, sev: 'warning' },
+      { key: 'zerocap', label: 'Link active but LMDC has zero capacity', count: autodmlDetails.zerocap.length, sev: 'danger' },
+      { key: 'multi', label: 'LMDC mapped to more than one SC', count: autodmlDetails.multi.length, sev: 'warning' },
+    ];
     const volumeFiles = [
       { name: 'July 2026 \u00b7 30L Base', type: 'LMDC Landing', rows: 11432, vol: 3010000, date: '10 Jul \u00b7 09:12', by: 'Pranita Sapkal', validated: true, errorCount: 0, active: true },
       { name: 'July 2026 \u00b7 Sale Peak', type: 'LMDC Landing', rows: 11480, vol: 3520000, date: '10 Jul \u00b7 09:40', by: 'Pranita Sapkal', validated: true, errorCount: 0 },
@@ -5441,32 +5520,31 @@ class NDCApp extends React.Component {
         refPlanId: null, cutoffs: null,
       };
     });
-    // LMDC Master (2026-08-06) — one row per LMDC across every SC's dcCount, generated once here
-    // so it's a stable master independent of any RLH plan's own route generation (genDcRows()
-    // only ever exists inside a plan's routes, not as a standalone identity, so it can't serve as
-    // "every LMDC" on its own). Core fields (code, location, capacity, LMSC link status) are
-    // read-only and deterministic per code, same synthetic-but-consistent spirit as the rest of
-    // this prototype. The 5 editable fields get sensible defaults here; real edits live in
-    // st.lmdcEdits (session overlay, same pattern as SC Master's scEdits) or a CSV upload matched
-    // by LMDC Code — this array itself is never mutated.
-    const lmdcs = [];
-    scs.forEach(sc => {
-      const n = sc.dcCount || 0;
-      for (let i = 0; i < n; i++) {
-        const code = sc.cityCode + '-' + (100 + i);
-        let h = 0; for (let k = 0; k < code.length; k++) h = (h * 31 + code.charCodeAt(k)) >>> 0;
-        const capacity = (h % 100) < 3 ? 0 : 3000 + (h % 9000); // ~3% zero-capacity, matching AutoDML's old ratio
-        const active = (h % 100) >= 4; // ~4% inactive LMSC link, matching AutoDML's old ratio
-        const latJit = (((h >> 3) % 400) - 200) / 2000; // +/- 0.1deg jitter around the SC's own coords
-        const lngJit = (((h >> 9) % 400) - 200) / 2000;
-        const vehIdx = h % VEH.length;
-        lmdcs.push({
-          code, lmscCode: sc.code, zone: sc.zone,
-          lat: +(sc.lat + latJit).toFixed(4), lng: +(sc.lng + lngJit).toFixed(4),
-          capacity, active,
-          open: '06:00', close: '22:00', d0Cutoff: '09:00', maxVehicle: VEH[vehIdx].name, unloadMin: 10 + (h % 21),
-        });
-      }
+    // LMDC Master (2026-08-08) — the canonical DC pool (every active/inactive/zerocap/multi node
+    // AutoDML carries) plus mapped Node Additions, generated once here. Node-level property, has
+    // nothing to do with which SC a DC is mapped to (2026-08-07) — so unlike the identity-fix this
+    // replaces, there's no need to derive codes from existing routes: routes now draw FROM this
+    // same pool (see nextPoolDcCode() above), so the two were never at risk of disagreeing in the
+    // first place. Closures and Migrations are deliberately excluded — a Closure's DC won't be
+    // scheduled again, and a Migration only changes which LMSC a DC reports to, not the DC's own
+    // physical parameters, so there's nothing for this master to do differently for it. Unmapped
+    // Additions (no SC assigned yet) still appear here — read-only lmscCode "Pending" — but are
+    // NOT part of any SC's route-generation pool until they're actually mapped (Node Mapping's own
+    // future scope, not this build). Core fields (location, capacity, LMSC Active Status) are
+    // read-only. The 5 editable fields default uniformly; real edits live in st.lmdcEdits (session
+    // overlay, same pattern as SC Master's scEdits) or a CSV upload matched by LMDC Code.
+    const rlhFeasibleVeh = VEH.filter(v => (v.feas || []).indexOf('RLH') >= 0);
+    const defaultRlhVehName = (rlhFeasibleVeh.slice().sort((a, b) => b.cap - a.cap)[0] || VEH[0]).name;
+    const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15 };
+    const lmdcs = allPoolDcs.map(dc => Object.assign({
+      code: dc.code, lmscCode: dc.scCode, zone: dc.zone, lat: dc.lat, lng: dc.lng,
+      capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
+    }, lmdcDefaults));
+    nodeAdditions.filter(a => a.mapped && a.sc).forEach(a => {
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false }, lmdcDefaults));
+    });
+    nodeAdditions.filter(a => !a.mapped || !a.sc).forEach(a => {
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true }, lmdcDefaults));
     });
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
@@ -5700,24 +5778,35 @@ class NDCApp extends React.Component {
         if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
         const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)');
         const validCodes = {}; (this.state.data.lmdcs || []).forEach(l => { validCodes[l.code] = true; });
+        // 2026-08-07 — all 4 editable fields are fixed dropdown option sets in the UI now, not free
+        // text/number. An uploaded value that doesn't match one of those options flags the WHOLE
+        // row (nothing from it is applied) rather than silently snapping or partially applying —
+        // same "flag it" convention the volume-file uploader already uses for its error rows.
+        const TIME_SET = {}; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) TIME_SET[String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0')] = true;
+        const D0_SET = { 'Default': true, '09:00': true, '09:30': true, '10:00': true, '10:30': true, '11:00': true, '11:30': true, '12:00': true };
+        const UNLOAD_SET = {}; for (let m = 15; m <= 60; m += 5) UNLOAD_SET[m] = true;
+        const VEH_SET = {}; (((this.state.data || {}).VEH || [])).filter(v => (v.feas || []).indexOf('RLH') >= 0).forEach(v => { VEH_SET[v.name] = true; });
         const edits = Object.assign({}, this.state.lmdcEdits || {});
+        const errorRows = [];
         let matched = 0, skipped = 0;
         for (let i = 1; i < lines.length; i++) {
           const cols = splitCsvLine(lines[i]);
           const code = (cols[codeIdx] || '').trim();
           if (!code || !validCodes[code]) { skipped++; continue; }
           const patch = {};
-          if (openIdx >= 0 && cols[openIdx]) patch.open = cols[openIdx];
-          if (closeIdx >= 0 && cols[closeIdx]) patch.close = cols[closeIdx];
-          if (d0Idx >= 0 && cols[d0Idx]) patch.d0Cutoff = cols[d0Idx];
-          if (vehIdx >= 0 && cols[vehIdx]) patch.maxVehicle = cols[vehIdx];
-          if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n)) patch.unloadMin = n; }
+          const rowErrs = [];
+          if (openIdx >= 0 && cols[openIdx]) { if (TIME_SET[cols[openIdx]]) patch.open = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not a 30-min slot'); }
+          if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_SET[cols[closeIdx]]) patch.close = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not a 30-min slot'); }
+          if (d0Idx >= 0 && cols[d0Idx]) { if (D0_SET[cols[d0Idx]]) patch.d0Cutoff = cols[d0Idx]; else rowErrs.push('D0 Cutoff "' + cols[d0Idx] + '" is not "Default" or 09:00\u201312:00 in 30-min steps'); }
+          if (vehIdx >= 0 && cols[vehIdx]) { if (VEH_SET[cols[vehIdx]]) patch.maxVehicle = cols[vehIdx]; else rowErrs.push('Max Vehicle Size "' + cols[vehIdx] + '" is not an RLH-feasible vehicle type'); }
+          if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not 15\u201360 in steps of 5'); }
+          if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(patch).length === 0) { skipped++; continue; }
           edits[code] = Object.assign({}, edits[code], patch);
           matched++;
         }
-        this.setState({ lmdcEdits: edits });
-        this.showToast('LMDC Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : ''), matched > 0 ? '#128A3E' : '#C77B00');
+        this.setState({ lmdcEdits: edits, lmdcUploadErrors: errorRows });
+        this.showToast('LMDC Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : '') + (errorRows.length ? ', ' + errorRows.length + ' flagged' : ''), errorRows.length ? '#C77B00' : (matched > 0 ? '#128A3E' : '#C77B00'));
       } catch (err) {
         this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
       }
@@ -6134,15 +6223,26 @@ class NDCApp extends React.Component {
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
         rowEdit: () => this.openScEdit(s.code), rowDelete: () => { const r = Object.assign({}, this.state.scRemoved || {}); r[s.code] = true; this.setState({ scRemoved: r }); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[s.code]; this.setState({ scRemoved: rr }); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
     });
-    // ===== LMDC Master (2026-08-06) =====================================================
+    // ===== LMDC Master (2026-08-06, fixed dropdowns 2026-08-07) =========================
     // Search + zone filter + pagination over d.lmdcs (thousands of rows — generated once in
     // buildSeed(), never regenerated here). Edits overlay (st.lmdcEdits, keyed by LMDC Code)
     // applies on top, same pattern as SC Master's scEdits. Inline row-edit (not a modal) for the
-    // 5 editable fields, mirroring Vehicle Master's own inline edit/save/cancel pattern.
+    // 5 editable fields, mirroring Vehicle Master's own inline edit/save/cancel pattern. All 4
+    // editable dropdown-backed fields now use FIXED option sets, not free text/number input:
+    //   Open/Close   — 30-min grid, 00:00..23:30 (48 options), default 05:00 / 21:00.
+    //   D0 Cutoff    — 'Default' (defer to the SC-level value set in Route Scheduler's own
+    //                  Operating Mode) or one of the same 7 values Route Scheduler itself offers
+    //                  (09:00..12:00 in 30-min steps) — see rule 5 in schedulerRouteDcInfo().
+    //   Max Vehicle  — RLH-feasible Vehicle Master types only, default = largest by capacity.
+    //   Unload Time  — 15..60 in 5-min steps, default 15.
+    const LMDC_TIME_SLOTS = []; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) LMDC_TIME_SLOTS.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+    const LMDC_D0_OPTIONS = ['Default', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00'];
+    const LMDC_UNLOAD_OPTIONS = []; for (let m = 15; m <= 60; m += 5) LMDC_UNLOAD_OPTIONS.push(m);
+    const rlhFeasibleVehNames = (d.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0).map(v => v.name);
     const lmdcEdits = st.lmdcEdits || {};
     const lq = (st.lmdcSearch || '').toLowerCase();
     const lz = st.lmdcZone || 'All';
-    const lmdcFiltered = (d.lmdcs || []).filter(l => (lz === 'All' || l.zone === lz) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || l.lmscCode.toLowerCase().indexOf(lq) >= 0));
+    const lmdcFiltered = (d.lmdcs || []).filter(l => (lz === 'All' || l.zone === lz) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || (l.lmscCode || '').toLowerCase().indexOf(lq) >= 0));
     const lmdcZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === lz, bg: z === lz ? '#003F98' : '#fff', fg: z === lz ? '#fff' : '#5A5E66', bd: z === lz ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ lmdcZone: z, pgLmdc: 1 }) }));
     const lmdcPager = this.pager(lmdcFiltered, st.pgLmdc, 'pgLmdc');
     const lmdcEditCode = st.lmdcEditCode;
@@ -6152,7 +6252,7 @@ class NDCApp extends React.Component {
       const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
       const editing = lmdcEditCode === l.code;
       return {
-        code: l.code, lmscCode: l.lmscCode, coords: l.lat.toFixed(4) + ', ' + l.lng.toFixed(4),
+        code: l.code, lmscCode: l.lmscCode || 'Pending', pending: !!l.pending, coords: (l.lat || l.lng) ? (l.lat.toFixed(4) + ', ' + l.lng.toFixed(4)) : '\u2014',
         capacity: l.capacity > 0 ? fmtInt(l.capacity) : '0', zeroCap: l.capacity === 0,
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
         open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
@@ -6168,11 +6268,13 @@ class NDCApp extends React.Component {
     const downloadLmdcCsv = () => {
       const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
-        return [l.code, l.lmscCode, l.capacity, l.active ? 'Active' : 'Inactive', l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
+        return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive', l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
-    const lmdcVehNames = (d.VEH || []).map(v => v.name);
+    const lmdcVehNames = rlhFeasibleVehNames;
+    const lmdcUploadErrors = st.lmdcUploadErrors || [];
+    const closeLmdcUploadErrors = () => this.setState({ lmdcUploadErrors: [] });
     // vehEdits / vehRemoved / addedVehTypes are applied over the same base so Master edits
     // flow through to Design Creation automatically.
     const vehRemoved = st.vehRemoved || {};
@@ -6404,7 +6506,8 @@ class NDCApp extends React.Component {
       scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'Hourly Throughput (HTP)' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneChips,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
-      lmdcVehNames, downloadLmdcCsv,
+      lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
+      lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
       lmdcFileInputRef: (el) => { this.lmdcFileInputEl = el; },
       onLmdcFileChange: (e) => this.handleLmdcCsvUpload(e),
@@ -7559,14 +7662,21 @@ class NDCApp extends React.Component {
     const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.htfOverridden || r.d0Overridden || r.docksOverridden).length;
     const canNextScheduler3 = !anyRefMissing;
 
-    // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30):
+    // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30), unchanged:
     // #1 (Blocking) — every selected SC must have landing data in the chosen NLH file.
-    // #2 (Warning)  — NLH landing volume vs. the RLH plan's SC volume can't vary by >5%. =====
-    const previewRows = opModeRows.map(r => {
-      const sc = d.scs.find(s => s.code === r.code);
+    // #2 (Warning)  — NLH landing volume vs. the RLH plan's SC volume can't vary by >5%.
+    // 2026-08-08 — rows are now per selected PLAN, not deduped per SC: if two plans of the same SC
+    // were both checked in Step 1, they show as two independent rows here (never unioned), since
+    // that's exactly what gets triggered — one schedulerPlans row per plan, not per SC. Each row
+    // can expand to show that specific plan's own DC list (read-only), flagging which DCs have an
+    // LMDC Master override — no new blocking logic, just visibility. =====
+    const lmdcEditsOverlayS4 = st.lmdcEdits || {};
+    const previewRows = selectedPlansFull.map(plan => {
+      const r = opModeRows.find(x => x.code === plan.scCode) || { code: plan.scCode, name: plan.scName, zone: plan.zone };
+      const sc = d.scs.find(s => s.code === plan.scCode);
       const rlhVol = sc ? sc.volume : 0;
-      const hasNlhCoverage = !!(chosenNlhPlan && chosenNlhPlan.scCodes && chosenNlhPlan.scCodes.indexOf(r.code) >= 0);
-      const nlhVol = hasNlhCoverage ? (chosenNlhPlan.volumeBySC || {})[r.code] : null;
+      const hasNlhCoverage = !!(chosenNlhPlan && chosenNlhPlan.scCodes && chosenNlhPlan.scCodes.indexOf(plan.scCode) >= 0);
+      const nlhVol = hasNlhCoverage ? (chosenNlhPlan.volumeBySC || {})[plan.scCode] : null;
       const flags = [];
       if (!chosenNlhPlan) {
         // Shouldn't normally happen (Step 2 requires a pick to advance), but stay honest if reached directly.
@@ -7581,7 +7691,35 @@ class NDCApp extends React.Component {
       }
       const hasError = flags.some(f => f.sev === 'error');
       const hasWarning = flags.some(f => f.sev === 'warning');
-      return Object.assign({}, r, { rlhVol, nlhVol, flags, hasError, hasWarning });
+      // Per-plan DC list — this exact Finalised plan's own DCs, "as is" (matches how Route
+      // Scheduler will actually consume it), matched against LMDC Master by code.
+      const seenCode = {};
+      const planDcRows = [];
+      (plan.rows || []).forEach(route => {
+        this.genDcRows(route).forEach(dc => {
+          if (seenCode[dc.code]) return; seenCode[dc.code] = true;
+          const patch = lmdcEditsOverlayS4[dc.code];
+          const overriddenFields = [];
+          if (patch) {
+            if (patch.open) overriddenFields.push('Open ' + patch.open);
+            if (patch.close) overriddenFields.push('Close ' + patch.close);
+            if (patch.d0Cutoff) overriddenFields.push('D0 Cutoff ' + patch.d0Cutoff);
+            if (patch.maxVehicle) overriddenFields.push('Max Vehicle ' + patch.maxVehicle);
+            if (patch.unloadMin != null) overriddenFields.push('Unload ' + patch.unloadMin + ' min');
+          }
+          planDcRows.push({ code: dc.code, routeCode: route.routeCode, vol: dc.vol, customized: !!patch, overriddenSummary: overriddenFields.join(' \u00b7 ') });
+        });
+      });
+      const customizedCount = planDcRows.filter(x => x.customized).length;
+      const expanded = st.previewExpandedPlanId === plan.id;
+      return Object.assign({}, r, {
+        planId: plan.id, code: plan.scCode, name: sc ? sc.name : plan.scCode, zone: sc ? sc.zone : (plan.zone || ''),
+        rlhVol, nlhVol, flags, hasError, hasWarning,
+        dcTotal: planDcRows.length, customizedCount, hasCustomized: customizedCount > 0,
+        expanded, planDcRows: expanded ? planDcRows : [], hasDcRows: expanded && planDcRows.length > 0,
+        expandChev: expanded ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',
+        onToggleExpand: () => this.setState({ previewExpandedPlanId: expanded ? null : plan.id }),
+      });
     });
     const step4NlhLabel = chosenNlhPlan ? chosenNlhPlan.name : '—';
     const step4ErrorCount = previewRows.filter(r => r.hasError).length;
@@ -7729,6 +7867,25 @@ class NDCApp extends React.Component {
     const htf = sp.htf || 0;
     const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
     const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
+    // Rule 5 (2026-08-07) — an LMDC's own D0 Cutoff (set in LMDC Master) wins OUTRIGHT over the
+    // SC-level cutoff for that one DC's on-time check, when it's been explicitly set away from
+    // "Default" — no min/max comparison, the override simply replaces the SC-level value for that
+    // DC. DCs left on "Default" (the vast majority) just inherit the plan's own cutoffMin exactly
+    // as before. E.g. SC-level 10:00 with two DCs overridden to 09:00 and 11:00: those two DCs are
+    // judged against 09:00 and 11:00 respectively; every other DC on the plan still uses 10:00.
+    const lmdcEditsOverlay = st.lmdcEdits || {};
+    const lmdcByCode = {};
+    (d.lmdcs || []).forEach(l => { lmdcByCode[l.code] = l; });
+    const resolveDcCutoffMin = (code) => {
+      const base = lmdcByCode[code];
+      const patch = lmdcEditsOverlay[code];
+      const eff = (patch && patch.d0Cutoff !== undefined) ? patch.d0Cutoff : (base ? base.d0Cutoff : 'Default');
+      if (!eff || eff === 'Default') return cutoffMin;
+      const parts = String(eff).split(':');
+      const hh = parseInt(parts[0], 10), mm = parseInt(parts[1], 10);
+      if (isNaN(hh) || isNaN(mm)) return cutoffMin;
+      return hh * 60 + mm;
+    };
     const routeInfo = routes.map(r => {
       const dispatchMin = cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
       let routeHoldMin = 0;
@@ -7741,12 +7898,13 @@ class NDCApp extends React.Component {
         const breakdownDistKm = parseFloat(dc.dist) || 0;
         const travelMin = speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2;
         const landingMin = dispatchMin + travelMin;
+        const effectiveCutoffMin = resolveDcCutoffMin(dc.code);
         // Per-DC hold draw — 0-14, floored below 4 (~33% of DCs land at exactly zero hold).
         const baseHold = hash(dc.code + r.routeCode + seed + 'h') % 15;
         const rawHold = Math.max(0, baseHold - 4);
         const holdMin = Math.round(rawHold * (1 - 0.4 * htf)); // HTF=1 cuts hold time by 40%
         routeHoldMin += holdMin;
-        return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), landingMin, holdMin };
+        return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), landingMin, holdMin, effectiveCutoffMin };
       });
       return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin };
     });
@@ -7764,9 +7922,9 @@ class NDCApp extends React.Component {
     const lanesWithHold = routeInfo.filter(x => x.holdMin > 0).length;
     let onTimeVol = 0, totalVol = 0;
     routeInfo.forEach(({ dcInfo }) => {
-      dcInfo.forEach(({ dc, landingMin }) => {
+      dcInfo.forEach(({ dc, landingMin, effectiveCutoffMin }) => {
         totalVol += dc.vol;
-        if (landingMin <= cutoffMin) onTimeVol += dc.vol;
+        if (landingMin <= (effectiveCutoffMin != null ? effectiveCutoffMin : cutoffMin)) onTimeVol += dc.vol;
       });
     });
     const d0LandingPct = totalVol > 0 ? (onTimeVol / totalVol * 100) : 0;

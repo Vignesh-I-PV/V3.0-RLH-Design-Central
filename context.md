@@ -1329,3 +1329,216 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     `03_Validation_Rules.md`, `04_Rule_Engine.md`, `05_Core_Flows.md`,
     `PROJECT_CONTEXT.md`) have **not** been updated to reflect any of the
     above yet — flagged to the user twice this session, still open.
+- **2026-08-04** —
+  1. **Route Scheduler Operating Mode: RLH Docks / Local Speed / Non-Local
+     Speed removed from the overall-defaults tier.** These are SC-level
+     physical facts, not plan-level scheduling choices — the "set for
+     everyone selected" cards for these three were removed from Step 3;
+     the per-SC override table (unchanged) is now the *only* way to move
+     them away from the SC's own default. HW/HTF/D0 Cutoff stayed as
+     overall defaults since they genuinely are plan-level choices.
+  2. **"Central" zone corrected — it was a data error, not a real zone,
+     reversing the 2026-08-03 entry above.** Re-verifying against the
+     actual `.jsx` (not the last summary) turned up the tell: a DC
+     migration entry (`IDRS→BHOS`, i.e. Indore→Bhopal — both objectively
+     West-zone cities) had been mislabeled `zone: 'Central'`. The business
+     has four zones — North/South/East/West. Fixed by reassigning the 5
+     SCs (Gwalior, Ujjain → West, alongside Indore/Bhopal already there;
+     Raipur, Jabalpur, Bilaspur → East) and stripping `'Central'` from all
+     10 zone-chip/filter arrays app-wide (the 7 from 08-03, plus Route
+     Scheduler's own 3). If `'Central'` turns up anywhere again, it's
+     stale data or a stale export, not a reintroduced requirement.
+  3. **Slot-Wise Dispatch converted from inline pill-chips to a dropdown**
+     (`<details>/<summary>`, one slot per row: time · docks used · pct%)
+     in Design Review's card, its full detail overlay, and (once built
+     later this session) Ops Alignment's detail overlay.
+  4. **Ops Alignment's Route Scheduler rail rebuilt to group by SC**,
+     matching Route Planner's own Ops Alignment rail — was a flat list of
+     individual runs with no zone filter and a literal "Cutoff Plans"
+     header (both removed); now has zone-chip filtering and an "N SCs"
+     count label.
+  5. **Ops Alignment's card unified with Design Review's card** — both
+     now render through the exact same `buildSchedCard()` output and JSX
+     template (verdict pill, inputs strip, 3-tile metric grid, Slot-Wise
+     Dispatch dropdown); Ops Alignment's copy just drops the Push/
+     Finalise-Direct buttons (read-only there) and adds reviewer chips +
+     a lifecycle status line in their place.
+  - **New: Plan Details / Route View / Dock Schedule**, a three-tab
+    detail view behind Route Scheduler's "view detail," in both Design
+    Review's overlay and a new matching overlay in Ops Alignment (shared,
+    not duplicated per persona, since it's read-only either way). Built
+    from the `_Template__Route_Scheduler_Plan_Output_.xlsx` DS Output
+    template, with a handful of ambiguities resolved via direct Q&A
+    before building (documented inline). New shared helper
+    `schedulerRouteDcInfo()` factors the per-route/per-DC synthesis out of
+    `computeSchedulerMetricsFor()` — **hold time is now drawn per-DC, not
+    once per route** (it happens at the destination LMDC while it
+    unloads, so it has no bearing on dispatch and genuinely varies stop-
+    to-stop; a route's hold time is just the sum of its DCs'). Dock
+    Schedule assigns routes sequentially (Dock-1, Dock-2… round-robin
+    *within* each dispatch slot) — confirmed with the user that vehicle-
+    to-dock assignment isn't DS-driven and "not as important." A mock was
+    built first via the Visualizer tool and approved before the real
+    build. `round_trip_tat` is shown as `—` deliberately — the real
+    formula (travel + hold + service time per DC + return leg) isn't
+    defined yet; don't invent a number for it.
+  - `buildSchedCard()`'s `onOpenReviewDetail`/`onOpenAlignDetail` handlers
+    are now always present regardless of `includeActions` — viewing
+    detail is a read action, unlike Push/Finalise-Direct.
+  - Companion docs (`01_Complete_Context.md`, `02_Logics_and_Formulae.md`,
+    `03_Validation_Rules.md`, `04_Rule_Engine.md`, `05_Core_Flows.md`,
+    `PROJECT_CONTEXT.md`) regenerated to catch up on **both** this session
+    and the 2026-08-03 session above (which had never been written up in
+    them at all).
+
+- **2026-08-05** —
+  1. **SC Master split into Core Node Data vs. RLH-Specific Data**, after
+     discussing three layout options (sub-tabs / toggle-to-expand-columns
+     / always-visible grouped headers) — picked toggle-to-expand. First
+     built as a single toolbar toggle button; per follow-up feedback,
+     rebuilt as **inline horizontal `+`/`−` expander cells in the header
+     row itself** (one for RLH columns, a second independent one for NLH
+     columns, both positioned just before Ops Leads) — a mock was shown
+     via the Visualizer tool and approved before building either version.
+     NLH Docks got its own expander rather than being folded into RLH,
+     since it isn't an RLH parameter — just one field for now, reserved
+     for whenever NLH gets its own module. The Add/Edit SC modal mirrors
+     the same three-section split (Core / RLH-Specific / NLH-Specific),
+     reusing the existing precedent of a labeled Contacts section.
+  2. **Fixed a real persistence bug found while building the above**: RLH
+     Docks, NLH Docks, Local/Non-Local TP Limit, and Open/Close were
+     cosmetic-only — the Add/Edit SC form had inputs for them, but the
+     table (and Route Scheduler's own `resolveSchedulerParamsFor`) always
+     regenerated a synthetic value and silently ignored whatever was
+     typed; only Local/Non-Local Speed actually persisted. Added
+     `resolveScFields(sc)` as the single source of truth (persisted
+     value if set, else the same deterministic synthetic default),
+     used by the table, the Edit-SC prefill, and
+     `resolveSchedulerParamsFor()` alike so the three can never show three
+     different numbers for the same SC again.
+  3. **Added editable Latitude/Longitude to SC Master** (Core section) —
+     these aren't decorative: `computeHypotheticalPlan()` (RLH's own Ops-
+     feedback recompute engine) already uses a SC's real `lat`/`lng` in
+     genuine haversine distance calculations, so editing them changes
+     computed round-trip distances for plans that get revalidated. Softly
+     validated against India's rough bounding box (warns, doesn't block).
+  4. **Built LMDC Master (v1)** under Node & Vehicle Master — a new
+     sub-tab listing every LMDC across the network (thousands of rows,
+     generated once at seed time), core fields read-only (Code, Location,
+     Capacity, LMSC Active Status), 5 fields editable inline (Open/Close,
+     D0 Cutoff, Max Vehicle Size, Unloading Time) with a working CSV
+     download/upload (the first genuinely functional file-upload/parse
+     flow in the app — every other "Upload CSV" button elsewhere was a
+     stub). This version derived the DC list's identity from codes
+     already used inside existing routes — turned out to be backwards;
+     corrected on 08-08 below.
+
+- **2026-08-06 / 2026-08-07** —
+  1. **LMDC Master's 4 editable fields converted to fixed dropdown
+     options**, following discussion: Open/Close → 30-min grid, default
+     05:00/21:00 (was free time input, default 06:00/22:00). D0 Cutoff →
+     `Default` sentinel + the same 09:00–12:00 range Route Scheduler's own
+     Operating Mode offered at the time (widened again on 08-09 below).
+     Unloading Time → 15–60 in steps of 5, default 15 (was a random
+     10–30min synthetic spread). Max Vehicle Size → restricted to
+     RLH-feasible Vehicle Master types only, defaulting to the largest by
+     capacity (22ft/LCV, 8,000 — the 14ft and 32ft trailers are NLH-only).
+  2. **Rule 5 — LMDC-level D0 Cutoff override wins outright over the
+     SC-level value for that one DC**, confirmed via a worked example
+     (SXV2 at 10:00 SC-level, two DCs explicitly set to 09:00/11:00 keep
+     their own values; the other ~98 inherit 10:00) — no min/max
+     clamping, despite the rule's own wording initially suggesting
+     "minimum." Wired into `schedulerRouteDcInfo()`'s D0 Landing % check
+     via a new `resolveDcCutoffMin()` lookup against LMDC Master.
+  3. **CSV upload validation added** for all 4 now-fixed-option fields —
+     an uploaded value that doesn't match a valid option flags the whole
+     row (nothing from it applied), shown in a dismissible banner with
+     row number/code/reason, capped at 20 with a "+N more" tail. Mirrors
+     the existing volume-file uploader's own error-row convention rather
+     than inventing a new pattern.
+
+- **2026-08-08** —
+  - **Root-cause fix to LMDC Master's identity model.** Working through
+    how Route Scheduler should actually consume LMDC data surfaced that
+    the whole approach had been backwards: LMDC Master should be an
+    independent source (AutoDML's full active-node set + Node Additions,
+    same code format AutoDML already natively uses — `cityCode-N`, no
+    special-casing needed for Migrations since they're LMSC-mapping
+    changes, not node-parameter changes) — and it's **Route Planner's own
+    route generation** that should draw its DC codes from that shared
+    pool, not the other way around. Previously routes drew independent
+    random codes (`cityCode` + random 3-digit, no hyphen) while AutoDML/
+    LMDC Master used a different numbering scheme entirely, so the two
+    could never actually refer to the same DC — meaning a per-DC match
+    (like Rule 5's override) could only ever fire on coincidence.
+  - **Seeded one canonical DC pool per SC** in `buildSeed()`, *before* any
+    plan/route generation — `dcPoolBySC`, deterministically shuffled with
+    a running per-SC pointer (`nextPoolDcCode()`) so routes draw a real,
+    non-repeating subset instead of inventing new codes.
+  - **Node Inputs' AutoDML tab is now a genuine filtered view of this
+    pool** (`autodmlDetails` derives from `linkStatus` flags on real pool
+    DCs), not a disconnected hand-authored list — same fixed 14 inactive /
+    6 zero-capacity / 9 multi-mapped counts as before, now backed by real
+    data instead of arbitrary strings.
+  - **LMDC Master rebuilt from the same pool** + mapped Node Additions
+    (unmapped Additions still show up, LMSC column reads "Pending,"
+    excluded from any SC's route-generation pool until actually mapped).
+    Closures and Migrations excluded — confirmed with the user that
+    LMDC-level parameters are node properties, independent of which LMSC
+    a DC is currently tagged to.
+  - **Preview & Trigger restructured: rows are now per selected *plan*,
+    never unioned at the SC level** — if two plans of the same SC were
+    both checked in Step 1, they show as two fully independent rows,
+    matching that Route Scheduler triggers one `schedulerPlans` row per
+    plan, not per SC. Each row expands to show that specific plan's real
+    DC list (matched against LMDC Master by code — reliably now, since
+    routes and LMDC Master finally share the same identity), flagging
+    "Customized" DCs (any LMDC Master override present) with a tooltip
+    listing which fields — no new blocking logic added anywhere.
+
+- **2026-08-09 / 2026-08-10** —
+  1. **HTP removed entirely** from SC Master — no longer a modeled
+     parameter anywhere in the app.
+  2. **HTF removed entirely from Route Scheduler** (~18 touch points:
+     Operating Mode's card/table, all 3 card badges, both detail
+     overlays, CSV exports, seed generation, `resolveSchedulerParamsFor`,
+     and the hold-time formula itself) — **replaced with Hold Time On/Off
+     + Max Hold Time (Local) + Max Hold Time (Non-Local)**, now an
+     SC-level fact (SC Master's RLH-specific section, same treatment as
+     RLH Docks/Local Speed/Non-Local Speed — no plan-wide default tier,
+     per-SC override only in Operating Mode). Off means the DS algorithm
+     isn't modeling/minimising hold time for that SC at all (every DC's
+     hold time is 0); On scales and caps each DC's hold draw to whichever
+     Local/Non-Local ceiling applies, a real operating policy instead of
+     an abstract multiplier.
+  3. **D0 Cutoff range widened to 07:00–15:00** (was 09:00–12:00),
+     default still 09:00 — synced everywhere it appears: Operating
+     Mode's global and per-SC steppers, and LMDC Master's dropdown/CSV
+     upload validator, both now generated programmatically from the
+     range instead of a hardcoded list so they can't drift apart again.
+  4. **Route Scheduler's wizard reduced from 4 steps to 3.** NLH Plan
+     Selection is merged into Step 1 (mirrors Route Planner's own Step 1
+     shape — pick the file first, then the list below reveals). Step 1's
+     SC/Plan selection rebuilt as a rail (empty "Pick a SC" default,
+     mirroring Design Review's own rail+cards pattern) + cards, with two
+     one-shot bulk actions — **Select All Plans** (every Finalised plan,
+     every SC, every version) and **Select All SCs** (exactly one plan
+     per SC: whichever is most recently finalised) — plus Clear All,
+     distinct from the existing "select all visible" (zone/search-scoped
+     only). Operating Mode is now Step 2; Preview & Trigger is now Step 3,
+     reached via a simulated DS-generation loading state (spinner +
+     progress bar, reusing the existing Run Queue ticker pattern) rather
+     than an instant step change.
+  5. **New: Start-Time vs. D0% simulation graph.** A chart icon on every
+     Preview & Trigger row opens a popup showing a real swept curve
+     (candidate dispatch start time, 03:00–23:00 on a 30-min grid, vs.
+     resulting D0 Landing %) — computed via the same per-DC travel-time
+     logic `schedulerRouteDcInfo()` already uses, just parameterised by
+     the swept start time instead of a cutoff-relative window. The DS's
+     own recommendation (whichever point maximises D0%) is marked
+     separately from the user's currently-chosen point; clicking anywhere
+     on the curve previews an alternate start time, with a one-click
+     "Use DS recommendation" to revert.
+  - Companion docs have **not** been updated to reflect this session
+    (08-04 through 08-10) — a recurring gap flagged after nearly every
+    session so far; worth a dedicated pass before it drifts any further.

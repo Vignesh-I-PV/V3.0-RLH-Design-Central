@@ -7944,7 +7944,8 @@ class NDCApp extends React.Component {
       schedulerStepper, schedulerStep: step,
       isSchedStep1: step === 1, isSchedStep2: step === 2, isSchedStep3: step === 3,
       // Step 1
-      zoneChipsStep1, schedulerScGroups, scsWithFinalEmpty, step1Summary, canNextScheduler1, selectedScCodesStep1,
+      zoneChipsStep1, schedulerScGroups, scsWithFinalEmpty, step1Summary, canNextScheduler1, nlhPicked, selectedScCodesStep1,
+      curRailGroup, onSelectAllPlans, onSelectAllScsLatest, onClearAllPlans,
       schedulerSearch: st.schedulerSearch || '', onSchedulerSearch: (e) => this.setState({ schedulerSearch: e.target.value }),
       allVisibleSelected, onSelectAllVisible,
       // Step 2

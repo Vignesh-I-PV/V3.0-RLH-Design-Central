@@ -1879,9 +1879,11 @@ function View(B, self) {
 </React.Fragment>)))}
 </div>
 </>)}
-{(nlhPicked) ? (<>
 {/* SC / Plan selection — rail + cards (2026-08-10), mirroring Design Review's own rail+cards
-    shape. Empty "Pick a SC" default; rail navigation never affects which plans are checked. */}
+    shape. Empty "Pick a SC" default; rail navigation never affects which plans are checked.
+    2026-08-13 — always visible regardless of NLH pick (previously gated on nlhPicked); NLH
+    selection stays mandatory to advance past this step (canNextScheduler1 still requires both),
+    it just no longer hides the list itself. */}
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;`)}>
 <button onClick={onSelectAllPlans} style={css(`height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Select All Plans</button>
 <button onClick={onSelectAllScsLatest} style={css(`height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Select All SCs (latest)</button>
@@ -1933,7 +1935,7 @@ function View(B, self) {
 </>)}
 </div>
 </div>
-</>) : null}
+{(!nlhPicked) ? (<><div style={css(`display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px 13px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; color:#14171F;`)}>Pick an NLH Landing Plan above before continuing to Operating Mode.</span></div></>) : null}
 </>) : null}
 {(isSchedStep2) ? (<>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Overall defaults</div>
@@ -1942,7 +1944,7 @@ function View(B, self) {
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
 <div style={css(`display:flex; gap:5px;`)}>
-{[0, 0.5, 1].map((v, __i46) => (<React.Fragment key={__i46}><button onClick={() => onHwGlobal(v)} style={css(`flex:1; height:30px; border:1px solid ${hwGlobal === v ? '#003F98' : '#E6EBF2'}; background:${hwGlobal === v ? '#003F98' : '#fff'}; color:${hwGlobal === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+{[0, 0.5, 1].map((v, __i46) => (<React.Fragment key={__i46}><button onClick={() => onHwGlobal(v)} style={css(`flex:1; height:30px; border:1px solid ${schedHwGlobal === v ? '#003F98' : '#E6EBF2'}; background:${schedHwGlobal === v ? '#003F98' : '#fff'}; color:${schedHwGlobal === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
 </div>
 {(hwGlobalNeedsRef) ? (<>
 {(globalRefAmbiguous) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>Multiple SCs selected — set a reference plan per SC below.</div></>) : (globalRefOptions.length === 0) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>No reference plan available yet for this SC.</div></>) : (<>
@@ -2016,11 +2018,13 @@ function View(B, self) {
 {(step4ErrorCount === 0 && step4WarningCount === 0) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>· clean — ready to trigger</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:1080px;`)}>
+<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 1fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'Start Time', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
-<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 1fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
 <div style={css(`display:flex; gap:4px;`)}>
 <button onClick={r.onToggleExpand} aria-label={r.expanded ? 'Collapse DC list' : 'Expand DC list'} title={r.expanded ? 'Collapse DC list' : 'Expand DC list'} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={r.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={r.onOpenGraph} aria-label={"Open Start-Time vs D0% graph"} title={"Start-Time vs D0% simulation"} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -2029,6 +2033,14 @@ function View(B, self) {
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
 <div style={css(`font-size:11.5px; font-weight:600; color:${r.holdOn ? '#128A3E' : '#8E96A3'};`)}>{r.holdOn ? ('On (' + r.maxHoldLocal + '/' + r.maxHoldNonLocal + 'm)') : 'Off'}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
+<div style={css(`display:flex; flex-direction:column; gap:2px;`)}>
+<div style={css(`display:flex; align-items:center; gap:4px;`)}>
+<button onClick={r.onStartTimeDec} aria-label={"Earlier by 30 min"} style={css(`width:19px; height:19px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; flex-shrink:0; display:flex; align-items:center; justify-content:center;`)}>−</button>
+<span style={css(`font-size:11.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.startTimeLabel}</span>
+<button onClick={r.onStartTimeInc} aria-label={"Later by 30 min"} style={css(`width:19px; height:19px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; flex-shrink:0; display:flex; align-items:center; justify-content:center;`)}>+</button>
+</div>
+<div style={css(`font-size:10px; color:#8E96A3;`)}>D0 {r.startD0Pct}% {(r.isStartTimeDefault) ? (<span style={css(`color:#1E6FB8; font-weight:600;`)}>· DS default</span>) : (<button onClick={r.onResetStartTime} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:10px; font-weight:600; cursor:pointer; padding:0; text-decoration:underline;`)}>reset</button>)}</div>
+</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
 <div style={css(`display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dcTotal}</span>
@@ -2041,20 +2053,31 @@ function View(B, self) {
 {(r.hasDcRows) ? (<>
 <div style={css(`padding:0 12px 12px 50px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
 <div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; padding:10px 0 6px;`)}>DCs IN THIS PLAN — READ ONLY, MATCHED AGAINST LMDC MASTER</div>
-<div style={css(`max-height:220px; overflow-y:auto; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
+<div style={css(`max-height:260px; overflow-y:auto; overflow-x:auto; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
+<div style={css(`min-width:640px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.8fr 0.9fr 0.9fr 0.9fr 1fr; gap:6px; padding:7px 11px; background:#F2F5FA; position:sticky; top:0;`)}>
+{['DC / Route', 'Open', 'Close', 'D0 Cutoff', 'Unloading', ''].map((h, __i57h) => (<React.Fragment key={__i57h}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+</div>
 {(r.planDcRows || []).map((dc, __i57) => (<React.Fragment key={__i57}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 11px; border-top:1px solid #F4F5F8;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.8fr 0.9fr 0.9fr 0.9fr 1fr; gap:6px; align-items:center; padding:7px 11px; border-top:1px solid #F4F5F8;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; min-width:0;`)}>
 <span style={css(`font-size:11.5px; font-weight:600; color:#003F98; white-space:nowrap;`)}>{dc.code}</span>
 <span style={css(`font-size:10.5px; color:#8E96A3; white-space:nowrap;`)}>{dc.routeCode}</span>
 </div>
-{(dc.customized) ? (<><span style={css(`font-size:10.5px; color:#0D7377; text-align:right;`)} title={dc.overriddenSummary}>Customized \u00b7 {dc.overriddenSummary}</span></>) : (<><span style={css(`font-size:10.5px; color:#8E96A3;`)}>Default</span></>)}
+<div style={css(`font-size:11px; font-variant-numeric:tabular-nums; color:${dc.openOverridden ? '#0D7377' : '#5A5E66'}; font-weight:${dc.openOverridden ? '700' : '400'};`)} title={dc.openOverridden ? 'Overridden in LMDC Master' : 'Default'}>{dc.openTime}</div>
+<div style={css(`font-size:11px; font-variant-numeric:tabular-nums; color:${dc.closeOverridden ? '#0D7377' : '#5A5E66'}; font-weight:${dc.closeOverridden ? '700' : '400'};`)} title={dc.closeOverridden ? 'Overridden in LMDC Master' : 'Default'}>{dc.closeTime}</div>
+<div style={css(`font-size:11px; font-variant-numeric:tabular-nums; color:${dc.d0Overridden ? '#0D7377' : '#5A5E66'}; font-weight:${dc.d0Overridden ? '700' : '400'}; font-style:${dc.d0Cutoff === 'Default' ? 'italic' : 'normal'};`)} title={dc.d0Overridden ? 'Overridden in LMDC Master' : 'Default \u2014 follows SC-level D0 Cutoff'}>{dc.d0Cutoff}</div>
+<div style={css(`font-size:11px; font-variant-numeric:tabular-nums; color:${dc.unloadOverridden ? '#0D7377' : '#5A5E66'}; font-weight:${dc.unloadOverridden ? '700' : '400'};`)} title={dc.unloadOverridden ? 'Overridden in LMDC Master' : 'Default'}>{dc.unloadMin}</div>
+<div style={css(`text-align:right;`)}>{(dc.customized) ? (<><span style={css(`display:inline-flex; padding:1px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)} title={dc.overriddenSummary}>Customized</span></>) : (<><span style={css(`font-size:10px; color:#8E96A3;`)}>Default</span></>)}</div>
 </div>
 </React.Fragment>))}
+</div>
 </div>
 </div>
 </>) : null}
 </React.Fragment>))}
+</div>
+</div>
 </div>
 <div style={css(`font-size:11.5px; color:#8E96A3; margin-top:10px;`)}>Triggering creates {previewRows.length} separate Route Scheduler run{previewRows.length === 1 ? '' : 's'} (one per selected plan), landing in Run Queue.</div>
 </>)}
@@ -4492,18 +4515,18 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
-{/* START-TIME vs D0% GRAPH POPUP (2026-08-10, opened from a Preview & Trigger row's graph icon) */}
+{/* START-TIME vs D0%/READY-TO-SHIP GRAPH POPUP (2026-08-13, redesigned) */}
 {(schedGraph.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedGraph.close}>
-<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:720px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:740px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
 <div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Start Time vs D0 %</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Time of Day vs Volume %</div>
 <div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{schedGraph.scCode} · {schedGraph.scName}</div>
 </div>
 <button onClick={schedGraph.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>DS-generated curve showing predicted D0 Landing % at each candidate dispatch start time. Click anywhere on the curve to preview an alternate start time for this plan.</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Ready to Ship % rises through the day as more volume finishes sorting; D0 Landing % falls as a later dispatch leaves less transit time before the D0 Cutoff. The DS suggests dispatching where the two cross — the latest point that doesn't give up material D0 performance. Click anywhere on the chart to preview an alternate start time.</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; padding:14px 10px; background:#FAFBFD;`)}>
 <svg width={"100%"} viewBox={"0 0 " + schedGraph.W + " " + schedGraph.H} style={css(`display:block;`)}>
 {(schedGraph.yTicks || []).map((t, __iSG1) => (<React.Fragment key={__iSG1}>
@@ -4511,19 +4534,22 @@ function View(B, self) {
 <text x={"4"} y={t.y + 4} fontSize={"10"} fill={"#8E96A3"}>{t.label}</text>
 </React.Fragment>))}
 {(schedGraph.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedGraph.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={"middle"}>{t.label}</text></React.Fragment>))}
-<path d={schedGraph.areaD} fill={"#0D737712"} stroke={"none"} />
-<path d={schedGraph.pathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
+<path d={schedGraph.readyPathD} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"2.2"} />
+<path d={schedGraph.d0PathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
 {(schedGraph.points || []).map((pt, __iSG3) => (<React.Fragment key={__iSG3}><rect x={pt.x - 6} y={"0"} width={"12"} height={schedGraph.H} fill={"transparent"} onClick={pt.onClick} style={css(`cursor:pointer;`)}><title>{pt.label}</title></rect></React.Fragment>))}
+<line x1={schedGraph.recX} y1={"16"} x2={schedGraph.recX} y2={schedGraph.H - 30} stroke={"#1E6FB8"} strokeWidth={"1.3"} strokeDasharray={"3,3"} />
 <circle cx={schedGraph.recX} cy={schedGraph.recY} r={"5"} fill={"#fff"} stroke={"#1E6FB8"} strokeWidth={"2.5"} />
-<circle cx={schedGraph.chosenX} cy={schedGraph.chosenY} r={"5"} fill={schedGraph.chosenIsRecommended ? "#1E6FB8" : "#0D7377"} stroke={"#fff"} strokeWidth={"2"} />
+<circle cx={schedGraph.chosenX} cy={schedGraph.chosenD0Y} r={"5"} fill={schedGraph.chosenIsRecommended ? "#1E6FB8" : "#0D7377"} stroke={"#fff"} strokeWidth={"2"} />
 </svg>
 </div>
-<div style={css(`display:flex; align-items:center; gap:18px; margin-top:12px; flex-wrap:wrap;`)}>
-<div style={css(`display:flex; items-center; gap:7px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #1E6FB8; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>DS recommended — {schedGraph.recLabel}</span></div>
-<div style={css(`display:flex; items-center; gap:7px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#0D7377; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>Currently selected — {schedGraph.chosenLabel}{schedGraph.chosenIsRecommended ? ' (same as recommended)' : ''}</span></div>
+<div style={css(`display:flex; align-items:center; gap:16px; margin-top:12px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#5B4FA0; display:inline-block; border-radius:2px;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>Ready to Ship %</span></div>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#0D7377; display:inline-block; border-radius:2px;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>D0 Landing %</span></div>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #1E6FB8; display:inline-block;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>DS suggested (crossing point) — {schedGraph.recLabel}</span></div>
 </div>
+<div style={css(`display:flex; align-items:center; gap:7px; margin-top:8px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:${schedGraph.chosenIsRecommended ? '#1E6FB8' : '#0D7377'}; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>Currently selected — {schedGraph.chosenLabel}{schedGraph.chosenIsRecommended ? ' (same as DS suggestion)' : ''}</span></div>
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
-{(!schedGraph.chosenIsRecommended) ? (<><button onClick={schedGraph.onUseRecommended} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Use DS recommendation</button></>) : null}
+{(!schedGraph.chosenIsRecommended) ? (<><button onClick={schedGraph.onUseRecommended} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Use DS suggestion</button></>) : null}
 <button onClick={schedGraph.close} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Done</button>
 </div>
 </div>
@@ -7607,14 +7633,20 @@ class NDCApp extends React.Component {
       }
     }, 450);
   }
-  // computeSchedStartTimeCurves() (2026-08-10) — for every plan selected in Step 1, sweeps a
-  // candidate dispatch "start time" across the day (30-min grid, 03:00-23:00) and computes the
-  // resulting D0 Landing % at each point, holding everything else (D0 Cutoff, Local/Non-Local
-  // Speed) fixed at whatever Operating Mode resolved for that plan's SC — same per-DC travel-time
-  // logic schedulerRouteDcInfo() already uses, just parameterised by the swept start time instead
-  // of a cutoff-relative window. The DS-"recommended" point is whichever start time maximises
-  // D0% (earliest wins on a tie) — stored separately from the user's own chosen point, which
-  // defaults to the recommendation until they pick something else on the graph.
+  // computeSchedStartTimeCurves() (2026-08-13, redesigned) — for every plan selected in Step 1,
+  // sweeps a candidate dispatch "start time" across the day (30-min grid, 03:00-23:00) and
+  // computes TWO curves at each point:
+  //   Ready to Ship %  — cumulative volume-readiness at the SC by that time of day; rises through
+  //                       the day (an S-curve, seeded per plan for a bit of variety — this
+  //                       prototype has no real sort-completion telemetry to draw from).
+  //   D0 Landing %     — same per-DC travel-time logic schedulerRouteDcInfo() already uses, just
+  //                       parameterised by the swept start time instead of a cutoff-relative
+  //                       window; falls through the day (dispatching later leaves less transit
+  //                       buffer before the SC-level D0 Cutoff).
+  // The DS-"suggested" start time is where the two curves CROSS — the latest point at which
+  // enough volume is ready to ship without giving up material D0 performance — not simply
+  // whichever point maximises D0% on its own. Stored separately from the user's own chosen
+  // point, which defaults to the suggestion until they pick something else on the graph.
   computeSchedStartTimeCurves() {
     const st = this.state, d = st.data;
     const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
@@ -7626,6 +7658,10 @@ class NDCApp extends React.Component {
       const params = this.resolveSchedulerParamsFor(plan.scCode);
       const cutoffMin = 9 * 60 + params.d0 * 30;
       const seed = plan.id;
+      const seedH = hash(seed);
+      // Ready-to-Ship S-curve — deterministic per plan, midpoint between 08:00-14:00, seeded slope.
+      const midpoint = 480 + (seedH % 360);
+      const slope = 55 + ((seedH >> 4) % 55);
       const points = [];
       for (let s = 180; s <= 1380; s += 30) {
         let onTimeVol = 0, totalVol = 0;
@@ -7642,15 +7678,42 @@ class NDCApp extends React.Component {
           });
         });
         const d0Pct = totalVol > 0 ? Math.round((onTimeVol / totalVol) * 1000) / 10 : 0;
-        points.push({ min: s, d0Pct });
+        const readyPct = Math.round((100 / (1 + Math.exp(-(s - midpoint) / slope))) * 10) / 10;
+        points.push({ min: s, d0Pct, readyPct });
       }
       curves[plan.id] = points;
-      let best = points[0];
-      points.forEach(pt => { if (pt.d0Pct > best.d0Pct) best = pt; });
-      recommended[plan.id] = best.min;
-      if (chosen[plan.id] === undefined) chosen[plan.id] = best.min;
+      // Intersection — first point (scanning earliest to latest) where Ready-to-Ship catches up
+      // to/overtakes D0 Landing; linearly interpolated between the two straddling points for a
+      // precise crossing minute. Falls back to the closest point by absolute gap if the two
+      // curves never cleanly cross (rare, but possible with the seeded synthetic data).
+      let crossMin = null;
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1], cur = points[i];
+        const prevDiff = prev.readyPct - prev.d0Pct, curDiff = cur.readyPct - cur.d0Pct;
+        if (prevDiff <= 0 && curDiff >= 0) {
+          const t = curDiff === prevDiff ? 0 : (0 - prevDiff) / (curDiff - prevDiff);
+          crossMin = Math.round((prev.min + t * (cur.min - prev.min)) / 30) * 30;
+          break;
+        }
+      }
+      if (crossMin == null) {
+        let best = points[0], bestGap = Math.abs(points[0].readyPct - points[0].d0Pct);
+        points.forEach(pt => { const gap = Math.abs(pt.readyPct - pt.d0Pct); if (gap < bestGap) { bestGap = gap; best = pt; } });
+        crossMin = best.min;
+      }
+      recommended[plan.id] = crossMin;
+      if (chosen[plan.id] === undefined) chosen[plan.id] = crossMin;
     });
     this.setState({ schedStartTimeCurves: curves, schedRecommendedStartTime: recommended, schedChosenStartTime: chosen });
+  }
+  // schedD0AtStartTime(planId, min) (2026-08-13) — looks up (or nearest-interpolates) the D0%
+  // that corresponds to a given start time on that plan's already-computed curve, for the inline
+  // Start Time control on Preview & Trigger (Fix 4) — no recomputation needed, the curve already
+  // has every 30-min point across the day.
+  schedD0AtStartTime(planId, min) {
+    const points = (this.state.schedStartTimeCurves || {})[planId] || [];
+    const pt = points.find(p => p.min === min);
+    return pt ? pt.d0Pct : null;
   }
   triggerSchedulerRuns() {
     const st = this.state, d = st.data;
@@ -7829,7 +7892,7 @@ class NDCApp extends React.Component {
     const globalRefOptions = selectedScCodesStep1.length === 1 ? refOptionsFor(selectedScCodesStep1[0]) : [];
     const globalRefAmbiguous = hwGlobalNeedsRef && selectedScCodesStep1.length > 1;
     const anyRefMissing = opModeRows.some(r => r.refMissing);
-    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.htfOverridden || r.d0Overridden || r.docksOverridden).length;
+    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.d0Overridden || r.docksOverridden || r.holdOnOverridden || r.maxHoldLocalOverridden || r.maxHoldNonLocalOverridden).length;
     const canNextScheduler2 = !anyRefMissing;
 
     // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30), unchanged:
@@ -7863,11 +7926,13 @@ class NDCApp extends React.Component {
       const hasWarning = flags.some(f => f.sev === 'warning');
       // Per-plan DC list — this exact Finalised plan's own DCs, "as is" (matches how Route
       // Scheduler will actually consume it), matched against LMDC Master by code.
+      const lmdcByCodeS4 = {}; (d.lmdcs || []).forEach(l => { lmdcByCodeS4[l.code] = l; });
       const seenCode = {};
       const planDcRows = [];
       (plan.rows || []).forEach(route => {
         this.genDcRows(route).forEach(dc => {
           if (seenCode[dc.code]) return; seenCode[dc.code] = true;
+          const base = lmdcByCodeS4[dc.code];
           const patch = lmdcEditsOverlayS4[dc.code];
           const overriddenFields = [];
           if (patch) {
@@ -7877,11 +7942,31 @@ class NDCApp extends React.Component {
             if (patch.maxVehicle) overriddenFields.push('Max Vehicle ' + patch.maxVehicle);
             if (patch.unloadMin != null) overriddenFields.push('Unload ' + patch.unloadMin + ' min');
           }
-          planDcRows.push({ code: dc.code, routeCode: route.routeCode, vol: dc.vol, customized: !!patch, overriddenSummary: overriddenFields.join(' \u00b7 ') });
+          // 2026-08-13 — per-field Default/Override breakdown for the new expanded columns.
+          const fieldOf = (key) => (patch && patch[key] !== undefined) ? { value: patch[key], overridden: true } : { value: base ? base[key] : undefined, overridden: false };
+          const openF = fieldOf('open'), closeF = fieldOf('close'), d0F = fieldOf('d0Cutoff'), unloadF = fieldOf('unloadMin');
+          planDcRows.push({ code: dc.code, routeCode: route.routeCode, vol: dc.vol, customized: !!patch, overriddenSummary: overriddenFields.join(' \u00b7 '),
+            openTime: openF.value || '\u2014', openOverridden: openF.overridden,
+            closeTime: closeF.value || '\u2014', closeOverridden: closeF.overridden,
+            d0Cutoff: d0F.value || 'Default', d0Overridden: d0F.overridden,
+            unloadMin: unloadF.value != null ? unloadF.value + ' min' : '\u2014', unloadOverridden: unloadF.overridden,
+          });
         });
       });
       const customizedCount = planDcRows.filter(x => x.customized).length;
       const expanded = st.previewExpandedPlanId === plan.id;
+      // Inline Start Time control (2026-08-13) — defaults to the DS suggestion (the curve's
+      // crossing point), editable here in 30-min increments without opening the graph popup;
+      // reads the live D0% straight off the same curve computeSchedStartTimeCurves() already
+      // built, no recomputation needed.
+      const fmtTRow = (m) => { if (m == null) return '\u2014'; const mm = ((m % 1440) + 1440) % 1440; return String(Math.floor(mm / 60)).padStart(2, '0') + ':' + String(mm % 60).padStart(2, '0'); };
+      const recMinForPlan = (st.schedRecommendedStartTime || {})[plan.id];
+      const chosenMinForPlan = (st.schedChosenStartTime || {})[plan.id];
+      const curveForPlan = (st.schedStartTimeCurves || {})[plan.id] || [];
+      const effectiveStartMin = chosenMinForPlan != null ? chosenMinForPlan : recMinForPlan;
+      const startPt = curveForPlan.find(pt => pt.min === effectiveStartMin);
+      const minBound = curveForPlan.length ? curveForPlan[0].min : 180;
+      const maxBound = curveForPlan.length ? curveForPlan[curveForPlan.length - 1].min : 1380;
       return Object.assign({}, r, {
         planId: plan.id, code: plan.scCode, name: sc ? sc.name : plan.scCode, zone: sc ? sc.zone : (plan.zone || ''),
         rlhVol, nlhVol, flags, hasError, hasWarning,
@@ -7890,6 +7975,11 @@ class NDCApp extends React.Component {
         expandChev: expanded ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',
         onToggleExpand: () => this.setState({ previewExpandedPlanId: expanded ? null : plan.id }),
         onOpenGraph: () => this.setState({ schedGraphPlanId: plan.id }),
+        startTimeLabel: fmtTRow(effectiveStartMin), startD0Pct: startPt ? startPt.d0Pct : '\u2014',
+        isStartTimeDefault: recMinForPlan != null && effectiveStartMin === recMinForPlan,
+        onStartTimeDec: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); const cur = m[plan.id] != null ? m[plan.id] : recMinForPlan; m[plan.id] = Math.max(minBound, (cur != null ? cur : minBound) - 30); this.setState({ schedChosenStartTime: m }); },
+        onStartTimeInc: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); const cur = m[plan.id] != null ? m[plan.id] : recMinForPlan; m[plan.id] = Math.min(maxBound, (cur != null ? cur : minBound) + 30); this.setState({ schedChosenStartTime: m }); },
+        onResetStartTime: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[plan.id] = recMinForPlan; this.setState({ schedChosenStartTime: m }); },
       });
     });
     const step4NlhLabel = chosenNlhPlan ? chosenNlhPlan.name : '—';
@@ -7897,10 +7987,13 @@ class NDCApp extends React.Component {
     const step4WarningCount = previewRows.filter(r => r.hasWarning).length;
     const step4Blocked = step4ErrorCount > 0;
 
-    // ===== Start-Time vs D0% graph popup (2026-08-10) — opened via the graph icon on a Preview &
-    // Trigger row. Curve points come from computeSchedStartTimeCurves() (run once, right after
-    // the simulated DS generation finishes). Clicking anywhere on the curve previews an alternate
-    // start time; the DS's own recommendation stays visible as a separate marker either way. =====
+    // ===== Start-Time vs D0%/Ready-to-Ship graph popup (2026-08-13, redesigned) — opened via the
+    // graph icon on a Preview & Trigger row. X-axis: Time of Day. Y-axis: Volume %. Two curves —
+    // Ready to Ship % (rising) and D0 Landing % (falling) — with their crossing point marked as
+    // the DS suggestion. Curve points come from computeSchedStartTimeCurves() (run once, right
+    // after the simulated DS generation finishes). Clicking anywhere on the curve previews an
+    // alternate start time; the DS's own suggestion stays visible as a separate marker either
+    // way. =====
     const schedGraphPlanId = st.schedGraphPlanId;
     let schedGraph = { open: false };
     if (schedGraphPlanId) {
@@ -7909,26 +8002,27 @@ class NDCApp extends React.Component {
       const recMin = (st.schedRecommendedStartTime || {})[schedGraphPlanId];
       const chosenMin = (st.schedChosenStartTime || {})[schedGraphPlanId];
       const fmtT = (m) => { const mm = ((m % 1440) + 1440) % 1440; return String(Math.floor(mm / 60)).padStart(2, '0') + ':' + String(mm % 60).padStart(2, '0'); };
-      const W = 640, H = 220, padL = 40, padR = 16, padT = 16, padB = 30;
+      const W = 640, H = 240, padL = 40, padR = 16, padT = 16, padB = 30;
       const minX = points.length ? points[0].min : 180, maxX = points.length ? points[points.length - 1].min : 1380;
       const xScale = (m) => padL + ((m - minX) / Math.max(1, (maxX - minX))) * (W - padL - padR);
       const yScale = (pct) => padT + (1 - pct / 100) * (H - padT - padB);
-      const pathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.min).toFixed(1) + ',' + yScale(pt.d0Pct).toFixed(1)).join(' ');
-      const areaD = points.length ? (pathD + ' L' + xScale(points[points.length - 1].min).toFixed(1) + ',' + yScale(0).toFixed(1) + ' L' + xScale(points[0].min).toFixed(1) + ',' + yScale(0).toFixed(1) + ' Z') : '';
-      const recPt = points.find(pt => pt.min === recMin);
+      const d0PathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.min).toFixed(1) + ',' + yScale(pt.d0Pct).toFixed(1)).join(' ');
+      const readyPathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.min).toFixed(1) + ',' + yScale(pt.readyPct).toFixed(1)).join(' ');
+      const recPt = points.find(pt => pt.min === recMin) || points.reduce((a, b) => (Math.abs(b.min - recMin) < Math.abs(a.min - recMin) ? b : a), points[0]);
       const chosenPt = points.find(pt => pt.min === chosenMin);
       const xTicks = []; for (let m = minX; m <= maxX; m += 180) xTicks.push(m);
       schedGraph = {
         open: true, planId: schedGraphPlanId, scCode: plan ? plan.scCode : '', scName: plan ? plan.scName : '',
-        pathD, areaD, W, H,
+        d0PathD, readyPathD, W, H,
         xTicks: xTicks.map(m => ({ x: xScale(m), label: fmtT(m) })),
         yTicks: [0, 25, 50, 75, 100].map(pct => ({ y: yScale(pct), label: pct + '%' })),
-        recX: recPt ? xScale(recPt.min) : 0, recY: recPt ? yScale(recPt.d0Pct) : 0, recLabel: recMin != null ? (fmtT(recMin) + ' · ' + (recPt ? recPt.d0Pct : 0) + '%') : '',
-        chosenX: chosenPt ? xScale(chosenPt.min) : 0, chosenY: chosenPt ? yScale(chosenPt.d0Pct) : 0, chosenLabel: chosenMin != null ? (fmtT(chosenMin) + ' · ' + (chosenPt ? chosenPt.d0Pct : 0) + '%') : '',
+        recX: recPt ? xScale(recPt.min) : 0, recY: recPt ? yScale(recPt.d0Pct) : 0,
+        recLabel: recMin != null ? (fmtT(recMin) + ' \u2014 D0 ' + (recPt ? recPt.d0Pct : 0) + '% \u00b7 Ready ' + (recPt ? recPt.readyPct : 0) + '%') : '',
+        chosenX: chosenPt ? xScale(chosenPt.min) : 0, chosenD0Y: chosenPt ? yScale(chosenPt.d0Pct) : 0, chosenReadyY: chosenPt ? yScale(chosenPt.readyPct) : 0,
+        chosenLabel: chosenMin != null ? (fmtT(chosenMin) + ' \u2014 D0 ' + (chosenPt ? chosenPt.d0Pct : 0) + '%') : '',
         chosenIsRecommended: chosenMin === recMin,
-        onPickPoint: (min) => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = min; this.setState({ schedChosenStartTime: m }); },
         onUseRecommended: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = recMin; this.setState({ schedChosenStartTime: m }); },
-        points: points.map(pt => ({ min: pt.min, x: xScale(pt.min), d0Pct: pt.d0Pct, label: fmtT(pt.min) + ' · ' + pt.d0Pct + '%', onClick: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = pt.min; this.setState({ schedChosenStartTime: m }); } })),
+        points: points.map(pt => ({ min: pt.min, x: xScale(pt.min), d0Pct: pt.d0Pct, readyPct: pt.readyPct, label: fmtT(pt.min) + ' \u2014 D0 ' + pt.d0Pct + '% \u00b7 Ready ' + pt.readyPct + '%', onClick: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = pt.min; this.setState({ schedChosenStartTime: m }); } })),
         close: () => this.setState({ schedGraphPlanId: null }),
       };
     }
@@ -7952,7 +8046,7 @@ class NDCApp extends React.Component {
       schedulerNlhCards, canNextScheduler2, schedulerNlhNoResults, schedulerNlhEmpty,
       schedulerNlhSearch: st.schedulerNlhSearch || '', onSchedulerNlhSearch: (e) => this.setState({ schedulerNlhSearch: e.target.value }),
       // Step 3
-      hwGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler2,
+      schedHwGlobal: hwGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler2,
       onHwGlobal: (v) => this.setState({ schedulerHwGlobal: v }),
       onD0GlobalInc: () => this.setState({ schedulerD0Global: Math.min(12, d0Global + 1) }),
       onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(-4, d0Global - 1) }),

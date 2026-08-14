@@ -2782,6 +2782,9 @@ function View(B, self) {
 </div>
 </>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
 </>) : null}
+{(reviewSchedDetail.secFeedback) ? (<>
+<div style={css(`display:flex; align-items:center; gap:9px; padding:16px; background:#F7F8FB; border:1px dashed #D7DCE5; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; color:#5A5E66;`)}>SC/LH/LM feedback is submitted and decided from <strong>Ops Alignment</strong>, not Design Review — go there to review this run's feedback threads.</span></div>
+</>) : null}
 </div>
 </div>
 </>) : null}
@@ -4730,6 +4733,106 @@ function View(B, self) {
 </div>
 </>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
 </>) : null}
+{(schedAlignDetail.secFeedback) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;`)}>
+<div style={css(`font-size:12px; color:#5A5E66; max-width:520px; line-height:1.5;`)}>3-stage review: <strong>SC + LH</strong> propose Dispatch Cutoff/TAT simultaneously, the <strong>Planner</strong> decides each, then <strong>LM</strong> can challenge the resulting Landing Time (only once Stage 1 is fully decided for that route).</div>
+{(!planner) ? (<>
+<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px; flex-shrink:0;`)}>
+{['SC', 'LH', 'LM'].map((rl, __iRoleA) => (<React.Fragment key={__iRoleA}>
+<button onClick={() => schedAlignDetail.feedbackView.onSetRole(rl)} style={css(`padding:6px 12px; border:none; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer; background:${schedAlignDetail.feedbackView.role === rl ? '#0D7377' : 'transparent'}; color:${schedAlignDetail.feedbackView.role === rl ? '#fff' : '#5A5E66'};`)}>{rl} User</button>
+</React.Fragment>))}
+</div>
+</>) : null}
+</div>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:8px;`)}>ROUTE LEVEL \u2014 DISPATCH CUTOFF (SC + LH) &amp; TAT (LH)</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:20px;`)}>
+{(schedAlignDetail.feedbackView.routeRows || []).map((rr, __iFRA) => (<React.Fragment key={__iFRA}>
+<div style={css(`padding:12px 14px; border-top:${__iFRA === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;`)}>
+<div style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{rr.routeCode}<span style={css(`font-size:11px; color:#5A5E66; font-weight:400; margin-left:8px;`)}>Dispatch {rr.dispatchLabel} \u00b7 {rr.dcCount} DCs</span></div>
+{(rr.stage1Complete) ? (<><span style={css(`font-size:10px; font-weight:700; color:#128A3E;`)}>Stage 1 complete \u2014 LM unlocked</span></>) : (<><span style={css(`font-size:10px; font-weight:700; color:#C77B00;`)}>Stage 1 in progress</span></>)}
+</div>
+{(rr.cutoffItems || []).concat(rr.tatItems || []).map((it, __iCIA) => (<React.Fragment key={__iCIA}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; padding:8px 10px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:7px;`)}>
+<div style={css(`min-width:0;`)}>
+<div style={css(`font-size:11.5px; color:#14171F;`)}><strong>{it.persona} User</strong> proposes {it.dcCode ? ('TAT for ' + it.dcCode) : 'Dispatch Cutoff'} \u2192 <strong>{it.dcCode ? (it.proposedValue + ' min') : it.proposedValue}</strong></div>
+<div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{it.reason}{it.remark ? ' \u2014 ' + it.remark : ''} \u00b7 {it.submittedAt}</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:6px; flex-shrink:0;`)}>
+<span style={css(`padding:2px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:${it.sevBg}; color:${it.sevFg};`)}>{it.status}</span>
+{(planner && it.status === 'Pending') ? (<>
+<button onClick={it.onAccept} aria-label={"Accept"} title={"Accept"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#fff; color:#128A3E; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M5 13l4 4L19 7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={it.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:24px; height:24px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</>) : null}
+</div>
+</div>
+</React.Fragment>))}
+{(!planner && rr.canFlagCutoff) ? (<>
+{(!rr.isDraftOpenCutoff) ? (<><button onClick={rr.onOpenDraft} style={css(`height:28px; padding:0 11px; border:1px dashed #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Flag Dispatch Cutoff</button></>) : (<>
+<div style={css(`padding:10px; background:#FFFCF4; border:1px solid #EDD9AF; border-radius:7px; margin-top:4px;`)}>
+<div style={css(`display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;`)}>
+<input type={"time"} value={rr.draftValue} onInput={rr.onDraftValue} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px;`)} />
+<select value={rr.draftReason} onChange={rr.onDraftReason} style={css(`flex:1; min-width:180px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; background:#fff;`)}>
+<option value={""}>Select reason\u2026</option>
+{(rr.reasonsForRole || []).map((rs, __iRsA) => (<React.Fragment key={__iRsA}><option value={rs}>{rs}</option></React.Fragment>))}
+</select>
+</div>
+<textarea value={rr.draftRemark} onInput={rr.onDraftRemark} placeholder={rr.draftReason === 'Others' ? 'Remarks (mandatory)' : 'Remarks (optional)'} style={css(`width:100%; height:50px; padding:7px 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; box-sizing:border-box; resize:vertical; margin-bottom:8px;`)} />
+<div style={css(`display:flex; justify-content:flex-end; gap:6px;`)}>
+<button onClick={rr.onCloseDraft} style={css(`height:28px; padding:0 11px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+<button onClick={rr.onSubmitDraft} disabled={!rr.draftReason} style={css(`height:28px; padding:0 13px; border:none; background:${rr.draftReason ? '#0D7377' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:${rr.draftReason ? 'pointer' : 'default'};`)}>Submit</button>
+</div>
+</div>
+</>)}
+</>) : null}
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:8px;`)}>DC LEVEL \u2014 LANDING TIME (LM, gated on Stage 1)</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+{(schedAlignDetail.feedbackView.dcRows || []).map((dr, __iFDA) => (<React.Fragment key={__iFDA}>
+<div style={css(`padding:11px 14px; border-top:${__iFDA === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#003F98;`)}>{dr.dcCode}<span style={css(`font-size:10.5px; color:#5A5E66; font-weight:400; margin-left:8px;`)}>{dr.routeCode} \u00b7 Landing {dr.landingLabel} \u00b7 Hold {dr.holdMin} min</span></div>
+{(!dr.stage1Complete) ? (<><span style={css(`font-size:10px; color:#8E96A3;`)}>Locked until Stage 1 decided</span></>) : null}
+</div>
+{(dr.landingItems || []).map((it, __iLIA) => (<React.Fragment key={__iLIA}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; padding:8px 10px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:7px;`)}>
+<div style={css(`min-width:0;`)}>
+<div style={css(`font-size:11.5px; color:#14171F;`)}><strong>LM User</strong> requests Landing Time \u2014 implies Dispatch Cutoff \u2192 <strong>{it.proposedValue}</strong></div>
+<div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{it.reason}{it.remark ? ' \u2014 ' + it.remark : ''} \u00b7 {it.submittedAt}</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:6px; flex-shrink:0;`)}>
+<span style={css(`padding:2px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:${it.sevBg}; color:${it.sevFg};`)}>{it.status}</span>
+{(planner && it.status === 'Pending') ? (<>
+<button onClick={it.onAccept} aria-label={"Accept"} title={"Accept"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#fff; color:#128A3E; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M5 13l4 4L19 7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={it.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:24px; height:24px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</>) : null}
+</div>
+</div>
+</React.Fragment>))}
+{(!planner && dr.canFlagLanding) ? (<>
+{(!dr.isDraftOpenLanding) ? (<><button onClick={dr.onOpenLandingDraft} style={css(`height:28px; padding:0 11px; border:1px dashed #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Flag Landing Time</button></>) : (<>
+<div style={css(`padding:10px; background:#FFFCF4; border:1px solid #EDD9AF; border-radius:7px; margin-top:4px;`)}>
+<div style={css(`display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;`)}>
+<input type={"time"} value={dr.draftValue} onInput={dr.onDraftValue} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px;`)} />
+<select value={dr.draftReason} onChange={dr.onDraftReason} style={css(`flex:1; min-width:180px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; background:#fff;`)}>
+<option value={""}>Select reason\u2026</option>
+{(dr.reasonsLanding || []).map((rs, __iRsB) => (<React.Fragment key={__iRsB}><option value={rs}>{rs}</option></React.Fragment>))}
+</select>
+</div>
+<textarea value={dr.draftRemark} onInput={dr.onDraftRemark} placeholder={dr.draftReason === 'Others' ? 'Remarks (mandatory)' : 'Remarks (optional)'} style={css(`width:100%; height:50px; padding:7px 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; box-sizing:border-box; resize:vertical; margin-bottom:8px;`)} />
+<div style={css(`display:flex; justify-content:flex-end; gap:6px;`)}>
+<button onClick={dr.onCloseDraft} style={css(`height:28px; padding:0 11px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+<button onClick={dr.onSubmitLandingDraft} disabled={!dr.draftReason} style={css(`height:28px; padding:0 13px; border:none; background:${dr.draftReason ? '#0D7377' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:${dr.draftReason ? 'pointer' : 'default'};`)}>Submit</button>
+</div>
+</div>
+</>)}
+</>) : null}
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
 </div>
 </div>
 </>) : null}
@@ -5137,6 +5240,23 @@ class NDCApp extends React.Component {
       inputsTab: 'volume',
       mastersTab: 'sc',
       lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '', lmdcUploadErrors: [],
+      // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14) =====
+      // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
+      // a second dimension on top of the existing Planner/Ops-Lead toggle and the existing
+      // opsActingCurrent (which individual). Stage 1 (SC+LH, simultaneous) proposes Dispatch
+      // Cutoff (+TAT for LH); Stage 2 is the Planner deciding Stage 1; Stage 3 (LM, gated on Stage
+      // 2 being fully decided for that route) proposes Landing Time, back-solved to an implied
+      // Dispatch Cutoff since TAT is locked by then.
+      schedOpsRole: 'SC',
+      // schedFeedback[planId][routeCode] = { cutoff: [items], tat: { [dcCode]: [items] }, landing: { [dcCode]: [items] } }
+      // item = { id, persona, reason, remark, status: Pending/Accepted/Rejected, proposedValue, submittedAt }
+      schedFeedback: {},
+      // Committed overrides — only written once a piece of feedback is Accepted; everything else
+      // (schedulerRouteDcInfo, D0%, Dock Schedule) reads through these so an Accept has a REAL
+      // effect on the plan, not just a status change.
+      schedRouteCutoffOverride: {}, // { [planId]: { [routeCode]: 'HH:MM' } }
+      schedDcTatOverride: {}, // { [planId]: { [dcCode]: minutes } }
+      schedFeedbackDraft: {}, schedFeedbackDraftOpen: null,
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5832,6 +5952,135 @@ class NDCApp extends React.Component {
   }
   // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
   // fields into st.lmdcEdits, keyed by LMDC Code — never mutates d.lmdcs itself.
+  // schedFeedbackReasons(persona, field) (2026-08-14) — the fixed reason-bucket list per
+  // (persona, field) pair, from the product's own defined table. "Others" is always last and
+  // always Mandatory remarks; every named reason is Optional remarks.
+  schedFeedbackReasons(persona, field) {
+    const T = {
+      SC_cutoff: ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time'],
+      LH_cutoff: ['Vendor not aligned - Due to Traffic', 'DC Not open to receive load'],
+      LH_tat: ['Due to Traffic', 'Geographical constraints'],
+      LM_landing: ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early'],
+    };
+    return (T[persona + '_' + field] || []).concat(['Others']);
+  }
+  // submitSchedFeedback(planId, routeCode, field, dcCode, proposedValue, reason, remark) —
+  // field is 'cutoff' (route-level, SC or LH) | 'tat' (DC-level, LH) | 'landing' (DC-level, LM,
+  // gated on Stage 1 being fully decided for that route — enforced by the caller/UI, not here).
+  // "Others" requires a non-empty remark; every named reason stays optional (2026-08-07 table).
+  // One PENDING item per (persona, field, route-or-DC) — resubmitting replaces the existing
+  // pending item from that same persona rather than stacking a second one.
+  submitSchedFeedback(planId, routeCode, field, dcCode, proposedValue, reason, remark) {
+    const persona = this.state.schedOpsRole;
+    if (reason === 'Others' && !String(remark || '').trim()) { this.showToast('Remarks are mandatory for "Others"', '#D14B4B'); return; }
+    const store = Object.assign({}, this.state.schedFeedback || {});
+    store[planId] = Object.assign({}, store[planId]);
+    store[planId][routeCode] = Object.assign({ cutoff: [], tat: {}, landing: {} }, store[planId][routeCode]);
+    const bucket = store[planId][routeCode];
+    const item = { id: 'FB-' + Date.now() + '-' + Math.round(Math.random() * 9999), persona, reason, remark: remark || '', status: 'Pending', proposedValue, submittedAt: 'Today' };
+    if (field === 'cutoff') {
+      bucket.cutoff = (bucket.cutoff || []).filter(x => !(x.persona === persona && x.status === 'Pending')).concat([item]);
+    } else {
+      bucket[field] = Object.assign({}, bucket[field]);
+      bucket[field][dcCode] = (bucket[field][dcCode] || []).filter(x => !(x.persona === persona && x.status === 'Pending')).concat([item]);
+    }
+    this.setState({ schedFeedback: store, schedFeedbackDraftOpen: null, schedFeedbackDraft: {} });
+    this.showToast('Feedback submitted', '#128A3E');
+  }
+  // checkSchedDockCapacity(sp, routeCode, candidateDispatchMin) (2026-08-14, rule 7) — a HARD
+  // block, not a warning: recomputes the candidate's 30-min slot against every OTHER route's
+  // already-resolved dispatch time and the SC's own dock count. E.g. slot 04:30 already at 4/5 —
+  // moving a route in makes 5/5 (fine); moving a second one in makes 6/5, blocked outright.
+  checkSchedDockCapacity(sp, routeCode, candidateDispatchMin) {
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return { ok: true };
+    const docks = sp.rlhDocks || 0;
+    const slotOf = (m) => Math.round(m / 30) * 30;
+    const candidateSlot = slotOf(candidateDispatchMin);
+    let count = 1; // the route being moved, at its new candidate slot
+    info.routeInfo.forEach(ri => { if (ri.route.routeCode !== routeCode && slotOf(ri.dispatchMin) === candidateSlot) count++; });
+    if (docks > 0 && count > docks) {
+      return { ok: false, count, docks, slotLabel: info.fmtTime(candidateSlot), message: 'Dock capacity exceeded: ' + info.fmtTime(candidateSlot) + ' would have ' + count + ' routes against ' + docks + ' docks.' };
+    }
+    return { ok: true, count, docks, slotLabel: info.fmtTime(candidateSlot) };
+  }
+  // decideSchedFeedback(planId, sp, routeCode, field, dcCode, itemId, decision) — Reject just
+  // marks the item; Accept commits a real override (schedRouteCutoffOverride / schedDcTatOverride)
+  // so the plan's own numbers actually change, but only after the dock-capacity check for
+  // 'cutoff'/'landing' passes — a violation blocks the Accept outright, the item stays Pending.
+  decideSchedFeedback(planId, sp, routeCode, field, dcCode, itemId, decision) {
+    const store = Object.assign({}, this.state.schedFeedback || {});
+    const bucket = ((store[planId] || {})[routeCode]) || {};
+    const list = field === 'cutoff' ? (bucket.cutoff || []) : ((bucket[field] || {})[dcCode] || []);
+    const item = list.find(x => x.id === itemId);
+    if (!item) return;
+    if (decision === 'Reject') {
+      item.status = 'Rejected';
+      this.setState({ schedFeedback: store });
+      this.showToast('Feedback rejected', '#5A5E66');
+      return;
+    }
+    if (field === 'cutoff') {
+      const parts = String(item.proposedValue).split(':');
+      const candidateMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+      const cap = this.checkSchedDockCapacity(sp, routeCode, candidateMin);
+      if (!cap.ok) { this.showToast(cap.message, '#D14B4B'); return; }
+      const rc = Object.assign({}, this.state.schedRouteCutoffOverride || {});
+      rc[planId] = Object.assign({}, rc[planId], { [routeCode]: item.proposedValue });
+      item.status = 'Accepted';
+      this.setState({ schedFeedback: store, schedRouteCutoffOverride: rc });
+      this.showToast('Dispatch Cutoff updated to ' + item.proposedValue, '#128A3E');
+    } else if (field === 'tat') {
+      const tc = Object.assign({}, this.state.schedDcTatOverride || {});
+      tc[planId] = Object.assign({}, tc[planId], { [dcCode]: Number(item.proposedValue) });
+      item.status = 'Accepted';
+      this.setState({ schedFeedback: store, schedDcTatOverride: tc });
+      this.showToast('TAT updated for ' + dcCode, '#128A3E');
+    } else if (field === 'landing') {
+      // Stage 3 — item.proposedValue is the IMPLIED Dispatch Cutoff, back-solved at submission
+      // time from the requested Landing Time and the (by-then-locked) TAT. Accepting it is the
+      // same action as accepting a cutoff override on that DC's route — same dock-capacity gate.
+      const parts = String(item.proposedValue).split(':');
+      const candidateMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+      const cap = this.checkSchedDockCapacity(sp, routeCode, candidateMin);
+      if (!cap.ok) { this.showToast(cap.message, '#D14B4B'); return; }
+      const rc = Object.assign({}, this.state.schedRouteCutoffOverride || {});
+      rc[planId] = Object.assign({}, rc[planId], { [routeCode]: item.proposedValue });
+      item.status = 'Accepted';
+      this.setState({ schedFeedback: store, schedRouteCutoffOverride: rc });
+      this.showToast('Dispatch Cutoff moved to ' + item.proposedValue + ' to satisfy the requested Landing Time', '#128A3E');
+    }
+  }
+  // computeImpliedCutoffForLanding(sp, routeCode, dcCode, proposedLandingHHMM) (2026-08-14, rule 3)
+  // — back-solves the Dispatch Cutoff a proposed Landing Time would require, given that DC's
+  // (by-then-locked) TAT: implied dispatch = proposed landing − TAT, assuming zero hold (i.e. the
+  // proposed time sits inside the DC's own open hours — if not, or if the implied dispatch falls
+  // outside the ORIGINATING SC's own open hours, this is flagged infeasible rather than silently
+  // clamped, per rule 1/3.
+  computeImpliedCutoffForLanding(sp, routeCode, dcCode, proposedLandingHHMM) {
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return { ok: false, message: 'Plan data unavailable.' };
+    const ri = info.routeInfo.find(r => r.route.routeCode === routeCode);
+    const dcRow = ri && ri.dcInfo.find(x => x.dc.code === dcCode);
+    if (!dcRow) return { ok: false, message: 'DC not found on this route.' };
+    const parts = String(proposedLandingHHMM).split(':');
+    const proposedMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    const travelMin = dcRow.breakdownTatHrs * 60; // locked TAT (post Stage 2)
+    const dcHrs = info.resolveDcHours(dcCode);
+    const proposedTod = ((proposedMin % 1440) + 1440) % 1440;
+    const dcOpenAtProposed = proposedTod >= dcHrs.openMin && proposedTod < dcHrs.closeMin;
+    if (!dcOpenAtProposed) return { ok: false, message: dcCode + ' is not open at ' + proposedLandingHHMM + ' — that Landing Time isn\u2019t achievable without also changing DC hours.' };
+    const impliedDispatchMin = proposedMin - travelMin;
+    const sc = this.state.data.scs.find(s => s.code === sp.scCode);
+    const scFields = this.resolveScFields(sc || { code: sp.scCode });
+    const scOpenMin = (() => { const p = scFields.openTime.split(':'); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10); })();
+    const scCloseMin = (() => { const p = scFields.closeTime.split(':'); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10); })();
+    const impliedTod = ((impliedDispatchMin % 1440) + 1440) % 1440;
+    if (impliedTod < scOpenMin || impliedTod >= scCloseMin) {
+      return { ok: false, message: 'Implied Dispatch Cutoff (' + info.fmtTime(impliedDispatchMin) + ') falls outside ' + sp.scCode + '\u2019s own operating hours (' + scFields.openTime + '\u2013' + scFields.closeTime + ').' };
+    }
+    return { ok: true, impliedDispatchMin, impliedLabel: info.fmtTime(impliedDispatchMin) };
+  }
   saveLmdcEdit(code) {
     const st = this.state;
     const f = st.lmdcEditDraft || {};
@@ -7663,6 +7912,18 @@ class NDCApp extends React.Component {
       const midpoint = 480 + (seedH % 360);
       const slope = 55 + ((seedH >> 4) % 55);
       const points = [];
+      const lmdcEditsOverlaySweep = st.lmdcEdits || {};
+      const lmdcByCodeSweep = {}; (d.lmdcs || []).forEach(l => { lmdcByCodeSweep[l.code] = l; });
+      const timeToMinSweep = (hhmm) => { const parts = String(hhmm || '05:00').split(':'); const hh = parseInt(parts[0], 10), mm = parseInt(parts[1], 10); return (isNaN(hh) ? 5 : hh) * 60 + (isNaN(mm) ? 0 : mm); };
+      const holdForArrivalSweep = (arrivalAbsMin, dcCode) => {
+        const base = lmdcByCodeSweep[dcCode]; const patch = lmdcEditsOverlaySweep[dcCode];
+        const open = timeToMinSweep((patch && patch.open) || (base ? base.open : '05:00'));
+        const close = timeToMinSweep((patch && patch.close) || (base ? base.close : '21:00'));
+        const arrivalTod = ((Math.round(arrivalAbsMin) % 1440) + 1440) % 1440;
+        if (arrivalTod < open) return open - arrivalTod;
+        if (arrivalTod >= close) return (open + 1440) - arrivalTod;
+        return 0;
+      };
       for (let s = 180; s <= 1380; s += 30) {
         let onTimeVol = 0, totalVol = 0;
         (plan.rows || []).forEach(route => {
@@ -7672,7 +7933,9 @@ class NDCApp extends React.Component {
             const speed = isLocal ? params.localSpeed : params.nonLocalSpeed;
             const distKm = parseFloat(dc.dist) || 0;
             const travelMin = speed > 0 ? (distKm / speed) * 60 : distKm * 2;
-            const landingMin = dispatchMin + travelMin;
+            const arrivalMin = dispatchMin + travelMin;
+            const holdMin = holdForArrivalSweep(arrivalMin, dc.code);
+            const landingMin = arrivalMin + holdMin; // Landing Time = Arrival + Hold (2026-08-14)
             totalVol += dc.vol;
             if (landingMin <= cutoffMin) onTimeVol += dc.vol;
           });
@@ -8153,15 +8416,18 @@ class NDCApp extends React.Component {
   // schedulerRouteDcInfo(sp) (2026-08-04) — the shared per-route/per-DC synthesis behind BOTH
   // computeSchedulerMetricsFor() (plan-wide aggregates) and computeSchedulerDetailTables() (the
   // Plan Details / Route View / Dock Schedule tabs) — factored out so the two can never drift.
-  // Hold time is drawn PER-DC, not once per route: hold happens at the destination LMDC while it
-  // unloads (e.g. a vehicle lands at 04:30 but the dock only unloads at 05:00 — that 30-min gap is
-  // hold time), so it has no bearing on dispatch and can genuinely vary stop-to-stop along a
-  // route. A route's own hold time is just the sum of its DCs'.
-  // 2026-08-09 — Hold Time is now an On/Off switch (SC-level fact) rather than a 0/0.5/1 HTF dial.
-  // Off means the DS algorithm isn't modeling/minimising hold time for this SC at all — every DC's
-  // hold time is 0. On means each DC's draw is scaled to, and capped by, the Max Hold Time ceiling
-  // for its Local/Non-Local classification (e.g. Local 30 min / Non-Local 120 min) — a real
-  // operating policy, not an abstract multiplier. ~30% of DCs still land at exactly zero hold.
+  // 2026-08-14 — Hold Time is now a REAL formula, not a synthetic draw: it's the time a vehicle
+  // waits at the destination DC after arrival for that DC to actually be open to unload — e.g.
+  // arrival 04:30 but the DC opens at 05:00 → 30 min hold; arrival 22:00 but the DC closed at
+  // 21:00 and reopens 05:00 next day → 7 hrs hold. Derived from each DC's own Open/Close hours in
+  // LMDC Master (never a per-SC cap applied after the fact). Landing Time = Arrival + Hold — the
+  // time the shipment is actually usable, not just when the truck physically shows up — and that's
+  // what D0 Landing % now checks against the D0 Cutoff (see computeSchedulerMetricsFor below).
+  // Hold Time On/Off + Max Hold Local/Non-Local (SC Master) stay exactly as configured, but their
+  // role changes: they're now a CONSTRAINT fed to the dispatch-time generator itself, not a cap
+  // applied to the result — when On, the generator searches (bounded, 30-min steps, up to 8 hrs
+  // later) for a dispatch time keeping every DC's real computed hold under its applicable ceiling,
+  // "minimising hold time and keeping it within the limit" rather than just drawing and clipping.
   schedulerRouteDcInfo(sp) {
     const st = this.state, d = st.data;
     const parent = d.plans.find(p => p.id === sp.parentPlanId);
@@ -8194,33 +8460,81 @@ class NDCApp extends React.Component {
       if (isNaN(hh) || isNaN(mm)) return cutoffMin;
       return hh * 60 + mm;
     };
+    // resolveDcHours(code) — a DC's own Open/Close, in minutes-of-day, from LMDC Master (+ edits).
+    const timeToMin = (hhmm) => { const parts = String(hhmm || '05:00').split(':'); const hh = parseInt(parts[0], 10), mm = parseInt(parts[1], 10); return (isNaN(hh) ? 5 : hh) * 60 + (isNaN(mm) ? 0 : mm); };
+    const resolveDcHours = (code) => {
+      const base = lmdcByCode[code];
+      const patch = lmdcEditsOverlay[code];
+      const open = (patch && patch.open) || (base ? base.open : '05:00');
+      const close = (patch && patch.close) || (base ? base.close : '21:00');
+      return { openMin: timeToMin(open), closeMin: timeToMin(close) };
+    };
+    // holdForArrival(arrivalAbsMin, dcCode) — the real formula: 0 while the DC is open, otherwise
+    // the wait until it next opens (same-day if arriving early, next-day if arriving after close).
+    const holdForArrival = (arrivalAbsMin, dcCode) => {
+      const hrs = resolveDcHours(dcCode);
+      const arrivalTod = ((Math.round(arrivalAbsMin) % 1440) + 1440) % 1440;
+      if (arrivalTod < hrs.openMin) return hrs.openMin - arrivalTod;
+      if (arrivalTod >= hrs.closeMin) return (hrs.openMin + 1440) - arrivalTod;
+      return 0;
+    };
+    const routeCutoffOverrides = (st.schedRouteCutoffOverride || {})[sp.id] || {};
+    const dcTatOverrides = (st.schedDcTatOverride || {})[sp.id] || {};
     const routeInfo = routes.map(r => {
-      const dispatchMin = cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
-      let routeHoldMin = 0;
-      const dcInfo = this.genDcRows(r).map((dc) => {
-        const isLocal = (hash(dc.code + seed) % 2) === 0;
-        const speed = isLocal ? localSpeed : nonLocalSpeed;
-        // breakdown_distance — reuses genDcRows' own per-DC distance (already the field Route
-        // Planner's Plan Details shows as "RT DIST (KM)"), so this stays consistent with what
-        // Route Planner already displays for the same DC rather than inventing a second number.
-        const breakdownDistKm = parseFloat(dc.dist) || 0;
-        const travelMin = speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2;
-        const landingMin = dispatchMin + travelMin;
-        const effectiveCutoffMin = resolveDcCutoffMin(dc.code);
-        // Per-DC hold draw — 0 when Off; else ~30% floored to zero, the rest scaled up to (and
-        // capped by) whichever Local/Non-Local ceiling applies.
-        let holdMin = 0;
-        if (holdOn) {
+      const dcRows = this.genDcRows(r);
+      // Accepted Dispatch Cutoff feedback (Stage 1/3, from SC/LH/back-solved-LM) overrides the
+      // synthetic base draw outright for this route — same "explicit override wins" convention
+      // Rule 5 already established for LMDC-level D0 Cutoff.
+      const cutoffOverrideStr = routeCutoffOverrides[r.routeCode];
+      const baseDispatch = cutoffOverrideStr
+        ? (() => { const parts = cutoffOverrideStr.split(':'); return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10); })()
+        : cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
+      const hasCutoffOverride = !!cutoffOverrideStr;
+      // computeAt(dispatchCandidate) — the per-DC breakdown for one candidate dispatch time,
+      // reused both to evaluate the base draw and (when Hold Time is On) each step of the
+      // constraint search below.
+      const computeAt = (dispatchCandidate) => {
+        let maxViolation = 0;
+        const perDc = dcRows.map((dc) => {
+          const isLocal = (hash(dc.code + seed) % 2) === 0;
+          const speed = isLocal ? localSpeed : nonLocalSpeed;
+          const breakdownDistKm = parseFloat(dc.dist) || 0;
+          // Accepted TAT feedback (Stage 1, from LH) overrides the synthetic travel time outright
+          // for that DC — same explicit-override convention as the cutoff override above.
+          const tatOverrideMin = dcTatOverrides[dc.code];
+          const travelMin = tatOverrideMin != null ? tatOverrideMin : (speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2);
+          const arrivalMin = dispatchCandidate + travelMin;
+          const holdMin = holdForArrival(arrivalMin, dc.code);
           const cap = isLocal ? maxHoldLocal : maxHoldNonLocal;
-          const roll = hash(dc.code + r.routeCode + seed + 'h') % 100;
-          holdMin = roll < 30 ? 0 : Math.round(((roll - 30) / 69) * cap);
+          maxViolation = Math.max(maxViolation, holdMin - cap);
+          return { dc, isLocal, breakdownDistKm, travelMin, arrivalMin, holdMin, hasTatOverride: tatOverrideMin != null };
+        });
+        return { perDc, maxViolation };
+      };
+      let dispatchMin = baseDispatch;
+      let chosen = computeAt(baseDispatch);
+      if (holdOn && !hasCutoffOverride && chosen.maxViolation > 0) {
+        // Bounded local search — the DS algorithm looking for a later dispatch time that keeps
+        // every DC's hold within its Local/Non-Local cap, stopping at the first fully-compliant
+        // time found (or the least-violating one tried, if none fully satisfy within 8 hrs).
+        // Skipped once a route's cutoff is an accepted override — that decision already went
+        // through its own dock-capacity check at Accept time and should win outright, not get
+        // silently nudged later by this search.
+        for (let shift = 30; shift <= 480 && chosen.maxViolation > 0; shift += 30) {
+          const candidate = computeAt(baseDispatch + shift);
+          if (candidate.maxViolation < chosen.maxViolation) { chosen = candidate; dispatchMin = baseDispatch + shift; }
         }
+      }
+      let routeHoldMin = 0;
+      const dcInfo = chosen.perDc.map(({ dc, isLocal, breakdownDistKm, travelMin, arrivalMin, holdMin }) => {
+        const landingMin = arrivalMin + holdMin; // Landing Time = Arrival + Hold — when it's actually usable
+        const effectiveCutoffMin = resolveDcCutoffMin(dc.code);
         routeHoldMin += holdMin;
-        return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), landingMin, holdMin, effectiveCutoffMin };
+        return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), arrivalMin, landingMin, holdMin, effectiveCutoffMin };
       });
       return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin };
     });
-    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash };
+    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival };
   }
   computeSchedulerMetricsFor(sp) {
     const info = this.schedulerRouteDcInfo(sp);
@@ -8385,10 +8699,100 @@ class NDCApp extends React.Component {
       dockCount: ds.docks.length, dockCols, dockRows, hasDockSchedule: ds.docks.length > 0 && dockCols.length > 0,
       dockTotalDeparted: totalDeparted, dockBusyLabel: busyLabel,
       granIsHour: gran === 'hour', onGranHour: () => this.setState({ [granKey]: 'hour' }), onGranSlot: () => this.setState({ [granKey]: 'slot' }),
-      sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule']].map(t => ({
+      sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule'], ['feedback', 'Feedback']].map(t => ({
         label: t[1], active: tab === t[0], color: tab === t[0] ? '#0D7377' : '#5A5E66', weight: tab === t[0] ? '700' : '600',
         onClick: () => this.setState({ [tabStateKey]: t[0] }) })),
-      secDetails: tab === 'details', secRoute: tab === 'route', secDock: tab === 'dock',
+      secDetails: tab === 'details', secRoute: tab === 'route', secDock: tab === 'dock', secFeedback: tab === 'feedback',
+      feedbackView: this.buildSchedFeedbackView(sp),
+    };
+  }
+  // buildSchedFeedbackView(sp) (2026-08-14) — the 3-stage Ops Alignment feedback loop for one
+  // Cutoff Plan run. Route-level rows (Dispatch Cutoff, from SC + LH; TAT, from LH — Stage 1) and
+  // DC-level rows (Landing Time, from LM — Stage 3, gated per-route on Stage 1 being fully
+  // decided). Feedback is keyed by sp.id (this specific run), not the parent RLH plan, since two
+  // different Cutoff Plan runs for the same SC could receive independent feedback.
+  buildSchedFeedbackView(sp) {
+    const st = this.state;
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return { routeRows: [], dcRows: [] };
+    const feedbackStore = (st.schedFeedback || {})[sp.id] || {};
+    const role = st.schedOpsRole || 'SC';
+    const draftOpenKey = st.schedFeedbackDraftOpen;
+    const draft = st.schedFeedbackDraft || {};
+    const mkDecideHandlers = (routeCode, field, dcCode, item) => ({
+      onAccept: () => this.decideSchedFeedback(sp.id, sp, routeCode, field, dcCode, item.id, 'Accept'),
+      onReject: () => this.decideSchedFeedback(sp.id, sp, routeCode, field, dcCode, item.id, 'Reject'),
+    });
+    const mkItemView = (routeCode, field, dcCode, item) => Object.assign({}, item, mkDecideHandlers(routeCode, field, dcCode, item),
+      { sevBg: item.status === 'Accepted' ? '#E7F4EC' : item.status === 'Rejected' ? '#FBEAEA' : '#FBF1DF',
+        sevFg: item.status === 'Accepted' ? '#128A3E' : item.status === 'Rejected' ? '#D14B4B' : '#C77B00' });
+    const stage1CompleteByRoute = {};
+    const routeRows = info.routeInfo.map(ri => {
+      const routeCode = ri.route.routeCode;
+      const bucket = feedbackStore[routeCode] || {};
+      const cutoffItems = (bucket.cutoff || []).map(it => mkItemView(routeCode, 'cutoff', null, it));
+      const tatByDc = bucket.tat || {};
+      const tatItems = [];
+      Object.keys(tatByDc).forEach(dcCode => (tatByDc[dcCode] || []).forEach(it => tatItems.push(mkItemView(routeCode, 'tat', dcCode, Object.assign({ dcCode }, it)))));
+      const allCutoffDecided = cutoffItems.every(x => x.status !== 'Pending');
+      const allTatDecided = tatItems.every(x => x.status !== 'Pending');
+      const stage1Complete = allCutoffDecided && allTatDecided;
+      stage1CompleteByRoute[routeCode] = stage1Complete;
+      const isDraftOpenCutoff = draftOpenKey === (routeCode + ':cutoff:');
+      const reasonsForRole = role === 'SC' ? this.schedFeedbackReasons('SC', 'cutoff') : role === 'LH' ? this.schedFeedbackReasons('LH', 'cutoff') : [];
+      return {
+        routeCode, dispatchLabel: info.fmtTime(ri.dispatchMin), dcCount: ri.dcInfo.length,
+        cutoffItems, hasCutoffPending: cutoffItems.some(x => x.status === 'Pending'),
+        tatItems, hasTatPending: tatItems.some(x => x.status === 'Pending'),
+        stage1Complete,
+        canFlagCutoff: role === 'SC' || role === 'LH',
+        isDraftOpenCutoff, draftReason: draft.reason || '', draftRemark: draft.remark || '', draftValue: draft.value || info.fmtTime(ri.dispatchMin),
+        reasonsForRole,
+        onOpenDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':cutoff:', schedFeedbackDraft: { value: info.fmtTime(ri.dispatchMin), reason: '', remark: '' } }),
+        onCloseDraft: () => this.setState({ schedFeedbackDraftOpen: null, schedFeedbackDraft: {} }),
+        onDraftReason: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { reason: e.target.value }) }),
+        onDraftRemark: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { remark: e.target.value }) }),
+        onDraftValue: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { value: e.target.value }) }),
+        onSubmitDraft: () => this.submitSchedFeedback(sp.id, routeCode, 'cutoff', null, draft.value, draft.reason, draft.remark),
+      };
+    });
+    const dcRows = [];
+    info.routeInfo.forEach(ri => {
+      const routeCode = ri.route.routeCode;
+      const bucket = feedbackStore[routeCode] || {};
+      ri.dcInfo.forEach(dcInfo => {
+        const dcCode = dcInfo.dc.code;
+        const tatItems = ((bucket.tat || {})[dcCode] || []).map(it => mkItemView(routeCode, 'tat', dcCode, it));
+        const landingItems = ((bucket.landing || {})[dcCode] || []).map(it => mkItemView(routeCode, 'landing', dcCode, it));
+        const isDraftOpenTat = draftOpenKey === (routeCode + ':tat:' + dcCode);
+        const isDraftOpenLanding = draftOpenKey === (routeCode + ':landing:' + dcCode);
+        dcRows.push({
+          routeCode, dcCode, landingLabel: info.fmtTime(Math.round(dcInfo.landingMin)), holdMin: dcInfo.holdMin,
+          tatItems, hasTatPending: tatItems.some(x => x.status === 'Pending'),
+          landingItems, hasLandingPending: landingItems.some(x => x.status === 'Pending'),
+          stage1Complete: stage1CompleteByRoute[routeCode],
+          canFlagTat: role === 'LH',
+          canFlagLanding: role === 'LM' && stage1CompleteByRoute[routeCode],
+          isDraftOpenTat, isDraftOpenLanding,
+          onOpenTatDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':tat:' + dcCode, schedFeedbackDraft: { value: String(Math.round(dcInfo.breakdownTatHrs * 60)), reason: '', remark: '' } }),
+          onOpenLandingDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':landing:' + dcCode, schedFeedbackDraft: { value: info.fmtTime(Math.round(dcInfo.landingMin)), reason: '', remark: '' } }),
+          onCloseDraft: () => this.setState({ schedFeedbackDraftOpen: null, schedFeedbackDraft: {} }),
+          onDraftReason: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { reason: e.target.value }) }),
+          onDraftRemark: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { remark: e.target.value }) }),
+          onDraftValue: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { value: e.target.value }) }),
+          draftReason: draft.reason || '', draftRemark: draft.remark || '', draftValue: draft.value || '',
+          reasonsTat: this.schedFeedbackReasons('LH', 'tat'), reasonsLanding: this.schedFeedbackReasons('LM', 'landing'),
+          onSubmitTatDraft: () => this.submitSchedFeedback(sp.id, routeCode, 'tat', dcCode, draft.value, draft.reason, draft.remark),
+          onSubmitLandingDraft: () => {
+            const implied = this.computeImpliedCutoffForLanding(sp, routeCode, dcCode, draft.value);
+            if (!implied.ok) { this.showToast(implied.message, '#D14B4B'); return; }
+            this.submitSchedFeedback(sp.id, routeCode, 'landing', dcCode, implied.impliedLabel, draft.reason, draft.remark);
+          },
+        });
+      });
+    });
+    return { routeRows, dcRows, role,
+      onSetRole: (r) => this.setState({ schedOpsRole: r }),
     };
   }
 

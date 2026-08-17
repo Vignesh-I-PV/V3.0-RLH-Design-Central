@@ -1542,3 +1542,143 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - Companion docs have **not** been updated to reflect this session
     (08-04 through 08-10) — a recurring gap flagged after nearly every
     session so far; worth a dedicated pass before it drifts any further.
+
+- **2026-08-11** — **Fixed a real runtime bug the user hit live**: opening Route Scheduler's
+  Design Creation threw `ReferenceError: nlhPicked is not defined`. Root cause, and a real lesson
+  for this codebase: the app resolves everything the render function references via a `with(B)`
+  block over the object `renderVals()` returns — there's no explicit destructuring list, so a
+  variable computed inside `schedulerVals()` but never added to its own `return {...}` is `undefined`
+  at best and a hard `ReferenceError` at worst, and **no Babel/syntax compile check can catch this
+  class of bug** — only an actual render does. `nlhPicked` was computed to build `canNextScheduler1`
+  but never itself exposed, even though Step 1's JSX gated the whole SC/Plan rail on it directly.
+  Fixed, then went back and found **four more instances of the exact same bug** from the same
+  wizard-restructuring work: `curRailGroup`, `onSelectAllPlans`, `onSelectAllScsLatest`,
+  `onClearAllPlans` — all computed, none returned. All five now properly exposed. Given a plain
+  compile check can't catch this, a real render/click-through pass is the only reliable guard
+  against it recurring.
+
+- **2026-08-12** — Two fixes from user testing:
+  1. **Step 1's SC/Plan rail is no longer gated on picking an NLH Plan first** — it was hidden
+     behind `{(nlhPicked) ? ... : null}`, which the user explicitly didn't want (list should
+     always be visible; NLH selection stays *mandatory to advance*, just doesn't hide the list).
+     Un-gated the rail, added a small amber inline note under it when NLH isn't picked yet,
+     explaining what's still blocking "Next" — `canNextScheduler1` itself is unchanged (still
+     requires both a plan selection and an NLH pick).
+  2. Began investigating a report that clicking HW = 0 in Operating Mode "applies but doesn't
+     highlight — 0.5 stays shown as active." Traced the read/write logic thoroughly (correct) but
+     couldn't reproduce a concrete bug from static reading alone this session; asked for more
+     specific repro detail before guessing a fix (resolved the next day — see below).
+
+- **2026-08-13** — 
+  1. **Found and fixed the HW highlight bug.** Real root cause: **Route Planner's own Design
+     Creation has a completely separate HW control that also returns a property literally named
+     `hwGlobal`** (defaulting to 0.5), and — since `...this.creationVals()` is spread *after*
+     `...this.schedulerVals()` into the combined render object — Route Planner's `hwGlobal` was
+     silently overwriting Route Scheduler's for display purposes everywhere the bare identifier
+     was referenced. Route Scheduler's actual *state* (`st.schedulerHwGlobal`) was always being
+     set correctly (which is why triggering worked despite the icon not visually responding) — only
+     the *read-back-for-display* was pointed at the wrong value. Renamed Route Scheduler's exposed
+     key to `schedHwGlobal` to end the collision.
+  2. Also fixed a smaller, related miss found while in there: the "N SCs overridden" badge still
+     referenced `htfOverridden`, a field deleted along with HTF on 2026-08-09 — it was silently
+     under-counting (not erroring) rather than including Hold Time's new override flags.
+  3. **Start-Time vs. D0% graph redesigned** — now plots **Time of Day (X) vs. Volume % (Y)** with
+     two curves: **Ready to Ship %** (a seeded logistic S-curve rising through the day — this
+     prototype has no real sort-completion telemetry to draw from) and **D0 Landing %** (falling,
+     same per-DC travel-time logic as before). The DS "suggested" start time is now genuinely the
+     curves' **crossing point** (found by scanning for the sign change and linearly interpolating
+     between the two straddling 30-min points), not simply whichever point maximises D0% on its
+     own.
+  4. **Preview & Trigger's expanded per-plan DC list gained 4 columns**: Open, Close, D0 Cutoff,
+     Unloading Time — each showing the LMDC Master value with overridden ones in teal/bold and a
+     tooltip distinguishing "Overridden in LMDC Master" from "Default."
+  5. **New: an inline Start Time stepper on every Preview & Trigger row** — defaults to the DS's
+     suggested (crossing-point) time, +/- buttons move it in 30-min increments without opening the
+     graph popup, and a live D0% readout underneath updates by reading straight off that plan's
+     already-computed curve (no recomputation). A small "reset" link appears once moved off the
+     default.
+
+- **2026-08-14** — **Built a full 3-persona Ops Alignment feedback loop for Route Scheduler**, per
+  a product-defined table of User Type × Feedback Parameter × Reason Bucket × Remarks-mandatory-
+  ness:
+  - **SC User** (Ops Lead at the originating SC) — Dispatch Cutoff, route level.
+  - **LH User** (linehaul/vehicle owner) — Dispatch Cutoff *and* TAT, both route/DC level.
+  - **LM User** (receiving DC) — Landing Time, DC level, gated on Stage 1 being fully decided.
+  - **3-stage flow, confirmed with the user**: Stage 1 (SC + LH simultaneous) → Stage 2 (Planner
+    decides Stage 1) → Stage 3 (LM, only once Stage 1 is fully resolved for that route — since
+    Landing Time's only lever, TAT, is locked by then, LM's request back-solves to an *implied*
+    Dispatch Cutoff rather than needing fresh TAT/Cutoff reconciliation).
+  - **Hold Time redefined as a REAL formula, replacing the synthetic capped-draw from 2026-08-09**:
+    `Hold = max(0, DC's next Open time − Arrival)`, same-day or next-day depending on when the
+    vehicle actually arrives vs. that DC's own Open/Close hours (LMDC Master) — not a random draw.
+    **Landing Time = Arrival + Hold** everywhere (D0 Landing %'s check, the Start-Time curve's
+    sweep, Plan Details' `landing_time` column) — the time a shipment is actually usable, not just
+    when the truck shows up.
+  - **Hold Time On/Off + Max Hold Local/Non-Local (SC Master) kept, but their role changed**: per
+    explicit correction from the user, these aren't a cap applied after the fact — they're now a
+    constraint fed to the dispatch-time *generator itself*. When On, a bounded local search (30-min
+    steps, up to 8 hrs later) looks for a dispatch time keeping every DC's real computed hold under
+    its applicable ceiling, "minimising hold time and keeping it within the limit," rather than
+    capping a random draw.
+  - **Cutoff disambiguated**: "Dispatch Cutoff" (the route's own `cutoff_time`/`dispatchMin`) vs.
+    "D0 Cutoff" (the existing SLA threshold, Operating Mode/LMDC Master) — always were two
+    different fields in the code, just needed the naming pulled apart for the feedback UI.
+  - **Validation rules**, confirmed with the user: Dispatch Cutoff proposals must sit within the
+    *originating SC's* own Open/Close hours; TAT proposals ≥ 0 (warned, not blocked, if wildly
+    inconsistent with breakdown distance); Landing Time proposals back-solve to an implied Dispatch
+    Cutoff via the (by-then-locked) TAT and the *target DC's* Open/Close hours, flagged infeasible
+    (never silently clamped) if no cutoff satisfies it or it would violate the SC-hours rule; one
+    pending proposal per (persona, field, route/DC); "Others" always requires Remarks, every named
+    reason stays optional; **and new — a hard dock-capacity block** (not a warning): before any
+    Accept that would move a route into a different 30-min dispatch slot, recomputes that slot's
+    route count against the SC's dock count and blocks the Accept outright if it would be exceeded
+    (e.g. an already-full 4/5 slot taking on a 5th and 6th route in the same batch).
+  - First built as its **own dedicated "Feedback" tab** (4th tab alongside Plan Details/Route
+    View/Dock Schedule) with inline flag-forms — **superseded three days later (2026-08-17, see
+    below) once the user clarified the UI should match Route Planner's existing pattern instead**.
+  - Mid-build, hit **the exact same `with(B)`-scope bug class as 2026-08-11**: the new Feedback
+    tab bare-referenced `planner` in 4 places, but only the derived `isAlignPlanner`/`isAlignOps`
+    flags were ever actually returned from `alignVals()` — `planner` itself never was. Fixed all 4
+    (`isAlignPlanner`), then did a full sweep of the surrounding JSX confirming no further instances.
+
+- **2026-08-17** — **Rebuilt the whole feedback loop's UI to match Route Planner's own existing
+  Needs-Change/Review-Changes pattern exactly**, per explicit direction: *"I want the feedback
+  modal to look similar with only functional changes where needed... do not create a dedicated
+  feedback tab... show it at route level with Needs Change/Aligned for Ops Lead and Review
+  Changes/Accept/Reject for the Planner."* Concretely:
+  - **Removed the dedicated "Feedback" tab entirely** — Route Scheduler is back to Route Planner's
+    exact 3-tab shape (Plan Details / Route View / Dock Schedule) in both Design Review and Ops
+    Alignment. Verified with a full div/fragment balance check after the deletion (not just a
+    compile check), given the earlier session's near-miss with silently dropped closing tags.
+  - **Feedback now lives at route level, inside Ops Alignment's own Plan Details table** — each
+    route gets a bordered header box above its DC rows (`buildSchedRouteHeaders()`), matching
+    Route Planner's `dcGroupHeaders` box pixel-for-pixel. Design Review's own Plan Details is
+    untouched (confirmed Route Planner's equivalent never shows these controls there either —
+    feedback review is exclusively an Ops Alignment concern).
+  - **Data model simplified to one shared status per route** (`Aligned` / `Needs Change`, derived
+    from whether any item is still Pending — never separately stored, so it can't drift), matching
+    Route Planner's own single `r.ops` model, replacing the earlier per-persona-per-field
+    bookkeeping.
+  - **Ops Lead view**: Aligned/Needs-Change toggle buttons on the route header (same green/amber
+    as Route Planner); a role selector (SC/LH/LM) added to the overlay's top bar. Clicking "Needs
+    Change" opens a **"Flag changes" modal that mirrors `ncOpen` exactly** — 600px card, one
+    toggle-pill per flaggable field (SC: Cutoff only; LH: Cutoff + one TAT row per DC; LM: one
+    Landing Time row per DC) that reveals an amber-bordered input + its own reason dropdown when
+    clicked, one shared Remark box at the bottom (mandatory only if any flagged reason is
+    "Others").
+  - **Planner view**: a plain status pill on Aligned routes; a "Review Changes" button on routes
+    with pending items, opening a **modal that mirrors `aSel.alignReviewRoute` exactly** — 640px
+    card, items bucketed by field type with a divider line, "Accept all remaining"/"Reject all
+    remaining," 26px Accept/Reject icons, plain-text decided-state (no pill background, matching
+    Route Planner exactly), and the submitted remark shown as an italic quoted callout.
+  - New methods matching Route Planner's own naming 1:1: `openSchedNc`/`closeSchedNc`/
+    `toggleSchedNcFlag`/`submitSchedNc` (propose), `openSchedReview`/`closeSchedReview`/
+    `schedAcceptAllRemaining`/`schedRejectAllRemaining` (decide), `withdrawSchedOwnOpen` (the
+    "Aligned" quick-action for withdrawing one's own pending item).
+  - Flagged as unverified: `schedAcceptAllRemaining`/`schedRejectAllRemaining` iterate calling
+    `decideSchedFeedback` per item, each running its own dock-capacity check independently — later
+    items in the same batch see already-updated dock counts from earlier ones in the *same* batch,
+    which is the intended behaviour but hasn't been exercised by an actual render/click-through.
+  - Companion docs (`01_Complete_Context.md` through `05_Core_Flows.md`, `PROJECT_CONTEXT.md`)
+    remain un-updated through this entire 2026-08-11 → 08-17 span — the gap flagged after nearly
+    every session continues to widen and would benefit from a dedicated pass.

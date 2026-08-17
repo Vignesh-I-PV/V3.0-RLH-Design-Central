@@ -2782,9 +2782,6 @@ function View(B, self) {
 </div>
 </>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
 </>) : null}
-{(reviewSchedDetail.secFeedback) ? (<>
-<div style={css(`display:flex; align-items:center; gap:9px; padding:16px; background:#F7F8FB; border:1px dashed #D7DCE5; border-radius:8px;`)}><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; color:#5A5E66;`)}>SC/LH/LM feedback is submitted and decided from <strong>Ops Alignment</strong>, not Design Review — go there to review this run's feedback threads.</span></div>
-</>) : null}
 </div>
 </div>
 </>) : null}
@@ -4518,6 +4515,92 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+{/* SCHEDULER FLAG-CHANGES MODAL (2026-08-17) — propose (SC/LH/LM), mirrors ncOpen exactly */}
+{(schedNcModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:600px; max-width:100%; max-height:92vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedNcModal.title} \u00b7 {schedNcModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedNcModal.intro} Reviewing as <strong>{schedNcModal.roleLabel}</strong>.</div></div>
+<button onClick={schedNcModal.close} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`padding:20px 22px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr; gap:13px; margin-bottom:16px;`)}>
+{(schedNcModal.fields || []).map((f, __iSNC1) => (<React.Fragment key={__iSNC1}>
+<div style={css(`border:1px solid #EEF1F6; border-radius:8px; padding:10px 12px; background:#FAFBFD;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px;`)}>
+<span style={css(`font-size:11.5px; font-weight:600; color:#14171F;`)}>{f.label}<span style={css(`font-weight:400; color:#8E96A3;`)}> \u2014 currently {f.currentLabel}</span></span>
+<button onClick={f.onToggleFlag} aria-label={"Flag this field"} style={css(`display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 9px; border:1px solid ${f.toggleBd}; background:${f.toggleBg}; color:${f.toggleFg}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:6px; cursor:pointer;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{f.toggleLabel}</button>
+</div>
+{(f.flagged) ? (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1.3fr; gap:8px; margin-top:8px;`)}>
+{(f.isTime) ? (<><input type={"time"} value={f.value} onInput={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : null}
+{(f.isNumber) ? (<><input type={"number"} min={"0"} value={f.value} onInput={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : null}
+<select value={f.reasonVal} onChange={f.onReason} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
+<option value={""}>Select reason\u2026</option>
+{(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
+</select>
+</div>
+</>) : null}
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>\u2014 required only if any flagged reason is "Others"</span></div><textarea value={schedNcModal.remark} onInput={schedNcModal.onRemark} placeholder={"Why this change is needed (ground reality, vendor, DC constraint)\u2026"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} /></div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
+<div style={css(`flex:1; min-width:0;`)}>{(schedNcModal.hasFlagged) ? (<><span style={css(`font-size:11.5px; color:#5A5E66;`)}>{(schedNcModal.fields || []).filter(f => f.flagged).length} field(s) flagged</span></>) : (<><span style={css(`font-size:11.5px; color:#8E96A3;`)}>Flag at least one field to submit</span></>)}</div>
+<button onClick={schedNcModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={schedNcModal.onSubmit} disabled={!schedNcModal.hasFlagged} style={css(`height:36px; padding:0 16px; border:none; background:${schedNcModal.hasFlagged ? '#C77B00' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${schedNcModal.hasFlagged ? 'pointer' : 'default'};`)}>Submit</button>
+</div>
+</div>
+</div>
+</>) : null}
+{/* SCHEDULER REVIEW-CHANGES MODAL (2026-08-17) — decide (Planner), mirrors aSel.alignReviewRoute exactly */}
+{(schedReviewModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:640px; max-width:100%; max-height:88vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
+<div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedReviewModal.routeCode}</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:3px;`)}>{schedReviewModal.decidedCount} of {schedReviewModal.changeTotal} changes decided</div>
+</div>
+<button onClick={schedReviewModal.close} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+{(schedReviewModal.acceptAllRowShow) ? (<>
+<div style={css(`display:flex; gap:8px; margin:14px 22px 0;`)}>
+<button onClick={schedReviewModal.onAcceptAllRow} style={css(`height:32px; padding:0 13px; border:1px solid #128A3E; background:#fff; color:#128A3E; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Accept all remaining</button>
+<button onClick={schedReviewModal.onRejectAllRow} style={css(`height:32px; padding:0 13px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Reject all remaining</button>
+</div>
+</>) : null}
+<div style={css(`padding:16px 22px 20px; display:flex; flex-direction:column; gap:16px;`)}>
+{(schedReviewModal.bucketedChanges || []).map((grp, __iSRB) => (<React.Fragment key={__iSRB}>
+<div>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.05em; margin-bottom:7px; display:flex; align-items:center; gap:7px;`)}>{grp.bucket.toUpperCase()}<span style={css(`height:1px; flex:1; background:#EEF1F6;`)} /></div>
+<div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
+{(grp.items || []).map((c, __iSRC) => (<React.Fragment key={__iSRC}>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:11px 13px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:8px;`)}>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:2px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{c.whereLabel}</span><span style={css(`padding:1px 7px; border-radius:999px; font-size:9px; font-weight:700; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{c.proposedBy}</span></div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>\u2192 {c.changeVal}</div>
+<div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{c.reason}</div>
+{(c.remark) ? (<><div style={css(`margin-top:6px; padding:8px 11px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:7px; font-size:11.5px; color:#14171F; font-style:italic;`)}>"{c.remark}"</div></>) : null}
+</div>
+{(c.canDecide) ? (<>
+<div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
+<button onClick={c.onAccept} aria-label={"Accept"} title={"Accept"} style={css(`width:26px; height:26px; padding:0; border:1px solid #128A3E; background:${c.accBg}; color:${c.accFg}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M5 13l4 4L19 7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:26px; height:26px; padding:0; border:1px solid #D14B4B; background:${c.rejBg}; color:${c.rejFg}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+</>) : (<>
+<span style={css(`font-size:11px; font-weight:700; color:${c.accepted ? '#128A3E' : (c.rejected ? '#D14B4B' : '#8E96A3')}; flex-shrink:0;`)}>{c.accepted ? '\u2713 Accepted' : (c.rejected ? '\u2715 Rejected' : 'Pending')}</span>
+</>)}
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</div>
+</>) : null}
 {/* START-TIME vs D0%/READY-TO-SHIP GRAPH POPUP (2026-08-13, redesigned) */}
 {(schedGraph.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedGraph.close}>
@@ -4607,6 +4690,13 @@ function View(B, self) {
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:11px; font-weight:700; background:${schedAlignDetail.verdictBg}; color:${schedAlignDetail.verdictFg};`)}>{schedAlignDetail.verdict}</span>
 </div>
 <div style={css(`flex:1;`)} />
+{(!isAlignPlanner) ? (<>
+<div style={css(`display:flex; gap:3px; background:#F2F5FA; border-radius:8px; padding:3px;`)} title={"Simulate a different Ops rep type reviewing this plan"}>
+{['SC', 'LH', 'LM'].map((rl, __iRoleHdr) => (<React.Fragment key={__iRoleHdr}>
+<button onClick={() => onSetSchedOpsRole(rl)} style={css(`padding:5px 11px; border:none; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer; background:${schedOpsRole === rl ? '#0D7377' : 'transparent'}; color:${schedOpsRole === rl ? '#fff' : '#5A5E66'};`)}>{rl} User</button>
+</React.Fragment>))}
+</div>
+</>) : null}
 <button onClick={schedAlignDetail.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
 <button onClick={schedAlignDetail.close} aria-label={"Close detail"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
@@ -4662,7 +4752,23 @@ function View(B, self) {
 {['LMDC', 'DESIGN VOL', 'LAT', 'LNG', 'ROUTE CODE', 'TP', 'ZONE', 'VEHICLE TYPE', 'BREAKDOWN DIST', 'RT DIST (KM)', 'CUTOFF TIME', 'BREAKDOWN TAT', 'HOLD TIME'].map((h, __iSADh1) => (<React.Fragment key={__iSADh1}><div style={css(`padding:10px 10px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(schedAlignDetail.dcRows || []).map((r, __iSAD4) => (<React.Fragment key={__iSAD4}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; align-items:center; border-left:2px solid #8E96A3; border-right:2px solid #8E96A3; border-top:${r.isFirstInGroup ? '2px solid #8E96A3' : '1px solid #F4F5F8'}; border-bottom:${r.isLastInGroup ? '2px solid #8E96A3' : 'none'}; margin-top:${r.isFirstInGroup ? '6px' : '0'};`)}>
+{(r.isFirstInGroup) ? (<>
+<div style={css(`display:flex; flex-direction:column; gap:6px; padding:8px 12px; margin-top:6px; background:#F7F8FB; border:2px solid #8E96A3; border-bottom:none;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px;`)}>
+<span style={css(`font-size:11.5px; font-weight:700; color:#0D7377;`)}>{r.routeCode}<span style={css(`font-size:10.5px; color:#8E96A3; font-weight:400; margin-left:8px;`)}>Dispatch {(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).dispatchLabel}</span></span>
+{(!isAlignPlanner && (schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).editable) ? (<>
+<div style={css(`display:flex; gap:6px;`)}>
+<button onClick={(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).onAlign} style={css(`height:26px; padding:0 11px; border:1px solid #128A3E; background:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).alignBg}; color:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).alignFg}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Aligned</button>
+<button onClick={(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).onNeeds} style={css(`height:26px; padding:0 11px; border:1px solid #C77B00; background:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).ncBg}; color:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).ncFg}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Needs change</button>
+</div>
+</>) : (isAlignPlanner && (schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).plannerCanReview) ? (<>
+<button onClick={(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).onReview} style={css(`height:26px; padding:0 12px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:6px; cursor:pointer;`)}>Review Changes</button>
+</>) : (<><span style={css(`font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:999px; background:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).opsBg}; color:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).opsFg};`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).decChip}</span></>)}
+</div>
+{((schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).lockedNote) ? (<><span style={css(`font-size:10px; color:#8E96A3;`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).lockedNote}</span></>) : null}
+</div>
+</>) : null}
+<div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; align-items:center; border-left:2px solid #8E96A3; border-right:2px solid #8E96A3; border-top:${r.isFirstInGroup ? '1px solid #8E96A3' : '1px solid #F4F5F8'}; border-bottom:${r.isLastInGroup ? '2px solid #8E96A3' : 'none'};`)}>
 <div style={css(`padding:10px 10px; font-size:11.5px; font-weight:600; color:#0D7377;`)}>{r.lmdc}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.designVol}</div>
 <div style={css(`padding:10px 10px; font-size:10.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.lat}</div>
@@ -4732,106 +4838,6 @@ function View(B, self) {
 </div>
 </div>
 </>) : (<><div style={css(`padding:30px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No dispatch data for this run yet.</div></>)}
-</>) : null}
-{(schedAlignDetail.secFeedback) ? (<>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;`)}>
-<div style={css(`font-size:12px; color:#5A5E66; max-width:520px; line-height:1.5;`)}>3-stage review: <strong>SC + LH</strong> propose Dispatch Cutoff/TAT simultaneously, the <strong>Planner</strong> decides each, then <strong>LM</strong> can challenge the resulting Landing Time (only once Stage 1 is fully decided for that route).</div>
-{(!planner) ? (<>
-<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px; flex-shrink:0;`)}>
-{['SC', 'LH', 'LM'].map((rl, __iRoleA) => (<React.Fragment key={__iRoleA}>
-<button onClick={() => schedAlignDetail.feedbackView.onSetRole(rl)} style={css(`padding:6px 12px; border:none; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer; background:${schedAlignDetail.feedbackView.role === rl ? '#0D7377' : 'transparent'}; color:${schedAlignDetail.feedbackView.role === rl ? '#fff' : '#5A5E66'};`)}>{rl} User</button>
-</React.Fragment>))}
-</div>
-</>) : null}
-</div>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:8px;`)}>ROUTE LEVEL \u2014 DISPATCH CUTOFF (SC + LH) &amp; TAT (LH)</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:20px;`)}>
-{(schedAlignDetail.feedbackView.routeRows || []).map((rr, __iFRA) => (<React.Fragment key={__iFRA}>
-<div style={css(`padding:12px 14px; border-top:${__iFRA === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;`)}>
-<div style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{rr.routeCode}<span style={css(`font-size:11px; color:#5A5E66; font-weight:400; margin-left:8px;`)}>Dispatch {rr.dispatchLabel} \u00b7 {rr.dcCount} DCs</span></div>
-{(rr.stage1Complete) ? (<><span style={css(`font-size:10px; font-weight:700; color:#128A3E;`)}>Stage 1 complete \u2014 LM unlocked</span></>) : (<><span style={css(`font-size:10px; font-weight:700; color:#C77B00;`)}>Stage 1 in progress</span></>)}
-</div>
-{(rr.cutoffItems || []).concat(rr.tatItems || []).map((it, __iCIA) => (<React.Fragment key={__iCIA}>
-<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; padding:8px 10px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:7px;`)}>
-<div style={css(`min-width:0;`)}>
-<div style={css(`font-size:11.5px; color:#14171F;`)}><strong>{it.persona} User</strong> proposes {it.dcCode ? ('TAT for ' + it.dcCode) : 'Dispatch Cutoff'} \u2192 <strong>{it.dcCode ? (it.proposedValue + ' min') : it.proposedValue}</strong></div>
-<div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{it.reason}{it.remark ? ' \u2014 ' + it.remark : ''} \u00b7 {it.submittedAt}</div>
-</div>
-<div style={css(`display:flex; align-items:center; gap:6px; flex-shrink:0;`)}>
-<span style={css(`padding:2px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:${it.sevBg}; color:${it.sevFg};`)}>{it.status}</span>
-{(planner && it.status === 'Pending') ? (<>
-<button onClick={it.onAccept} aria-label={"Accept"} title={"Accept"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#fff; color:#128A3E; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M5 13l4 4L19 7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={it.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:24px; height:24px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</>) : null}
-</div>
-</div>
-</React.Fragment>))}
-{(!planner && rr.canFlagCutoff) ? (<>
-{(!rr.isDraftOpenCutoff) ? (<><button onClick={rr.onOpenDraft} style={css(`height:28px; padding:0 11px; border:1px dashed #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Flag Dispatch Cutoff</button></>) : (<>
-<div style={css(`padding:10px; background:#FFFCF4; border:1px solid #EDD9AF; border-radius:7px; margin-top:4px;`)}>
-<div style={css(`display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;`)}>
-<input type={"time"} value={rr.draftValue} onInput={rr.onDraftValue} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px;`)} />
-<select value={rr.draftReason} onChange={rr.onDraftReason} style={css(`flex:1; min-width:180px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; background:#fff;`)}>
-<option value={""}>Select reason\u2026</option>
-{(rr.reasonsForRole || []).map((rs, __iRsA) => (<React.Fragment key={__iRsA}><option value={rs}>{rs}</option></React.Fragment>))}
-</select>
-</div>
-<textarea value={rr.draftRemark} onInput={rr.onDraftRemark} placeholder={rr.draftReason === 'Others' ? 'Remarks (mandatory)' : 'Remarks (optional)'} style={css(`width:100%; height:50px; padding:7px 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; box-sizing:border-box; resize:vertical; margin-bottom:8px;`)} />
-<div style={css(`display:flex; justify-content:flex-end; gap:6px;`)}>
-<button onClick={rr.onCloseDraft} style={css(`height:28px; padding:0 11px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-<button onClick={rr.onSubmitDraft} disabled={!rr.draftReason} style={css(`height:28px; padding:0 13px; border:none; background:${rr.draftReason ? '#0D7377' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:${rr.draftReason ? 'pointer' : 'default'};`)}>Submit</button>
-</div>
-</div>
-</>)}
-</>) : null}
-</div>
-</React.Fragment>))}
-</div>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:8px;`)}>DC LEVEL \u2014 LANDING TIME (LM, gated on Stage 1)</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-{(schedAlignDetail.feedbackView.dcRows || []).map((dr, __iFDA) => (<React.Fragment key={__iFDA}>
-<div style={css(`padding:11px 14px; border-top:${__iFDA === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#003F98;`)}>{dr.dcCode}<span style={css(`font-size:10.5px; color:#5A5E66; font-weight:400; margin-left:8px;`)}>{dr.routeCode} \u00b7 Landing {dr.landingLabel} \u00b7 Hold {dr.holdMin} min</span></div>
-{(!dr.stage1Complete) ? (<><span style={css(`font-size:10px; color:#8E96A3;`)}>Locked until Stage 1 decided</span></>) : null}
-</div>
-{(dr.landingItems || []).map((it, __iLIA) => (<React.Fragment key={__iLIA}>
-<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; padding:8px 10px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:7px;`)}>
-<div style={css(`min-width:0;`)}>
-<div style={css(`font-size:11.5px; color:#14171F;`)}><strong>LM User</strong> requests Landing Time \u2014 implies Dispatch Cutoff \u2192 <strong>{it.proposedValue}</strong></div>
-<div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{it.reason}{it.remark ? ' \u2014 ' + it.remark : ''} \u00b7 {it.submittedAt}</div>
-</div>
-<div style={css(`display:flex; align-items:center; gap:6px; flex-shrink:0;`)}>
-<span style={css(`padding:2px 8px; border-radius:999px; font-size:9.5px; font-weight:700; background:${it.sevBg}; color:${it.sevFg};`)}>{it.status}</span>
-{(planner && it.status === 'Pending') ? (<>
-<button onClick={it.onAccept} aria-label={"Accept"} title={"Accept"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#fff; color:#128A3E; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M5 13l4 4L19 7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={it.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:24px; height:24px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</>) : null}
-</div>
-</div>
-</React.Fragment>))}
-{(!planner && dr.canFlagLanding) ? (<>
-{(!dr.isDraftOpenLanding) ? (<><button onClick={dr.onOpenLandingDraft} style={css(`height:28px; padding:0 11px; border:1px dashed #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Flag Landing Time</button></>) : (<>
-<div style={css(`padding:10px; background:#FFFCF4; border:1px solid #EDD9AF; border-radius:7px; margin-top:4px;`)}>
-<div style={css(`display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;`)}>
-<input type={"time"} value={dr.draftValue} onInput={dr.onDraftValue} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px;`)} />
-<select value={dr.draftReason} onChange={dr.onDraftReason} style={css(`flex:1; min-width:180px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; background:#fff;`)}>
-<option value={""}>Select reason\u2026</option>
-{(dr.reasonsLanding || []).map((rs, __iRsB) => (<React.Fragment key={__iRsB}><option value={rs}>{rs}</option></React.Fragment>))}
-</select>
-</div>
-<textarea value={dr.draftRemark} onInput={dr.onDraftRemark} placeholder={dr.draftReason === 'Others' ? 'Remarks (mandatory)' : 'Remarks (optional)'} style={css(`width:100%; height:50px; padding:7px 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12px; box-sizing:border-box; resize:vertical; margin-bottom:8px;`)} />
-<div style={css(`display:flex; justify-content:flex-end; gap:6px;`)}>
-<button onClick={dr.onCloseDraft} style={css(`height:28px; padding:0 11px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-<button onClick={dr.onSubmitLandingDraft} disabled={!dr.draftReason} style={css(`height:28px; padding:0 13px; border:none; background:${dr.draftReason ? '#0D7377' : '#D0D5DD'}; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:${dr.draftReason ? 'pointer' : 'default'};`)}>Submit</button>
-</div>
-</div>
-</>)}
-</>) : null}
-</div>
-</React.Fragment>))}
-</div>
 </>) : null}
 </div>
 </div>
@@ -5240,7 +5246,8 @@ class NDCApp extends React.Component {
       inputsTab: 'volume',
       mastersTab: 'sc',
       lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '', lmdcUploadErrors: [],
-      // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14) =====
+      // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
+      // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
       // a second dimension on top of the existing Planner/Ops-Lead toggle and the existing
       // opsActingCurrent (which individual). Stage 1 (SC+LH, simultaneous) proposes Dispatch
@@ -5248,15 +5255,20 @@ class NDCApp extends React.Component {
       // 2 being fully decided for that route) proposes Landing Time, back-solved to an implied
       // Dispatch Cutoff since TAT is locked by then.
       schedOpsRole: 'SC',
-      // schedFeedback[planId][routeCode] = { cutoff: [items], tat: { [dcCode]: [items] }, landing: { [dcCode]: [items] } }
-      // item = { id, persona, reason, remark, status: Pending/Accepted/Rejected, proposedValue, submittedAt }
+      // schedFeedback[planId][routeCode] = { status: 'Aligned'|'Needs Change', items: [item] }
+      // item = { id, persona, field:'cutoff'|'tat'|'landing', dcCode(if tat/landing), reason,
+      // remark, status: Pending/Accepted/Rejected, proposedValue, submittedAt }. One shared status
+      // per route, same model Route Planner's own r.ops uses — not one status per persona.
       schedFeedback: {},
       // Committed overrides — only written once a piece of feedback is Accepted; everything else
       // (schedulerRouteDcInfo, D0%, Dock Schedule) reads through these so an Accept has a REAL
       // effect on the plan, not just a status change.
       schedRouteCutoffOverride: {}, // { [planId]: { [routeCode]: 'HH:MM' } }
       schedDcTatOverride: {}, // { [planId]: { [dcCode]: minutes } }
-      schedFeedbackDraft: {}, schedFeedbackDraftOpen: null,
+      // Propose modal (SC/LH/LM) — mirrors ncOpen/ncFields/ncRemark exactly.
+      schedNcOpen: false, schedNcRoute: null, schedNcFields: {}, schedNcReason: '', schedNcRemark: '',
+      // Decide modal (Planner) — mirrors aSel.alignReviewRoute exactly.
+      schedReviewRoute: null,
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5964,28 +5976,104 @@ class NDCApp extends React.Component {
     };
     return (T[persona + '_' + field] || []).concat(['Others']);
   }
-  // submitSchedFeedback(planId, routeCode, field, dcCode, proposedValue, reason, remark) —
-  // field is 'cutoff' (route-level, SC or LH) | 'tat' (DC-level, LH) | 'landing' (DC-level, LM,
-  // gated on Stage 1 being fully decided for that route — enforced by the caller/UI, not here).
-  // "Others" requires a non-empty remark; every named reason stays optional (2026-08-07 table).
-  // One PENDING item per (persona, field, route-or-DC) — resubmitting replaces the existing
-  // pending item from that same persona rather than stacking a second one.
-  submitSchedFeedback(planId, routeCode, field, dcCode, proposedValue, reason, remark) {
-    const persona = this.state.schedOpsRole;
-    if (reason === 'Others' && !String(remark || '').trim()) { this.showToast('Remarks are mandatory for "Others"', '#D14B4B'); return; }
-    const store = Object.assign({}, this.state.schedFeedback || {});
-    store[planId] = Object.assign({}, store[planId]);
-    store[planId][routeCode] = Object.assign({ cutoff: [], tat: {}, landing: {} }, store[planId][routeCode]);
-    const bucket = store[planId][routeCode];
-    const item = { id: 'FB-' + Date.now() + '-' + Math.round(Math.random() * 9999), persona, reason, remark: remark || '', status: 'Pending', proposedValue, submittedAt: 'Today' };
-    if (field === 'cutoff') {
-      bucket.cutoff = (bucket.cutoff || []).filter(x => !(x.persona === persona && x.status === 'Pending')).concat([item]);
-    } else {
-      bucket[field] = Object.assign({}, bucket[field]);
-      bucket[field][dcCode] = (bucket[field][dcCode] || []).filter(x => !(x.persona === persona && x.status === 'Pending')).concat([item]);
+  // schedRouteBucket(planId, routeCode) — always-present accessor for a route's feedback bucket.
+  schedRouteBucket(planId, routeCode) {
+    return (((this.state.schedFeedback || {})[planId] || {})[routeCode]) || { items: [] };
+  }
+  // schedRouteStatus(planId, routeCode) — 'Needs Change' whenever any item is still Pending
+  // (derived, never separately stored, so it can't drift from the items themselves — same
+  // single-shared-status-per-route model Route Planner's own r.ops uses).
+  schedRouteStatus(planId, routeCode) {
+    const items = this.schedRouteBucket(planId, routeCode).items || [];
+    return items.some(x => x.status === 'Pending') ? 'Needs Change' : 'Aligned';
+  }
+  // openSchedNc(planId, routeCode) (2026-08-17) — opens the "Flag changes" propose modal (mirrors
+  // ncOpen exactly), seeded with whichever fields the current role can flag: SC → Dispatch
+  // Cutoff only; LH → Dispatch Cutoff + TAT (one row per DC); LM → Landing Time (one row per DC,
+  // only reachable once Stage 1 is fully decided for this route — enforced by the UI, not here).
+  openSchedNc(planId, routeCode) {
+    this.setState({ schedNcOpen: true, schedNcRoute: { planId, routeCode }, schedNcFields: {}, schedNcReason: '', schedNcRemark: '' });
+  }
+  closeSchedNc() { this.setState({ schedNcOpen: false, schedNcRoute: null, schedNcFields: {}, schedNcReason: '', schedNcRemark: '' }); }
+  // toggleSchedNcFlag(fieldKey, defaultValue) — mirrors Route Planner's per-field flag toggle:
+  // clicking "Flag" reveals an editable value for that one field; clicking again withdraws it.
+  toggleSchedNcFlag(fieldKey, defaultValue) {
+    const cur = Object.assign({}, this.state.schedNcFields);
+    if (cur[fieldKey]) { delete cur[fieldKey]; } else { cur[fieldKey] = { value: defaultValue, reason: '' }; }
+    this.setState({ schedNcFields: cur });
+  }
+  onSchedNcFieldValue(fieldKey, value) { const cur = Object.assign({}, this.state.schedNcFields); cur[fieldKey] = Object.assign({}, cur[fieldKey], { value }); this.setState({ schedNcFields: cur }); }
+  onSchedNcFieldReason(fieldKey, reason) { const cur = Object.assign({}, this.state.schedNcFields); cur[fieldKey] = Object.assign({}, cur[fieldKey], { reason }); this.setState({ schedNcFields: cur }); }
+  // submitSchedNc() — commits every flagged field in the open propose modal as its own feedback
+  // item on the route. One shared Remark for the whole submission (mirrors ncRemark exactly);
+  // mandatory only if any flagged field's reason is "Others".
+  submitSchedNc() {
+    const st = this.state;
+    const route = st.schedNcRoute;
+    if (!route) return;
+    const fields = st.schedNcFields || {};
+    const keys = Object.keys(fields);
+    if (keys.length === 0) { this.showToast('Flag at least one field before submitting', '#C77B00'); return; }
+    const anyOthers = keys.some(k => fields[k].reason === 'Others');
+    if (anyOthers && !String(st.schedNcRemark || '').trim()) { this.showToast('Remarks are mandatory when "Others" is the reason', '#D14B4B'); return; }
+    if (keys.some(k => !fields[k].reason)) { this.showToast('Pick a reason for every flagged field', '#C77B00'); return; }
+    const sp = (st.data.schedulerPlans || []).find(x => x.id === route.planId);
+    // Landing Time proposals (LM, Stage 3) store the IMPLIED Dispatch Cutoff, back-solved here —
+    // not the raw requested landing time — so Accept later is just "apply this cutoff", same as
+    // any other cutoff proposal (rule 3). Infeasible ones abort the whole submission with why.
+    const resolved = {};
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i]; const parts = k.split(':'); const field = parts[0], dcCode = parts[1] || null;
+      if (field === 'landing') {
+        const implied = this.computeImpliedCutoffForLanding(sp, route.routeCode, dcCode, fields[k].value);
+        if (!implied.ok) { this.showToast(implied.message, '#D14B4B'); return; }
+        resolved[k] = implied.impliedLabel;
+      } else {
+        resolved[k] = fields[k].value;
+      }
     }
-    this.setState({ schedFeedback: store, schedFeedbackDraftOpen: null, schedFeedbackDraft: {} });
-    this.showToast('Feedback submitted', '#128A3E');
+    const persona = st.schedOpsRole;
+    const store = Object.assign({}, st.schedFeedback || {});
+    store[route.planId] = Object.assign({}, store[route.planId]);
+    const bucket = Object.assign({ items: [] }, store[route.planId][route.routeCode]);
+    let items = (bucket.items || []).filter(x => !(x.persona === persona && x.status === 'Pending'));
+    keys.forEach(k => {
+      const f = fields[k];
+      const parts = k.split(':'); // 'cutoff' | 'tat:<dcCode>' | 'landing:<dcCode>'
+      const field = parts[0], dcCode = parts[1] || null;
+      items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], submittedAt: 'Today' });
+    });
+    bucket.items = items;
+    store[route.planId][route.routeCode] = bucket;
+    this.setState({ schedFeedback: store });
+    this.closeSchedNc();
+    this.showToast('Feedback submitted for ' + route.routeCode, '#128A3E');
+  }
+  // withdrawSchedOwnOpen(planId, routeCode) — the "Aligned" button, for an Ops rep with their own
+  // pending item(s) on this route: withdraws them (their part is fine after all), rather than
+  // requiring the propose modal just to cancel.
+  withdrawSchedOwnOpen(planId, routeCode) {
+    const persona = this.state.schedOpsRole;
+    const store = Object.assign({}, this.state.schedFeedback || {});
+    const bucket = Object.assign({ items: [] }, (store[planId] || {})[routeCode]);
+    const before = (bucket.items || []).length;
+    bucket.items = (bucket.items || []).filter(x => !(x.persona === persona && x.status === 'Pending'));
+    if (bucket.items.length === before) return; // nothing of theirs was open
+    store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
+    this.setState({ schedFeedback: store });
+    this.showToast('Marked aligned', '#128A3E');
+  }
+  // openSchedReview(planId, routeCode) / closeSchedReview() — the Planner's decide modal, mirrors
+  // aSel.alignReviewRoute exactly (same 640px shape, bucketed items, Accept-all/Reject-all).
+  openSchedReview(planId, routeCode) { this.setState({ schedReviewRoute: { planId, routeCode } }); }
+  closeSchedReview() { this.setState({ schedReviewRoute: null }); }
+  schedAcceptAllRemaining(planId, sp, routeCode) {
+    const items = (this.schedRouteBucket(planId, routeCode).items || []).filter(x => x.status === 'Pending');
+    items.forEach(it => this.decideSchedFeedback(planId, sp, routeCode, it.field, it.dcCode, it.id, 'Accept'));
+  }
+  schedRejectAllRemaining(planId, sp, routeCode) {
+    const items = (this.schedRouteBucket(planId, routeCode).items || []).filter(x => x.status === 'Pending');
+    items.forEach(it => this.decideSchedFeedback(planId, sp, routeCode, it.field, it.dcCode, it.id, 'Reject'));
   }
   // checkSchedDockCapacity(sp, routeCode, candidateDispatchMin) (2026-08-14, rule 7) — a HARD
   // block, not a warning: recomputes the candidate's 30-min slot against every OTHER route's
@@ -6010,17 +6098,17 @@ class NDCApp extends React.Component {
   // 'cutoff'/'landing' passes — a violation blocks the Accept outright, the item stays Pending.
   decideSchedFeedback(planId, sp, routeCode, field, dcCode, itemId, decision) {
     const store = Object.assign({}, this.state.schedFeedback || {});
-    const bucket = ((store[planId] || {})[routeCode]) || {};
-    const list = field === 'cutoff' ? (bucket.cutoff || []) : ((bucket[field] || {})[dcCode] || []);
-    const item = list.find(x => x.id === itemId);
+    const bucket = Object.assign({ items: [] }, (store[planId] || {})[routeCode]);
+    const item = (bucket.items || []).find(x => x.id === itemId);
     if (!item) return;
     if (decision === 'Reject') {
       item.status = 'Rejected';
+      store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
       this.setState({ schedFeedback: store });
       this.showToast('Feedback rejected', '#5A5E66');
       return;
     }
-    if (field === 'cutoff') {
+    if (field === 'cutoff' || field === 'landing') {
       const parts = String(item.proposedValue).split(':');
       const candidateMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
       const cap = this.checkSchedDockCapacity(sp, routeCode, candidateMin);
@@ -6028,27 +6116,16 @@ class NDCApp extends React.Component {
       const rc = Object.assign({}, this.state.schedRouteCutoffOverride || {});
       rc[planId] = Object.assign({}, rc[planId], { [routeCode]: item.proposedValue });
       item.status = 'Accepted';
+      store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
       this.setState({ schedFeedback: store, schedRouteCutoffOverride: rc });
-      this.showToast('Dispatch Cutoff updated to ' + item.proposedValue, '#128A3E');
+      this.showToast(field === 'landing' ? ('Dispatch Cutoff moved to ' + item.proposedValue + ' to satisfy the requested Landing Time') : ('Dispatch Cutoff updated to ' + item.proposedValue), '#128A3E');
     } else if (field === 'tat') {
       const tc = Object.assign({}, this.state.schedDcTatOverride || {});
       tc[planId] = Object.assign({}, tc[planId], { [dcCode]: Number(item.proposedValue) });
       item.status = 'Accepted';
+      store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
       this.setState({ schedFeedback: store, schedDcTatOverride: tc });
       this.showToast('TAT updated for ' + dcCode, '#128A3E');
-    } else if (field === 'landing') {
-      // Stage 3 — item.proposedValue is the IMPLIED Dispatch Cutoff, back-solved at submission
-      // time from the requested Landing Time and the (by-then-locked) TAT. Accepting it is the
-      // same action as accepting a cutoff override on that DC's route — same dock-capacity gate.
-      const parts = String(item.proposedValue).split(':');
-      const candidateMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-      const cap = this.checkSchedDockCapacity(sp, routeCode, candidateMin);
-      if (!cap.ok) { this.showToast(cap.message, '#D14B4B'); return; }
-      const rc = Object.assign({}, this.state.schedRouteCutoffOverride || {});
-      rc[planId] = Object.assign({}, rc[planId], { [routeCode]: item.proposedValue });
-      item.status = 'Accepted';
-      this.setState({ schedFeedback: store, schedRouteCutoffOverride: rc });
-      this.showToast('Dispatch Cutoff moved to ' + item.proposedValue + ' to satisfy the requested Landing Time', '#128A3E');
     }
   }
   // computeImpliedCutoffForLanding(sp, routeCode, dcCode, proposedLandingHHMM) (2026-08-14, rule 3)
@@ -8250,6 +8327,34 @@ class NDCApp extends React.Component {
     const step4WarningCount = previewRows.filter(r => r.hasWarning).length;
     const step4Blocked = step4ErrorCount > 0;
 
+    // ===== Flag-changes / Review-changes modals (2026-08-17) — mirror Route Planner's own
+    // ncOpen (propose) and aSel.alignReviewRoute (decide) exactly. Looked up by planId/routeCode
+    // rather than tied to whichever detail overlay happens to be open, since either modal can be
+    // triggered from Ops Alignment's Route Scheduler Plan Details view. =====
+    let schedNcModal = { open: false };
+    if (st.schedNcOpen && st.schedNcRoute) {
+      const ncSp = (d.schedulerPlans || []).find(x => x.id === st.schedNcRoute.planId);
+      if (ncSp) {
+        const role = st.schedOpsRole || 'SC';
+        const ncFields = this.buildSchedNcFields(ncSp, st.schedNcRoute.routeCode, role);
+        const anyFlagged = ncFields.some(f => f.flagged);
+        schedNcModal = {
+          open: true, routeCode: st.schedNcRoute.routeCode, role, roleLabel: role + ' User',
+          title: 'Flag changes', intro: role === 'SC' ? 'Propose a new Dispatch Cutoff for this route.' : role === 'LH' ? 'Propose a new Dispatch Cutoff and/or TAT for this route\u2019s DCs.' : 'Propose a new Landing Time for this route\u2019s DCs \u2014 this implies a new Dispatch Cutoff once TAT is locked.',
+          fields: ncFields, hasFlagged: anyFlagged,
+          remark: st.schedNcRemark || '', onRemark: (e) => this.setState({ schedNcRemark: e.target.value }),
+          close: () => this.closeSchedNc(), onSubmit: () => this.submitSchedNc(),
+        };
+      }
+    }
+    let schedReviewModal = { open: false };
+    if (st.schedReviewRoute) {
+      const rvSp = (d.schedulerPlans || []).find(x => x.id === st.schedReviewRoute.planId);
+      if (rvSp) {
+        const rv = this.buildSchedReviewData(rvSp, st.schedReviewRoute.routeCode);
+        schedReviewModal = Object.assign({ open: true, close: () => this.closeSchedReview() }, rv);
+      }
+    }
     // ===== Start-Time vs D0%/Ready-to-Ship graph popup (2026-08-13, redesigned) — opened via the
     // graph icon on a Preview & Trigger row. X-axis: Time of Day. Y-axis: Volume %. Two curves —
     // Ready to Ship % (rising) and D0 Landing % (falling) — with their crossing point marked as
@@ -8315,7 +8420,7 @@ class NDCApp extends React.Component {
       onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(-4, d0Global - 1) }),
       onRefGlobalPick: (v) => this.setState({ schedulerRefGlobal: v }),
       // Step 4
-      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedGraph,
+      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedGraph, schedNcModal, schedReviewModal,
       onTriggerScheduler: () => this.triggerSchedulerRuns(),
       // Run Queue tab
       schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
@@ -8648,6 +8753,120 @@ class NDCApp extends React.Component {
   // Ops Alignment's own detail overlay so the two tab sets can never drift apart. tabStateKey is
   // the this.state key each caller uses for its own active-tab selection (they're different
   // screens, so they need separate state, same shape RLH's reviewDetailTab/... would use).
+  // buildSchedRouteHeaders(sp) (2026-08-17) — per-route feedback status for Plan Details' route-
+  // group headers, matching Route Planner's own dcGroupHeaders shape exactly (alignBg/ncBg toggle
+  // colors, opsBg/decChip once locked). Ops Lead (SC/LH/LM) sees the Aligned/Needs-Change toggle;
+  // the Planner sees a "Review Changes" trigger once a route has pending items. Once the run is
+  // Acknowledged/Finalised, everything is read-only, same lock semantics as Route Planner.
+  buildSchedRouteHeaders(sp) {
+    const st = this.state;
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return {};
+    const role = st.schedOpsRole || 'SC';
+    const locked = sp.status === 'Acknowledged' || sp.status === 'Finalised';
+    const headers = {};
+    info.routeInfo.forEach(ri => {
+      const routeCode = ri.route.routeCode;
+      const bucket = this.schedRouteBucket(sp.id, routeCode);
+      const items = bucket.items || [];
+      const pendingItems = items.filter(x => x.status === 'Pending');
+      const status = pendingItems.length > 0 ? 'Needs Change' : 'Aligned';
+      const myPending = pendingItems.some(x => x.persona === role);
+      const stage1Items = items.filter(x => x.field === 'cutoff' || x.field === 'tat');
+      const stage1Complete = stage1Items.every(x => x.status !== 'Pending');
+      const canFlag = role === 'SC' || role === 'LH' || (role === 'LM' && stage1Complete);
+      headers[routeCode] = {
+        routeCode, dcCount: ri.dcInfo.length, dispatchLabel: info.fmtTime(ri.dispatchMin),
+        status, decChip: status, opsBg: status === 'Aligned' ? '#E7F4EC' : '#FBF1DF', opsFg: status === 'Aligned' ? '#128A3E' : '#C77B00',
+        editable: !locked && canFlag,
+        alignBg: status === 'Aligned' ? '#128A3E' : '#fff', alignFg: status === 'Aligned' ? '#fff' : '#128A3E',
+        ncBg: status === 'Needs Change' ? '#C77B00' : '#fff', ncFg: status === 'Needs Change' ? '#fff' : '#C77B00',
+        onAlign: () => { if (myPending) this.withdrawSchedOwnOpen(sp.id, routeCode); },
+        onNeeds: () => this.openSchedNc(sp.id, routeCode),
+        plannerCanReview: !locked && status === 'Needs Change',
+        onReview: () => this.openSchedReview(sp.id, routeCode),
+        stage1Complete, pendingCount: pendingItems.length,
+        lockedNote: locked ? 'Acknowledged/Finalised — read-only' : (role === 'LM' && !stage1Complete ? 'Locked until Stage 1 is decided' : ''),
+      };
+    });
+    return headers;
+  }
+  // buildSchedNcFields(sp, routeCode, role) (2026-08-17) — the flaggable-field list for the
+  // propose modal, matching ncFields' shape exactly (toggle pill, amber input once flagged).
+  // SC → Dispatch Cutoff only. LH → Dispatch Cutoff + one TAT row per DC on the route. LM →
+  // one Landing Time row per DC (only reachable once Stage 1 is fully decided — the UI gates
+  // opening this modal at all for LM before then, so no extra check needed here).
+  buildSchedNcFields(sp, routeCode, role) {
+    const info = this.schedulerRouteDcInfo(sp);
+    if (!info) return [];
+    const ri = info.routeInfo.find(r => r.route.routeCode === routeCode);
+    if (!ri) return [];
+    const st = this.state;
+    const draft = st.schedNcFields || {};
+    const mkField = (key, label, currentLabel, defaultVal, isTime, reasons) => {
+      const flagged = !!draft[key];
+      return {
+        key, label, currentLabel, flagged,
+        toggleLabel: flagged ? 'Unflag' : 'Flag',
+        toggleBg: flagged ? '#FFF4E0' : '#fff', toggleFg: flagged ? '#C77B00' : '#5A5E66', toggleBd: flagged ? '#C77B00' : '#E6EBF2',
+        onToggleFlag: () => this.toggleSchedNcFlag(key, defaultVal),
+        value: flagged ? draft[key].value : defaultVal,
+        onInput: (e) => this.onSchedNcFieldValue(key, e.target.value),
+        isTime, isNumber: !isTime,
+        reasonVal: flagged ? draft[key].reason : '',
+        onReason: (e) => this.onSchedNcFieldReason(key, e.target.value),
+        reasons,
+      };
+    };
+    const fields = [];
+    if (role === 'SC' || role === 'LH') {
+      fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), info.fmtTime(ri.dispatchMin), true, this.schedFeedbackReasons(role, 'cutoff')));
+    }
+    if (role === 'LH') {
+      ri.dcInfo.forEach(dc => {
+        const tatMin = String(Math.round(dc.breakdownTatHrs * 60));
+        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatMin + ' min', tatMin, false, this.schedFeedbackReasons('LH', 'tat')));
+      });
+    }
+    if (role === 'LM') {
+      ri.dcInfo.forEach(dc => {
+        const landingLabel = info.fmtTime(Math.round(dc.landingMin));
+        fields.push(mkField('landing:' + dc.dc.code, 'Landing Time \u2014 ' + dc.dc.code, landingLabel, landingLabel, true, this.schedFeedbackReasons('LM', 'landing')));
+      });
+    }
+    return fields;
+  }
+  // buildSchedReviewData(sp, routeCode) (2026-08-17) — the Planner's decide-modal data, bucketed
+  // by field type (mirrors aSel.alignReviewRoute's bucketedChanges exactly): one section per
+  // field kind, each item showing who proposed it, the reason/remark, and Accept/Reject (or its
+  // decided state once resolved).
+  buildSchedReviewData(sp, routeCode) {
+    const bucket = this.schedRouteBucket(sp.id, routeCode);
+    const items = bucket.items || [];
+    const FIELD_LABEL = { cutoff: 'Dispatch Cutoff', tat: 'TAT', landing: 'Landing Time (\u2192 implied Cutoff)' };
+    const byField = {};
+    items.forEach(it => { byField[it.field] = byField[it.field] || []; byField[it.field].push(it); });
+    const bucketedChanges = Object.keys(byField).map(field => ({
+      bucket: FIELD_LABEL[field] || field,
+      items: byField[field].map(it => ({
+        id: it.id, whereLabel: it.dcCode || routeCode, fieldLabel: FIELD_LABEL[field] || field,
+        proposedBy: it.persona + ' User', changeVal: (it.dcCode ? (it.field === 'tat' ? (it.proposedValue + ' min') : it.proposedValue) : it.proposedValue) + (it.remark ? '' : ''),
+        reason: it.reason, remark: it.remark, status: it.status,
+        canDecide: it.status === 'Pending',
+        accepted: it.status === 'Accepted', rejected: it.status === 'Rejected',
+        accBg: it.status === 'Accepted' ? '#128A3E' : '#fff', accFg: it.status === 'Accepted' ? '#fff' : '#128A3E',
+        rejBg: it.status === 'Rejected' ? '#D14B4B' : '#fff', rejFg: it.status === 'Rejected' ? '#fff' : '#D14B4B',
+        onAccept: () => this.decideSchedFeedback(sp.id, sp, routeCode, it.field, it.dcCode, it.id, 'Accept'),
+        onReject: () => this.decideSchedFeedback(sp.id, sp, routeCode, it.field, it.dcCode, it.id, 'Reject'),
+      })),
+    }));
+    const pendingCount = items.filter(x => x.status === 'Pending').length;
+    return { routeCode, bucketedChanges, decidedCount: items.length - pendingCount, changeTotal: items.length,
+      acceptAllRowShow: pendingCount > 1,
+      onAcceptAllRow: () => this.schedAcceptAllRemaining(sp.id, sp, routeCode),
+      onRejectAllRow: () => this.schedRejectAllRemaining(sp.id, sp, routeCode),
+    };
+  }
   buildSchedDetailView(sp, tabStateKey) {
     const st = this.state;
     const tables = this.computeSchedulerDetailTables(sp);
@@ -8699,11 +8918,11 @@ class NDCApp extends React.Component {
       dockCount: ds.docks.length, dockCols, dockRows, hasDockSchedule: ds.docks.length > 0 && dockCols.length > 0,
       dockTotalDeparted: totalDeparted, dockBusyLabel: busyLabel,
       granIsHour: gran === 'hour', onGranHour: () => this.setState({ [granKey]: 'hour' }), onGranSlot: () => this.setState({ [granKey]: 'slot' }),
-      sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule'], ['feedback', 'Feedback']].map(t => ({
+      sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule']].map(t => ({
         label: t[1], active: tab === t[0], color: tab === t[0] ? '#0D7377' : '#5A5E66', weight: tab === t[0] ? '700' : '600',
         onClick: () => this.setState({ [tabStateKey]: t[0] }) })),
-      secDetails: tab === 'details', secRoute: tab === 'route', secDock: tab === 'dock', secFeedback: tab === 'feedback',
-      feedbackView: this.buildSchedFeedbackView(sp),
+      secDetails: tab === 'details', secRoute: tab === 'route', secDock: tab === 'dock',
+      routeGroupHeaders: this.buildSchedRouteHeaders(sp),
     };
   }
   // buildSchedFeedbackView(sp) (2026-08-14) — the 3-stage Ops Alignment feedback loop for one
@@ -9903,6 +10122,7 @@ class NDCApp extends React.Component {
     }
 
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
+      schedOpsRole: st.schedOpsRole || 'SC', onSetSchedOpsRole: (r) => this.setState({ schedOpsRole: r }),
       alignIsL1, alignIsL2,
       alignPage: alignPageSafe, alignTotalPages, alignShowPager,
       alignShowingLabel, alignHasPrev, alignHasNext,

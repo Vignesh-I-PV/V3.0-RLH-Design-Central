@@ -2898,6 +2898,7 @@ function View(B, self) {
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.stageBg}; color:${c.stageFg};`)}>{c.stageLabel}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
@@ -2938,18 +2939,24 @@ function View(B, self) {
 </details>
 </div>
 </>) : null}
-{/* bottom row — flag chip + reviewer chips + lifecycle status text; no push/finalise buttons here,
-    since those only ever happen from Design Review (2026-08-04) */}
+{/* bottom row — flag chip + feedback-lead chips + the Planner's own lifecycle-gate actions
+    (2026-08-18: Acknowledge & Freeze / Unfreeze / Push to LM Alignment / Finalise) */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px solid #F4F5F8;`)}>
 <span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
-{(c.hasReviewers) ? (<>
+{(c.hasFeedbackLeads) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
-{(c.opsLeads || []).map((ol, __iA6) => (<React.Fragment key={__iA6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{c.schedStage === 'stage2' ? 'LM:' : 'SC/LH:'}</span>
+{(c.feedbackLeadChips || []).map((ol, __iA6) => (<React.Fragment key={__iA6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)}>
+{(c.canAckFreeze) ? (<><button onClick={c.onOpenAck} style={css(`height:30px; padding:0 12px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Acknowledge & Freeze</button></>) : null}
+{(c.canUnfreeze) ? (<><button onClick={c.onOpenUnfreeze} style={css(`height:30px; padding:0 12px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Unfreeze</button></>) : null}
+{(c.canPushToLM) ? (<><button onClick={c.onOpenPushLM} style={css(`height:30px; padding:0 12px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Push to LM Alignment</button></>) : null}
+{(c.canFinaliseSched) ? (<><button onClick={c.onOpenFin} style={css(`height:30px; padding:0 12px; border:1px solid #128A3E; background:#128A3E; color:#fff; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Finalise</button></>) : null}
 </div>
-{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>Ops review acknowledged.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting Ops feedback.</div></>)}
+</div>
+{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>{c.schedStage === 'stage2' ? 'LM' : 'SC/LH'} input frozen — decide items, then {c.schedStage === 'stage2' ? 'Finalise' : 'Push to LM Alignment'} once clear.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting {c.schedStage === 'stage2' ? 'LM' : 'SC/LH'} feedback.</div></>)}
 </div>
 </React.Fragment>))}
 </div>
@@ -3563,6 +3570,90 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+{/* ===== Route Scheduler — lifecycle-gate modals (2026-08-18): Acknowledge & Freeze / Unfreeze /
+    Push to LM Alignment / Finalise / Validate. Kept fully separate from RLH's own ackOpen/
+    unfreezeOpen/finOpen right above (different state keys, different schedulerPlans target). ===== */}
+{(schedAckOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Acknowledge & freeze {schedAckStageLabel}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This freezes <strong>{schedAckPlanName}</strong> and locks {schedAckStageLabel} from any further flags. You'll then be able to Accept/Reject the items already submitted. <strong style={css(`color:#C77B00;`)}>This cannot be undone</strong> without an Unfreeze.</div></div>
+</div>
+{(schedAckHasPending) ? (<>
+<div style={css(`margin:16px 24px 0; display:flex; align-items:center; gap:9px; padding:10px 13px; background:#FBF1DF; border:1px solid #F0DBA8; border-radius:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg><span style={css(`font-size:12px; color:#14171F;`)}>{schedAckPendingLabel}</span></div>
+</>) : null}
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedAck} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmSchedAck} style={css(`height:38px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Acknowledge & freeze</button>
+</div>
+</div>
+</div>
+</>) : null}
+{(schedUnfreezeOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#FBF1DF; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Unfreeze {schedUnfreezePlanName}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This reopens the current stage for editing again. <strong style={css(`color:#C77B00;`)}>Any changes you've already accepted, rejected, or superseded on this stage will reset to Pending</strong> — you'll need to decide them again. Submitted feedback itself is not lost.</div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedUnfreeze} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmSchedUnfreeze} style={css(`height:38px; padding:0 18px; border:none; background:#C77B00; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Unfreeze stage</button>
+</div>
+</div>
+</div>
+</>) : null}
+{(schedPushLMOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Push {schedPushLMPlanName} to LM Alignment?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>Stage 1 (SC/LH) is fully decided. This opens Stage 2 for LM to flag Landing Time — SC and LH can no longer make changes on this run.</div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedPushLM} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmPushToLM} style={css(`height:38px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Push to LM Alignment</button>
+</div>
+</div>
+</div>
+</>) : null}
+{(schedFinOpen2) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:480px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#E7F4EC; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Finalise {schedFinPlanName2}?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>Stage 2 (LM) is fully decided. This locks the Cutoff Plan for handoff. <strong style={css(`color:#C77B00;`)}>This cannot be undone.</strong></div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedFin2} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmSchedFinalise} style={css(`height:38px; padding:0 18px; border:none; background:#128A3E; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Finalise</button>
+</div>
+</div>
+</div>
+</>) : null}
+{/* Validate (2026-08-18, lightweight pre-flight — see 02_Logics_and_Formulae.md) — re-derives the
+    full dock schedule from every currently-Accepted override and flags any 30-min slot that now
+    exceeds dock capacity. Available any time from the detail overlay; also the gate Push-to-LM/
+    Finalise both check silently before proceeding. */}
+{(schedValidateOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={closeSchedValidate}>
+<div style={css(`width:460px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`padding:22px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:${schedValidateClean ? '#E7F4EC' : '#FBEAEA'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(schedValidateClean) ? (<><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : (<><svg width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.8"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>)}</div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Validate</div><div style={css(`font-size:13px; color:${schedValidateClean ? '#128A3E' : '#D14B4B'}; margin-top:6px; font-weight:600;`)}>{schedValidateSummary}</div></div>
+</div>
+{(schedValidateErrorCount > 0) ? (<>
+<div style={css(`margin:14px 24px 0; display:flex; flex-direction:column; gap:8px;`)}>
+{(schedValidateErrors || []).map((er, __iSV1) => (<React.Fragment key={__iSV1}><div style={css(`padding:9px 12px; background:#FBEAEA; border:1px solid #F3C6C6; border-radius:8px; font-size:12px; color:#14171F;`)}>{er.t}</div></React.Fragment>))}
+</div>
+</>) : null}
+<div style={css(`display:flex; justify-content:flex-end; padding:20px 24px;`)}>
+<button onClick={closeSchedValidate} style={css(`height:36px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Close</button>
+</div>
+</div>
+</div>
+</>) : null}
 {/* RUN SCHEDULER MODAL (2026-07-29) — planner-only guarded action on a Finalised RLH plan.
     Creates a new, separate schedulerPlans entry (parentPlanId → this plan) with its own
     lifecycle, then redirects into Design Creation's Route Scheduler fork with that plan
@@ -3769,17 +3860,26 @@ function View(B, self) {
 {(isAlignTierRLH && isAlignRouteScheduler) ? (<>
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
-<div style={css(`padding:12px 12px 8px;`)}>
+{/* Role selector (2026-08-18) — SC/LH/LM. This governs BOTH which rail entries show up
+    (the schedOps rail below is scoped to whichever role is active) and, inside the detail
+    overlay, which fields that role is allowed to flag. */}
+<div style={css(`padding:12px 12px 0;`)}>
+<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em; margin-bottom:6px;`)}>ACTING AS</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:3px; background:#F2F5FA; border-radius:8px; padding:3px; margin-bottom:10px;`)}>
+{['SC', 'LH', 'LM'].map((r, __iC0) => (<React.Fragment key={__iC0}><button onClick={() => onSetSchedOpsRole(r)} title={"Act as this Route Scheduler ops rep type"} style={css(`height:28px; border:none; border-radius:6px; background:${schedOpsRole === r ? '#0D7377' : 'transparent'}; color:${schedOpsRole === r ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:11.5px; font-weight:${schedOpsRole === r ? '700' : '600'}; cursor:pointer;`)}>{r}</button></React.Fragment>))}
+</div>
+</div>
+<div style={css(`padding:0 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(schedAlignFilterSeg || []).map((f, __iB1) => (<React.Fragment key={__iB1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+{(schedOpsFilterSeg || []).map((f, __iC1) => (<React.Fragment key={__iC1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
 </div>
 </div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(schedAlignZoneChips || []).map((z, __iB2) => (<React.Fragment key={__iB2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+{(schedOpsZoneChips || []).map((z, __iC2) => (<React.Fragment key={__iC2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
 </div>
-<div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedAlignPlanCountLabel}</div>
+<div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedOpsPlanCountLabel}</div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
-{(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter.</div></>) : ((schedAlignList || []).map((r, __iB3) => (<React.Fragment key={__iB3}>
+{(schedOpsEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter for {schedOpsRole}.</div></>) : ((schedOpsList || []).map((r, __iC3) => (<React.Fragment key={__iC3}>
 <button onClick={r.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${r.active ? '#0D7377' : '#E6EBF2'}; border-radius:9px; background:${r.active ? '#E9F5F5' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
 <span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66; margin-left:6px;`)}>{r.zone}</span><div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div></div>
@@ -3789,35 +3889,36 @@ function View(B, self) {
 </div>
 </aside>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
-{(!hasCurSchedAlignSC) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a plan from the rail.</div></>) : (<>
+{(!hasCurSchedOpsSC) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Select a plan from the rail.</div></>) : (<>
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>Route Scheduler</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-weight:600; color:#0D7377;`)}>{curSchedAlignCode}</span>
+<span style={css(`font-weight:600; color:#0D7377;`)}>{curSchedOpsCode}</span>
 </div>
 {/* SC identity header — mirrors Design Review's SC header block, so identity isn't repeated on
     every card below it (2026-08-04, brings the plan card to parity with Design Review's) */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; margin-bottom:16px;`)}>
 <div style={css(`display:flex; align-items:center; gap:9px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{curSchedAlignCode}</span>
-<span style={css(`font-size:14px; color:#5A5E66;`)}>{curSchedAlignName}</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{curSchedAlignZone} Zone</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{curSchedAlignCoords}</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler</span>
+<span style={css(`font-size:19px; font-weight:700; color:#14171F;`)}>{curSchedOpsCode}</span>
+<span style={css(`font-size:14px; color:#5A5E66;`)}>{curSchedOpsName}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{curSchedOpsZone} Zone</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; background:#F7F8FB; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{curSchedOpsCoords}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#E9F5F5; color:#0D7377;`)}>Route Scheduler · Acting as {schedOpsRole}</span>
 </div>
-<div style={css(`font-size:13px; color:#5A5E66; margin-top:8px;`)}>Every run for this SC in the current filter is shown below — read-only for now; the detailed feedback loop isn't built yet.</div>
+<div style={css(`font-size:13px; color:#5A5E66; margin-top:8px;`)}>Every run for this SC in the current filter is shown below. Open a run's detail to flag Dispatch Cutoff/TAT (SC/LH, Stage 1) or Landing Time (LM, Stage 2), then use Submit Feedback to send it to the Planner.</div>
 </div>
-{(!hasSchedAlignRunCards) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No runs match this filter for this SC.</div></>) : null}
-{/* one card per run — reuses the SAME visual template as Design Review's run cards (2026-08-04
-    fix), just without push/finalise actions (those only ever happen from Design Review) */}
+{(!hasSchedOpsRunCards) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12.5px; color:#8E96A3;`)}>No runs match this filter for this SC.</div></>) : null}
+{/* one card per run — reuses the SAME visual template as Design Review's run cards, plus the
+    2026-08-18 stage chip and this role's own Submit Feedback action */}
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
-{(schedAlignRunCards || []).map((c, __iB4) => (<React.Fragment key={__iB4}>
+{(schedOpsRunCards || []).map((c, __iC4) => (<React.Fragment key={__iC4}>
 <div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:16px 20px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.stageBg}; color:${c.stageFg};`)}>{c.stageLabel}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
@@ -3847,7 +3948,7 @@ function View(B, self) {
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
-{(c.slotBreakdown || []).map((s, __iB5) => (<React.Fragment key={__iB5}>
+{(c.slotBreakdown || []).map((s, __iC5) => (<React.Fragment key={__iC5}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 9px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
 <span style={css(`font-size:10.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
 <span style={css(`font-size:10px; color:#5A5E66;`)}>{s.used}/{s.docks} docks</span>
@@ -3858,18 +3959,20 @@ function View(B, self) {
 </details>
 </div>
 </>) : null}
-{/* bottom row — flag chip + reviewer chips + lifecycle status text; no push/finalise buttons here,
-    since those only ever happen from Design Review (2026-08-04) */}
+{/* bottom row — flag chip + this role's own feedback-lead chips + Submit Feedback (2026-08-18) */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:10px; border-top:1px solid #F4F5F8;`)}>
 <span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
-{(c.hasReviewers) ? (<>
+{(c.hasFeedbackLeads) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REVIEWERS:</span>
-{(c.opsLeads || []).map((ol, __iB6) => (<React.Fragment key={__iB6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{c.schedStage === 'stage2' ? 'LM:' : 'SC/LH:'}</span>
+{(c.feedbackLeadChips || []).map((ol, __iC6) => (<React.Fragment key={__iC6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
+{(c.canSubmitFeedback) ? (<>
+<button onClick={c.onSubmitFeedback} style={css(`height:30px; padding:0 13px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Submit Feedback</button>
+</>) : null}
 </div>
-{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>Ops review acknowledged.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting Ops feedback.</div></>)}
+{(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>{c.schedStage === 'stage2' ? 'LM' : 'SC/LH'} input frozen — Planner reviewing.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>{c.canSubmitFeedback ? 'Flag routes as needed, then Submit Feedback when done.' : 'Feedback submitted — awaiting Planner.'}</div></>)}
 </div>
 </React.Fragment>))}
 </div>
@@ -4583,6 +4686,7 @@ function View(B, self) {
 <div style={css(`font-size:12.5px; color:#14171F;`)}>\u2192 {c.changeVal}</div>
 <div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{c.reason}</div>
 {(c.remark) ? (<><div style={css(`margin-top:6px; padding:8px 11px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:7px; font-size:11.5px; color:#14171F; font-style:italic;`)}>"{c.remark}"</div></>) : null}
+{(c.superseded) ? (<><div style={css(`margin-top:4px; font-size:10.5px; color:#8E96A3;`)}>{c.supersededNote}</div></>) : null}
 </div>
 {(c.canDecide) ? (<>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
@@ -4590,7 +4694,7 @@ function View(B, self) {
 <button onClick={c.onReject} aria-label={"Reject"} title={"Reject"} style={css(`width:26px; height:26px; padding:0; border:1px solid #D14B4B; background:${c.rejBg}; color:${c.rejFg}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"3"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 </>) : (<>
-<span style={css(`font-size:11px; font-weight:700; color:${c.accepted ? '#128A3E' : (c.rejected ? '#D14B4B' : '#8E96A3')}; flex-shrink:0;`)}>{c.accepted ? '\u2713 Accepted' : (c.rejected ? '\u2715 Rejected' : 'Pending')}</span>
+<span style={css(`font-size:11px; font-weight:700; color:${c.accepted ? '#128A3E' : (c.rejected ? '#D14B4B' : (c.superseded ? '#8E96A3' : '#8E96A3'))}; flex-shrink:0;`)}>{c.accepted ? '\u2713 Accepted' : (c.rejected ? '\u2715 Rejected' : (c.superseded ? 'Superseded' : 'Pending'))}</span>
 </>)}
 </div>
 </React.Fragment>))}
@@ -4696,7 +4800,14 @@ function View(B, self) {
 <button onClick={() => onSetSchedOpsRole(rl)} style={css(`padding:5px 11px; border:none; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer; background:${schedOpsRole === rl ? '#0D7377' : 'transparent'}; color:${schedOpsRole === rl ? '#fff' : '#5A5E66'};`)}>{rl} User</button>
 </React.Fragment>))}
 </div>
-</>) : null}
+{(schedAlignDetail.canSubmitFeedback) ? (<><button onClick={schedAlignDetail.onSubmitFeedback} style={css(`height:34px; padding:0 13px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Submit Feedback</button></>) : null}
+</>) : (<>
+{(schedAlignDetail.canAckFreeze) ? (<><button onClick={schedAlignDetail.onOpenAck} style={css(`height:34px; padding:0 13px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Acknowledge & Freeze</button></>) : null}
+{(schedAlignDetail.canUnfreeze) ? (<><button onClick={schedAlignDetail.onOpenUnfreeze} style={css(`height:34px; padding:0 13px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Unfreeze</button></>) : null}
+{(schedAlignDetail.canPushToLM) ? (<><button onClick={schedAlignDetail.onOpenPushLM} style={css(`height:34px; padding:0 13px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Push to LM Alignment</button></>) : null}
+{(schedAlignDetail.canFinaliseSched) ? (<><button onClick={schedAlignDetail.onOpenFin} style={css(`height:34px; padding:0 13px; border:1px solid #128A3E; background:#128A3E; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Finalise</button></>) : null}
+</>)}
+<button onClick={schedAlignDetail.onValidate} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid ${schedAlignDetail.validateClean ? '#128A3E' : '#E6EBF2'}; background:#fff; color:${schedAlignDetail.validateClean ? '#128A3E' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 11l3 3 8-8M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Validate</button>
 <button onClick={schedAlignDetail.onDownloadCsv} aria-label={"Download Cutoff Plan as CSV"} title={"Download Cutoff Plan summary CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#0D7377; color:#0D7377;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
 <button onClick={schedAlignDetail.close} aria-label={"Close detail"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
@@ -5269,6 +5380,19 @@ class NDCApp extends React.Component {
       schedNcOpen: false, schedNcRoute: null, schedNcFields: {}, schedNcReason: '', schedNcRemark: '',
       // Decide modal (Planner) — mirrors aSel.alignReviewRoute exactly.
       schedReviewRoute: null,
+      // schedSubmitted[planId] = { stage1: { SC:{by,at}, LH:{by,at} }, stage2: { LM:{by,at} } } —
+      // per-ROLE submission record (not per-named-individual, since Route Scheduler's 3 proposer
+      // types are role-based, not assigned-reviewer-based like RLH). Drives the Ops-role-scoped
+      // To Review/Submitted tabs and the "at least one submitted" Acknowledge gate.
+      schedSubmitted: {},
+      // schedAckOpen/schedUnfreezeOpen/schedPushLMOpen/schedFinOpen — the 4 lifecycle-gate confirm
+      // modals (mirrors RLH's ackOpen/unfreezeOpen exactly, plus the 2 new scheduler-only gates).
+      schedAckOpen: false, schedAckPlanId: null,
+      schedUnfreezeOpen: false, schedUnfreezePlanId: null,
+      schedPushLMOpen: false, schedPushLMPlanId: null,
+      schedFinOpen: false, schedFinPlanId: null,
+      schedValidateOpen: false,
+      schedOpsFilter: 'To Review',
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5341,6 +5465,16 @@ class NDCApp extends React.Component {
     this.state.mapSC = this.state.data.scs[0].code;
   }
 
+  // deriveScPocRoles(pocs) (2026-08-18) — shared SC-Master POC → SC-pool/LH-pool split, used by
+  // both buildSeed() (Route Scheduler demo seeding) and the Ops Alignment reviewer-pool lookup.
+  // Mirrors scMasterVals()' own POC_ROLES index mapping exactly (odd positions are the "LH Ops
+  // ZH/CH" roles) so the two never drift on which POC counts as SC vs LH.
+  deriveScPocRoles(pocs) {
+    const POC_ROLES = ['Ops ZH', 'LH Ops ZH', 'Ops CH', 'LH Ops CH', 'Ops AM-1', 'Ops AM-2'];
+    const scNames = [], lhNames = [];
+    (pocs || []).slice(0, 6).forEach((n, i) => { const role = POC_ROLES[i] || ('Ops Lead ' + (i + 1)); if (role.indexOf('LH ') === 0) lhNames.push(n); else scNames.push(n); });
+    return { scNames, lhNames };
+  }
   buildSeed() {
     let s = 20260624;
     const R = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
@@ -5716,17 +5850,27 @@ class NDCApp extends React.Component {
     // aren't blank on first load. The other 2 Finalised plans stay unscheduled, so Step 1's
     // "Plan Selection" list still has something fresh to pick from.
     const _finalisedForSeed = plans.filter(p => p.status === 'Finalised').slice(0, 5);
-    const _seedStatuses = ['Draft', 'Pushed', 'In Alignment', 'Acknowledged', 'Finalised'];
+    // 2026-08-18 — 5 seed points now walk the full 2-stage feedback loop (see 04_Rule_Engine.md /
+    // 05_Core_Flows.md for the lifecycle) rather than the old flat 5-status spread, so both halves
+    // of the loop have something to click through on first load:
+    //   0: Draft-ish/untouched — Pushed, stage1, nothing flagged yet.
+    //   1: stage1 In Alignment — SC has submitted, LH hasn't yet.
+    //   2: stage1 Acknowledged, fully decided, ready for "Push to LM Alignment.
+    //   3: stage2 (LM) In Alignment — LM mid-flagging.
+    //   4: stage2 Acknowledged & fully decided → Finalised (the whole loop closed).
+    const _seedPoints = ['Pushed', 'In Alignment', 'Acknowledged', 'In Alignment', 'Finalised'];
+    const _seedStages = ['stage1', 'stage1', 'stage1', 'stage2', 'stage2'];
     const schedulerPlans = _finalisedForSeed.map((p, i) => {
       const hh = p.scCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
       const hw = [0, 0.5, 1][hh % 3];
       const d0Increments = (hh >> 4) % 5;
-      const status = _seedStatuses[i % _seedStatuses.length];
+      const status = _seedPoints[i % _seedPoints.length];
+      const schedStage = _seedStages[i % _seedStages.length];
       const sc = scs.find(s => s.code === p.scCode);
       const rf = this.resolveScFields(sc || { code: p.scCode });
       return {
         id: p.id + '-SCHED-DEMO' + (i + 1), parentPlanId: p.id, scCode: p.scCode, scName: p.scName, zone: p.zone,
-        status, createdAt: '2' + (4 + i) + ' Jul 2026', createdBy: 'Pranita Sapkal',
+        status, schedStage, createdAt: '2' + (4 + i) + ' Jul 2026', createdBy: 'Pranita Sapkal',
         nlhPlanId: 'NLH-ING-DEMO',
         hw, d0Increments, d0Cutoff: (() => { const m = 9 * 60 + d0Increments * 30; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); })(),
         rlhDocks: 2 + ((hh >> 3) % 6),
@@ -5734,6 +5878,7 @@ class NDCApp extends React.Component {
         nonLocalSpeed: sc && sc.nonLocalSpeed != null ? sc.nonLocalSpeed : 32 + ((hh >> 5) % 10),
         holdOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
         refPlanId: null, cutoffs: null,
+        _seedIdx: i, // used once below to seed schedFeedback/schedSubmitted matching this run's stage
       };
     });
     // LMDC Master (2026-08-08) — the canonical DC pool (every active/inactive/zerocap/multi node
@@ -5765,6 +5910,74 @@ class NDCApp extends React.Component {
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
+  // componentDidMount → seedSchedDemoFeedback() (2026-08-18) — populates demo schedFeedback/
+  // schedSubmitted for the 5 seeded schedulerPlans rows so Ops Alignment's feedback loop isn't
+  // blank on first load. Done post-mount (not inside buildSeed/constructor) because it needs real
+  // route/DC codes from schedulerRouteDcInfo(), which itself reads this.state.data — not available
+  // yet at construction time. One-time setState, keyed off each demo row's _seedIdx (0-4).
+  componentDidMount() {
+    this.seedSchedDemoFeedback();
+  }
+  seedSchedDemoFeedback() {
+    const d = this.state.data;
+    const demoRuns = (d.schedulerPlans || []).filter(sp => sp._seedIdx != null);
+    const feedback = {}, submitted = {};
+    const rcOverride = {}, tatOverride = {};
+    demoRuns.forEach(sp => {
+      const info = this.schedulerRouteDcInfo(sp);
+      if (!info || !info.routeInfo.length) return;
+      const sc = d.scs.find(s => s.code === sp.scCode) || {};
+      const pocs = this.deriveScPocRoles(sc.pocs);
+      const scName = pocs.scNames[0] || 'SC Ops Lead';
+      const lhName = pocs.lhNames[0] || 'LH Ops Lead';
+      const r0 = info.routeInfo[0];
+      const routeCode = r0.route.routeCode;
+      const mkItem = (persona, field, dcCode, reason, status, proposedValue, supersededBy) => ({
+        id: 'FB-SEED-' + sp.id + '-' + field + '-' + persona, persona, field, dcCode, reason, remark: '', status, proposedValue, submittedAt: '2' + (5 + sp._seedIdx) + ' Jul',
+        supersededBy: supersededBy || null,
+      });
+      if (sp._seedIdx === 1) {
+        // stage1, In Alignment — SC has submitted a Dispatch Cutoff flag, LH hasn't yet.
+        const proposed = info.fmtTime(r0.dispatchMin + 30);
+        feedback[sp.id] = { [routeCode]: { items: [mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Pending', proposed)] } };
+        submitted[sp.id] = { stage1: { SC: { by: scName, at: '25 Jul' } } };
+      } else if (sp._seedIdx === 2) {
+        // stage1, Acknowledged, fully decided — SC and LH proposed CONTRADICTING cutoffs on the
+        // same route; the Planner accepted SC's and the LH one was auto-superseded. Demonstrates
+        // the supersede path on first load rather than only via a live click-through.
+        const scVal = info.fmtTime(r0.dispatchMin + 30), lhVal = info.fmtTime(r0.dispatchMin + 60);
+        feedback[sp.id] = { [routeCode]: { items: [
+          mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Accepted', scVal),
+          mkItem('LH', 'cutoff', null, 'Vendor not aligned - Due to Traffic', 'Superseded', lhVal, 'SC'),
+        ] } };
+        submitted[sp.id] = { stage1: { SC: { by: scName, at: '26 Jul' }, LH: { by: lhName, at: '26 Jul' } } };
+        rcOverride[sp.id] = { [routeCode]: scVal };
+      } else if (sp._seedIdx === 3) {
+        // stage2, In Alignment — LM has submitted a Landing Time flag, still pending decision.
+        const dc0 = r0.dcInfo[0];
+        if (dc0) {
+          const proposed = info.fmtTime(Math.round(dc0.landingMin) + 45);
+          feedback[sp.id] = { [routeCode]: { items: [mkItem('LM', 'landing', dc0.dc.code, 'DC opening early', 'Pending', proposed)] } };
+          submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '27 Jul' } } };
+        }
+      } else if (sp._seedIdx === 4) {
+        // stage2, fully decided → Finalised. LM's Landing Time request was accepted, back-solved
+        // to an implied Dispatch Cutoff (same as decideSchedFeedback's real 'landing' Accept path).
+        const dc0 = r0.dcInfo[0];
+        if (dc0) {
+          const impliedCutoff = info.fmtTime(r0.dispatchMin - 30);
+          feedback[sp.id] = { [routeCode]: { items: [mkItem('LM', 'landing', dc0.dc.code, 'Processing Feasibility', 'Accepted', impliedCutoff)] } };
+          submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '28 Jul' } } };
+          rcOverride[sp.id] = { [routeCode]: impliedCutoff };
+        }
+      }
+    });
+    this.setState({
+      schedFeedback: Object.assign({}, this.state.schedFeedback, feedback),
+      schedSubmitted: Object.assign({}, this.state.schedSubmitted, submitted),
+      schedRouteCutoffOverride: Object.assign({}, this.state.schedRouteCutoffOverride, rcOverride),
+    });
+  }
   showToast(msg, dot, undoFn) { clearTimeout(this._t); this.setState({ toast: { msg, dot: dot || '#2F4FC6', undo: undoFn || null } }); this._t = setTimeout(() => this.setState({ toast: null }), undoFn ? 5200 : 3500); }
   runUndo() { const t = this.state.toast; clearTimeout(this._t); this.setState({ toast: null }); if (t && t.undo) t.undo(); }
   // C8a — entering Creation always starts at step 1 so re-entry never resumes mid-wizard.
@@ -6096,11 +6309,19 @@ class NDCApp extends React.Component {
   // marks the item; Accept commits a real override (schedRouteCutoffOverride / schedDcTatOverride)
   // so the plan's own numbers actually change, but only after the dock-capacity check for
   // 'cutoff'/'landing' passes — a violation blocks the Accept outright, the item stays Pending.
+  // 2026-08-18 — SC and LH can independently propose CONTRADICTING values for the same field (e.g.
+  // both flag Dispatch Cutoff on the same route with different times). Accepting one now auto-
+  // marks every other still-Pending item on that same field+route(+DC) as 'Superseded' — a
+  // distinct terminal status from Rejected, so the audit trail stays honest (both proposals stay
+  // visible, one clearly won) instead of silently overwriting the override a second time.
   decideSchedFeedback(planId, sp, routeCode, field, dcCode, itemId, decision) {
     const store = Object.assign({}, this.state.schedFeedback || {});
     const bucket = Object.assign({ items: [] }, (store[planId] || {})[routeCode]);
     const item = (bucket.items || []).find(x => x.id === itemId);
     if (!item) return;
+    const supersedeOthers = () => {
+      bucket.items = (bucket.items || []).map(x => (x.id !== itemId && x.field === field && x.dcCode === dcCode && x.status === 'Pending') ? Object.assign({}, x, { status: 'Superseded', supersededBy: item.persona }) : x);
+    };
     if (decision === 'Reject') {
       item.status = 'Rejected';
       store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
@@ -6116,6 +6337,7 @@ class NDCApp extends React.Component {
       const rc = Object.assign({}, this.state.schedRouteCutoffOverride || {});
       rc[planId] = Object.assign({}, rc[planId], { [routeCode]: item.proposedValue });
       item.status = 'Accepted';
+      supersedeOthers();
       store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
       this.setState({ schedFeedback: store, schedRouteCutoffOverride: rc });
       this.showToast(field === 'landing' ? ('Dispatch Cutoff moved to ' + item.proposedValue + ' to satisfy the requested Landing Time') : ('Dispatch Cutoff updated to ' + item.proposedValue), '#128A3E');
@@ -6123,6 +6345,7 @@ class NDCApp extends React.Component {
       const tc = Object.assign({}, this.state.schedDcTatOverride || {});
       tc[planId] = Object.assign({}, tc[planId], { [dcCode]: Number(item.proposedValue) });
       item.status = 'Accepted';
+      supersedeOthers();
       store[planId] = Object.assign({}, store[planId], { [routeCode]: bucket });
       this.setState({ schedFeedback: store, schedDcTatOverride: tc });
       this.showToast('TAT updated for ' + dcCode, '#128A3E');
@@ -6157,6 +6380,180 @@ class NDCApp extends React.Component {
       return { ok: false, message: 'Implied Dispatch Cutoff (' + info.fmtTime(impliedDispatchMin) + ') falls outside ' + sp.scCode + '\u2019s own operating hours (' + scFields.openTime + '\u2013' + scFields.closeTime + ').' };
     }
     return { ok: true, impliedDispatchMin, impliedLabel: info.fmtTime(impliedDispatchMin) };
+  }
+  // ===== Route Scheduler Ops Alignment — lifecycle gates (2026-08-18) =========================
+  // schedPersonaName(sp, role) — a display name for whoever is "submitting" as this role. SC/LH
+  // draw from SC Master's own POC split (deriveScPocRoles); LM has no POC source yet (LMDC Master
+  // integration is future scope, per product direction) so it's a generic placeholder for now.
+  schedPersonaName(sp, role) {
+    if (role === 'LM') return 'LM Ops Lead';
+    const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
+    const pocs = this.deriveScPocRoles(sc.pocs);
+    return role === 'LH' ? (pocs.lhNames[0] || 'LH Ops Lead') : (pocs.scNames[0] || 'SC Ops Lead');
+  }
+  // schedStageRoles(stage) — which roles are the active proposers for a stage; stage1 = SC+LH
+  // simultaneously, stage2 = LM alone.
+  schedStageRoles(stage) { return stage === 'stage2' ? ['LM'] : ['SC', 'LH']; }
+  // submitSchedFeedback(planId) — the plan-level "Submit Feedback" action for the CURRENT
+  // schedOpsRole (mirrors RLH's submitOpsPlan, per-role rather than per-named-reviewer). Doesn't
+  // require anything to actually be flagged (an SC/LH/LM with nothing to say can still submit
+  // "Aligned" for their part) — only records that this role is done with this stage, and flips
+  // Pushed → In Alignment the first time ANY relevant role submits. Items flagged by this role
+  // only become visible to the Planner once this fires (see buildSchedRouteHeaders' visibleTo-
+  // Planner gate), matching RLH parity exactly per product direction.
+  submitSchedFeedback(planId) {
+    const st = this.state, d = st.data;
+    const idx = (d.schedulerPlans || []).findIndex(x => x.id === planId);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    const role = st.schedOpsRole;
+    if (this.schedStageRoles(sp.schedStage).indexOf(role) < 0) { this.showToast('This role has nothing to submit at the current stage', '#C77B00'); return; }
+    if (sp.status === 'Acknowledged' || sp.status === 'Finalised') { this.showToast('This stage is already frozen — nothing left to submit', '#C77B00'); return; }
+    const now = new Date(); const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const at = String(now.getDate()).padStart(2, '0') + ' ' + MON[now.getMonth()] + ' · ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const submitted = Object.assign({}, st.schedSubmitted);
+    submitted[planId] = Object.assign({}, submitted[planId]);
+    submitted[planId][sp.schedStage] = Object.assign({}, submitted[planId][sp.schedStage], { [role]: { by: this.schedPersonaName(sp, role), at } });
+    const schedulerPlans = d.schedulerPlans.slice();
+    if (sp.status === 'Pushed') schedulerPlans[idx] = Object.assign({}, sp, { status: 'In Alignment' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedSubmitted: submitted });
+    this.showToast('Feedback submitted to Planner · recorded ' + at, '#128A3E');
+  }
+  // computeSchedValidation(sp) (2026-08-18) — lightweight pre-flight check, mirroring RLH's own
+  // Validate in spirit: re-derives the FULL dock schedule from every currently-Accepted override
+  // (not just the single field checked at Accept time) and confirms no 30-min slot exceeds the
+  // SC's dock count. Kept minimal for now — per-item Accept already blocks dock-capacity
+  // violations at the moment of decision, so this mostly re-confirms nothing drifted; it's here
+  // as the seam Design/Product asked to keep for future error classes.
+  computeSchedValidation(sp) {
+    const info = this.schedulerRouteDcInfo(sp);
+    const errors = [], warnings = [];
+    if (info) {
+      const docks = sp.rlhDocks || 0;
+      const slotOf = (m) => Math.round(m / 30) * 30;
+      const counts = {};
+      info.routeInfo.forEach(ri => { const s = slotOf(ri.dispatchMin); counts[s] = (counts[s] || 0) + 1; });
+      Object.keys(counts).forEach(s => { if (docks > 0 && counts[s] > docks) errors.push({ t: 'Dock capacity exceeded at ' + info.fmtTime(Number(s)) + ': ' + counts[s] + ' routes against ' + docks + ' docks.' }); });
+    }
+    return { errors, warnings, clean: errors.length === 0 };
+  }
+  // schedStagePendingCount(sp) — Pending items across every route, scoped to the CURRENT stage's
+  // own field kind (cutoff/tat for stage1, landing for stage2) — the gate for both "Acknowledge &
+  // Freeze can't be re-armed while still deciding" bookkeeping and Push-to-LM/Finalise below.
+  schedStagePendingCount(sp) {
+    const st = this.state;
+    const stageFields = sp.schedStage === 'stage2' ? ['landing'] : ['cutoff', 'tat'];
+    const bucket = (st.schedFeedback || {})[sp.id] || {};
+    let n = 0;
+    Object.keys(bucket).forEach(routeCode => { (bucket[routeCode].items || []).forEach(it => { if (stageFields.indexOf(it.field) >= 0 && it.status === 'Pending') n++; }); });
+    return n;
+  }
+  openSchedAck(planId) { this.setState({ schedAckOpen: true, schedAckPlanId: planId }); }
+  closeSchedAck() { this.setState({ schedAckOpen: false, schedAckPlanId: null }); }
+  // confirmSchedAck() — Acknowledge & Freeze for the CURRENT stage. Gated on "at least one" of
+  // that stage's roles having submitted (mirrors RLH's own "at least one reviewer" threshold, per
+  // product direction — stage1 needs SC OR LH, not both). Freezes further SC/LH (or LM) flagging
+  // and unlocks the Planner's Accept/Reject for this stage's items.
+  confirmSchedAck() {
+    const st = this.state, d = st.data;
+    const id = st.schedAckPlanId;
+    const idx = (d.schedulerPlans || []).findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    const roles = this.schedStageRoles(sp.schedStage);
+    const stageSub = ((st.schedSubmitted || {})[id] || {})[sp.schedStage] || {};
+    const anySubmitted = roles.some(r => !!stageSub[r]);
+    if (!anySubmitted) { this.showToast('At least one Ops role must submit feedback before you can acknowledge', '#C77B00'); return; }
+    const schedulerPlans = d.schedulerPlans.slice();
+    schedulerPlans[idx] = Object.assign({}, sp, { status: 'Acknowledged' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedAckOpen: false, schedAckPlanId: null });
+    this.showToast(id + ' acknowledged — ' + (sp.schedStage === 'stage2' ? 'LM' : 'SC/LH') + ' input frozen', '#1E6FB8');
+  }
+  openSchedUnfreeze(planId) { this.setState({ schedUnfreezeOpen: true, schedUnfreezePlanId: planId }); }
+  closeSchedUnfreeze() { this.setState({ schedUnfreezeOpen: false, schedUnfreezePlanId: null }); }
+  // confirmSchedUnfreeze() — inverse of confirmSchedAck(), same semantics as RLH's own unfreeze:
+  // reverts to In Alignment (not Pushed — submitted feedback stays intact), reopening the
+  // Planner's own decisions on this stage's items (Accepted/Rejected/Superseded → back to
+  // Pending) without touching what Ops already submitted.
+  confirmSchedUnfreeze() {
+    const st = this.state, d = st.data;
+    const id = st.schedUnfreezePlanId;
+    const idx = (d.schedulerPlans || []).findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    const stageFields = sp.schedStage === 'stage2' ? ['landing'] : ['cutoff', 'tat'];
+    const feedback = Object.assign({}, st.schedFeedback);
+    const bucket = Object.assign({}, feedback[id]);
+    Object.keys(bucket).forEach(routeCode => {
+      const items = (bucket[routeCode].items || []).map(it => (stageFields.indexOf(it.field) >= 0 && it.status !== 'Pending') ? Object.assign({}, it, { status: 'Pending' }) : it);
+      bucket[routeCode] = Object.assign({}, bucket[routeCode], { items });
+    });
+    feedback[id] = bucket;
+    const schedulerPlans = d.schedulerPlans.slice();
+    schedulerPlans[idx] = Object.assign({}, sp, { status: 'In Alignment' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedFeedback: feedback, schedUnfreezeOpen: false, schedUnfreezePlanId: null });
+    this.showToast(id + ' unfrozen — reopened for editing, decisions reset', '#C77B00');
+  }
+  openSchedPushLM(planId) { this.setState({ schedPushLMOpen: true, schedPushLMPlanId: planId }); }
+  closeSchedPushLM() { this.setState({ schedPushLMOpen: false, schedPushLMPlanId: null }); }
+  // confirmPushToLM() — the stage1→stage2 gate: only reachable once stage1 is Acknowledged, every
+  // stage1 item is decided (nothing left Pending), and Validate comes back clean. Resets the run
+  // to Pushed for stage2 so LM sees it appear fresh in their own queue.
+  confirmPushToLM() {
+    const st = this.state, d = st.data;
+    const id = st.schedPushLMPlanId;
+    const idx = (d.schedulerPlans || []).findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    if (sp.status !== 'Acknowledged' || sp.schedStage !== 'stage1') { this.showToast('Stage 1 must be Acknowledged with every item decided first', '#C77B00'); return; }
+    if (this.schedStagePendingCount(sp) > 0) { this.showToast('Every Stage 1 item must be Accepted or Rejected first', '#C77B00'); return; }
+    const v = this.computeSchedValidation(sp);
+    if (!v.clean) { this.showToast('Validate shows ' + v.errors.length + ' error(s) — resolve before pushing to LM', '#D14B4B'); return; }
+    const schedulerPlans = d.schedulerPlans.slice();
+    schedulerPlans[idx] = Object.assign({}, sp, { schedStage: 'stage2', status: 'Pushed' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedPushLMOpen: false, schedPushLMPlanId: null });
+    this.showToast(id + ' pushed to LM Alignment', '#0D7377');
+  }
+  openSchedFin(planId) { this.setState({ schedFinOpen: true, schedFinPlanId: planId }); }
+  closeSchedFin() { this.setState({ schedFinOpen: false, schedFinPlanId: null }); }
+  // confirmSchedFinalise() — the real (non-bypass) Finalise for a Cutoff Plan run, distinct from
+  // Design Review's "Finalise Directly" skip. Only reachable once stage2 is Acknowledged, every
+  // stage2 item is decided, and Validate is clean.
+  confirmSchedFinalise() {
+    const st = this.state, d = st.data;
+    const id = st.schedFinPlanId;
+    const idx = (d.schedulerPlans || []).findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const sp = d.schedulerPlans[idx];
+    if (sp.status !== 'Acknowledged' || sp.schedStage !== 'stage2') { this.showToast('Stage 2 must be Acknowledged with every item decided first', '#C77B00'); return; }
+    if (this.schedStagePendingCount(sp) > 0) { this.showToast('Every Stage 2 item must be Accepted or Rejected first', '#C77B00'); return; }
+    const v = this.computeSchedValidation(sp);
+    if (!v.clean) { this.showToast('Validate shows ' + v.errors.length + ' error(s) — resolve before finalising', '#D14B4B'); return; }
+    const schedulerPlans = d.schedulerPlans.slice();
+    schedulerPlans[idx] = Object.assign({}, sp, { status: 'Finalised' });
+    this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedFinOpen: false, schedFinPlanId: null });
+    this.showToast(id + ' finalised — Cutoff Plan ready for handoff', '#128A3E');
+  }
+  // schedOpsStatusOf(sp, role) (2026-08-18) — the Ops-role-scoped display status for the To
+  // Review/Submitted/Acknowledged/Finalised tabs. Returns null when the run isn't in this role's
+  // queue at all (LM before stage2 begins). SC/LH get their status PINNED to 'Acknowledged' for
+  // the whole of stage2 (their part is decided, but the run isn't done) — per product direction —
+  // rather than reflecting stage2's own internal Pushed/In Alignment/Acknowledged cycling.
+  schedOpsStatusOf(sp, role) {
+    const st = this.state;
+    if (role === 'LM') {
+      if (sp.schedStage !== 'stage2') return null;
+      if (sp.status === 'Finalised') return 'Finalised';
+      if (sp.status === 'Acknowledged') return 'Acknowledged';
+      const sub = ((st.schedSubmitted || {})[sp.id] || {}).stage2 || {};
+      return sub.LM ? 'Submitted' : 'To Review';
+    }
+    // SC or LH
+    if (sp.schedStage === 'stage2') return sp.status === 'Finalised' ? 'Finalised' : 'Acknowledged';
+    if (sp.status === 'Finalised') return 'Finalised';
+    if (sp.status === 'Acknowledged') return 'Acknowledged';
+    const sub = ((st.schedSubmitted || {})[sp.id] || {}).stage1 || {};
+    return sub[role] ? 'Submitted' : 'To Review';
   }
   saveLmdcEdit(code) {
     const st = this.state;
@@ -7671,12 +8068,45 @@ class NDCApp extends React.Component {
       return { name: nm, done, pending: !done, mark: done ? '\u2713' : '\u23f3', statusText: done ? 'Submitted' : 'Not-Submitted', initials,
         chipBg: done ? '#E7F4EC' : '#F2F5FA', chipFg: done ? '#128A3E' : '#5A5E66' };
     });
+    // 2026-08-18 — Stage chip (Stage 1 · SC/LH vs Stage 2 · LM) so the Planner's own rail (which
+    // isn't role-scoped and can show both stages' runs side by side) can tell them apart at a
+    // glance. Feedback reviewer chips are ALSO stage-scoped now: stage1 shows the SC/LH POC pool
+    // (from SC Master); stage2 shows the LM placeholder (LMDC Master POC integration is future
+    // scope). "Submitted" per chip reflects schedSubmitted for the role that name belongs to.
+    const schedStage = sp.schedStage || 'stage1';
+    const stageLabel = schedStage === 'stage2' ? 'Stage 2 · LM' : 'Stage 1 · SC/LH';
+    const stageBg = schedStage === 'stage2' ? '#F0EDFB' : '#E9F5F5', stageFg = schedStage === 'stage2' ? '#5B4FA0' : '#0D7377';
+    const scPoc = this.deriveScPocRoles(sc ? sc.pocs : []);
+    const stageSub = ((st.schedSubmitted || {})[sp.id] || {})[schedStage] || {};
+    const feedbackLeads = schedStage === 'stage2'
+      ? [{ name: 'LM', role: 'LM', done: !!stageSub.LM }]
+      : [{ name: 'SC', role: 'SC', done: !!stageSub.SC }, { name: 'LH', role: 'LH', done: !!stageSub.LH }];
+    const feedbackLeadChips = feedbackLeads.map(fl => ({ name: fl.role + ' User', done: fl.done, mark: fl.done ? '\u2713' : '\u23f3',
+      chipBg: fl.done ? '#E7F4EC' : '#F2F5FA', chipFg: fl.done ? '#128A3E' : '#5A5E66' }));
+    // Lifecycle-gate availability — computed here (not JSX-time) so both Design Review and Ops
+    // Alignment's card read the exact same truth. Visibility per persona/role is still decided in
+    // JSX (mirrors buildSchedRouteHeaders' own editable/plannerCanReview split): Ack/Unfreeze/
+    // Push-to-LM/Finalise are Planner-only actions on Ops Alignment; Submit Feedback is the
+    // active Ops role's own action.
+    const stagePendingCount = this.schedStagePendingCount(sp);
+    const canAckFreeze = sp.status === 'In Alignment';
+    const canUnfreeze = sp.status === 'Acknowledged';
+    const canPushToLM = sp.status === 'Acknowledged' && schedStage === 'stage1' && stagePendingCount === 0;
+    const canFinaliseSched = sp.status === 'Acknowledged' && schedStage === 'stage2' && stagePendingCount === 0;
+    const activeRole = st.schedOpsRole || 'SC';
+    const canSubmitFeedback = (sp.status === 'Pushed' || sp.status === 'In Alignment') && this.schedStageRoles(schedStage).indexOf(activeRole) >= 0 && !stageSub[activeRole];
     const card = {
       id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone,
       scCoords: sc ? (Number(sc.lat).toFixed(4) + ', ' + Number(sc.lng).toFixed(4)) : '\u2014',
       createdAt: sp.createdAt, createdBy: sp.createdBy || '', sentDate: sp.sentDate || sp.createdAt, pushedBy: sp.pushedBy || sp.createdBy || '',
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
       isFinalDirect, reviewerNames, opsLeads, hasReviewers: opsLeads.length > 0,
+      schedStage, stageLabel, stageBg, stageFg, feedbackLeadChips, hasFeedbackLeads: feedbackLeadChips.length > 0,
+      stagePendingCount,
+      canAckFreeze, canUnfreeze, canPushToLM, canFinaliseSched, canSubmitFeedback,
+      onOpenAck: () => this.openSchedAck(sp.id), onOpenUnfreeze: () => this.openSchedUnfreeze(sp.id),
+      onOpenPushLM: () => this.openSchedPushLM(sp.id), onOpenFin: () => this.openSchedFin(sp.id),
+      onSubmitFeedback: () => this.submitSchedFeedback(sp.id),
       parentRunId: parentSp ? ('RUN-' + parentSp.scCode + '-01') : '\u2014',
       nlhPlanName: nlhP ? nlhP.name : '\u2014',
       docks: sp.rlhDocks, hw: sp.hw, holdOn: sp.holdOn, maxHoldLocal: sp.maxHoldLocal, maxHoldNonLocal: sp.maxHoldNonLocal, d0Label: sp.d0Cutoff, localSpeed: sp.localSpeed, nonLocalSpeed: sp.nonLocalSpeed,
@@ -8758,35 +9188,54 @@ class NDCApp extends React.Component {
   // colors, opsBg/decChip once locked). Ops Lead (SC/LH/LM) sees the Aligned/Needs-Change toggle;
   // the Planner sees a "Review Changes" trigger once a route has pending items. Once the run is
   // Acknowledged/Finalised, everything is read-only, same lock semantics as Route Planner.
+  // 2026-08-18 rebuild — stage-aware gating (was inverted: Acknowledged used to LOCK the
+  // Planner's own Review/Decide action instead of unlocking it) plus the new visible-to-Planner-
+  // only-after-Submit rule (RLH parity): a route's Needs-Change pill and the Planner's Review
+  // trigger only reflect items belonging to the CURRENT stage's field kind (cutoff/tat for
+  // stage1, landing for stage2) AND only once the run has left 'Pushed' (i.e. someone submitted).
+  // The proposing Ops role always sees their OWN in-progress flags regardless of that visibility
+  // gate (it's their own draft, not something hidden from them).
   buildSchedRouteHeaders(sp) {
     const st = this.state;
     const info = this.schedulerRouteDcInfo(sp);
     if (!info) return {};
     const role = st.schedOpsRole || 'SC';
-    const locked = sp.status === 'Acknowledged' || sp.status === 'Finalised';
+    const stage = sp.schedStage || 'stage1';
+    const stageFields = stage === 'stage2' ? ['landing'] : ['cutoff', 'tat'];
+    const frozen = sp.status === 'Acknowledged' || sp.status === 'Finalised';
+    const visibleToPlanner = sp.status !== 'Pushed'; // first Submit flips status away from Pushed
+    const canFlag = this.schedStageRoles(stage).indexOf(role) >= 0 && !frozen;
     const headers = {};
     info.routeInfo.forEach(ri => {
       const routeCode = ri.route.routeCode;
       const bucket = this.schedRouteBucket(sp.id, routeCode);
-      const items = bucket.items || [];
+      const items = (bucket.items || []).filter(x => stageFields.indexOf(x.field) >= 0);
       const pendingItems = items.filter(x => x.status === 'Pending');
+      // "true" status (drives the Ops role's own toggle coloring — always real, own-draft visible
+      // regardless of submit state) vs. what the Planner is allowed to see before Submit.
       const status = pendingItems.length > 0 ? 'Needs Change' : 'Aligned';
+      const plannerSeesNeedsChange = visibleToPlanner && status === 'Needs Change';
       const myPending = pendingItems.some(x => x.persona === role);
-      const stage1Items = items.filter(x => x.field === 'cutoff' || x.field === 'tat');
-      const stage1Complete = stage1Items.every(x => x.status !== 'Pending');
-      const canFlag = role === 'SC' || role === 'LH' || (role === 'LM' && stage1Complete);
+      const displayStatus = (!visibleToPlanner && status === 'Needs Change') ? 'Pending Submission' : status;
       headers[routeCode] = {
         routeCode, dcCount: ri.dcInfo.length, dispatchLabel: info.fmtTime(ri.dispatchMin),
-        status, decChip: status, opsBg: status === 'Aligned' ? '#E7F4EC' : '#FBF1DF', opsFg: status === 'Aligned' ? '#128A3E' : '#C77B00',
-        editable: !locked && canFlag,
+        status: displayStatus, decChip: displayStatus,
+        opsBg: displayStatus === 'Aligned' ? '#E7F4EC' : displayStatus === 'Pending Submission' ? '#F2F5FA' : '#FBF1DF',
+        opsFg: displayStatus === 'Aligned' ? '#128A3E' : displayStatus === 'Pending Submission' ? '#5A5E66' : '#C77B00',
+        editable: canFlag,
         alignBg: status === 'Aligned' ? '#128A3E' : '#fff', alignFg: status === 'Aligned' ? '#fff' : '#128A3E',
         ncBg: status === 'Needs Change' ? '#C77B00' : '#fff', ncFg: status === 'Needs Change' ? '#fff' : '#C77B00',
         onAlign: () => { if (myPending) this.withdrawSchedOwnOpen(sp.id, routeCode); },
         onNeeds: () => this.openSchedNc(sp.id, routeCode),
-        plannerCanReview: !locked && status === 'Needs Change',
+        // Planner's Review/Decide unlocks exactly when this stage is Acknowledged (the freeze) —
+        // the inverse of the pre-2026-08-18 bug, which disabled it at Acknowledged instead.
+        plannerCanReview: sp.status === 'Acknowledged' && plannerSeesNeedsChange,
         onReview: () => this.openSchedReview(sp.id, routeCode),
-        stage1Complete, pendingCount: pendingItems.length,
-        lockedNote: locked ? 'Acknowledged/Finalised — read-only' : (role === 'LM' && !stage1Complete ? 'Locked until Stage 1 is decided' : ''),
+        pendingCount: pendingItems.length,
+        lockedNote: sp.status === 'Finalised' ? 'Finalised — read-only'
+          : frozen ? ('Stage ' + (stage === 'stage2' ? '2 (LM)' : '1 (SC/LH)') + ' frozen — Planner reviewing')
+          : !visibleToPlanner ? 'Not yet visible to Planner — awaiting Submit'
+          : (this.schedStageRoles(stage).indexOf(role) < 0 ? ('Stage ' + (stage === 'stage2' ? '2 · LM only' : '1 · SC/LH only')) : ''),
       };
     });
     return headers;
@@ -8854,6 +9303,9 @@ class NDCApp extends React.Component {
         reason: it.reason, remark: it.remark, status: it.status,
         canDecide: it.status === 'Pending',
         accepted: it.status === 'Accepted', rejected: it.status === 'Rejected',
+        // Superseded (2026-08-18) — a contradicting proposal on the same field/route that lost out
+        // once another was Accepted; kept visible (not silently dropped) but permanently decided.
+        superseded: it.status === 'Superseded', supersededNote: it.status === 'Superseded' ? ('Superseded by ' + it.supersededBy + " User's accepted value") : '',
         accBg: it.status === 'Accepted' ? '#128A3E' : '#fff', accFg: it.status === 'Accepted' ? '#fff' : '#128A3E',
         rejBg: it.status === 'Rejected' ? '#D14B4B' : '#fff', rejFg: it.status === 'Rejected' ? '#fff' : '#D14B4B',
         onAccept: () => this.decideSchedFeedback(sp.id, sp, routeCode, it.field, it.dcCode, it.id, 'Accept'),
@@ -8925,96 +9377,6 @@ class NDCApp extends React.Component {
       routeGroupHeaders: this.buildSchedRouteHeaders(sp),
     };
   }
-  // buildSchedFeedbackView(sp) (2026-08-14) — the 3-stage Ops Alignment feedback loop for one
-  // Cutoff Plan run. Route-level rows (Dispatch Cutoff, from SC + LH; TAT, from LH — Stage 1) and
-  // DC-level rows (Landing Time, from LM — Stage 3, gated per-route on Stage 1 being fully
-  // decided). Feedback is keyed by sp.id (this specific run), not the parent RLH plan, since two
-  // different Cutoff Plan runs for the same SC could receive independent feedback.
-  buildSchedFeedbackView(sp) {
-    const st = this.state;
-    const info = this.schedulerRouteDcInfo(sp);
-    if (!info) return { routeRows: [], dcRows: [] };
-    const feedbackStore = (st.schedFeedback || {})[sp.id] || {};
-    const role = st.schedOpsRole || 'SC';
-    const draftOpenKey = st.schedFeedbackDraftOpen;
-    const draft = st.schedFeedbackDraft || {};
-    const mkDecideHandlers = (routeCode, field, dcCode, item) => ({
-      onAccept: () => this.decideSchedFeedback(sp.id, sp, routeCode, field, dcCode, item.id, 'Accept'),
-      onReject: () => this.decideSchedFeedback(sp.id, sp, routeCode, field, dcCode, item.id, 'Reject'),
-    });
-    const mkItemView = (routeCode, field, dcCode, item) => Object.assign({}, item, mkDecideHandlers(routeCode, field, dcCode, item),
-      { sevBg: item.status === 'Accepted' ? '#E7F4EC' : item.status === 'Rejected' ? '#FBEAEA' : '#FBF1DF',
-        sevFg: item.status === 'Accepted' ? '#128A3E' : item.status === 'Rejected' ? '#D14B4B' : '#C77B00' });
-    const stage1CompleteByRoute = {};
-    const routeRows = info.routeInfo.map(ri => {
-      const routeCode = ri.route.routeCode;
-      const bucket = feedbackStore[routeCode] || {};
-      const cutoffItems = (bucket.cutoff || []).map(it => mkItemView(routeCode, 'cutoff', null, it));
-      const tatByDc = bucket.tat || {};
-      const tatItems = [];
-      Object.keys(tatByDc).forEach(dcCode => (tatByDc[dcCode] || []).forEach(it => tatItems.push(mkItemView(routeCode, 'tat', dcCode, Object.assign({ dcCode }, it)))));
-      const allCutoffDecided = cutoffItems.every(x => x.status !== 'Pending');
-      const allTatDecided = tatItems.every(x => x.status !== 'Pending');
-      const stage1Complete = allCutoffDecided && allTatDecided;
-      stage1CompleteByRoute[routeCode] = stage1Complete;
-      const isDraftOpenCutoff = draftOpenKey === (routeCode + ':cutoff:');
-      const reasonsForRole = role === 'SC' ? this.schedFeedbackReasons('SC', 'cutoff') : role === 'LH' ? this.schedFeedbackReasons('LH', 'cutoff') : [];
-      return {
-        routeCode, dispatchLabel: info.fmtTime(ri.dispatchMin), dcCount: ri.dcInfo.length,
-        cutoffItems, hasCutoffPending: cutoffItems.some(x => x.status === 'Pending'),
-        tatItems, hasTatPending: tatItems.some(x => x.status === 'Pending'),
-        stage1Complete,
-        canFlagCutoff: role === 'SC' || role === 'LH',
-        isDraftOpenCutoff, draftReason: draft.reason || '', draftRemark: draft.remark || '', draftValue: draft.value || info.fmtTime(ri.dispatchMin),
-        reasonsForRole,
-        onOpenDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':cutoff:', schedFeedbackDraft: { value: info.fmtTime(ri.dispatchMin), reason: '', remark: '' } }),
-        onCloseDraft: () => this.setState({ schedFeedbackDraftOpen: null, schedFeedbackDraft: {} }),
-        onDraftReason: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { reason: e.target.value }) }),
-        onDraftRemark: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { remark: e.target.value }) }),
-        onDraftValue: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { value: e.target.value }) }),
-        onSubmitDraft: () => this.submitSchedFeedback(sp.id, routeCode, 'cutoff', null, draft.value, draft.reason, draft.remark),
-      };
-    });
-    const dcRows = [];
-    info.routeInfo.forEach(ri => {
-      const routeCode = ri.route.routeCode;
-      const bucket = feedbackStore[routeCode] || {};
-      ri.dcInfo.forEach(dcInfo => {
-        const dcCode = dcInfo.dc.code;
-        const tatItems = ((bucket.tat || {})[dcCode] || []).map(it => mkItemView(routeCode, 'tat', dcCode, it));
-        const landingItems = ((bucket.landing || {})[dcCode] || []).map(it => mkItemView(routeCode, 'landing', dcCode, it));
-        const isDraftOpenTat = draftOpenKey === (routeCode + ':tat:' + dcCode);
-        const isDraftOpenLanding = draftOpenKey === (routeCode + ':landing:' + dcCode);
-        dcRows.push({
-          routeCode, dcCode, landingLabel: info.fmtTime(Math.round(dcInfo.landingMin)), holdMin: dcInfo.holdMin,
-          tatItems, hasTatPending: tatItems.some(x => x.status === 'Pending'),
-          landingItems, hasLandingPending: landingItems.some(x => x.status === 'Pending'),
-          stage1Complete: stage1CompleteByRoute[routeCode],
-          canFlagTat: role === 'LH',
-          canFlagLanding: role === 'LM' && stage1CompleteByRoute[routeCode],
-          isDraftOpenTat, isDraftOpenLanding,
-          onOpenTatDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':tat:' + dcCode, schedFeedbackDraft: { value: String(Math.round(dcInfo.breakdownTatHrs * 60)), reason: '', remark: '' } }),
-          onOpenLandingDraft: () => this.setState({ schedFeedbackDraftOpen: routeCode + ':landing:' + dcCode, schedFeedbackDraft: { value: info.fmtTime(Math.round(dcInfo.landingMin)), reason: '', remark: '' } }),
-          onCloseDraft: () => this.setState({ schedFeedbackDraftOpen: null, schedFeedbackDraft: {} }),
-          onDraftReason: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { reason: e.target.value }) }),
-          onDraftRemark: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { remark: e.target.value }) }),
-          onDraftValue: (e) => this.setState({ schedFeedbackDraft: Object.assign({}, draft, { value: e.target.value }) }),
-          draftReason: draft.reason || '', draftRemark: draft.remark || '', draftValue: draft.value || '',
-          reasonsTat: this.schedFeedbackReasons('LH', 'tat'), reasonsLanding: this.schedFeedbackReasons('LM', 'landing'),
-          onSubmitTatDraft: () => this.submitSchedFeedback(sp.id, routeCode, 'tat', dcCode, draft.value, draft.reason, draft.remark),
-          onSubmitLandingDraft: () => {
-            const implied = this.computeImpliedCutoffForLanding(sp, routeCode, dcCode, draft.value);
-            if (!implied.ok) { this.showToast(implied.message, '#D14B4B'); return; }
-            this.submitSchedFeedback(sp.id, routeCode, 'landing', dcCode, implied.impliedLabel, draft.reason, draft.remark);
-          },
-        });
-      });
-    });
-    return { routeRows, dcRows, role,
-      onSetRole: (r) => this.setState({ schedOpsRole: r }),
-    };
-  }
-
   // ===== Ops Feedback recompute engine (2026-07-09) =====================================
   // computeHypotheticalPlan() is the single source of truth behind Validate, Simulate, and
   // Finalise for a plan under Ops feedback. It NEVER mutates plan.rows itself -- it takes the
@@ -10071,15 +10433,19 @@ class NDCApp extends React.Component {
     const alignHasPrev = alignPageSafe > 0;
     const alignHasNext = alignPageSafe < alignTotalPages - 1;
 
-    // ===== Route Scheduler — Ops Alignment (2026-07-30; rail regrouped by SC 2026-08-04 to match
-    // Route Planner's own Ops Alignment rail — see 01_Complete_Context.md) — list/filter/card-
-    // summary level only. Detailed feedback parameters (Needs Change, per-field decisions) are a
-    // later pass; for now this mirrors RLH's status-filtered, SC-grouped list + read-only cards,
-    // using the new metrics. Shared between Planner and Ops Lead (both personas see the same
-    // filtered list; deep actions differ only once the feedback loop itself is built). =====
+    // ===== Route Scheduler — Ops Alignment (2026-07-30; rail regrouped by SC 2026-08-04; full
+    // 2-stage feedback loop 2026-08-18 — see 04_Rule_Engine.md / 05_Core_Flows.md) =====
+    // Two SEPARATE rail/filter models now, mirroring RLH's own Planner-vs-Ops-Lead split exactly:
+    //   - schedAlignFilter*  → the PLANNER's own rail (Pending Feedback/Feedback Received/
+    //     Acknowledged/Finalised), reflecting the run's real, literal status/stage as it cycles.
+    //   - schedOpsFilter*    → the OPS role's own rail (To Review/Submitted/Acknowledged/
+    //     Finalised), role-scoped: SC/LH always see the run (their bucket just pins to
+    //     "Acknowledged" for the whole of stage2, per product direction — their part is done but
+    //     the run isn't); LM doesn't see the run in their queue AT ALL until stage2 begins.
     const schedAlignFilter = st.schedAlignFilter || 'Pending Feedback';
     const SCHED_FILTER_MAP = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
     const SCHED_SEG_ICON = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
+    const OPS_SEG_ICON = { 'To Review': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Submitted': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
     const allSchedPlansA = d.schedulerPlans || [];
     const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label, icon: SCHED_SEG_ICON[label],
       count: allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
@@ -10106,20 +10472,68 @@ class NDCApp extends React.Component {
     });
     const schedAlignEmpty = schedAlignList.length === 0;
     // Main pane — one card per run for the selected SC, built from the SAME buildSchedCard() Design
-    // Review uses (includeActions=false here since Push/Finalise only happen from Design Review),
-    // so Ops Alignment's card can never visually drift from Design Review's (2026-08-04 fix).
+    // Review uses (includeActions=false here since Push/Finalise-Direct only happen from Design
+    // Review), so Ops Alignment's card can never visually drift from Design Review's (2026-08-04).
     const schedAlignRunCards = curSchedAlignSC ? schedRunsForScA(curSchedAlignCode).map(sp => this.buildSchedCard(sp, false)) : [];
     const schedAlignPlanCountLabel = schedAlignList.length + ' SC' + (schedAlignList.length === 1 ? '' : 's');
 
+    // ----- Ops role's OWN rail (2026-08-18, new) — schedOpsFilter/schedOpsFilterSeg/
+    // schedOpsZoneChips/schedOpsList/schedOpsRunCards, scoped to the CURRENTLY ACTING role
+    // (st.schedOpsRole). This is what fixes "Ops User sees the same tabs as Planner" — a
+    // genuinely separate bucketing, not a relabeled copy of the Planner's own filter. -----
+    const schedOpsRoleActive = st.schedOpsRole || 'SC';
+    const schedOpsFilter = st.schedOpsFilter || 'To Review';
+    const schedOpsVisiblePlans = allSchedPlansA.filter(sp => this.schedOpsStatusOf(sp, schedOpsRoleActive) != null);
+    const schedOpsFilterSeg = ['To Review', 'Submitted', 'Acknowledged', 'Finalised'].map(label => ({ label, active: schedOpsFilter === label, icon: OPS_SEG_ICON[label],
+      count: schedOpsVisiblePlans.filter(sp => this.schedOpsStatusOf(sp, schedOpsRoleActive) === label).length,
+      onClick: () => this.setState({ schedOpsFilter: label, schedOpsSC: null }) }));
+    const schedOpsZone = st.schedOpsZone || 'All';
+    const schedRunsForScOps = (code) => schedOpsVisiblePlans.filter(sp => sp.scCode === code && this.schedOpsStatusOf(sp, schedOpsRoleActive) === schedOpsFilter);
+    const schedOpsSCsWithRuns = d.scs.filter(s => schedRunsForScOps(s.code).length >= 1);
+    const schedOpsZoneChips = ['All'].concat(ALIGN_SCHED_ZONES).map(z => ({ label: z, active: schedOpsZone === z,
+      count: z === 'All' ? schedOpsSCsWithRuns.length : schedOpsSCsWithRuns.filter(s => s.zone === z).length,
+      onClick: () => this.setState({ schedOpsZone: z, schedOpsSC: null }) })).filter(z => z.label === 'All' || z.count > 0);
+    const listSchedOpsSCs = schedOpsSCsWithRuns.filter(s => schedOpsZone === 'All' || s.zone === schedOpsZone);
+    const curSchedOpsCode = (st.schedOpsSC && listSchedOpsSCs.find(s => s.code === st.schedOpsSC)) ? st.schedOpsSC : (listSchedOpsSCs[0] && listSchedOpsSCs[0].code);
+    const curSchedOpsSC = d.scs.find(s => s.code === curSchedOpsCode);
+    const schedOpsList = listSchedOpsSCs.map(s => {
+      const rs = schedRunsForScOps(s.code);
+      const anyWarn = rs.some(sp => { const mm = this.computeSchedulerMetricsFor(sp) || {}; return mm.warnD0Low || mm.warnHoldHigh; });
+      return { code: s.code, name: s.name, zone: s.zone, runCountLabel: rs.length + ' run' + (rs.length === 1 ? '' : 's'),
+        active: s.code === curSchedOpsCode, hasWarning: anyWarn,
+        onClick: () => this.setState({ schedOpsSC: s.code }) };
+    });
+    const schedOpsEmpty = schedOpsList.length === 0;
+    const schedOpsRunCards = curSchedOpsSC ? schedRunsForScOps(curSchedOpsCode).map(sp => this.buildSchedCard(sp, false)) : [];
+    const schedOpsPlanCountLabel = schedOpsList.length + ' SC' + (schedOpsList.length === 1 ? '' : 's');
+
     // Full-screen detail overlay for Ops Alignment (2026-08-04) — same shape as Design Review's
     // reviewSchedDetail, opened via a run card's "view detail" icon in either persona view. Shared
-    // single overlay (not duplicated per persona) since it's read-only either way — rendered once
-    // near the other top-level modals (delConfirmOpen/runMapOpen), not inside isAlignPlanner/isAlignOps.
+    // single overlay (not duplicated per persona) since the underlying tables are identical either
+    // way; the route-level Aligned/Needs-Change/Review controls inside it are still gated per-
+    // persona/role by buildSchedRouteHeaders itself. Rendered once near the other top-level
+    // modals (delConfirmOpen/runMapOpen), not inside isAlignPlanner/isAlignOps.
     let schedAlignDetail = { open: false };
     if (st.schedAlignDetailId) {
       const dsp = allSchedPlansA.find(sp => sp.id === st.schedAlignDetailId);
-      if (dsp) schedAlignDetail = Object.assign({ open: true, close: () => this.setState({ schedAlignDetailId: null }) }, this.buildSchedCard(dsp, false), this.buildSchedDetailView(dsp, 'schedAlignDetailTab'));
+      if (dsp) {
+        const v = this.computeSchedValidation(dsp);
+        schedAlignDetail = Object.assign({ open: true, close: () => this.setState({ schedAlignDetailId: null }),
+          validateClean: v.clean, validateErrors: v.errors, validateErrorCount: v.errors.length,
+          onValidate: () => { this.setState({ schedValidateOpen: true }); },
+        }, this.buildSchedCard(dsp, false), this.buildSchedDetailView(dsp, 'schedAlignDetailTab'));
+      }
     }
+    // Lifecycle-gate confirm modals (Acknowledge & Freeze / Unfreeze / Push to LM / Finalise /
+    // Validate) — plan looked up fresh from whichever *PlanId the modal's own open-state carries,
+    // so these work identically whether triggered from the Planner's rail or the detail overlay.
+    const schedAckPlan = st.schedAckPlanId ? allSchedPlansA.find(sp => sp.id === st.schedAckPlanId) : null;
+    const schedUnfreezePlan = st.schedUnfreezePlanId ? allSchedPlansA.find(sp => sp.id === st.schedUnfreezePlanId) : null;
+    const schedPushLMPlan = st.schedPushLMPlanId ? allSchedPlansA.find(sp => sp.id === st.schedPushLMPlanId) : null;
+    const schedFinPlan = st.schedFinPlanId ? allSchedPlansA.find(sp => sp.id === st.schedFinPlanId) : null;
+    const schedAckPendingCount = schedAckPlan ? this.schedStagePendingCount(schedAckPlan) : 0;
+    const schedValidatePlan = st.schedAlignDetailId ? allSchedPlansA.find(sp => sp.id === st.schedAlignDetailId) : (st.reviewSchedDetailId ? allSchedPlansA.find(sp => sp.id === st.reviewSchedDetailId) : null);
+    const schedValidateResult = schedValidatePlan ? this.computeSchedValidation(schedValidatePlan) : { errors: [], warnings: [], clean: true };
 
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
       schedOpsRole: st.schedOpsRole || 'SC', onSetSchedOpsRole: (r) => this.setState({ schedOpsRole: r }),
@@ -10140,6 +10554,31 @@ class NDCApp extends React.Component {
       curSchedAlignName: curSchedAlignSC ? curSchedAlignSC.name : '', curSchedAlignZone: curSchedAlignSC ? curSchedAlignSC.zone : '',
       curSchedAlignCoords: curSchedAlignSC ? (Number(curSchedAlignSC.lat).toFixed(4) + ', ' + Number(curSchedAlignSC.lng).toFixed(4)) : '\u2014',
       schedAlignRunCards, hasSchedAlignRunCards: schedAlignRunCards.length > 0, schedAlignDetail,
+      // 2026-08-18 — Ops role's OWN rail (To Review/Submitted/Acknowledged/Finalised), scoped to
+      // st.schedOpsRole. This is the fix for "Ops User sees the same tabs as Planner" — a genuinely
+      // separate bucketing from schedAlignFilter* above, not a relabeled copy.
+      schedOpsFilterSeg, schedOpsZoneChips, schedOpsList, schedOpsEmpty, schedOpsPlanCountLabel,
+      curSchedOpsSC, hasCurSchedOpsSC: !!curSchedOpsSC, curSchedOpsCode,
+      curSchedOpsName: curSchedOpsSC ? curSchedOpsSC.name : '', curSchedOpsZone: curSchedOpsSC ? curSchedOpsSC.zone : '',
+      curSchedOpsCoords: curSchedOpsSC ? (Number(curSchedOpsSC.lat).toFixed(4) + ', ' + Number(curSchedOpsSC.lng).toFixed(4)) : '\u2014',
+      schedOpsRunCards, hasSchedOpsRunCards: schedOpsRunCards.length > 0,
+      // Lifecycle-gate confirm modals (2026-08-18) — Acknowledge & Freeze / Unfreeze / Push to LM
+      // Alignment / Finalise / Validate, all scoped to Route Scheduler's own schedulerPlans (kept
+      // fully separate from RLH's own ackOpen/unfreezeOpen/finOpen right above).
+      schedAckOpen: st.schedAckOpen, schedAckPlanName: schedAckPlan ? (schedAckPlan.scCode + ' \u00b7 ' + schedAckPlan.scName) : '',
+      schedAckStageLabel: schedAckPlan ? (schedAckPlan.schedStage === 'stage2' ? 'Stage 2 (LM)' : 'Stage 1 (SC/LH)') : '',
+      schedAckPendingCount, schedAckHasPending: schedAckPendingCount > 0,
+      schedAckPendingLabel: schedAckPendingCount + ' item' + (schedAckPendingCount === 1 ? '' : 's') + ' still pending \u2014 they will remain open for you to decide after freezing',
+      confirmSchedAck: () => this.confirmSchedAck(), closeSchedAck: () => this.closeSchedAck(),
+      schedUnfreezeOpen: st.schedUnfreezeOpen, schedUnfreezePlanName: schedUnfreezePlan ? (schedUnfreezePlan.scCode + ' \u00b7 ' + schedUnfreezePlan.scName) : '',
+      confirmSchedUnfreeze: () => this.confirmSchedUnfreeze(), closeSchedUnfreeze: () => this.closeSchedUnfreeze(),
+      schedPushLMOpen: st.schedPushLMOpen, schedPushLMPlanName: schedPushLMPlan ? (schedPushLMPlan.scCode + ' \u00b7 ' + schedPushLMPlan.scName) : '',
+      confirmPushToLM: () => this.confirmPushToLM(), closeSchedPushLM: () => this.closeSchedPushLM(),
+      schedFinOpen2: st.schedFinOpen, schedFinPlanName2: schedFinPlan ? (schedFinPlan.scCode + ' \u00b7 ' + schedFinPlan.scName) : '',
+      confirmSchedFinalise: () => this.confirmSchedFinalise(), closeSchedFin2: () => this.closeSchedFin(),
+      schedValidateOpen: st.schedValidateOpen, closeSchedValidate: () => this.setState({ schedValidateOpen: false }),
+      schedValidateClean: schedValidateResult.clean, schedValidateErrors: schedValidateResult.errors, schedValidateErrorCount: schedValidateResult.errors.length,
+      schedValidateSummary: schedValidateResult.clean ? 'No errors found — clear to proceed.' : (schedValidateResult.errors.length + ' error' + (schedValidateResult.errors.length === 1 ? '' : 's') + ' found.'),
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -11464,7 +11903,8 @@ class NDCApp extends React.Component {
     let reviewSchedDetail = { open: false };
     if (st.reviewSchedDetailId) {
       const dsp = allSchedPlans.find(sp => sp.id === st.reviewSchedDetailId);
-      if (dsp) reviewSchedDetail = Object.assign({ open: true, close: () => this.setState({ reviewSchedDetailId: null }) }, this.buildSchedCard(dsp, true), this.buildSchedDetailView(dsp, 'reviewSchedDetailTab'));
+      if (dsp) reviewSchedDetail = Object.assign({ open: true, close: () => this.setState({ reviewSchedDetailId: null }),
+        onValidate: () => this.setState({ schedValidateOpen: true }) }, this.buildSchedCard(dsp, true), this.buildSchedDetailView(dsp, 'reviewSchedDetailTab'));
     }
 
     const schedPushPlan = allSchedPlans.find(sp => sp.id === (st.schedPushPlanId || st.schedFinaliseDirectPlanId));

@@ -2758,11 +2758,8 @@ function View(B, self) {
 <div style={css(`display:flex; gap:24px;`)}>
 <div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Docks</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockCount}</div></div>
 <div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Routes departing</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockTotalDeparted}</div></div>
-<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest hour</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockBusyLabel}</div></div>
-</div>
-<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-<button onClick={reviewSchedDetail.onGranHour} style={css(`border:none; background:${reviewSchedDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${reviewSchedDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By hour</button>
-<button onClick={reviewSchedDetail.onGranSlot} style={css(`border:none; background:${!reviewSchedDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${!reviewSchedDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By 30-min slot</button>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest slot</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockBusyLabel}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Dock Utilisation</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.dockUtilPct}%</div></div>
 </div>
 </div>
 {(reviewSchedDetail.hasDockSchedule) ? (<>
@@ -2892,15 +2889,30 @@ function View(B, self) {
     fix), just without push/finalise actions (those only ever happen from Design Review) */}
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(schedAlignRunCards || []).map((c, __iA4) => (<React.Fragment key={__iA4}>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; border-left:4px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
-<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.stageBg}; color:${c.stageFg};`)}>{c.stageLabel}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
+{/* Stage tracker (2026-08-18) — replaces the old bare stage chip, which reused the same 4-word
+    status vocabulary for both stages ("Acknowledged" appearing once per stage) and forced the
+    Planner to combine two separate labels to know where a run stood. One 2-node progress line
+    instead: filled dot + connecting line per completed stage, sub-status shown only under
+    whichever stage is currently active. */}
+<div style={css(`display:flex; align-items:center; gap:5px; margin-top:6px;`)}>
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node1.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:${c.stageTracker.node1.state === 'active' ? '700' : '600'}; color:${c.stageTracker.node1.state === 'pending' ? '#8E96A3' : '#14171F'};`)}>Stage 1: SC/LH</span>
+<span style={css(`width:20px; height:2px; background:${c.stageTracker.line1Filled ? '#128A3E' : '#E6EBF2'}; flex-shrink:0;`)} />
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node2.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:${c.stageTracker.node2.state === 'active' ? '700' : '600'}; color:${c.stageTracker.node2.state === 'pending' ? '#8E96A3' : '#14171F'};`)}>Stage 2: LM</span>
+<span style={css(`width:20px; height:2px; background:${c.stageTracker.line2Filled ? '#128A3E' : '#E6EBF2'}; flex-shrink:0;`)} />
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node3.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:600; color:${c.stageTracker.node3.state === 'pending' ? '#8E96A3' : '#128A3E'};`)}>Finalised</span>
+</div>
+{(c.stageTracker.node1.subLabel || c.stageTracker.node2.subLabel) ? (<><div style={css(`font-size:10px; color:#8E96A3; margin-top:2px;`)}>{c.stageTracker.node1.subLabel || c.stageTracker.node2.subLabel}</div></>) : null}
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
@@ -3912,15 +3924,27 @@ function View(B, self) {
     2026-08-18 stage chip and this role's own Submit Feedback action */}
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(schedOpsRunCards || []).map((c, __iC4) => (<React.Fragment key={__iC4}>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; border-left:4px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
-<span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.stageBg}; color:${c.stageFg};`)}>{c.stageLabel}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
+{/* Stage tracker (2026-08-18) — same shared shape as Design Review/Planner's card; see the
+    Planner-card copy above for the full rationale comment. */}
+<div style={css(`display:flex; align-items:center; gap:5px; margin-top:6px;`)}>
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node1.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:${c.stageTracker.node1.state === 'active' ? '700' : '600'}; color:${c.stageTracker.node1.state === 'pending' ? '#8E96A3' : '#14171F'};`)}>Stage 1: SC/LH</span>
+<span style={css(`width:20px; height:2px; background:${c.stageTracker.line1Filled ? '#128A3E' : '#E6EBF2'}; flex-shrink:0;`)} />
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node2.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:${c.stageTracker.node2.state === 'active' ? '700' : '600'}; color:${c.stageTracker.node2.state === 'pending' ? '#8E96A3' : '#14171F'};`)}>Stage 2: LM</span>
+<span style={css(`width:20px; height:2px; background:${c.stageTracker.line2Filled ? '#128A3E' : '#E6EBF2'}; flex-shrink:0;`)} />
+<span style={css(`width:8px; height:8px; border-radius:50%; background:${c.stageTracker.node3.color}; flex-shrink:0;`)} />
+<span style={css(`font-size:10.5px; font-weight:600; color:${c.stageTracker.node3.state === 'pending' ? '#8E96A3' : '#128A3E'};`)}>Finalised</span>
+</div>
+{(c.stageTracker.node1.subLabel || c.stageTracker.node2.subLabel) ? (<><div style={css(`font-size:10px; color:#8E96A3; margin-top:2px;`)}>{c.stageTracker.node1.subLabel || c.stageTracker.node2.subLabel}</div></>) : null}
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.isFinalised ? 'Finalised' : 'Pushed'} {c.sentDate}</div>
 </div>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
@@ -4636,8 +4660,9 @@ function View(B, self) {
 </div>
 {(f.flagged) ? (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1.3fr; gap:8px; margin-top:8px;`)}>
-{(f.isTime) ? (<><input type={"time"} value={f.value} onInput={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : null}
-{(f.isNumber) ? (<><input type={"number"} min={"0"} value={f.value} onInput={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : null}
+<select value={f.value} onChange={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
+{(f.options || []).map((op, __iSNCo) => (<React.Fragment key={__iSNCo}><option value={op.value}>{op.label}</option></React.Fragment>))}
+</select>
 <select value={f.reasonVal} onChange={f.onReason} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
 <option value={""}>Select reason\u2026</option>
 {(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
@@ -4677,13 +4702,15 @@ function View(B, self) {
 <div style={css(`padding:16px 22px 20px; display:flex; flex-direction:column; gap:16px;`)}>
 {(schedReviewModal.bucketedChanges || []).map((grp, __iSRB) => (<React.Fragment key={__iSRB}>
 <div>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.05em; margin-bottom:7px; display:flex; align-items:center; gap:7px;`)}>{grp.bucket.toUpperCase()}<span style={css(`height:1px; flex:1; background:#EEF1F6;`)} /></div>
+<div style={css(`margin-bottom:7px; display:flex; align-items:center; gap:7px;`)}><span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; letter-spacing:0.03em; background:${grp.bucketBg}; color:${grp.bucketFg};`)}>{grp.bucketLabel.toUpperCase()}</span><span style={css(`height:1px; flex:1; background:#EEF1F6;`)} /></div>
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(grp.items || []).map((c, __iSRC) => (<React.Fragment key={__iSRC}>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:11px 13px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:8px;`)}>
 <div style={css(`flex:1; min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:2px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{c.whereLabel}</span><span style={css(`padding:1px 7px; border-radius:999px; font-size:9px; font-weight:700; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{c.proposedBy}</span></div>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>\u2192 {c.changeVal}</div>
+{/* Change visibility (2026-08-18) — struck original value → colored proposed value, mirroring
+    Route Planner's own diff pattern (dv.hasTpChange etc.), instead of only showing the new value. */}
+{(c.hasChange) ? (<><div style={css(`font-size:12.5px; display:flex; align-items:center; gap:6px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{c.origLabel}</span><span style={css(`color:#C77B00; font-weight:700;`)}>{c.changeVal}</span></div></>) : (<><div style={css(`font-size:12.5px; color:#14171F;`)}>\u2192 {c.changeVal}</div></>)}
 <div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{c.reason}</div>
 {(c.remark) ? (<><div style={css(`margin-top:6px; padding:8px 11px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:7px; font-size:11.5px; color:#14171F; font-style:italic;`)}>"{c.remark}"</div></>) : null}
 {(c.superseded) ? (<><div style={css(`margin-top:4px; font-size:10.5px; color:#8E96A3;`)}>{c.supersededNote}</div></>) : null}
@@ -4926,11 +4953,8 @@ function View(B, self) {
 <div style={css(`display:flex; gap:24px;`)}>
 <div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Docks</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockCount}</div></div>
 <div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Routes departing</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockTotalDeparted}</div></div>
-<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest hour</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockBusyLabel}</div></div>
-</div>
-<div style={css(`display:flex; gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-<button onClick={schedAlignDetail.onGranHour} style={css(`border:none; background:${schedAlignDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${schedAlignDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By hour</button>
-<button onClick={schedAlignDetail.onGranSlot} style={css(`border:none; background:${!schedAlignDetail.granIsHour ? '#fff' : 'transparent'}; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px; cursor:pointer; color:${!schedAlignDetail.granIsHour ? '#14171F' : '#5A5E66'};`)}>By 30-min slot</button>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Busiest slot</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockBusyLabel}</div></div>
+<div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Dock Utilisation</div><div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.dockUtilPct}%</div></div>
 </div>
 </div>
 {(schedAlignDetail.hasDockSchedule) ? (<>
@@ -5849,17 +5873,26 @@ class NDCApp extends React.Component {
     // run, spanning all 5 lifecycle stages) so Design Review/Ops Alignment for Route Scheduler
     // aren't blank on first load. The other 2 Finalised plans stay unscheduled, so Step 1's
     // "Plan Selection" list still has something fresh to pick from.
-    const _finalisedForSeed = plans.filter(p => p.status === 'Finalised').slice(0, 5);
-    // 2026-08-18 — 5 seed points now walk the full 2-stage feedback loop (see 04_Rule_Engine.md /
-    // 05_Core_Flows.md for the lifecycle) rather than the old flat 5-status spread, so both halves
-    // of the loop have something to click through on first load:
-    //   0: Draft-ish/untouched — Pushed, stage1, nothing flagged yet.
-    //   1: stage1 In Alignment — SC has submitted, LH hasn't yet.
-    //   2: stage1 Acknowledged, fully decided, ready for "Push to LM Alignment.
-    //   3: stage2 (LM) In Alignment — LM mid-flagging.
-    //   4: stage2 Acknowledged & fully decided → Finalised (the whole loop closed).
-    const _seedPoints = ['Pushed', 'In Alignment', 'Acknowledged', 'In Alignment', 'Finalised'];
-    const _seedStages = ['stage1', 'stage1', 'stage1', 'stage2', 'stage2'];
+    // 2026-08-18 — "seed more plans": per product direction, this now follows Route Planner's own
+    // rule exactly — every RLH plan that reaches Finalised is eligible for Route Scheduler, so ALL
+    // Finalised RLH plans get a seeded run (previously capped at 5 of however many were Finalised).
+    const _finalisedForSeed = plans.filter(p => p.status === 'Finalised');
+    // 7 seed points now walk a richer spread across the full 2-stage feedback loop (see
+    // 04_Rule_Engine.md / 05_Core_Flows.md for the lifecycle), each with more review content
+    // (multiple routes/items per run, not just one) than the original 5-point pass:
+    //   0: untouched — Pushed, stage1, nothing flagged yet.
+    //   1: stage1 In Alignment — SC has submitted (2 routes flagged), LH hasn't yet.
+    //   2: stage1 In Alignment — both SC and LH have submitted, several pending items across 2 routes.
+    //   3: stage1 Acknowledged, fully decided (mix of Accepted/Rejected/Superseded across 2 routes)
+    //      — ready for "Push to LM Alignment".
+    //   4: stage2 (LM) In Alignment — LM mid-flagging, 2 DCs across 2 routes.
+    //   5: stage2 Acknowledged, fully decided — ready for Finalise.
+    //   6: stage2 Acknowledged & fully decided → Finalised (the whole loop closed).
+    // Runs beyond the 7th cycle back through the same 7 points (index % 7) so any FUTURE session
+    // that adds more Finalised RLH plans still gets non-blank demo data on every run, not just the
+    // first 7.
+    const _seedPoints = ['Pushed', 'In Alignment', 'In Alignment', 'Acknowledged', 'In Alignment', 'Acknowledged', 'Finalised'];
+    const _seedStages = ['stage1', 'stage1', 'stage1', 'stage1', 'stage2', 'stage2', 'stage2'];
     const schedulerPlans = _finalisedForSeed.map((p, i) => {
       const hh = p.scCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
       const hw = [0, 0.5, 1][hh % 3];
@@ -5870,7 +5903,7 @@ class NDCApp extends React.Component {
       const rf = this.resolveScFields(sc || { code: p.scCode });
       return {
         id: p.id + '-SCHED-DEMO' + (i + 1), parentPlanId: p.id, scCode: p.scCode, scName: p.scName, zone: p.zone,
-        status, schedStage, createdAt: '2' + (4 + i) + ' Jul 2026', createdBy: 'Pranita Sapkal',
+        status, schedStage, createdAt: '2' + (4 + (i % 6)) + ' Jul 2026', createdBy: 'Pranita Sapkal',
         nlhPlanId: 'NLH-ING-DEMO',
         hw, d0Increments, d0Cutoff: (() => { const m = 9 * 60 + d0Increments * 30; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); })(),
         rlhDocks: 2 + ((hh >> 3) % 6),
@@ -5878,7 +5911,7 @@ class NDCApp extends React.Component {
         nonLocalSpeed: sc && sc.nonLocalSpeed != null ? sc.nonLocalSpeed : 32 + ((hh >> 5) % 10),
         holdOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
         refPlanId: null, cutoffs: null,
-        _seedIdx: i, // used once below to seed schedFeedback/schedSubmitted matching this run's stage
+        _seedIdx: i % 7, // used once below to seed schedFeedback/schedSubmitted matching this run's stage
       };
     });
     // LMDC Master (2026-08-08) — the canonical DC pool (every active/inactive/zerocap/multi node
@@ -5918,11 +5951,14 @@ class NDCApp extends React.Component {
   componentDidMount() {
     this.seedSchedDemoFeedback();
   }
+  // seedSchedDemoFeedback() (2026-08-18, expanded) — richer demo content across all 7 seed
+  // points: multiple routes/items per run where the parent plan has enough routes, not just one
+  // route touched per run as before ("review within the plans" — more to actually click through).
   seedSchedDemoFeedback() {
     const d = this.state.data;
     const demoRuns = (d.schedulerPlans || []).filter(sp => sp._seedIdx != null);
     const feedback = {}, submitted = {};
-    const rcOverride = {}, tatOverride = {};
+    const rcOverride = {};
     demoRuns.forEach(sp => {
       const info = this.schedulerRouteDcInfo(sp);
       if (!info || !info.routeInfo.length) return;
@@ -5931,45 +5967,72 @@ class NDCApp extends React.Component {
       const scName = pocs.scNames[0] || 'SC Ops Lead';
       const lhName = pocs.lhNames[0] || 'LH Ops Lead';
       const r0 = info.routeInfo[0];
-      const routeCode = r0.route.routeCode;
-      const mkItem = (persona, field, dcCode, reason, status, proposedValue, supersededBy) => ({
-        id: 'FB-SEED-' + sp.id + '-' + field + '-' + persona, persona, field, dcCode, reason, remark: '', status, proposedValue, submittedAt: '2' + (5 + sp._seedIdx) + ' Jul',
-        supersededBy: supersededBy || null,
+      const r1 = info.routeInfo[1] || null;
+      const rc0 = r0.route.routeCode, rc1 = r1 ? r1.route.routeCode : null;
+      const mkItem = (persona, field, dcCode, reason, status, proposedValue, supersededBy, originalValue) => ({
+        id: 'FB-SEED-' + sp.id + '-' + field + '-' + persona + '-' + (dcCode || rc0), persona, field, dcCode, reason, remark: '', status, proposedValue, submittedAt: '2' + (5 + sp._seedIdx) + ' Jul',
+        supersededBy: supersededBy || null, originalValue: originalValue != null ? originalValue : null,
       });
+      const orig0 = info.fmtTime(r0.dispatchMin);
+      const orig1 = r1 ? info.fmtTime(r1.dispatchMin) : null;
+      const routeItems = {};
+      const addItem = (routeCode, item) => { routeItems[routeCode] = routeItems[routeCode] || []; routeItems[routeCode].push(item); };
+
       if (sp._seedIdx === 1) {
-        // stage1, In Alignment — SC has submitted a Dispatch Cutoff flag, LH hasn't yet.
-        const proposed = info.fmtTime(r0.dispatchMin + 30);
-        feedback[sp.id] = { [routeCode]: { items: [mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Pending', proposed)] } };
+        // stage1, In Alignment — SC has submitted Dispatch Cutoff flags on up to 2 routes; LH
+        // hasn't submitted yet.
+        addItem(rc0, mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Pending', info.fmtTime(r0.dispatchMin + 30), null, orig0));
+        if (r1) addItem(rc1, mkItem('SC', 'cutoff', null, 'Slot Congestion', 'Pending', info.fmtTime(r1.dispatchMin + 30), null, orig1));
         submitted[sp.id] = { stage1: { SC: { by: scName, at: '25 Jul' } } };
       } else if (sp._seedIdx === 2) {
-        // stage1, Acknowledged, fully decided — SC and LH proposed CONTRADICTING cutoffs on the
-        // same route; the Planner accepted SC's and the LH one was auto-superseded. Demonstrates
-        // the supersede path on first load rather than only via a live click-through.
-        const scVal = info.fmtTime(r0.dispatchMin + 30), lhVal = info.fmtTime(r0.dispatchMin + 60);
-        feedback[sp.id] = { [routeCode]: { items: [
-          mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Accepted', scVal),
-          mkItem('LH', 'cutoff', null, 'Vendor not aligned - Due to Traffic', 'Superseded', lhVal, 'SC'),
-        ] } };
-        submitted[sp.id] = { stage1: { SC: { by: scName, at: '26 Jul' }, LH: { by: lhName, at: '26 Jul' } } };
-        rcOverride[sp.id] = { [routeCode]: scVal };
+        // stage1, In Alignment — both SC and LH have submitted; several still-pending items
+        // spread across 2 routes (a cutoff flag and a TAT flag on the same route, plus a second
+        // route's cutoff flag) — nothing decided yet.
+        addItem(rc0, mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Pending', info.fmtTime(r0.dispatchMin + 30), null, orig0));
+        const dc0r0 = r0.dcInfo[0];
+        if (dc0r0) { const curTat = String(Math.round(dc0r0.breakdownTatHrs * 60)); addItem(rc0, mkItem('LH', 'tat', dc0r0.dc.code, 'Vendor not aligned - Due to Traffic', 'Pending', String(Number(curTat) + 15), null, curTat)); }
+        if (r1) addItem(rc1, mkItem('LH', 'cutoff', null, 'Route Consolidation', 'Pending', info.fmtTime(r1.dispatchMin + 60), null, orig1));
+        submitted[sp.id] = { stage1: { SC: { by: scName, at: '25 Jul' }, LH: { by: lhName, at: '26 Jul' } } };
       } else if (sp._seedIdx === 3) {
-        // stage2, In Alignment — LM has submitted a Landing Time flag, still pending decision.
-        const dc0 = r0.dcInfo[0];
-        if (dc0) {
-          const proposed = info.fmtTime(Math.round(dc0.landingMin) + 45);
-          feedback[sp.id] = { [routeCode]: { items: [mkItem('LM', 'landing', dc0.dc.code, 'DC opening early', 'Pending', proposed)] } };
-          submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '27 Jul' } } };
-        }
+        // stage1, Acknowledged, fully decided — SC and LH proposed CONTRADICTING cutoffs on the
+        // same route (Planner accepted SC's, LH's auto-superseded — demonstrates the supersede
+        // path on first load); a second route has a TAT proposal the Planner Rejected.
+        const scVal = info.fmtTime(r0.dispatchMin + 30), lhVal = info.fmtTime(r0.dispatchMin + 60);
+        addItem(rc0, mkItem('SC', 'cutoff', null, 'Dock Constraints - Manpower Limitation', 'Accepted', scVal, null, orig0));
+        addItem(rc0, mkItem('LH', 'cutoff', null, 'Vendor not aligned - Due to Traffic', 'Superseded', lhVal, 'SC', orig0));
+        if (r1) { const dc0r1 = r1.dcInfo[0]; if (dc0r1) { const curTat = String(Math.round(dc0r1.breakdownTatHrs * 60)); addItem(rc1, mkItem('LH', 'tat', dc0r1.dc.code, 'Others', 'Rejected', String(Number(curTat) + 30), null, curTat)); } }
+        submitted[sp.id] = { stage1: { SC: { by: scName, at: '26 Jul' }, LH: { by: lhName, at: '26 Jul' } } };
+        rcOverride[sp.id] = { [rc0]: scVal };
       } else if (sp._seedIdx === 4) {
+        // stage2, In Alignment — LM mid-flagging Landing Time on DCs across 2 routes, both still
+        // Pending.
+        const dc0 = r0.dcInfo[0];
+        if (dc0) addItem(rc0, mkItem('LM', 'landing', dc0.dc.code, 'DC opening early', 'Pending', info.fmtTime(Math.round(dc0.landingMin) + 45), null, orig0));
+        if (r1) { const dc0r1 = r1.dcInfo[0]; if (dc0r1) addItem(rc1, mkItem('LM', 'landing', dc0r1.dc.code, 'Processing Feasibility', 'Pending', info.fmtTime(Math.round(dc0r1.landingMin) + 30), null, orig1)); }
+        submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '27 Jul' } } };
+      } else if (sp._seedIdx === 5) {
+        // stage2, Acknowledged, fully decided — ready for Finalise. One route's Landing Time
+        // request Accepted (back-solved to an implied Dispatch Cutoff); a second route's Rejected.
+        const dc0 = r0.dcInfo[0];
+        const rc = {};
+        if (dc0) { const implied = info.fmtTime(r0.dispatchMin - 30); addItem(rc0, mkItem('LM', 'landing', dc0.dc.code, 'Processing Feasibility', 'Accepted', implied, null, orig0)); rc[rc0] = implied; }
+        if (r1) { const dc0r1 = r1.dcInfo[0]; if (dc0r1) addItem(rc1, mkItem('LM', 'landing', dc0r1.dc.code, 'Others', 'Rejected', info.fmtTime(Math.round(dc0r1.landingMin) + 15), null, orig1)); }
+        submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '28 Jul' } } };
+        if (Object.keys(rc).length) rcOverride[sp.id] = rc;
+      } else if (sp._seedIdx === 6) {
         // stage2, fully decided → Finalised. LM's Landing Time request was accepted, back-solved
         // to an implied Dispatch Cutoff (same as decideSchedFeedback's real 'landing' Accept path).
         const dc0 = r0.dcInfo[0];
         if (dc0) {
           const impliedCutoff = info.fmtTime(r0.dispatchMin - 30);
-          feedback[sp.id] = { [routeCode]: { items: [mkItem('LM', 'landing', dc0.dc.code, 'Processing Feasibility', 'Accepted', impliedCutoff)] } };
-          submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '28 Jul' } } };
-          rcOverride[sp.id] = { [routeCode]: impliedCutoff };
+          addItem(rc0, mkItem('LM', 'landing', dc0.dc.code, 'Processing Feasibility', 'Accepted', impliedCutoff, null, orig0));
+          rcOverride[sp.id] = { [rc0]: impliedCutoff };
         }
+        submitted[sp.id] = { stage2: { LM: { by: 'LM Ops Lead', at: '29 Jul' } } };
+      }
+      if (Object.keys(routeItems).length) {
+        feedback[sp.id] = {};
+        Object.keys(routeItems).forEach(rc => { feedback[sp.id][rc] = { items: routeItems[rc] }; });
       }
     });
     this.setState({
@@ -6231,16 +6294,24 @@ class NDCApp extends React.Component {
     if (anyOthers && !String(st.schedNcRemark || '').trim()) { this.showToast('Remarks are mandatory when "Others" is the reason', '#D14B4B'); return; }
     if (keys.some(k => !fields[k].reason)) { this.showToast('Pick a reason for every flagged field', '#C77B00'); return; }
     const sp = (st.data.schedulerPlans || []).find(x => x.id === route.planId);
+    const info = this.schedulerRouteDcInfo(sp);
     // Landing Time proposals (LM, Stage 3) store the IMPLIED Dispatch Cutoff, back-solved here —
     // not the raw requested landing time — so Accept later is just "apply this cutoff", same as
     // any other cutoff proposal (rule 3). Infeasible ones abort the whole submission with why.
+    // 2026-08-18 — dropdown values now arrive as raw minute-of-day numbers (strings), not "HH:MM"
+    // — converted to "HH:MM" here for cutoff/landing since that's the format proposedValue and
+    // every downstream reader (decideSchedFeedback, buildSchedReviewData) expects. TAT stays a
+    // plain minute count, unchanged.
     const resolved = {};
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i]; const parts = k.split(':'); const field = parts[0], dcCode = parts[1] || null;
       if (field === 'landing') {
-        const implied = this.computeImpliedCutoffForLanding(sp, route.routeCode, dcCode, fields[k].value);
+        const landingHHMM = info ? info.fmtTime(Number(fields[k].value)) : fields[k].value;
+        const implied = this.computeImpliedCutoffForLanding(sp, route.routeCode, dcCode, landingHHMM);
         if (!implied.ok) { this.showToast(implied.message, '#D14B4B'); return; }
         resolved[k] = implied.impliedLabel;
+      } else if (field === 'cutoff') {
+        resolved[k] = info ? info.fmtTime(Number(fields[k].value)) : fields[k].value;
       } else {
         resolved[k] = fields[k].value;
       }
@@ -6250,11 +6321,23 @@ class NDCApp extends React.Component {
     store[route.planId] = Object.assign({}, store[route.planId]);
     const bucket = Object.assign({ items: [] }, store[route.planId][route.routeCode]);
     let items = (bucket.items || []).filter(x => !(x.persona === persona && x.status === 'Pending'));
+    // originalValue (2026-08-18) — the value in effect at the MOMENT this proposal is submitted
+    // (i.e. before this item's own effect), captured once here rather than recomputed later, so
+    // the review modal can show a true "struck original → new" diff even after other proposals
+    // have since changed what's currently effective. cutoff/landing compare on the route's current
+    // Dispatch Cutoff (landing's proposedValue is itself an implied cutoff, so this keeps the
+    // comparison apples-to-apples); tat compares on that DC's current TAT minutes.
+    const ri = info ? info.routeInfo.find(r => r.route.routeCode === route.routeCode) : null;
     keys.forEach(k => {
       const f = fields[k];
       const parts = k.split(':'); // 'cutoff' | 'tat:<dcCode>' | 'landing:<dcCode>'
       const field = parts[0], dcCode = parts[1] || null;
-      items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], submittedAt: 'Today' });
+      let originalValue = null;
+      if (ri) {
+        if (field === 'cutoff' || field === 'landing') originalValue = info.fmtTime(ri.dispatchMin);
+        else if (field === 'tat') { const dcRow = ri.dcInfo.find(x => x.dc.code === dcCode); originalValue = dcRow ? String(Math.round(dcRow.breakdownTatHrs * 60)) : null; }
+      }
+      items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], originalValue, submittedAt: 'Today' });
     });
     bucket.items = items;
     store[route.planId][route.routeCode] = bucket;
@@ -6370,7 +6453,11 @@ class NDCApp extends React.Component {
     const proposedTod = ((proposedMin % 1440) + 1440) % 1440;
     const dcOpenAtProposed = proposedTod >= dcHrs.openMin && proposedTod < dcHrs.closeMin;
     if (!dcOpenAtProposed) return { ok: false, message: dcCode + ' is not open at ' + proposedLandingHHMM + ' — that Landing Time isn\u2019t achievable without also changing DC hours.' };
-    const impliedDispatchMin = proposedMin - travelMin;
+    const impliedDispatchMinRaw = proposedMin - travelMin;
+    // Rounded up to the 30-min grid (product rule: Dispatch Cutoff is always a 30-min multiple) —
+    // this can only push the implied dispatch LATER, never earlier, so the resulting arrival is
+    // never worse than the requested Landing Time, only possibly a few minutes later.
+    const impliedDispatchMin = info.roundUp(impliedDispatchMinRaw, 30);
     const sc = this.state.data.scs.find(s => s.code === sp.scCode);
     const scFields = this.resolveScFields(sc || { code: sp.scCode });
     const scOpenMin = (() => { const p = scFields.openTime.split(':'); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10); })();
@@ -8073,7 +8160,29 @@ class NDCApp extends React.Component {
     // glance. Feedback reviewer chips are ALSO stage-scoped now: stage1 shows the SC/LH POC pool
     // (from SC Master); stage2 shows the LM placeholder (LMDC Master POC integration is future
     // scope). "Submitted" per chip reflects schedSubmitted for the role that name belongs to.
+    // 2026-08-18 — Stage tracker + card border color, replacing the old bare stage chip. The
+    // chip alone reused the same 4-word status vocabulary for both stages (e.g. "Acknowledged"
+    // appearing once per stage), so a Planner had to mentally combine two separate labels to
+    // know where a run actually stood. This gives one 2-node progress tracker instead:
+    //   ●━━━━━━○  Stage 1: SC/LH  →  Stage 2: LM  →  ✓ Finalised
+    //     (sub-status shown only under whichever stage is currently active)
+    // Card border color is a simple at-a-glance signal, independent of the tracker: amber while
+    // in Stage 1, blue in Stage 2, dark green once Finalised (terminal color always wins).
     const schedStage = sp.schedStage || 'stage1';
+    const isFinalisedRun = sp.status === 'Finalised';
+    const inStage2 = schedStage === 'stage2';
+    const STAGE_SUBLABEL = { Pushed: 'Awaiting feedback', 'In Alignment': 'Feedback received', Acknowledged: 'Deciding items' };
+    const stage1Done = inStage2 || isFinalisedRun;
+    const stage2Done = isFinalisedRun;
+    const stageTracker = {
+      node1: { label: 'Stage 1: SC/LH', state: stage1Done ? 'done' : 'active', subLabel: stage1Done ? '' : (STAGE_SUBLABEL[sp.status] || ''), color: stage1Done ? '#128A3E' : '#C77B00' },
+      node2: { label: 'Stage 2: LM', state: stage2Done ? 'done' : (inStage2 ? 'active' : 'pending'), subLabel: (inStage2 && !stage2Done) ? (STAGE_SUBLABEL[sp.status] || '') : '', color: stage2Done ? '#128A3E' : (inStage2 ? '#1E6FB8' : '#C3C9D4') },
+      node3: { label: 'Finalised', state: stage2Done ? 'done' : 'pending', color: stage2Done ? '#128A3E' : '#C3C9D4' },
+      line1Filled: stage1Done, line2Filled: stage2Done,
+    };
+    const cardBorderColor = isFinalisedRun ? '#128A3E' : (inStage2 ? '#1E6FB8' : '#C77B00');
+    // Stage chip kept (used in a couple of compact contexts — rail entries, CSV export) but the
+    // full tracker above is what the card/overlay actually render now.
     const stageLabel = schedStage === 'stage2' ? 'Stage 2 · LM' : 'Stage 1 · SC/LH';
     const stageBg = schedStage === 'stage2' ? '#F0EDFB' : '#E9F5F5', stageFg = schedStage === 'stage2' ? '#5B4FA0' : '#0D7377';
     const scPoc = this.deriveScPocRoles(sc ? sc.pocs : []);
@@ -8102,6 +8211,7 @@ class NDCApp extends React.Component {
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
       isFinalDirect, reviewerNames, opsLeads, hasReviewers: opsLeads.length > 0,
       schedStage, stageLabel, stageBg, stageFg, feedbackLeadChips, hasFeedbackLeads: feedbackLeadChips.length > 0,
+      stageTracker, cardBorderColor,
       stagePendingCount,
       canAckFreeze, canUnfreeze, canPushToLM, canFinaliseSched, canSubmitFeedback,
       onOpenAck: () => this.openSchedAck(sp.id), onOpenUnfreeze: () => this.openSchedUnfreeze(sp.id),
@@ -8976,6 +9086,13 @@ class NDCApp extends React.Component {
     const maxHoldNonLocal = sp.maxHoldNonLocal != null ? sp.maxHoldNonLocal : 120;
     const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
     const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
+    // roundUp(min, step) (2026-08-18) — Dispatch/Cutoff times are always a multiple of 30 min;
+    // Travel time and Hold time are always a multiple of 15 min (confirmed product rule). Always
+    // rounds UP (ceil), never to nearest — a computed 09:41 dispatch becomes 10:00, not 09:30; a
+    // 23-min travel becomes 30 min, not 15. Applied at the SOURCE (this function) so every
+    // downstream metric — D0 Landing %, Holding Time, Slot-Wise Dispatch, Dock Schedule — is
+    // automatically grid-compliant, not just the feedback module's own proposed values.
+    const roundUp = (min, step) => Math.ceil(min / step) * step;
     // Rule 5 (2026-08-07) — an LMDC's own D0 Cutoff (set in LMDC Master) wins OUTRIGHT over the
     // SC-level cutoff for that one DC's on-time check, when it's been explicitly set away from
     // "Default" — no min/max comparison, the override simply replaces the SC-level value for that
@@ -9006,12 +9123,15 @@ class NDCApp extends React.Component {
     };
     // holdForArrival(arrivalAbsMin, dcCode) — the real formula: 0 while the DC is open, otherwise
     // the wait until it next opens (same-day if arriving early, next-day if arriving after close).
+    // Rounded UP to the nearest 15 min (product rule) — 0 stays 0 (a DC that's already open has no
+    // hold at all, rounding up a non-zero wait never produces a false zero).
     const holdForArrival = (arrivalAbsMin, dcCode) => {
       const hrs = resolveDcHours(dcCode);
       const arrivalTod = ((Math.round(arrivalAbsMin) % 1440) + 1440) % 1440;
-      if (arrivalTod < hrs.openMin) return hrs.openMin - arrivalTod;
-      if (arrivalTod >= hrs.closeMin) return (hrs.openMin + 1440) - arrivalTod;
-      return 0;
+      let raw = 0;
+      if (arrivalTod < hrs.openMin) raw = hrs.openMin - arrivalTod;
+      else if (arrivalTod >= hrs.closeMin) raw = (hrs.openMin + 1440) - arrivalTod;
+      return raw > 0 ? roundUp(raw, 15) : 0;
     };
     const routeCutoffOverrides = (st.schedRouteCutoffOverride || {})[sp.id] || {};
     const dcTatOverrides = (st.schedDcTatOverride || {})[sp.id] || {};
@@ -9019,11 +9139,13 @@ class NDCApp extends React.Component {
       const dcRows = this.genDcRows(r);
       // Accepted Dispatch Cutoff feedback (Stage 1/3, from SC/LH/back-solved-LM) overrides the
       // synthetic base draw outright for this route — same "explicit override wins" convention
-      // Rule 5 already established for LMDC-level D0 Cutoff.
+      // Rule 5 already established for LMDC-level D0 Cutoff. Rounded up to the 30-min grid
+      // defensively even though the propose modal itself now only offers 30-min-aligned options.
       const cutoffOverrideStr = routeCutoffOverrides[r.routeCode];
-      const baseDispatch = cutoffOverrideStr
+      const baseDispatchRaw = cutoffOverrideStr
         ? (() => { const parts = cutoffOverrideStr.split(':'); return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10); })()
         : cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
+      const baseDispatch = roundUp(baseDispatchRaw, 30);
       const hasCutoffOverride = !!cutoffOverrideStr;
       // computeAt(dispatchCandidate) — the per-DC breakdown for one candidate dispatch time,
       // reused both to evaluate the base draw and (when Hold Time is On) each step of the
@@ -9035,9 +9157,11 @@ class NDCApp extends React.Component {
           const speed = isLocal ? localSpeed : nonLocalSpeed;
           const breakdownDistKm = parseFloat(dc.dist) || 0;
           // Accepted TAT feedback (Stage 1, from LH) overrides the synthetic travel time outright
-          // for that DC — same explicit-override convention as the cutoff override above.
+          // for that DC — same explicit-override convention as the cutoff override above. Both
+          // the synthetic draw and an accepted override are rounded up to the 15-min grid.
           const tatOverrideMin = dcTatOverrides[dc.code];
-          const travelMin = tatOverrideMin != null ? tatOverrideMin : (speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2);
+          const travelMinRaw = tatOverrideMin != null ? tatOverrideMin : (speed > 0 ? (breakdownDistKm / speed) * 60 : breakdownDistKm * 2);
+          const travelMin = roundUp(Math.max(travelMinRaw, 1), 15);
           const arrivalMin = dispatchCandidate + travelMin;
           const holdMin = holdForArrival(arrivalMin, dc.code);
           const cap = isLocal ? maxHoldLocal : maxHoldNonLocal;
@@ -9052,9 +9176,10 @@ class NDCApp extends React.Component {
         // Bounded local search — the DS algorithm looking for a later dispatch time that keeps
         // every DC's hold within its Local/Non-Local cap, stopping at the first fully-compliant
         // time found (or the least-violating one tried, if none fully satisfy within 8 hrs).
-        // Skipped once a route's cutoff is an accepted override — that decision already went
-        // through its own dock-capacity check at Accept time and should win outright, not get
-        // silently nudged later by this search.
+        // 30-min steps keep every candidate on-grid automatically. Skipped once a route's cutoff
+        // is an accepted override — that decision already went through its own dock-capacity
+        // check at Accept time and should win outright, not get silently nudged later by this
+        // search.
         for (let shift = 30; shift <= 480 && chosen.maxViolation > 0; shift += 30) {
           const candidate = computeAt(baseDispatch + shift);
           if (candidate.maxViolation < chosen.maxViolation) { chosen = candidate; dispatchMin = baseDispatch + shift; }
@@ -9069,7 +9194,7 @@ class NDCApp extends React.Component {
       });
       return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin };
     });
-    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival };
+    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp };
   }
   computeSchedulerMetricsFor(sp) {
     const info = this.schedulerRouteDcInfo(sp);
@@ -9240,8 +9365,11 @@ class NDCApp extends React.Component {
     });
     return headers;
   }
-  // buildSchedNcFields(sp, routeCode, role) (2026-08-17) — the flaggable-field list for the
-  // propose modal, matching ncFields' shape exactly (toggle pill, amber input once flagged).
+  // buildSchedNcFields(sp, routeCode, role) (2026-08-17; converted to fixed-step dropdowns
+  // 2026-08-18 per product rule — Dispatch Cutoff/Landing Time are always 30-min multiples, TAT
+  // is always a 15-min multiple. A free time-picker/number input can't guarantee that, so every
+  // proposable value here is now drawn from a fixed option list, same pattern LMDC Master's own
+  // Open/Close/D0 Cutoff dropdowns already use in this app.
   // SC → Dispatch Cutoff only. LH → Dispatch Cutoff + one TAT row per DC on the route. LM →
   // one Landing Time row per DC (only reachable once Stage 1 is fully decided — the UI gates
   // opening this modal at all for LM before then, so no extra check needed here).
@@ -9252,7 +9380,13 @@ class NDCApp extends React.Component {
     if (!ri) return [];
     const st = this.state;
     const draft = st.schedNcFields || {};
-    const mkField = (key, label, currentLabel, defaultVal, isTime, reasons) => {
+    // Fixed option lists — 30-min grid (Cutoff), 15-min grid (Landing Time), 15-min-step minute
+    // counts (TAT). Generated once per call; cheap (48/96/24 entries) and keeps this function
+    // self-contained rather than threading shared constants through every caller.
+    const TIME_OPTS_30 = []; for (let m = 0; m < 1440; m += 30) TIME_OPTS_30.push({ value: String(m), label: info.fmtTime(m) });
+    const TIME_OPTS_15 = []; for (let m = 0; m < 1440; m += 15) TIME_OPTS_15.push({ value: String(m), label: info.fmtTime(m) });
+    const TAT_OPTS = []; for (let m = 15; m <= 360; m += 15) TAT_OPTS.push({ value: String(m), label: m + ' min' });
+    const mkField = (key, label, currentLabel, defaultVal, options, reasons) => {
       const flagged = !!draft[key];
       return {
         key, label, currentLabel, flagged,
@@ -9261,7 +9395,7 @@ class NDCApp extends React.Component {
         onToggleFlag: () => this.toggleSchedNcFlag(key, defaultVal),
         value: flagged ? draft[key].value : defaultVal,
         onInput: (e) => this.onSchedNcFieldValue(key, e.target.value),
-        isTime, isNumber: !isTime,
+        options,
         reasonVal: flagged ? draft[key].reason : '',
         onReason: (e) => this.onSchedNcFieldReason(key, e.target.value),
         reasons,
@@ -9269,18 +9403,18 @@ class NDCApp extends React.Component {
     };
     const fields = [];
     if (role === 'SC' || role === 'LH') {
-      fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), info.fmtTime(ri.dispatchMin), true, this.schedFeedbackReasons(role, 'cutoff')));
+      fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), String(ri.dispatchMin), TIME_OPTS_30, this.schedFeedbackReasons(role, 'cutoff')));
     }
     if (role === 'LH') {
       ri.dcInfo.forEach(dc => {
-        const tatMin = String(Math.round(dc.breakdownTatHrs * 60));
-        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatMin + ' min', tatMin, false, this.schedFeedbackReasons('LH', 'tat')));
+        const tatMin = Math.round(dc.breakdownTatHrs * 60);
+        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatMin + ' min', String(tatMin), TAT_OPTS, this.schedFeedbackReasons('LH', 'tat')));
       });
     }
     if (role === 'LM') {
       ri.dcInfo.forEach(dc => {
-        const landingLabel = info.fmtTime(Math.round(dc.landingMin));
-        fields.push(mkField('landing:' + dc.dc.code, 'Landing Time \u2014 ' + dc.dc.code, landingLabel, landingLabel, true, this.schedFeedbackReasons('LM', 'landing')));
+        const landingMin = Math.round(dc.landingMin);
+        fields.push(mkField('landing:' + dc.dc.code, 'Landing Time \u2014 ' + dc.dc.code, info.fmtTime(landingMin), String(landingMin), TIME_OPTS_15, this.schedFeedbackReasons('LM', 'landing')));
       });
     }
     return fields;
@@ -9289,17 +9423,37 @@ class NDCApp extends React.Component {
   // by field type (mirrors aSel.alignReviewRoute's bucketedChanges exactly): one section per
   // field kind, each item showing who proposed it, the reason/remark, and Accept/Reject (or its
   // decided state once resolved).
+  // buildSchedReviewData(sp, routeCode) (2026-08-17; change-visibility + colored bucket taxonomy
+  // added 2026-08-18, mirroring Route Planner's own diff pattern — struck original value, colored
+  // new value) — the Planner's decide-modal data, bucketed by field type (mirrors aSel.align-
+  // ReviewRoute's bucketedChanges exactly): one section per field kind, each item showing who
+  // proposed it, the reason/remark, the before→after diff, and Accept/Reject (or its decided
+  // state once resolved).
   buildSchedReviewData(sp, routeCode) {
     const bucket = this.schedRouteBucket(sp.id, routeCode);
     const items = bucket.items || [];
+    // BUCKET_META mirrors RLH's own change-bucket taxonomy (Vehicle Change/DC Movement/etc.) —
+    // a label + distinct color per field kind, not just plain uppercase text.
+    const BUCKET_META = {
+      cutoff: { label: 'Cutoff Change', bg: '#FBF1DF', fg: '#C77B00' },
+      tat: { label: 'TAT Change', bg: '#EAEEFB', fg: '#2F4FC6' },
+      landing: { label: 'Landing Time Change', bg: '#E9F5F5', fg: '#0D7377' },
+    };
     const FIELD_LABEL = { cutoff: 'Dispatch Cutoff', tat: 'TAT', landing: 'Landing Time (\u2192 implied Cutoff)' };
     const byField = {};
     items.forEach(it => { byField[it.field] = byField[it.field] || []; byField[it.field].push(it); });
-    const bucketedChanges = Object.keys(byField).map(field => ({
-      bucket: FIELD_LABEL[field] || field,
-      items: byField[field].map(it => ({
+    const bucketedChanges = Object.keys(byField).map(field => {
+      const meta = BUCKET_META[field] || { label: field, bg: '#F2F5FA', fg: '#5A5E66' };
+      return {
+      bucket: FIELD_LABEL[field] || field, bucketLabel: meta.label, bucketBg: meta.bg, bucketFg: meta.fg,
+      items: byField[field].map(it => {
+        const isTime = it.field === 'cutoff' || it.field === 'landing';
+        const newLabel = isTime ? it.proposedValue : (it.proposedValue + ' min');
+        const origLabel = it.originalValue != null ? (isTime ? it.originalValue : (it.originalValue + ' min')) : null;
+        const hasChange = origLabel != null && origLabel !== newLabel;
+        return {
         id: it.id, whereLabel: it.dcCode || routeCode, fieldLabel: FIELD_LABEL[field] || field,
-        proposedBy: it.persona + ' User', changeVal: (it.dcCode ? (it.field === 'tat' ? (it.proposedValue + ' min') : it.proposedValue) : it.proposedValue) + (it.remark ? '' : ''),
+        proposedBy: it.persona + ' User', changeVal: newLabel, origLabel, hasChange,
         reason: it.reason, remark: it.remark, status: it.status,
         canDecide: it.status === 'Pending',
         accepted: it.status === 'Accepted', rejected: it.status === 'Rejected',
@@ -9310,8 +9464,8 @@ class NDCApp extends React.Component {
         rejBg: it.status === 'Rejected' ? '#D14B4B' : '#fff', rejFg: it.status === 'Rejected' ? '#fff' : '#D14B4B',
         onAccept: () => this.decideSchedFeedback(sp.id, sp, routeCode, it.field, it.dcCode, it.id, 'Accept'),
         onReject: () => this.decideSchedFeedback(sp.id, sp, routeCode, it.field, it.dcCode, it.id, 'Reject'),
-      })),
-    }));
+      };}),
+    };});
     const pendingCount = items.filter(x => x.status === 'Pending').length;
     return { routeCode, bucketedChanges, decidedCount: items.length - pendingCount, changeTotal: items.length,
       acceptAllRowShow: pendingCount > 1,
@@ -9333,13 +9487,12 @@ class NDCApp extends React.Component {
       segment: r.routeCode, tps: r.tps, vol: r.vol, dist: r.dist + ' km', veh: r.veh, util: r.util, cap: r.cap,
       cutoffTime: r.cutoffTime, holdTime: r.holdTimeHrs + ' h',
     }));
-    // Dock Schedule — hour view aggregates the native 30-min slots into hourly buckets (multiple
-    // chips per cell if >1 route left that dock within the hour); slot view shows the raw 30-min
-    // grid the rest of the engine already works in.
+    // Dock Schedule — always the native 30-min slot grid now (2026-08-18: the hour/30-min
+    // granularity toggle removed per product direction — one consistent grid, matching the rest
+    // of the engine, plus this tab now surfaces Dock Utilisation directly instead of only on the
+    // card's own summary tile).
     const ds = tables.dockSchedule;
-    const granKey = tabStateKey + 'Gran';
-    const gran = st[granKey] || 'hour';
-    const step = gran === 'hour' ? 60 : 30;
+    const step = 30;
     const colSet = {};
     ds.cols.forEach(c => { colSet[Math.floor(c.min / step) * step] = true; });
     const dockCols = Object.keys(colSet).map(Number).sort((a, b) => a - b).map(min => ({ min, label: ds.fmtTime(min) }));
@@ -9364,12 +9517,16 @@ class NDCApp extends React.Component {
       totalDeparted += n; perCol[c.min] = (perCol[c.min] || 0) + n;
     }));
     dockCols.forEach(c => { if (perCol[c.min] > busyN) { busyN = perCol[c.min]; busyLabel = c.label; } });
+    // Dock Utilisation — same metric computeSchedulerMetricsFor() already derives for the card's
+    // tile (total departures / (slots-in-use × docks)); recomputed here so the Dock Schedule tab
+    // is self-contained and doesn't need the caller to thread the card's own metrics through.
+    const slotsInUse = dockCols.filter(c => perCol[c.min] > 0).length;
+    const dockUtilPct = (slotsInUse > 0 && ds.docks.length > 0) ? Math.round((totalDeparted / (slotsInUse * ds.docks.length)) * 1000) / 10 : 0;
     return {
       dcRows, hasDcRows: dcRows.length > 0,
       routeRows, hasRouteRows: routeRows.length > 0,
       dockCount: ds.docks.length, dockCols, dockRows, hasDockSchedule: ds.docks.length > 0 && dockCols.length > 0,
-      dockTotalDeparted: totalDeparted, dockBusyLabel: busyLabel,
-      granIsHour: gran === 'hour', onGranHour: () => this.setState({ [granKey]: 'hour' }), onGranSlot: () => this.setState({ [granKey]: 'slot' }),
+      dockTotalDeparted: totalDeparted, dockBusyLabel: busyLabel, dockUtilPct,
       sections: [['details', 'Plan Details'], ['route', 'Route View'], ['dock', 'Dock Schedule']].map(t => ({
         label: t[1], active: tab === t[0], color: tab === t[0] ? '#0D7377' : '#5A5E66', weight: tab === t[0] ? '700' : '600',
         onClick: () => this.setState({ [tabStateKey]: t[0] }) })),

@@ -473,6 +473,17 @@ function View(B, self) {
 {(inputsZoneSel.hasSelection) ? (<><button onClick={inputsZoneSel.onClear} style={css(`width:100%; margin-top:4px; padding:6px 8px; border:none; background:transparent; color:#003F98; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; text-align:left;`)}>Clear selection</button></>) : null}
 </div>
 </details>
+<details style={css(`position:relative;`)}>
+<summary style={css(`list-style:none; display:flex; align-items:center; gap:6px; border:1px solid ${scTypeSel.hasSelection ? '#003F98' : '#E6EBF2'}; background:${scTypeSel.hasSelection ? '#EAEEFB' : '#fff'}; color:${scTypeSel.hasSelection ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>SC Type: {scTypeSel.label}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></summary>
+<div style={css(`position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:150px; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 8px 24px rgba(11,20,48,0.14); padding:8px;`)}>
+{(scTypeSel.options || []).map((o, __iZ4) => (<React.Fragment key={__iZ4}>
+<label style={css(`display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`)} onMouseEnter={(e) => hoverOn(e, `background:#F4F5F8;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`, `background:#F4F5F8;`)}>
+<input type={"checkbox"} checked={o.checked} onChange={o.onToggle} style={css(`width:14px; height:14px; cursor:pointer; accent-color:#003F98;`)} />{o.value}
+</label>
+</React.Fragment>))}
+{(scTypeSel.hasSelection) ? (<><button onClick={scTypeSel.onClear} style={css(`width:100%; margin-top:4px; padding:6px 8px; border:none; background:transparent; color:#003F98; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; text-align:left;`)}>Clear selection</button></>) : null}
+</div>
+</details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{scShown}</strong> of <strong style={css(`color:#14171F;`)}>{scTotal}</strong> SCs</span>
 <button onClick={addSc} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add SC</button>
@@ -810,11 +821,17 @@ function View(B, self) {
 </div>
 </details>
 <div style={css(`width:1px; height:24px; background:#E6EBF2;`)} />
-<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)} title={"Filter to just Co-Loading or MDC rows"}>
-{(lmdcModeChips || []).map((z, __i41b) => (<React.Fragment key={__i41b}>
-<button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button>
+<details style={css(`position:relative;`)}>
+<summary style={css(`list-style:none; display:flex; align-items:center; gap:6px; border:1px solid ${lmdcModeSel.hasSelection ? '#5B4FA0' : '#E6EBF2'}; background:${lmdcModeSel.hasSelection ? '#EEEAFB' : '#fff'}; color:${lmdcModeSel.hasSelection ? '#5B4FA0' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)} title={"Filter by RLH Mode"}>RLH Mode: {lmdcModeSel.label}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></summary>
+<div style={css(`position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:170px; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 8px 24px rgba(11,20,48,0.14); padding:8px;`)}>
+{(lmdcModeSel.options || []).map((o, __iZ3) => (<React.Fragment key={__iZ3}>
+<label style={css(`display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`)} onMouseEnter={(e) => hoverOn(e, `background:#F4F5F8;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`, `background:#F4F5F8;`)}>
+<input type={"checkbox"} checked={o.checked} onChange={o.onToggle} style={css(`width:14px; height:14px; cursor:pointer; accent-color:#5B4FA0;`)} />{o.value}
+</label>
 </React.Fragment>))}
+{(lmdcModeSel.hasSelection) ? (<><button onClick={lmdcModeSel.onClear} style={css(`width:100%; margin-top:4px; padding:6px 8px; border:none; background:transparent; color:#5B4FA0; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; text-align:left;`)}>Clear selection</button></>) : null}
 </div>
+</details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{lmdcShown}</strong> of <strong style={css(`color:#14171F;`)}>{lmdcTotal}</strong> LMDCs</span>
 <input ref={lmdcFileInputRef} type={"file"} accept={".csv"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
@@ -849,7 +866,7 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #5B4FA0;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; white-space:nowrap;`)}>MDC / LANE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"DC-level \u2014 LMSC to this DC transit time, varies within the same lane"}>TAT</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"DC-level \u2014 LMSC to this DC transit time, in hours, varies within the same lane"}>TAT (HRS)</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #0D7377;`)}>OPEN</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>D0 CUTOFF</div>
@@ -874,7 +891,7 @@ function View(B, self) {
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftCutoff} onChange={l.onDraftCutoff} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcCutoffOptions || []).map((co, __iCO) => (<React.Fragment key={__iCO}><option value={co}>{co}</option></React.Fragment>))}</select></div></>) : null}
 {(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; `)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
-{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftTat} onChange={l.onDraftTat} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTatOptions || []).map((tm, __iTM) => (<React.Fragment key={__iTM}><option value={tm}>{tm} min</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"number"} step={"0.25"} min={"0.25"} value={l.draftTat} onInput={l.onDraftTat} placeholder={"hrs"} title={"Free numeric entry, in hours \u2014 rounds up to the nearest 15 min (0.25 hr) on save"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
 {(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; border-left:3px solid #0D7377;`)}>{l.open}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #0D7377;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
@@ -2220,7 +2237,7 @@ function View(B, self) {
 <div style={css(`font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div>
 </div>
 <div style={css(`text-align:right; flex-shrink:0;`)}>
-<span style={css(`display:inline-block; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:${r.verdictBg}; color:${r.verdictFg};`)}>{r.verdict}</span>
+{(r.verdict) ? (<><span style={css(`display:inline-block; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:${r.verdictBg}; color:${r.verdictFg};`)}>{r.verdict}</span></>) : null}
 </div>
 </button>
 </div>
@@ -3057,7 +3074,7 @@ function View(B, self) {
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#003F98;`)}>{aSel.code}</span>
 </div>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:14px 18px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:2px solid #C3C9D4; background:#fff; border-radius:13px; padding:14px 18px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0;`)}>
 <span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{aSel.code}</span>
@@ -4083,7 +4100,7 @@ function View(B, self) {
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#003F98;`)}>{oSel.code}</span>
 </div>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; background:#fff; border-radius:13px; padding:14px 18px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:2px solid #C3C9D4; background:#fff; border-radius:13px; padding:14px 18px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0;`)}>
 <span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{oSel.code}</span>
@@ -4690,9 +4707,11 @@ function View(B, self) {
 </div>
 {(f.flagged) ? (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1.3fr; gap:8px; margin-top:8px;`)}>
+{(f.isNumeric) ? (<><input type={"number"} step={"0.25"} min={"0.25"} value={f.value} onInput={f.onInput} placeholder={"hrs"} title={"Free numeric entry, in hours \u2014 rounds up to the nearest 15 min (0.25 hr) on submit"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : (<>
 <select value={f.value} onChange={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
 {(f.options || []).map((op, __iSNCo) => (<React.Fragment key={__iSNCo}><option value={op.value}>{op.label}</option></React.Fragment>))}
 </select>
+</>)}
 <select value={f.reasonVal} onChange={f.onReason} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
 <option value={""}>Select reason\u2026</option>
 {(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
@@ -4900,23 +4919,6 @@ function View(B, self) {
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.holdColor}; line-height:1;`)}>{schedAlignDetail.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lanesWithHold} / {schedAlignDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
 </div>
-{(schedAlignDetail.hasSlotBreakdown) ? (<>
-<details style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px; background:#fff;`)}>
-<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#FAFBFD; font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH · {schedAlignDetail.slotBreakdown.length} slot{schedAlignDetail.slotBreakdown.length === 1 ? '' : 's'}</span>
-<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</summary>
-<div>
-{(schedAlignDetail.slotBreakdown || []).map((s, __iSADSlot) => (<React.Fragment key={__iSADSlot}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
-<span style={css(`font-size:13px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>{s.used}/{s.docks} docks in this slot</span>
-<span style={css(`font-size:13px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
-</div>
-</React.Fragment>))}
-</div>
-</details>
-</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(schedAlignDetail.hasFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:18px;`)}>
@@ -5436,7 +5438,7 @@ class NDCApp extends React.Component {
       toast: null,
       inputsTab: 'volume',
       mastersTab: 'sc',
-      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZones: [], lmdcModeFilter: 'All', lmdcSearch: '', lmdcUploadErrors: [],
+      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZones: [], lmdcModes: [], lmdcSearch: '', lmdcUploadErrors: [],
       // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
       // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
@@ -5484,7 +5486,7 @@ class NDCApp extends React.Component {
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
-      inputsZones: [],
+      inputsZones: [], inputsScTypes: [],
       autodmlOpen: null,
       nodeWarnFilter: 'all',
       nodeShow: 'all',
@@ -5562,22 +5564,52 @@ class NDCApp extends React.Component {
   // Design Inputs' own screens (SC Master, SC Vehicle Availability, LMDC Master) with one
   // dropdown supporting several zones at once. `selected` is the current array (empty = every
   // zone); `matches(zone)` is what filter logic should call instead of a single equality check.
-  buildZoneMultiSelect(selected, stateKey, extraResetKeys) {
-    const ZONES = ['North', 'South', 'East', 'West'];
+  // buildMultiSelect(selected, allOptions, stateKey, extraResetKeys, allLabel) (2026-08-19) — the
+  // generic version behind buildZoneMultiSelect below; also powers LMDC Master's RLH Mode filter
+  // and SC Master's new SC Type filter. `selected` is the current array (empty = every option);
+  // `matches(value)` is what filter logic should call instead of a single equality check.
+  buildMultiSelect(selected, allOptions, stateKey, extraResetKeys, allLabel) {
     const sel = selected || [];
-    const label = sel.length === 0 || sel.length === ZONES.length ? 'All Zones' : sel.join(', ');
-    const options = ZONES.map(z => ({
-      zone: z, checked: sel.indexOf(z) >= 0,
+    const label = sel.length === 0 || sel.length === allOptions.length ? (allLabel || 'All') : sel.join(', ');
+    const options = allOptions.map(v => ({
+      value: v, checked: sel.indexOf(v) >= 0,
       onToggle: () => {
-        const cur = sel.indexOf(z) >= 0 ? sel.filter(x => x !== z) : sel.concat([z]);
+        const cur = sel.indexOf(v) >= 0 ? sel.filter(x => x !== v) : sel.concat([v]);
         this.setState(Object.assign({ [stateKey]: cur }, extraResetKeys || {}));
       },
     }));
     return {
-      label, options, hasSelection: sel.length > 0 && sel.length < ZONES.length,
+      label, options, hasSelection: sel.length > 0 && sel.length < allOptions.length,
       onClear: () => this.setState(Object.assign({ [stateKey]: [] }, extraResetKeys || {})),
-      matches: (zone) => sel.length === 0 || sel.indexOf(zone) >= 0,
+      matches: (v) => sel.length === 0 || sel.indexOf(v) >= 0,
     };
+  }
+  // buildZoneMultiSelect(selected, stateKey, extraResetKeys) — the Zone-specific case, kept as its
+  // own name since every existing call site already uses it; just delegates to buildMultiSelect
+  // now, with 'zone' as the option's field name (existing JSX reads `o.zone`, not `o.value`).
+  // TAT hour helpers (2026-08-19) — TAT is user-facing in HOURS everywhere now (free numeric
+  // input, no more dropdowns), but every existing computation (schedulerRouteDcInfo, the lane
+  // stitching, dcTatOverride) still internally works in MINUTES — changing that engine wholesale
+  // would be a much larger, riskier change than it needs to be. So the unit conversion happens
+  // right at the edges: hrsToMinRoundUp() when a human's hour input is stored, minToHrsLabel()
+  // when a stored minute value is displayed back to a human.
+  hrsToMinRoundUp(hrs) {
+    const h = parseFloat(hrs);
+    if (isNaN(h) || h <= 0) return 15; // minimum 1 grid-step, never zero/negative
+    return Math.ceil((h * 60) / 15) * 15;
+  }
+  minToHrsLabel(min) {
+    const n = Number(min);
+    if (isNaN(n)) return '\u2014';
+    const hrs = n / 60;
+    // Trim to at most 2 decimal places, dropping trailing zeros (1 -> "1", 1.5 -> "1.5", 0.25 -> "0.25")
+    const s = (Math.round(hrs * 100) / 100).toString();
+    return s;
+  }
+  buildZoneMultiSelect(selected, stateKey, extraResetKeys) {
+    const ZONES = ['North', 'South', 'East', 'West'];
+    const base = this.buildMultiSelect(selected, ZONES, stateKey, extraResetKeys, 'All Zones');
+    return Object.assign({}, base, { options: base.options.map(o => ({ zone: o.value, checked: o.checked, onToggle: o.onToggle })) });
   }
   deriveScPocRoles(pocs) {
     const POC_ROLES = ['Ops ZH', 'LH Ops ZH', 'Ops CH', 'LH Ops CH', 'Ops AM-1', 'Ops AM-2'];
@@ -5683,16 +5715,38 @@ class NDCApp extends React.Component {
     // independent random codes (cityCode + random 3-digit, no hyphen) while AutoDML/LMDC Master
     // used a different numbering entirely — the two could never actually refer to the same DC, so
     // a per-DC match (e.g. Route Scheduler's LMDC-level D0 Cutoff override) could never fire for
-    // real. Code format matches AutoDML's own long-standing native scheme (cityCode + '-' + N).
+    // real.
+    // 2026-08-19 fix — code is now sc.code (the guaranteed-unique SC code), not sc.cityCode. 68 of
+    // the 80 seeded SCs share a city with a second SC (the generator cycles back through the city
+    // list once it runs out of unique ones — e.g. DELS and DEL2 both live in Delhi), and every one
+    // of those pairs was generating IDENTICAL DC codes for two completely different SCs' pools.
+    // A validation pass found 4,764 duplicate LMDC codes out of 12,547 (38% of the whole pool) —
+    // whichever SC processed last in this loop silently overwrote the other's DC data in every
+    // downstream lookup keyed by code (LMDC Master, Route Scheduler's per-DC overrides, etc.).
+    // This is what caused "GGNS shows missing SC Master inputs" — GGNS and GGN2 share a city code
+    // and were colliding on every one of their DC codes.
     const dcPoolBySC = {};
     scs.forEach(sc => {
       const pool = [];
       for (let i = 0; i < (sc.dcCount || 0); i++) {
-        const code = sc.cityCode + '-' + (300 + i);
+        const code = sc.code + '-' + (300 + i);
         let h = 0; for (let k = 0; k < code.length; k++) h = (h * 31 + code.charCodeAt(k)) >>> 0;
-        const latJit = (((h >> 3) % 400) - 200) / 2000; // +/- 0.1deg jitter around the SC's own coords
-        const lngJit = (((h >> 9) % 400) - 200) / 2000;
-        pool.push({ code, scCode: sc.code, zone: sc.zone, lat: +(sc.lat + latJit).toFixed(4), lng: +(sc.lng + lngJit).toFixed(4), capacity: 3000 + (h % 9000), linkStatus: 'active', secondSc: null });
+        // 2026-08-19 — jitter widened from +/-0.1deg to +/-0.018deg (tuned against
+        // NDC_haversineKm's own x55 scaling — see that function's comment) so DCs land on both
+        // sides of the 100km Local/Non-Local threshold in a realistic ~70/30 mix, rather than
+        // clustering almost entirely on one side of it.
+        const latJit = (((h >> 3) % 72) - 36) / 2000;
+        const lngJit = (((h >> 9) % 72) - 36) / 2000;
+        const dcLat = +(sc.lat + latJit).toFixed(4), dcLng = +(sc.lng + lngJit).toFixed(4);
+        // isLocal (2026-08-19) — a genuine, permanent DC-level attribute now (distance-based, SC↔DC
+        // <=100km = Local), not a per-route coin flip. Stored once here so every consumer (route
+        // generation below, LMDC Master, Route Scheduler) reads the SAME answer for a given DC — a
+        // route's initial DS output stays locality-homogeneous (see route generation below), but
+        // Ops Alignment feedback can freely move a DC into a route of the other locality afterward,
+        // by design (this attribute never changes, only which route a DC sits on can).
+        const distFromSc = NDC_haversineKm(sc.lat, sc.lng, dcLat, dcLng);
+        const isLocal = distFromSc <= 100;
+        pool.push({ code, scCode: sc.code, zone: sc.zone, lat: dcLat, lng: dcLng, capacity: 3000 + (h % 9000), linkStatus: 'active', secondSc: null, isLocal, distFromSc });
       }
       dcPoolBySC[sc.code] = pool;
     });
@@ -5710,12 +5764,18 @@ class NDCApp extends React.Component {
     // get a few DCs reassigned to MDCs (split across MDC-1/MDC-2, showing "one LMSC can split to
     // multiple MDCs"); 1 SC gets ~8 DCs grouped into 2 Co-Loading lanes.
     Object.keys(dcPoolBySC).forEach(code => { dcPoolBySC[code].forEach(dc => { dc.rlhMode = 'Valmo RLH'; dc.mdcCode = null; dc.laneName = null; dc.cutoff = null; dc.tat = null; }); });
-    const mdcDonorScsEarly = scs.filter(s => s.nodeKind !== 'MDC' && s.dcCount >= 10).slice(0, 2);
+    // 2026-08-19 fix — donor SCs MUST come from the first 41 real SCs (scs.slice(0, 41)), the only
+    // ones that actually get a `plans` entry below. Previously this searched the full 80-SC pool,
+    // so a donor could land outside that range and get real Co-Loading/MDC tags in LMDC Master
+    // with no plan for the lane to ever stitch into — exactly the "NOIS has Co-Loading DCs but
+    // Design Review shows nothing" bug this fixes.
+    const plannedScPool = scs.slice(0, 41);
+    const mdcDonorScsEarly = plannedScPool.filter(s => s.nodeKind !== 'MDC' && s.dcCount >= 10).slice(0, 2);
     mdcDonorScsEarly.forEach((sc) => {
       const own = (dcPoolBySC[sc.code] || []).slice(0, 5);
       own.forEach((dc, li) => { dc.rlhMode = 'MDC'; dc.mdcCode = li % 2 === 0 ? 'MDC-1' : 'MDC-2'; });
     });
-    const coLoadDonorScEarly = scs.find(s => s.nodeKind !== 'MDC' && mdcDonorScsEarly.indexOf(s) < 0 && s.dcCount >= 12);
+    const coLoadDonorScEarly = plannedScPool.find(s => s.nodeKind !== 'MDC' && mdcDonorScsEarly.indexOf(s) < 0 && s.dcCount >= 12);
     if (coLoadDonorScEarly) {
       const own = (dcPoolBySC[coLoadDonorScEarly.code] || []).slice(0, 8);
       own.forEach((dc, li) => {
@@ -5731,17 +5791,27 @@ class NDCApp extends React.Component {
     // of inventing new codes — "Route Planner may use all of a SC's DCs or a subset" (2026-08-07).
     // 2026-08-19 — only 'Valmo RLH' DCs go into the queue routes actually draw from; MDC/Co-Loading
     // DCs are real pool members (still visible in LMDC Master/AutoDML) but never handed to a route.
+    // dcPoolQueueBySC (2026-08-19: split by locality) — a route's own DCs must all share the same
+    // Local/Non-Local status (product rule — no route mixes the two), so each SC now gets TWO
+    // shuffled queues instead of one; nextPoolDcCode(sc, wantLocal) draws from whichever queue the
+    // route's own locality calls for, falling back to the other queue only if the requested one is
+    // completely empty for that SC (e.g. an SC with zero non-local DCs).
     const dcPoolQueueBySC = {};
     Object.keys(dcPoolBySC).forEach(code => {
-      const arr = dcPoolBySC[code].filter(dc => dc.rlhMode === 'Valmo RLH');
-      for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
-      dcPoolQueueBySC[code] = { arr, ptr: 0 };
+      const eligible = dcPoolBySC[code].filter(dc => dc.rlhMode === 'Valmo RLH');
+      const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; } return arr; };
+      const localArr = shuffle(eligible.filter(dc => dc.isLocal));
+      const nonLocalArr = shuffle(eligible.filter(dc => !dc.isLocal));
+      dcPoolQueueBySC[code] = { local: { arr: localArr, ptr: 0 }, nonLocal: { arr: nonLocalArr, ptr: 0 } };
     });
-    const nextPoolDcCode = (sc) => {
+    const nextPoolDcCode = (sc, wantLocal) => {
       const q = dcPoolQueueBySC[sc.code];
-      if (!q || !q.arr.length) return sc.cityCode + '-' + ri(300, 999); // fallback; shouldn't normally happen
-      if (q.ptr >= q.arr.length) q.ptr = 0; // wrap if a plan needs more DC-slots than the pool has
-      const dc = q.arr[q.ptr]; q.ptr++;
+      if (!q) return sc.code + '-' + ri(300, 999); // fallback; shouldn't normally happen
+      let bucket = wantLocal ? q.local : q.nonLocal;
+      if (!bucket.arr.length) bucket = wantLocal ? q.nonLocal : q.local; // fall back if this SC has none of the requested locality
+      if (!bucket.arr.length) return sc.code + '-' + ri(300, 999); // fallback; shouldn't normally happen
+      if (bucket.ptr >= bucket.arr.length) bucket.ptr = 0; // wrap if a plan needs more DC-slots than the pool has
+      const dc = bucket.arr[bucket.ptr]; bucket.ptr++;
       return dc.code;
     };
 
@@ -5837,8 +5907,12 @@ class NDCApp extends React.Component {
       for (let j = 0; j < rowCount; j++) {
         const veh = pick([VEH[0], VEH[1], VEH[1], VEH[2], VEH[2], VEH[3]]);
         const tp = ri(2, veh.tp + (R() < 0.16 ? 1 : 0));
+        // Route locality (2026-08-19) — chosen ONCE per route, then every one of its stops draws
+        // from that same locality's queue, so a single route never mixes Local and Non-Local DCs
+        // (product rule). ~65% Local, matching the pool's own overall Local/Non-Local mix.
+        const routeIsLocal = R() < 0.65;
         const dcs = [];
-        for (let k = 0; k < tp; k++) dcs.push(nextPoolDcCode(sc));
+        for (let k = 0; k < tp; k++) dcs.push(nextPoolDcCode(sc, routeIsLocal));
         let ops = 'Pending', planner = null, fb = null, proposedBy = null;
         if (status !== 'Pushed') {
           const r = R();
@@ -5971,7 +6045,7 @@ class NDCApp extends React.Component {
       { dc: 'CCU-204', name: 'Rajarhat NewTown', sc: '', zone: 'East', cap: 5800, mapped: false },
     ];
     const nodeClosures = [
-      { dc: 'MAA-118', name: 'Tambaram Old', sc: 'MAAS', zone: 'South', reason: 'Merged into MAA-220' },
+      { dc: 'CJB-118', name: 'Tambaram Old', sc: 'CJBS', zone: 'South', reason: 'Merged into CJB-220' },
       { dc: 'AMD-077', name: 'Maninagar', sc: 'AMDS', zone: 'West', reason: 'Low volume \u2014 consolidated' },
     ];
     const migrations = [
@@ -5982,12 +6056,12 @@ class NDCApp extends React.Component {
     // Unified node changes list for the redesigned Additions/Closures/Migrations table (fix 1.6).
     // Columns: LMSC Code \u00b7 LMDC Code \u00b7 Node Flag \u00b7 LMDC Latitude \u00b7 LMDC Longitude
     const nodeChangesUnified = [
-      { lmscCode: 'BLRS', lmdcCode: 'BLR-742', flag: 'Addition', lat: '12.9754', lng: '77.7204' },
+      { lmscCode: 'COKS', lmdcCode: 'COK-742', flag: 'Addition', lat: '17.549', lng: '75.553' },
       { lmscCode: 'DELS', lmdcCode: 'DEL-913', flag: 'Addition', lat: '28.5921', lng: '77.0688' },
       { lmscCode: 'PNQS', lmdcCode: 'PNQ-388', flag: 'Addition', lat: '18.5904', lng: '73.7382' },
       { lmscCode: 'HYDS', lmdcCode: 'HYD-551', flag: 'Addition', lat: '17.5494', lng: '78.4898' },
       { lmscCode: 'CCUS', lmdcCode: 'CCU-204', flag: 'Addition', lat: '22.5958', lng: '88.4885' },
-      { lmscCode: 'MAAS', lmdcCode: 'MAA-118', flag: 'Closure',  lat: '12.9259', lng: '80.0991' },
+      { lmscCode: 'CJBS', lmdcCode: 'CJB-118', flag: 'Closure',  lat: '12.985', lng: '79.956' },
       { lmscCode: 'AMDS', lmdcCode: 'AMD-077', flag: 'Closure',  lat: '23.0124', lng: '72.5876' },
       { lmscCode: 'JAI2', lmdcCode: 'JAI-410', flag: 'Migration', lat: '26.9124', lng: '75.8001' },
       { lmscCode: 'BHOS', lmdcCode: 'IDR-233', flag: 'Migration', lat: '22.7196', lng: '75.8577' },
@@ -6112,12 +6186,13 @@ class NDCApp extends React.Component {
       code: dc.code, lmscCode: dc.scCode, zone: dc.zone, lat: dc.lat, lng: dc.lng,
       capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
       rlhMode: dc.rlhMode || 'Valmo RLH', mdcCode: dc.mdcCode || null, laneName: dc.laneName || null, cutoff: dc.cutoff || null, tat: dc.tat || null,
+      isLocal: dc.isLocal !== undefined ? dc.isLocal : true, distFromSc: dc.distFromSc != null ? dc.distFromSc : 0,
     }, lmdcDefaults));
     nodeAdditions.filter(a => a.mapped && a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0 }, lmdcDefaults));
     });
     nodeAdditions.filter(a => !a.mapped || !a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0 }, lmdcDefaults));
     });
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
@@ -6482,8 +6557,10 @@ class NDCApp extends React.Component {
     // any other cutoff proposal (rule 3). Infeasible ones abort the whole submission with why.
     // 2026-08-18 — dropdown values now arrive as raw minute-of-day numbers (strings), not "HH:MM"
     // — converted to "HH:MM" here for cutoff/landing since that's the format proposedValue and
-    // every downstream reader (decideSchedFeedback, buildSchedReviewData) expects. TAT stays a
-    // plain minute count, unchanged.
+    // every downstream reader (decideSchedFeedback, buildSchedReviewData) expects. TAT (2026-08-19)
+    // is a free-text HOURS input now — converted to minutes, rounded up to the nearest 15-min
+    // grid, right here at submission (hrsToMinRoundUp), so everything downstream keeps working in
+    // minutes exactly as before; only the human-facing unit changed.
     const resolved = {};
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i]; const parts = k.split(':'); const field = parts[0], dcCode = parts[1] || null;
@@ -6494,6 +6571,8 @@ class NDCApp extends React.Component {
         resolved[k] = implied.impliedLabel;
       } else if (field === 'cutoff') {
         resolved[k] = info ? info.fmtTime(Number(fields[k].value)) : fields[k].value;
+      } else if (field === 'tat') {
+        resolved[k] = String(this.hrsToMinRoundUp(fields[k].value));
       } else {
         resolved[k] = fields[k].value;
       }
@@ -6896,7 +6975,12 @@ class NDCApp extends React.Component {
       patch.mdcCode = f.mdcCode || null;
     } else if (rlhMode === 'Co-Loading') {
       patch.laneName = (f.laneName || '').trim() || null;
-      patch.tat = f.tat || null;
+      // TAT (2026-08-19) — free numeric hours input now; converted to minutes and rounded UP to
+      // the nearest 15-min grid at save time (0.25hr = 15min, same underlying grid rule as
+      // before, just a different input unit). Stored internally as minutes, unchanged, since
+      // every downstream consumer (schedulerRouteDcInfo, the lane stitching) already works in
+      // minutes.
+      patch.tat = (f.tat !== '' && f.tat != null) ? String(this.hrsToMinRoundUp(f.tat)) : null;
       let cutoff = f.cutoff || null;
       if (patch.laneName) {
         const d = st.data;
@@ -7263,11 +7347,18 @@ class NDCApp extends React.Component {
     const q = (st.inputsSearch || '').toLowerCase();
     const inputsZoneSel = this.buildZoneMultiSelect(st.inputsZones, 'inputsZones', { pgScMaster: 1, pgAvail: 1 });
     const zf = inputsZoneSel.matches;
+    // SC Type filter (2026-08-19, new) — LMSC/FMSC/Hybrid is derived from dcCount, not a stored
+    // field, so the filter has to apply the SAME formula scRows itself uses below, or the two
+    // could disagree on what a given SC's type actually is.
+    const scTypeOf = (s) => s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC';
+    const SC_TYPE_VALUES = ['LMSC', 'FMSC', 'Hybrid'];
+    const scTypeSel = this.buildMultiSelect(st.inputsScTypes, SC_TYPE_VALUES, 'inputsScTypes', { pgScMaster: 1 }, 'All Types');
+    const tf = scTypeSel.matches;
     const nstep = st.nodeStep || 'active';
     const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
     const nodeSteps = nodeStepMeta.map(s => ({ label: s[1] + ' (' + s[2] + ')', tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
-    const anFiltered = d.scs.filter(s => zf(s.zone) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
+    const anFiltered = d.scs.filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     // AutoDML flagged-link table (matches Vignesh AutoDML Node View). Each d.autodmlNodes row is one
     // flagged LMSC→LMDC link; enrich it with a synthesized LMDC name, capacity, link status, mapped SCs
     // and a colored warning chip, then filter by the click-to-filter tile (nodeWarnFilter) + LMSC dropdown.
@@ -7364,7 +7455,7 @@ class NDCApp extends React.Component {
     const volErrModal = st.volErrModal || { name: '', rows: [] };
     const closeVolErrModal = () => this.setState({ volErrModal: null });
     const volErrModalReplace = () => { const m = st.volErrModal; this.setState({ volErrModal: null }); if (m && m.type) replaceVolFile(m.name, m.type); };
-    const _addedScs = (st.addedScs || []).filter(s => zf(s.zone) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
+    const _addedScs = (st.addedScs || []).filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
     const scRemovedMap = st.scRemoved || {};
     const scFiltered = _addedScs.concat(anFiltered).filter(s => !scRemovedMap[s.code]);
     // PARITY §6 — identity columns City / State + Type. State is the representative state for the SC's
@@ -7412,7 +7503,8 @@ class NDCApp extends React.Component {
     // everywhere else in this app; TAT is 15-min-step minute counts, same rule as Route Scheduler's.
     const RLH_MODE_OPTIONS = ['Valmo RLH', 'MDC', 'Co-Loading'];
     const LMDC_CUTOFF_OPTIONS = LMDC_TIME_SLOTS;
-    const LMDC_TAT_OPTIONS = []; for (let m = 15; m <= 360; m += 15) LMDC_TAT_OPTIONS.push(m);
+    // LMDC_TAT_OPTIONS removed (2026-08-19) — TAT is a free numeric hours input now, not a
+    // fixed dropdown list; see hrsToMinRoundUp()/minToHrsLabel().
     const mdcCodeOptions = d.scs.filter(s => s.nodeKind === 'MDC').map(s => s.code);
     const LMDC_UNLOAD_OPTIONS = []; for (let m = 15; m <= 60; m += 5) LMDC_UNLOAD_OPTIONS.push(m);
     const rlhFeasibleVehNames = (d.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0).map(v => v.name);
@@ -7424,14 +7516,11 @@ class NDCApp extends React.Component {
     // straight to auditing those without scrolling past every plain Valmo RLH row. Checks the
     // EFFECTIVE rlhMode (base row merged with any live edit), not the stale base value, so
     // filtering stays correct immediately after editing a row's mode.
-    const lmdcModeFilter = st.lmdcModeFilter || 'All';
     const effRlhMode = (l) => (lmdcEdits[l.code] && lmdcEdits[l.code].rlhMode) || l.rlhMode || 'Valmo RLH';
-    const lmdcFiltered = (d.lmdcs || []).filter(l => lz(l.zone) && (lmdcModeFilter === 'All' || effRlhMode(l) === lmdcModeFilter) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || (l.lmscCode || '').toLowerCase().indexOf(lq) >= 0));
-    const LMDC_MODE_FILTER_OPTS = [['All', 'All'], ['MDC', 'MDC'], ['Co-Loading', 'Co-Loading']];
-    const lmdcModeChips = LMDC_MODE_FILTER_OPTS.map(o => ({ label: o[1], active: lmdcModeFilter === o[0],
-      bg: lmdcModeFilter === o[0] ? '#5B4FA0' : '#fff', fg: lmdcModeFilter === o[0] ? '#fff' : '#5A5E66', bd: lmdcModeFilter === o[0] ? '#5B4FA0' : '#E6EBF2',
-      count: o[0] === 'All' ? (d.lmdcs || []).length : (d.lmdcs || []).filter(l => effRlhMode(l) === o[0]).length,
-      onClick: () => this.setState({ lmdcModeFilter: o[0], pgLmdc: 1 }) }));
+    const RLH_MODE_VALUES = ['Valmo RLH', 'MDC', 'Co-Loading'];
+    const lmdcModeSel = this.buildMultiSelect(st.lmdcModes, RLH_MODE_VALUES, 'lmdcModes', { pgLmdc: 1 }, 'All Modes');
+    const lmdcModeFilter = lmdcModeSel.matches;
+    const lmdcFiltered = (d.lmdcs || []).filter(l => lz(l.zone) && lmdcModeFilter(effRlhMode(l)) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || (l.lmscCode || '').toLowerCase().indexOf(lq) >= 0));
     const lmdcPager = this.pager(lmdcFiltered, st.pgLmdc, 'pgLmdc');
     const lmdcEditCode = st.lmdcEditCode;
     const lmdcDraft = st.lmdcEditDraft || {};
@@ -7446,23 +7535,31 @@ class NDCApp extends React.Component {
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
         open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
         rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
-        mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (l.tat + ' min') : '\u2014',
+        mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (this.minToHrsLabel(l.tat) + ' hrs') : '\u2014',
         editing, notEditing: !editing,
         draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
         draftRlhMode: lmdcDraft.rlhMode, draftMdcCode: lmdcDraft.mdcCode, draftLaneName: lmdcDraft.laneName, draftCutoff: lmdcDraft.cutoff, draftTat: lmdcDraft.tat,
         draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
         onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? String(l.tat) : '' } }),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '' } }),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
     });
-    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min)';
+    // 2026-08-19 — CSV header/body brought back in sync with the table's real columns (RLH
+    // Mode/MDC Code/Lane Name/Cutoff/TAT were added to the table but never added here — this is
+    // exactly the "CSVs must match the tables" gap flagged this round). TAT exports in HOURS
+    // (matching the table's own display unit), not the internal minute storage.
+    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min)';
     const downloadLmdcCsv = () => {
       const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
-        return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive', l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
+        const mode = l.rlhMode || 'Valmo RLH';
+        return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive',
+          mode, mode === 'MDC' ? (l.mdcCode || '') : '', mode === 'Co-Loading' ? (l.laneName || '') : '',
+          mode === 'Co-Loading' ? (l.cutoff || '') : '', mode === 'Co-Loading' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
+          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
@@ -7679,7 +7776,7 @@ class NDCApp extends React.Component {
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
       autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
-      inputsZoneSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
+      inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
       scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 40px' + (st.scNlhOpen ? ' 80px' : '') + ' 140px 80px',
@@ -7698,10 +7795,10 @@ class NDCApp extends React.Component {
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
       scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Hold Time (On/Off)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
-      lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeChips,
+      lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
-      rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS, lmdcTatOptions: LMDC_TAT_OPTIONS,
+      rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS,
       lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
       lmdcFileInputRef: (el) => { this.lmdcFileInputEl = el; },
@@ -8854,7 +8951,7 @@ class NDCApp extends React.Component {
         (plan.rows || []).forEach(route => {
           const dispatchMin = s + (hash(route.routeCode + seed) % 90);
           this.genDcRows(route).forEach(dc => {
-            const isLocal = (hash(dc.code + seed) % 2) === 0;
+            const isLocal = dc.isLocal !== undefined ? dc.isLocal : true; // real per-DC attribute (2026-08-19), not a hash guess
             const speed = isLocal ? params.localSpeed : params.nonLocalSpeed;
             const distKm = parseFloat(dc.dist) || 0;
             const travelMin = speed > 0 ? (distKm / speed) * 60 : distKm * 2;
@@ -9383,23 +9480,33 @@ class NDCApp extends React.Component {
       return r.laneDcInfo.map((x, i) => ({ code: x.code, name: r.routeCode, vol: x.vol, tpOrder: i + 1, lat: x.lat, lng: x.lng, dist: '\u2014', tat: x.tat, isCoLoadDc: true }));
     }
     const DC_NAMES = ['Sector Hub','Market Depot','City Point','Town Centre','Zone Gateway','North Cluster','South Cluster','East Block','West Node','Central Store','Junction Hub','Metro Point','Park Depot','Ring Station','Cross Dock'];
+    // Real per-DC lookup (2026-08-19) — lat/lng and isLocal now come from the shared LMDC pool
+    // (the same data LMDC Master itself shows), not a second independent jitter-from-code-string
+    // synthesis. isLocal in particular has to be the real, persistent DC-level attribute — a coin
+    // flip here would silently disagree with what LMDC Master and Route Scheduler both read.
+    const d = this.state.data;
+    const lmdcByCode = {};
+    (d.lmdcs || []).forEach(l => { lmdcByCode[l.code] = l; });
     const dcArr = r.dcs; // array of dc-code strings e.g. ["BDQ234","BDQ567"]
     const n = dcArr.length || 1;
     const baseVol = Math.floor(r.volume / n);
     const baseDist = Math.floor(r.rtDist / n);
     return dcArr.map((code, i) => {
-      // deterministic jitter from char codes of the dc code string
+      const rec = lmdcByCode[code];
+      // deterministic jitter from char codes of the dc code string — kept as a fallback only for
+      // any DC code that somehow isn't in the LMDC pool (shouldn't normally happen).
       const charSum = code.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
       const jitterLat = ((charSum * 137 + i * 31) % 10000) / 100000;  // ~±0.04°
       const jitterLng = ((charSum * 97  + i * 53) % 10000) / 100000;
       const latSign   = ((charSum + i) % 2 === 0) ? 1 : -1;
       const lngSign   = ((charSum + i * 3) % 2 === 0) ? 1 : -1;
-      const lat  = (r.oLat + latSign * jitterLat).toFixed(4);
-      const lng  = (r.oLng + lngSign * jitterLng).toFixed(4);
+      const lat  = rec ? rec.lat : +(r.oLat + latSign * jitterLat).toFixed(4);
+      const lng  = rec ? rec.lng : +(r.oLng + lngSign * jitterLng).toFixed(4);
       const vol  = baseVol + ((charSum + i) % 3 === 0 ? 1 : 0);
       const dist = baseDist + ((charSum + i * 7) % 5);
       const nameIdx = (charSum + i * 13) % DC_NAMES.length;
-      return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km' };
+      const isLocal = rec ? rec.isLocal : true;
+      return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km', isLocal };
     });
   }
 
@@ -9533,7 +9640,7 @@ class NDCApp extends React.Component {
         let maxViolation = 0;
         const dockViol = (laneSlotCounts[slotOf(dispatchCandidate)] || 0) >= docksCap && docksCap > 0 ? 1 : 0;
         const perDc = dcRows.map((dc) => {
-          const isLocal = (hash(dc.code + seed) % 2) === 0;
+          const isLocal = dc.isLocal !== undefined ? dc.isLocal : true; // real per-DC attribute (2026-08-19), not a hash guess
           const speed = isLocal ? localSpeed : nonLocalSpeed;
           const breakdownDistKm = parseFloat(dc.dist) || 0;
           // Accepted TAT feedback (Stage 1, from LH) overrides the synthetic travel time outright
@@ -9786,13 +9893,11 @@ class NDCApp extends React.Component {
     if (!ri) return [];
     const st = this.state;
     const draft = st.schedNcFields || {};
-    // Fixed option lists — 30-min grid (Cutoff), 15-min grid (Landing Time), 15-min-step minute
-    // counts (TAT). Generated once per call; cheap (48/96/24 entries) and keeps this function
-    // self-contained rather than threading shared constants through every caller.
+    // Fixed option lists — 30-min grid (Cutoff), 15-min grid (Landing Time). TAT (2026-08-19) is
+    // a free numeric hours input now, not a fixed dropdown — see hrsToMinRoundUp()/minToHrsLabel().
     const TIME_OPTS_30 = []; for (let m = 0; m < 1440; m += 30) TIME_OPTS_30.push({ value: String(m), label: info.fmtTime(m) });
     const TIME_OPTS_15 = []; for (let m = 0; m < 1440; m += 15) TIME_OPTS_15.push({ value: String(m), label: info.fmtTime(m) });
-    const TAT_OPTS = []; for (let m = 15; m <= 360; m += 15) TAT_OPTS.push({ value: String(m), label: m + ' min' });
-    const mkField = (key, label, currentLabel, defaultVal, options, reasons) => {
+    const mkField = (key, label, currentLabel, defaultVal, options, reasons, isNumeric) => {
       const flagged = !!draft[key];
       return {
         key, label, currentLabel, flagged,
@@ -9801,7 +9906,7 @@ class NDCApp extends React.Component {
         onToggleFlag: () => this.toggleSchedNcFlag(key, defaultVal),
         value: flagged ? draft[key].value : defaultVal,
         onInput: (e) => this.onSchedNcFieldValue(key, e.target.value),
-        options,
+        options, isNumeric: !!isNumeric,
         reasonVal: flagged ? draft[key].reason : '',
         onReason: (e) => this.onSchedNcFieldReason(key, e.target.value),
         reasons,
@@ -9814,7 +9919,8 @@ class NDCApp extends React.Component {
     if (role === 'LH') {
       ri.dcInfo.forEach(dc => {
         const tatMin = Math.round(dc.breakdownTatHrs * 60);
-        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatMin + ' min', String(tatMin), TAT_OPTS, this.schedFeedbackReasons('LH', 'tat')));
+        const tatHrsLabel = this.minToHrsLabel(tatMin);
+        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatHrsLabel + ' hrs', tatHrsLabel, null, this.schedFeedbackReasons('LH', 'tat'), true));
       });
     }
     if (role === 'LM') {
@@ -9854,8 +9960,9 @@ class NDCApp extends React.Component {
       bucket: FIELD_LABEL[field] || field, bucketLabel: meta.label, bucketBg: meta.bg, bucketFg: meta.fg,
       items: byField[field].map(it => {
         const isTime = it.field === 'cutoff' || it.field === 'landing';
-        const newLabel = isTime ? it.proposedValue : (it.proposedValue + ' min');
-        const origLabel = it.originalValue != null ? (isTime ? it.originalValue : (it.originalValue + ' min')) : null;
+        // TAT (2026-08-19) — stored internally as minutes (unchanged), displayed in hours here.
+        const newLabel = isTime ? it.proposedValue : (this.minToHrsLabel(it.proposedValue) + ' hrs');
+        const origLabel = it.originalValue != null ? (isTime ? it.originalValue : (this.minToHrsLabel(it.originalValue) + ' hrs')) : null;
         const hasChange = origLabel != null && origLabel !== newLabel;
         return {
         id: it.id, whereLabel: it.dcCode || routeCode, fieldLabel: FIELD_LABEL[field] || field,
@@ -12318,7 +12425,10 @@ class NDCApp extends React.Component {
       return { code: s.code, name: s.name, zone: s.zone, cps: rs.length + ' run' + (rs.length === 1 ? '' : 's'), active: s.code === curCode,
         bg: s.code === curCode ? '#EAEEFB' : '#fff', bd: s.code === curCode ? '#003F98' : 'transparent',
         sevDot, sevTitle,
-        verdict: pushed ? 'Pushed' : 'Created', verdictBg: pushed ? '#E7F0F8' : '#E7F4EC', verdictFg: pushed ? '#1E6FB8' : '#128A3E',
+        // "Created" removed (2026-08-19) — an un-pushed plan just shows no badge now, rather than
+        // a status word that isn't really a status (every plan here has been created; "Pushed" is
+        // the only state actually worth calling out).
+        verdict: pushed ? 'Pushed' : '', verdictBg: pushed ? '#E7F0F8' : 'transparent', verdictFg: pushed ? '#1E6FB8' : 'transparent',
         onClick: () => this.setState({ reviewSC: s.code }) };
     });
 

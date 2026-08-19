@@ -510,10 +510,10 @@ function View(B, self) {
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
 <div style={css(`display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}</div>
+<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}{(s.isMdc) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EEEAFB; color:#5B4FA0;`)} title={"Multi-Distribution-Centre node \u2014 not a real Sort Centre; DCs tagged 'MDC' on LMDC Master route from here instead"}>MDC</span></>) : null}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
-<div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{s.scType}</span></div>
+<div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:${s.isMdc ? '#EEEAFB' : '#EAEEFB'}; color:${s.isMdc ? '#5B4FA0' : '#2F4FC6'}; white-space:nowrap;`)}>{s.isMdc ? 'MDC' : s.scType}</span></div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66; white-space:nowrap;`)}>{s.zone}</span></div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
@@ -805,7 +805,7 @@ function View(B, self) {
 </div>
 <div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. Only Open/Close, D0 Cutoff, Max Vehicle Size and Unloading Time can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
+<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size and Unloading Time can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
 </div>
 {(hasLmdcUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -822,12 +822,16 @@ function View(B, self) {
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
 <div style={css(`min-width:1280px;`)}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 80px 80px 90px 160px 130px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMSC</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>CAPACITY</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LMSC ACTIVE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; white-space:nowrap; background:#EEEAFB;`)}>MDC / LANE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"DC-level \u2014 LMSC to this DC transit time, varies within the same lane"}>TAT</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>OPEN</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>CLOSE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>D0 CUTOFF</div>
@@ -836,12 +840,24 @@ function View(B, self) {
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 80px 80px 90px 160px 130px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:${l.pending ? '#8E96A3' : '#5A5E66'}; font-style:${l.pending ? 'italic' : 'normal'}; white-space:nowrap;`)}>{l.lmscCode}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
 <div style={css(`padding:10px 10px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${l.active ? '#E7F4EC' : '#FBEAEA'}; color:${l.active ? '#128A3E' : '#D14B4B'}; white-space:nowrap;`)}>{l.statusLabel}</span></div>
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; background:#F9F7FE;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#F9F7FE;`)}>{l.isMdc ? l.mdcCode : (l.isCoLoad ? l.laneName : '\u2014')}</div></>) : null}
+{(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC\u2026</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><input type={"text"} value={l.draftLaneName} onInput={l.onDraftLaneName} placeholder={"e.g. CL-01"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+{(l.editing && !l.draftIsMdc && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; background:#F9F7FE;`)}>\u2014</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; font-variant-numeric:tabular-nums; color:#14171F; background:#F9F7FE;`)}>{l.isCoLoad ? l.cutoff : '\u2014'}</div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftCutoff} onChange={l.onDraftCutoff} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcCutoffOptions || []).map((co, __iCO) => (<React.Fragment key={__iCO}><option value={co}>{co}</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; background:#F9F7FE;`)}>\u2014</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; background:#F9F7FE;`)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftTat} onChange={l.onDraftTat} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTatOptions || []).map((tm, __iTM) => (<React.Fragment key={__iTM}><option value={tm}>{tm} min</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; background:#F9F7FE;`)}>\u2014</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.open}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.close}</div></>) : null}
@@ -1337,6 +1353,7 @@ function View(B, self) {
 <span style={css(`width:18px; height:18px; border-radius:5px; border:1.5px solid ${s.checkBd}; background:${s.checkBg}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"3"} style={css(`opacity:${s.checkOp};`)}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></span>
 <span style={css(`font-size:12.5px; font-weight:700; color:#003F98; width:62px; flex-shrink:0;`)}>{s.code}</span>
 <span style={css(`font-size:12.5px; color:#14171F; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</span>
+{(s.isMdc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EEEAFB; color:#5B4FA0; flex-shrink:0;`)} title={"Multi-Distribution-Centre node, not a real Sort Centre"}>MDC</span></>) : null}
 {(s.newSc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6; flex-shrink:0;`)}>NEW SC</span></>) : null}
 {/* D. per-SC volume gap flag */}
 {(s.volGap) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#FBEAEA; color:#D14B4B; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.volGapLabel}</span></>) : null}
@@ -2766,7 +2783,7 @@ function View(B, self) {
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`display:grid; grid-template-columns:70px ${(reviewSchedDetail.dockCols || []).map(() => '1fr').join(' ')}; min-width:${70 + (reviewSchedDetail.dockCols || []).length * 80}px;`)}>
 <div style={css(`padding:6px 8px; border-bottom:1px solid #E6EBF2;`)} />
-{(reviewSchedDetail.dockCols || []).map((c, __iRSDc1) => (<React.Fragment key={__iRSDc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:#5A5E66; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums;`)}>{c.label}</div></React.Fragment>))}
+{(reviewSchedDetail.dockCols || []).map((c, __iRSDc1) => (<React.Fragment key={__iRSDc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:${c.breached ? '#D14B4B' : '#5A5E66'}; font-weight:${c.breached ? '700' : '400'}; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums; background:${c.breached ? '#FBEAEA' : 'transparent'};`)} title={c.breached ? ('Dock capacity exceeded: ' + c.departed + ' departures') : ''}>{c.label}{(c.breached) ? ' \u26a0' : ''}</div></React.Fragment>))}
 {(reviewSchedDetail.dockRows || []).map((row, __iRSDr1) => (<React.Fragment key={__iRSDr1}>
 <div style={css(`padding:8px; font-size:12px; font-weight:600; color:#14171F; border-bottom:1px solid #EEF1F6;`)}>{row.label}</div>
 {(row.cells || []).map((cell, __iRSDc2) => (<React.Fragment key={__iRSDc2}>
@@ -4732,6 +4749,25 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+{/* Co-Loading lane flag modal (2026-08-19) — one Needs-Change + remark for the whole lane. */}
+{(laneFlagModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={laneFlagModal.close}>
+<div style={css(`width:440px; max-width:100%; background:#fff; border-radius:14px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`padding:20px 22px 0; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;`)}>
+<div><div style={css(`font-size:15.5px; font-weight:700; color:#14171F;`)}>Flag lane {laneFlagModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:3px;`)}>Co-Loading lanes are LMDC Master data \u2014 add a remark for the Planner, no route/DC-level fields to propose.</div></div>
+<button onClick={laneFlagModal.close} aria-label={"Close"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#5A5E66; display:flex; flex-shrink:0;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`padding:16px 22px 0;`)}>
+<div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span></div>
+<textarea value={laneFlagModal.remark} onInput={laneFlagModal.onRemark} placeholder={"What's wrong with this lane's Cutoff/TAT/DC list\u2026"} style={css(`width:100%; min-height:72px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} />
+</div>
+<div style={css(`display:flex; justify-content:flex-end; gap:8px; padding:18px 22px;`)}>
+<button onClick={laneFlagModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={laneFlagModal.onSubmit} style={css(`height:36px; padding:0 16px; border:none; background:#C77B00; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Flag as Needs Change</button>
+</div>
+</div>
+</div>
+</>) : null}
 {/* START-TIME vs D0%/READY-TO-SHIP GRAPH POPUP (2026-08-13, redesigned) */}
 {(schedGraph.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedGraph.close}>
@@ -4904,6 +4940,13 @@ function View(B, self) {
 </>) : (<><span style={css(`font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:999px; background:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).opsBg}; color:${(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).opsFg};`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).decChip}</span></>)}
 </div>
 {((schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).lockedNote) ? (<><span style={css(`font-size:10px; color:#8E96A3;`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).lockedNote}</span></>) : null}
+{/* Co-Loading lane remark (2026-08-19) — Planner side is display-only, no Accept/Reject; the
+    remark is just surfaced here so the Planner can act on it directly in LMDC Master if needed. */}
+{((schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).isCoLoadLane && (schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag) ? (<>
+<div style={css(`grid-column:1 / -1; margin-top:4px; padding:7px 10px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:6px; font-size:11px; color:#14171F;`)}>
+<span style={css(`font-weight:700; color:#C77B00;`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.by}</span> \u00b7 {(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.at}: "{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.remark}"
+</div>
+</>) : null}
 </div>
 </>) : null}
 <div style={css(`display:grid; grid-template-columns:1fr 0.7fr 0.6fr 0.6fr 0.9fr 0.4fr 0.7fr 0.8fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr; align-items:center; border-left:2px solid #8E96A3; border-right:2px solid #8E96A3; border-top:${r.isFirstInGroup ? '1px solid #8E96A3' : '1px solid #F4F5F8'}; border-bottom:${r.isLastInGroup ? '2px solid #8E96A3' : 'none'};`)}>
@@ -4961,7 +5004,7 @@ function View(B, self) {
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`display:grid; grid-template-columns:70px ${(schedAlignDetail.dockCols || []).map(() => '1fr').join(' ')}; min-width:${70 + (schedAlignDetail.dockCols || []).length * 80}px;`)}>
 <div style={css(`padding:6px 8px; border-bottom:1px solid #E6EBF2;`)} />
-{(schedAlignDetail.dockCols || []).map((c, __iSADc1) => (<React.Fragment key={__iSADc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:#5A5E66; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums;`)}>{c.label}</div></React.Fragment>))}
+{(schedAlignDetail.dockCols || []).map((c, __iSADc1) => (<React.Fragment key={__iSADc1}><div style={css(`padding:6px 4px; font-size:10.5px; color:${c.breached ? '#D14B4B' : '#5A5E66'}; font-weight:${c.breached ? '700' : '400'}; text-align:center; border-bottom:1px solid #E6EBF2; border-left:1px solid #EEF1F6; font-variant-numeric:tabular-nums; background:${c.breached ? '#FBEAEA' : 'transparent'};`)} title={c.breached ? ('Dock capacity exceeded: ' + c.departed + ' departures') : ''}>{c.label}{(c.breached) ? ' \u26a0' : ''}</div></React.Fragment>))}
 {(schedAlignDetail.dockRows || []).map((row, __iSADr1) => (<React.Fragment key={__iSADr1}>
 <div style={css(`padding:8px; font-size:12px; font-weight:600; color:#14171F; border-bottom:1px solid #EEF1F6;`)}>{row.label}</div>
 {(row.cells || []).map((cell, __iSADc2) => (<React.Fragment key={__iSADc2}>
@@ -5417,6 +5460,14 @@ class NDCApp extends React.Component {
       schedFinOpen: false, schedFinPlanId: null,
       schedValidateOpen: false,
       schedOpsFilter: 'To Review',
+      // laneFlags (2026-08-19) — Co-Loading lane feedback on Ops Alignment, one flag per LANE
+      // (not per route/DC-level like real routes), keyed 'parentPlanId::laneRouteCode' so the
+      // same lane reads consistently whether viewed via RLH's own Ops Alignment or Route
+      // Scheduler's (both ultimately point at the same lane row on the parent RLH plan). Just
+      // Needs-Change + a remark — no Accept/Reject, since Cutoff/TAT are master data, not
+      // something this flow can apply an override to. Cleared on Finalise (either RLH's own or
+      // Route Scheduler's), never carried into the Finalised state.
+      laneFlags: {}, laneFlagOpen: null, laneFlagDraft: '',
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
@@ -5563,11 +5614,32 @@ class NDCApp extends React.Component {
         // count, not a shipment-volume figure), realistically 50-250. Always >= dcCount (the SC
         // can't be seeded already over its own capacity), with modest headroom. Volume Capacity
         // stays a genuine shipment-volume figure — the two are separate metrics.
-        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.min(250, dcCount + ri(10, 40)), volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]) });
+        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.min(250, dcCount + ri(10, 40)), volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]), nodeKind: 'SC' });
       }
       ci++;
       if (ci % cityArr.length === 0) zi++;
     }
+
+    // ===== MDC nodes (2026-08-19) — Multi-Distribution-Centre nodes, added by a Planner in SC
+    // Master exactly like a real SC (nodeKind: 'MDC' distinguishes them everywhere downstream).
+    // Once a DC is tagged RLH Mode = "MDC" on LMDC Master and mapped to one of these, that DC's
+    // link moves here entirely (AutoDML gives it a direct MDC→DC link, no LMSC→DC link at all —
+    // see 04_Rule_Engine.md) — Route Planner then runs FROM the MDC exactly as it would from any
+    // real SC. 3 demo MDCs seeded here so Co-Loading/MDC master-data screens aren't empty on
+    // first load; DC reassignment itself happens in the DC-pool generation right below.
+    const MDC_NAMES = [['Panvel MDC', 'PNVL'], ['Sonipat MDC', 'SNPT'], ['Hosur MDC', 'HSUR']];
+    const MDC_ZONES = ['West', 'North', 'South'];
+    MDC_NAMES.forEach((mn, mi) => {
+      const zone = MDC_ZONES[mi];
+      const near = scs.find(s => s.zone === zone) || scs[0];
+      scs.push({
+        code: 'MDC-' + (mi + 1), name: mn[0], cityCode: mn[1], zone,
+        dcCount: 0, volume: 0, lat: near ? near.lat + 0.15 : 20, lng: near ? near.lng + 0.15 : 77,
+        sortCap: 60, volCap: 40000, docks: ri(3, 5), hasRef: false, farDist: false, zeroVolDc: 0, missVolDc: 0,
+        pocs: Array.from({ length: ri(2, 3) }, () => NAMES[Math.floor(R() * NAMES.length)]),
+        nodeKind: 'MDC',
+      });
+    });
 
     // ===== Canonical DC pool (2026-08-08) ==================================================
     // One shared pool of DC identities per SC, seeded HERE — before plans/routes exist — so every
@@ -5595,12 +5667,38 @@ class NDCApp extends React.Component {
     scs.slice(0, 14).forEach(sc => { const p = dcPoolBySC[sc.code]; if (p && p[0]) p[0].linkStatus = 'inactive'; });
     scs.slice(6, 12).forEach(sc => { const p = dcPoolBySC[sc.code]; if (p && p[1]) { p[1].linkStatus = 'zerocap'; p[1].capacity = 0; } });
     scs.slice(2, 11).forEach((sc, i) => { const p = dcPoolBySC[sc.code]; if (p && p[2]) { p[2].linkStatus = 'multi'; p[2].secondSc = scs[(i + 25) % scs.length].code; } });
+    // RLH Mode tagging (2026-08-19) — moved here, ON THE POOL ITSELF, before route generation
+    // below draws from it. This is what actually makes "excluded from RLH Planner" real: a DC
+    // tagged MDC or Co-Loading is stripped out of dcPoolQueueBySC (below) before any route ever
+    // gets a chance to draw it, rather than being tagged afterward on LMDC Master alone (where it
+    // would just be decorative). Defaults every pool DC to 'Valmo RLH' (unchanged behavior); 2 SCs
+    // get a few DCs reassigned to MDCs (split across MDC-1/MDC-2, showing "one LMSC can split to
+    // multiple MDCs"); 1 SC gets ~8 DCs grouped into 2 Co-Loading lanes.
+    Object.keys(dcPoolBySC).forEach(code => { dcPoolBySC[code].forEach(dc => { dc.rlhMode = 'Valmo RLH'; dc.mdcCode = null; dc.laneName = null; dc.cutoff = null; dc.tat = null; }); });
+    const mdcDonorScsEarly = scs.filter(s => s.nodeKind !== 'MDC' && s.dcCount >= 10).slice(0, 2);
+    mdcDonorScsEarly.forEach((sc) => {
+      const own = (dcPoolBySC[sc.code] || []).slice(0, 5);
+      own.forEach((dc, li) => { dc.rlhMode = 'MDC'; dc.mdcCode = li % 2 === 0 ? 'MDC-1' : 'MDC-2'; });
+    });
+    const coLoadDonorScEarly = scs.find(s => s.nodeKind !== 'MDC' && mdcDonorScsEarly.indexOf(s) < 0 && s.dcCount >= 12);
+    if (coLoadDonorScEarly) {
+      const own = (dcPoolBySC[coLoadDonorScEarly.code] || []).slice(0, 8);
+      own.forEach((dc, li) => {
+        const laneIdx = li % 2; // 2 lanes, 4 DCs each
+        dc.rlhMode = 'Co-Loading';
+        dc.laneName = 'CL-' + (laneIdx + 1);
+        dc.cutoff = laneIdx === 0 ? '10:30' : '11:00'; // lane-level, identical across its own DCs
+        dc.tat = String(30 + ((li * 15) % 90)); // DC-level, varies within the lane
+      });
+    }
     // Deterministic per-SC shuffle (Fisher-Yates on the SAME seeded R() stream) + a running pointer,
     // so route generation below draws a genuine, non-repeating SUBSET of each SC's real pool instead
     // of inventing new codes — "Route Planner may use all of a SC's DCs or a subset" (2026-08-07).
+    // 2026-08-19 — only 'Valmo RLH' DCs go into the queue routes actually draw from; MDC/Co-Loading
+    // DCs are real pool members (still visible in LMDC Master/AutoDML) but never handed to a route.
     const dcPoolQueueBySC = {};
     Object.keys(dcPoolBySC).forEach(code => {
-      const arr = dcPoolBySC[code].slice();
+      const arr = dcPoolBySC[code].filter(dc => dc.rlhMode === 'Valmo RLH');
       for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
       dcPoolQueueBySC[code] = { arr, ptr: 0 };
     });
@@ -5775,6 +5873,39 @@ class NDCApp extends React.Component {
       if (fr.dcs && fr.dcs.length) { fr.fb.dcCells = {}; fr.fb.dcCells[fr.dcs[0]] = { tp: '2' }; if (fr.dcs.length > 1) fr.fb.dcCells[fr.dcs[1]] = { lat: (fr.oLat + 0.02).toFixed(4), lng: (fr.oLng - 0.01).toFixed(4) }; fr.fb.dcCount = Object.keys(fr.fb.dcCells).length; }
     }
 
+    // Co-Loading lane stitching (2026-08-19) — see 05_Core_Flows.md. A lane never touches the DS
+    // algorithm; it's appended as a FROZEN extra row on its originating SC's own RLH plan, at
+    // generation time, using the real DC codes/coordinates from the pool (not synthesized like a
+    // normal route's DCs) and the Cutoff/TAT hand-entered on LMDC Master. isCoLoadLane distinguishes
+    // it everywhere downstream (Route View/Plan Details show "—" for distance/vehicle/utilisation;
+    // genDcRows() below special-cases it to skip the normal per-DC distance-splitting math, which
+    // would otherwise divide by a distance that was never real in the first place).
+    // Per-DC volume: this prototype's Volume Forecast is upload metadata only (no real parsed
+    // per-DC dataset to look up), so — same as every other synthetic figure in this seed — each
+    // Co-Loading DC gets a deterministic hash-based volume rather than a fabricated-looking round
+    // number, documented here since it stands in for a real upstream lookup.
+    const laneDonorPlan = plans.find(p => p.scCode === (coLoadDonorScEarly && coLoadDonorScEarly.code));
+    if (laneDonorPlan && coLoadDonorScEarly) {
+      const coLoadDcs = (dcPoolBySC[coLoadDonorScEarly.code] || []).filter(dc => dc.rlhMode === 'Co-Loading');
+      const byLane = {};
+      coLoadDcs.forEach(dc => { byLane[dc.laneName] = byLane[dc.laneName] || []; byLane[dc.laneName].push(dc); });
+      Object.keys(byLane).forEach(laneName => {
+        const members = byLane[laneName];
+        const dcInfo = members.map(dc => {
+          let h = 0; for (let k = 0; k < dc.code.length; k++) h = (h * 31 + dc.code.charCodeAt(k)) >>> 0;
+          const vol = 500 + (h % 4500); // documented synthetic stand-in, see comment above
+          return { code: dc.code, lat: dc.lat, lng: dc.lng, tat: Number(dc.tat), vol };
+        });
+        const totalVol = dcInfo.reduce((a, b) => a + b.vol, 0);
+        laneDonorPlan.rows.push({
+          routeCode: laneName, veh: '\u2014', vehTp: 0, tp: dcInfo.length, dcs: dcInfo.map(x => x.code),
+          rtDist: null, breakdownTat: null, outCutoff: members[0].cutoff, oLat: coLoadDonorScEarly.lat, oLng: coLoadDonorScEarly.lng,
+          volume: totalVol, util: null, cps: null, ops: null, planner: null, fb: null, proposedBy: null,
+          isCoLoadLane: true, laneCutoff: members[0].cutoff, laneDcInfo: dcInfo,
+        });
+      });
+    }
+
     // AutoDML (2026-08-08) — now a genuine FILTERED VIEW of the canonical pool's linkStatus flags,
     // not a disconnected hand-authored list. Node Inputs' AutoDML tab still shows only these
     // warning cases (unchanged UX); LMDC Master shows the full pool including everything healthy.
@@ -5929,17 +6060,33 @@ class NDCApp extends React.Component {
     // overlay, same pattern as SC Master's scEdits) or a CSV upload matched by LMDC Code.
     const rlhFeasibleVeh = VEH.filter(v => (v.feas || []).indexOf('RLH') >= 0);
     const defaultRlhVehName = (rlhFeasibleVeh.slice().sort((a, b) => b.cap - a.cap)[0] || VEH[0]).name;
+    // rlhMode/mdcCode/laneName/cutoff/tat (2026-08-19) — LMDC Master's new per-DC routing-mode
+    // dimension. 'Valmo RLH' (default) = normal DS-planned route, unchanged behavior. 'MDC' = this
+    // DC's link moves entirely to the named MDC node (AutoDML gives it a direct MDC→DC link, no
+    // LMSC→DC link — see 04_Rule_Engine.md); Route Planner excludes it from the original SC's own
+    // pool and it becomes routable FROM the MDC instead. 'Co-Loading' = never DS-planned at all;
+    // Lane Name/Cutoff/TAT are hand-entered and get stitched into the parent RLH plan as a frozen
+    // lane-row at generation time (05_Core_Flows.md). Cutoff is lane-level (validated identical
+    // across every DC sharing a Lane Name); TAT is DC-level (LMSC→that DC transit time, varies row
+    // to row within the same lane).
     const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15 };
+    // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
+    // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
+    // and the actual routable pool can never disagree on which DCs are excluded.
     const lmdcs = allPoolDcs.map(dc => Object.assign({
       code: dc.code, lmscCode: dc.scCode, zone: dc.zone, lat: dc.lat, lng: dc.lng,
       capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
+      rlhMode: dc.rlhMode || 'Valmo RLH', mdcCode: dc.mdcCode || null, laneName: dc.laneName || null, cutoff: dc.cutoff || null, tat: dc.tat || null,
     }, lmdcDefaults));
     nodeAdditions.filter(a => a.mapped && a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null }, lmdcDefaults));
     });
     nodeAdditions.filter(a => !a.mapped || !a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null }, lmdcDefaults));
     });
+    // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
+    // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
+    // See the stitching pass further below (after `plans` is built).
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
@@ -6512,15 +6659,27 @@ class NDCApp extends React.Component {
   // SC's dock count. Kept minimal for now — per-item Accept already blocks dock-capacity
   // violations at the moment of decision, so this mostly re-confirms nothing drifted; it's here
   // as the seam Design/Product asked to keep for future error classes.
+  // computeSchedValidation(sp) (2026-08-18; lane-aware 2026-08-19) — re-derives the FULL dock
+  // schedule from every currently-Accepted override AND every Co-Loading lane's static occupancy,
+  // confirming no 30-min slot exceeds the SC's dock count. Per-item Accept already blocks a real
+  // route's own dock-capacity violation at decision time; this additionally catches the case a
+  // single Accept can't see — two real routes (or a real route and a static lane) independently
+  // landing in the same slot.
   computeSchedValidation(sp) {
     const info = this.schedulerRouteDcInfo(sp);
     const errors = [], warnings = [];
     if (info) {
       const docks = sp.rlhDocks || 0;
       const slotOf = (m) => Math.round(m / 30) * 30;
-      const counts = {};
-      info.routeInfo.forEach(ri => { const s = slotOf(ri.dispatchMin); counts[s] = (counts[s] || 0) + 1; });
-      Object.keys(counts).forEach(s => { if (docks > 0 && counts[s] > docks) errors.push({ t: 'Dock capacity exceeded at ' + info.fmtTime(Number(s)) + ': ' + counts[s] + ' routes against ' + docks + ' docks.' }); });
+      const counts = {}, laneCounts = {};
+      info.routeInfo.forEach(ri => { const s = slotOf(ri.dispatchMin); counts[s] = (counts[s] || 0) + 1; if (ri.isCoLoadLane) laneCounts[s] = (laneCounts[s] || 0) + 1; });
+      Object.keys(counts).forEach(s => {
+        if (docks > 0 && counts[s] > docks) {
+          const laneN = laneCounts[s] || 0;
+          const laneNote = laneN > 0 ? (' (includes ' + laneN + ' Co-Loading lane' + (laneN === 1 ? '' : 's') + ')') : '';
+          errors.push({ t: 'Dock capacity exceeded at ' + info.fmtTime(Number(s)) + ': ' + counts[s] + ' against ' + docks + ' docks' + laneNote + '.' });
+        }
+      });
     }
     return { errors, warnings, clean: errors.length === 0 };
   }
@@ -6619,6 +6778,7 @@ class NDCApp extends React.Component {
     const schedulerPlans = d.schedulerPlans.slice();
     schedulerPlans[idx] = Object.assign({}, sp, { status: 'Finalised' });
     this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedFinOpen: false, schedFinPlanId: null });
+    this.clearLaneFlagsForPlan(sp.parentPlanId);
     this.showToast(id + ' finalised — Cutoff Plan ready for handoff', '#128A3E');
   }
   // schedOpsStatusOf(sp, role) (2026-08-18) — the Ops-role-scoped display status for the To
@@ -6642,14 +6802,83 @@ class NDCApp extends React.Component {
     const sub = ((st.schedSubmitted || {})[sp.id] || {}).stage1 || {};
     return sub[role] ? 'Submitted' : 'To Review';
   }
+  // ===== Co-Loading lane Ops Alignment flag (2026-08-19) =====================================
+  // laneFlagKey(planId, routeCode) — always keyed to the parent RLH plan's own id, so a lane
+  // reads identically whether viewed via RLH's own Ops Alignment or Route Scheduler's (both
+  // ultimately point at the same lane row on that parent plan).
+  laneFlagKey(planId, routeCode) { return planId + '::' + routeCode; }
+  laneFlagFor(planId, routeCode) { return (this.state.laneFlags || {})[this.laneFlagKey(planId, routeCode)] || null; }
+  openLaneFlag(planId, routeCode) { this.setState({ laneFlagOpen: { planId, routeCode }, laneFlagDraft: '' }); }
+  closeLaneFlag() { this.setState({ laneFlagOpen: null, laneFlagDraft: '' }); }
+  // submitLaneFlag() — one flag per LANE (not per route/DC-level like real routes): Needs-Change
+  // + a remark only. No Accept/Reject exists for this, since Cutoff/TAT are LMDC Master data, not
+  // something this flow can override — the Planner just sees the remark and acts on it directly
+  // in LMDC Master if warranted.
+  submitLaneFlag() {
+    const st = this.state;
+    const o = st.laneFlagOpen;
+    if (!o || !(st.laneFlagDraft || '').trim()) { this.showToast('Add a remark before flagging', '#C77B00'); return; }
+    const key = this.laneFlagKey(o.planId, o.routeCode);
+    const flags = Object.assign({}, st.laneFlags);
+    const now = new Date(); const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const at = String(now.getDate()).padStart(2, '0') + ' ' + MON[now.getMonth()] + ' \u00b7 ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    flags[key] = { flagged: true, remark: st.laneFlagDraft.trim(), by: this.opsPersonaName ? this.opsPersonaName() : 'Ops Lead', at };
+    this.setState({ laneFlags: flags, laneFlagOpen: null, laneFlagDraft: '' });
+    this.showToast('Lane ' + o.routeCode + ' flagged \u2014 Needs Change', '#C77B00');
+  }
+  withdrawLaneFlag(planId, routeCode) {
+    const flags = Object.assign({}, this.state.laneFlags);
+    delete flags[this.laneFlagKey(planId, routeCode)];
+    this.setState({ laneFlags: flags });
+    this.showToast('Lane ' + routeCode + ' marked Aligned', '#128A3E');
+  }
+  // clearLaneFlagsForPlan(planId) — "don't carry the comment forward to the Finalised state":
+  // called from both RLH's own confirmFin() and Route Scheduler's confirmSchedFinalise(), so a
+  // lane's flag/remark never survives past whichever Finalise actually closes out its parent plan.
+  clearLaneFlagsForPlan(planId) {
+    const st = this.state;
+    const prefix = planId + '::';
+    const flags = {};
+    let changed = false;
+    Object.keys(st.laneFlags || {}).forEach(k => { if (k.indexOf(prefix) === 0) { changed = true; } else { flags[k] = st.laneFlags[k]; } });
+    if (changed) this.setState({ laneFlags: flags });
+  }
+  // saveLmdcEdit(code) (2026-08-19: RLH Mode / MDC / Lane fields added) — Cutoff is genuinely
+  // lane-level: every DC sharing a Lane Name must show the SAME Cutoff, so rather than let a typo
+  // silently create two "same lane, different cutoff" rows, saving a Co-Loading row auto-corrects
+  // its Cutoff to match whatever that Lane Name already uses elsewhere (first row to define a
+  // lane wins), with a toast explaining the correction — never a hard block, since that would
+  // strand the save entirely.
   saveLmdcEdit(code) {
     const st = this.state;
     const f = st.lmdcEditDraft || {};
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
     const edits = Object.assign({}, st.lmdcEdits || {});
-    edits[code] = Object.assign({}, edits[code], { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin) });
+    const rlhMode = f.rlhMode || 'Valmo RLH';
+    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null };
+    let laneCorrected = false;
+    if (rlhMode === 'MDC') {
+      patch.mdcCode = f.mdcCode || null;
+    } else if (rlhMode === 'Co-Loading') {
+      patch.laneName = (f.laneName || '').trim() || null;
+      patch.tat = f.tat || null;
+      let cutoff = f.cutoff || null;
+      if (patch.laneName) {
+        const d = st.data;
+        const thisRow = (d.lmdcs || []).find(l => l.code === code) || {};
+        const lmscCode = edits[code] && edits[code].lmscCode ? edits[code].lmscCode : thisRow.lmscCode;
+        const sibling = (d.lmdcs || []).find(l => l.code !== code && l.lmscCode === lmscCode &&
+          ((edits[l.code] && edits[l.code].laneName) || l.laneName) === patch.laneName);
+        if (sibling) {
+          const siblingCutoff = (edits[sibling.code] && edits[sibling.code].cutoff) || sibling.cutoff;
+          if (siblingCutoff && siblingCutoff !== cutoff) { laneCorrected = true; cutoff = siblingCutoff; }
+        }
+      }
+      patch.cutoff = cutoff;
+    }
+    edits[code] = Object.assign({}, edits[code], patch);
     this.setState({ lmdcEdits: edits, lmdcEditCode: null, lmdcEditDraft: {} });
-    this.showToast(code + ' updated', '#128A3E');
+    this.showToast(laneCorrected ? (code + ' updated \u2014 Cutoff corrected to match Lane ' + patch.laneName + "'s existing " + patch.cutoff) : (code + ' updated'), laneCorrected ? '#C77B00' : '#128A3E');
   }
   // handleLmdcCsvUpload(e) (2026-08-06) — reads a CSV, matches rows by LMDC Code against the real
   // master list, and applies ONLY the 5 editable fields present in that row into st.lmdcEdits.
@@ -7118,7 +7347,7 @@ class NDCApp extends React.Component {
       const rf = this.resolveScFields(s);
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
+      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', isMdc: s.nodeKind === 'MDC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
         coords: rf.lat.toFixed(4) + ', ' + rf.lng.toFixed(4),
         nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
         holdTimeOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
@@ -7142,6 +7371,14 @@ class NDCApp extends React.Component {
     //   Unload Time  — 15..60 in 5-min steps, default 15.
     const LMDC_TIME_SLOTS = []; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) LMDC_TIME_SLOTS.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
     const LMDC_D0_OPTIONS = ['Default']; for (let m = 7 * 60; m <= 15 * 60; m += 30) LMDC_D0_OPTIONS.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
+    // RLH Mode (2026-08-19) — 'Valmo RLH' (default, unchanged), 'MDC' (this DC's link moves to the
+    // named MDC node), 'Co-Loading' (never DS-planned — Lane Name/Cutoff/TAT hand-entered here and
+    // stitched into the RLH plan at generation time). Cutoff shares the same 30-min grid as
+    // everywhere else in this app; TAT is 15-min-step minute counts, same rule as Route Scheduler's.
+    const RLH_MODE_OPTIONS = ['Valmo RLH', 'MDC', 'Co-Loading'];
+    const LMDC_CUTOFF_OPTIONS = LMDC_TIME_SLOTS;
+    const LMDC_TAT_OPTIONS = []; for (let m = 15; m <= 360; m += 15) LMDC_TAT_OPTIONS.push(m);
+    const mdcCodeOptions = d.scs.filter(s => s.nodeKind === 'MDC').map(s => s.code);
     const LMDC_UNLOAD_OPTIONS = []; for (let m = 15; m <= 60; m += 5) LMDC_UNLOAD_OPTIONS.push(m);
     const rlhFeasibleVehNames = (d.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0).map(v => v.name);
     const lmdcEdits = st.lmdcEdits || {};
@@ -7156,15 +7393,21 @@ class NDCApp extends React.Component {
     const lmdcRows = lmdcPager.pageRows.map(l0 => {
       const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
       const editing = lmdcEditCode === l.code;
+      const isMdc = l.rlhMode === 'MDC', isCoLoad = l.rlhMode === 'Co-Loading';
       return {
         code: l.code, lmscCode: l.lmscCode || 'Pending', pending: !!l.pending, coords: (l.lat || l.lng) ? (l.lat.toFixed(4) + ', ' + l.lng.toFixed(4)) : '\u2014',
         capacity: l.capacity > 0 ? fmtInt(l.capacity) : '0', zeroCap: l.capacity === 0,
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
         open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
+        rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
+        mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (l.tat + ' min') : '\u2014',
         editing, notEditing: !editing,
         draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
+        draftRlhMode: lmdcDraft.rlhMode, draftMdcCode: lmdcDraft.mdcCode, draftLaneName: lmdcDraft.laneName, draftCutoff: lmdcDraft.cutoff, draftTat: lmdcDraft.tat,
+        draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin) } }),
+        onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? String(l.tat) : '' } }),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
@@ -7412,6 +7655,7 @@ class NDCApp extends React.Component {
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneChips,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
+      rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS, lmdcTatOptions: LMDC_TAT_OPTIONS,
       lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
       lmdcFileInputRef: (el) => { this.lmdcFileInputEl = el; },
@@ -7517,7 +7761,7 @@ class NDCApp extends React.Component {
           const scSortCapLabel = hasMissingMaster ? '—' : fmtInt(s.sortCap);
           const scDocksLabel = hasMissingMaster ? '—' : String(s.docks);
           const scLocLabel = hasMissingMaster ? '—' : (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2));
-          return { code: s.code, name: s.name, dcCount: s.dcCount, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code,
+          return { code: s.code, name: s.name, dcCount: s.dcCount, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code, isMdc: s.nodeKind === 'MDC',
           hasMissingMaster, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel,
           onFixMaster: () => { this.go('inputs'); this.setState({ inputsTab: 'masters', mastersTab: 'sc' }); this.showToast('Navigating to Sort Center Master — update ' + s.code + ' details', '#1E6FB8'); },
           // D. per-SC volume-gap flag (covers both zero-volume and missing-volume DCs)
@@ -8144,6 +8388,14 @@ class NDCApp extends React.Component {
     const flags = [];
     if (m.warnD0Low) flags.push({ sevLabel: 'WARNING', sevBg: '#FBF1DF', sevFg: '#C77B00', t: 'D0 Landing is ' + m.d0LandingPct + '%, below the 30% threshold.' });
     if (m.warnHoldHigh) flags.push({ sevLabel: 'WARNING', sevBg: '#FBF1DF', sevFg: '#C77B00', t: 'Holding Time is ' + m.holdingTotalHours + ' hrs, above the 12hr threshold.' });
+    // Dock capacity breach (2026-08-19) — a real ERROR-severity flag (not just a warning), since
+    // this means the finite dock count is genuinely oversubscribed at some slot, including by
+    // Co-Loading lanes' static occupancy. Same computeSchedValidation() Push-to-LM/Finalise
+    // already gate on, surfaced here too so it's visible on the card itself, not just inside those
+    // confirm flows.
+    const dockV = this.computeSchedValidation(sp);
+    const dockBreach = !dockV.clean;
+    dockV.errors.forEach(e => flags.push({ sevLabel: 'ERROR', sevBg: '#FBEAEA', sevFg: '#D14B4B', t: e.t }));
     // Reviewer chips — mirrors RLH's opsLeads shape exactly (plan.reviewerNames/submittedReviewers →
     // {name, done, mark, statusText, initials, chipBg, chipFg}) so Ops Alignment's card can reuse the
     // same reviewer-chip markup RLH's does, just fed from schedulerPlans' own fields (2026-07-31).
@@ -8224,10 +8476,10 @@ class NDCApp extends React.Component {
       d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours, lanesWithHold: m.lanesWithHold, totalLanes: m.totalLanes,
       dockUtilPct: m.dockUtilPct, slotBreakdown: m.slotBreakdown || [], hasSlotBreakdown: (m.slotBreakdown || []).length > 0,
       d0Color: m.warnD0Low ? '#D14B4B' : '#14171F', holdColor: m.warnHoldHigh ? '#D14B4B' : '#14171F',
-      warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, hasAnyWarning: m.warnD0Low || m.warnHoldHigh,
+      warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, dockBreach, hasAnyWarning: m.warnD0Low || m.warnHoldHigh || dockBreach,
       flags, hasFlags: flags.length > 0, noFlags: flags.length === 0,
-      flagLabel: flags.length ? (flags.length + ' warning' + (flags.length === 1 ? '' : 's')) : 'No flags',
-      flagBg: flags.length ? '#FBF1DF' : '#E7F4EC', flagFg: flags.length ? '#C77B00' : '#128A3E', flagDot: flags.length ? '#C77B00' : '#128A3E',
+      flagLabel: flags.length ? (flags.length + (dockBreach ? ' issue' : ' warning') + (flags.length === 1 ? '' : 's')) : 'No flags',
+      flagBg: dockBreach ? '#FBEAEA' : (flags.length ? '#FBF1DF' : '#E7F4EC'), flagFg: dockBreach ? '#D14B4B' : (flags.length ? '#C77B00' : '#128A3E'), flagDot: dockBreach ? '#D14B4B' : (flags.length ? '#C77B00' : '#128A3E'),
       isDraft: sp.status === 'Draft', isPushedState: sp.status === 'Pushed' || sp.status === 'In Alignment',
       isAcknowledged: sp.status === 'Acknowledged', isFinalised: sp.status === 'Finalised',
       // 2026-07-31 — "retain push directly irrespective": Finalise Directly stays available at every
@@ -8266,7 +8518,7 @@ class NDCApp extends React.Component {
     const schedulerPlans = d.schedulerPlans.slice();
     schedulerPlans[idx] = Object.assign({}, sp, { status: targetStatus, reviewerNames: reviewers, submittedReviewers: finaliseDirect ? reviewers.slice() : [], pushedBy: 'Pranita Sapkal', sentDate: 'Today', finalisedDirect: !!finaliseDirect });
     this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });
-    if (finaliseDirect) this.showToast('Finalised ' + spId + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E');
+    if (finaliseDirect) { this.clearLaneFlagsForPlan(sp.parentPlanId); this.showToast('Finalised ' + spId + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E'); }
     else this.showToast('Pushed ' + spId + ' to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
   }
   doPush(finaliseDirect) {
@@ -8329,7 +8581,7 @@ class NDCApp extends React.Component {
     // Reset the filter to All so the just-pushed/finalised plan is guaranteed visible in the list.
     this.setState({ data: Object.assign({}, d, { plans }), alignStatus, pushedSCs: pushed, pushOpen: false, finDirectOpen: false, pushRunId: null, view: 'align', opsPlanId: plan ? plan.id : st.opsPlanId, alignPlanId: null, alignFilter: 'Pending Feedback', alignPage: 0 });
     const runTxt = run ? (run.runId || run.id) : code;
-    if (finaliseDirect) this.showToast('Finalised ' + runTxt + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E');
+    if (finaliseDirect) { this.clearLaneFlagsForPlan(plan ? plan.id : ('PL-' + code)); this.showToast('Finalised ' + runTxt + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E'); }
     else this.showToast('Pushed ' + runTxt + ' (' + hwTxt + ') to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
   }
 
@@ -8801,6 +9053,24 @@ class NDCApp extends React.Component {
         if (pctDiff > 5) {
           flags.push({ sev: 'warning', text: 'NLH landing volume (' + nlhVol.toLocaleString('en-IN') + ') differs from RLH plan volume (' + rlhVol.toLocaleString('en-IN') + ') by ' + pctDiff.toFixed(1) + '% (>5%).' });
         }
+        // Dock capacity pre-check (2026-08-19) — Co-Loading lanes' Cutoff is fixed master data,
+        // known before the run is even triggered, so a lane-caused breach can be surfaced right
+        // here rather than waiting until after generation (Dock Schedule/Validate catch it either
+        // way, but this is earlier). Real routes' own dispatch times aren't known yet at this
+        // step, so this only checks lanes against each other/the dock count, not the full picture.
+        const laneSlots = {};
+        (plan.rows || []).filter(row => row.isCoLoadLane).forEach(row => {
+          const parts = String(row.laneCutoff || '00:00').split(':');
+          const slot = Math.round((parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10)) / 30) * 30;
+          laneSlots[slot] = (laneSlots[slot] || 0) + 1;
+        });
+        const docksForS4 = r.docks || 0;
+        Object.keys(laneSlots).forEach(s => {
+          if (docksForS4 > 0 && laneSlots[s] > docksForS4) {
+            const hh = String(Math.floor(Number(s) / 60)).padStart(2, '0'), mm = String(Number(s) % 60).padStart(2, '0');
+            flags.push({ sev: 'warning', text: 'Co-Loading lanes alone fill ' + laneSlots[s] + ' of ' + docksForS4 + ' docks at ' + hh + ':' + mm + ' \u2014 real routes may not fit that slot.' });
+          }
+        });
       }
       const hasError = flags.some(f => f.sev === 'error');
       const hasWarning = flags.some(f => f.sev === 'warning');
@@ -8895,6 +9165,13 @@ class NDCApp extends React.Component {
         schedReviewModal = Object.assign({ open: true, close: () => this.closeSchedReview() }, rv);
       }
     }
+    // Co-Loading lane flag modal (2026-08-19) — one Needs-Change + remark for the whole lane, no
+    // per-route/DC-level fields like schedNcModal above.
+    const laneFlagModal = st.laneFlagOpen ? {
+      open: true, routeCode: st.laneFlagOpen.routeCode,
+      remark: st.laneFlagDraft || '', onRemark: (e) => this.setState({ laneFlagDraft: e.target.value }),
+      close: () => this.closeLaneFlag(), onSubmit: () => this.submitLaneFlag(),
+    } : { open: false, routeCode: '', remark: '', onRemark: () => {}, close: () => {}, onSubmit: () => {} };
     // ===== Start-Time vs D0%/Ready-to-Ship graph popup (2026-08-13, redesigned) — opened via the
     // graph icon on a Preview & Trigger row. X-axis: Time of Day. Y-axis: Volume %. Two curves —
     // Ready to Ship % (rising) and D0 Landing % (falling) — with their crossing point marked as
@@ -8960,7 +9237,7 @@ class NDCApp extends React.Component {
       onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(-4, d0Global - 1) }),
       onRefGlobalPick: (v) => this.setState({ schedulerRefGlobal: v }),
       // Step 4
-      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedGraph, schedNcModal, schedReviewModal,
+      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedGraph, schedNcModal, schedReviewModal, laneFlagModal,
       onTriggerScheduler: () => this.triggerSchedulerRuns(),
       // Run Queue tab
       schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
@@ -9008,6 +9285,11 @@ class NDCApp extends React.Component {
       const priorByCode = {}; plan.rows.forEach(r => { priorByCode[r.routeCode] = r; });
       plan.rows = hyp.routes.map((rt) => {
         const prior = priorByCode[rt.routeCode]; // same code as before -> carry forward fields the engine doesn't model (TAT/cutoff)
+        // Co-Loading lane (2026-08-19) — pass the ORIGINAL row through verbatim rather than
+        // reconstruct it from hyp.routes' generic shape, which doesn't carry isCoLoadLane/
+        // laneDcInfo/laneCutoff. Losing those on Finalise would silently turn a frozen lane into
+        // what looks like a broken normal route.
+        if (rt.isCoLoadLane && prior) return prior;
         const vehRecord = (d.VEH || []).find(v => v.name === rt.vehName) || {};
         const util = vehRecord.cap ? Math.min(0.98, +(rt.volume / vehRecord.cap).toFixed(2)) : (prior ? prior.util : 0.7);
         return {
@@ -9031,12 +9313,19 @@ class NDCApp extends React.Component {
       const clr = (obj) => { const c = Object.assign({}, obj); delete c[id]; return c; };
       this.setState({ opsRowFb: clr(this.state.opsRowFb), opsRowDec: clr(this.state.opsRowDec), alignDecisions: clr(this.state.alignDecisions), alignDcDecisions: clr(this.state.alignDcDecisions) });
     }
-    const s = Object.assign({}, this.state.alignStatus); s[id] = 'Finalised'; const fb = Object.assign({}, this.state.alignFinalisedBy); fb[id] = 'Pranita Sapkal'; this.setState({ alignStatus: s, alignFinalisedBy: fb, finOpen: false }); this.showToast(id + ' finalised — reordered per accepted feedback, ready for RFQ handoff', '#128A3E');
+    const s = Object.assign({}, this.state.alignStatus); s[id] = 'Finalised'; const fb = Object.assign({}, this.state.alignFinalisedBy); fb[id] = 'Pranita Sapkal'; this.setState({ alignStatus: s, alignFinalisedBy: fb, finOpen: false }); this.clearLaneFlagsForPlan(id); this.showToast(id + ' finalised — reordered per accepted feedback, ready for RFQ handoff', '#128A3E');
   }
 
   // LMDC cluster view — generate deterministic DC breakdown rows for a route.
   // No Math.random / Date.now: all values derived from indices and char codes.
   genDcRows(r) {
+    // Co-Loading lane rows (2026-08-19) — real DC identities/coordinates from the pool (carried on
+    // r.laneDcInfo at generation time), not the usual jitter-from-origin synthesis, since these are
+    // actual LMDCs, not invented stops. Distance is genuinely not applicable (never planned by us,
+    // see 05_Core_Flows.md) — shown as '\u2014' rather than a computed number.
+    if (r.isCoLoadLane && r.laneDcInfo) {
+      return r.laneDcInfo.map((x, i) => ({ code: x.code, name: r.routeCode, vol: x.vol, tpOrder: i + 1, lat: x.lat, lng: x.lng, dist: '\u2014', tat: x.tat, isCoLoadDc: true }));
+    }
     const DC_NAMES = ['Sector Hub','Market Depot','City Point','Town Centre','Zone Gateway','North Cluster','South Cluster','East Block','West Node','Central Store','Junction Hub','Metro Point','Park Depot','Ring Station','Cross Dock'];
     const dcArr = r.dcs; // array of dc-code strings e.g. ["BDQ234","BDQ567"]
     const n = dcArr.length || 1;
@@ -9135,7 +9424,40 @@ class NDCApp extends React.Component {
     };
     const routeCutoffOverrides = (st.schedRouteCutoffOverride || {})[sp.id] || {};
     const dcTatOverrides = (st.schedDcTatOverride || {})[sp.id] || {};
+    const slotOf = (min) => roundUp(min, 30);
+    // Co-Loading lanes' static dock occupancy (2026-08-19) — computed FIRST, before any real
+    // route's own dispatch time is chosen, since a lane's Cutoff is fixed/hand-entered and never
+    // moves. Real routes' own bounded search below actively avoids a slot once lanes alone would
+    // already fill it, per product direction ("that dock at the cutoff will remain static and
+    // occupied"). This only protects against the KNOWN lanes, not against other real routes
+    // landing in the same slot as each other — that's Dock Schedule/Validate's job to flag
+    // afterward (see computeSchedValidation), not this search's job to fully solve.
+    const laneSlotCounts = {};
+    routes.filter(r => r.isCoLoadLane).forEach(r => {
+      const parts = String(r.laneCutoff || '00:00').split(':');
+      const slot = slotOf(parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10));
+      laneSlotCounts[slot] = (laneSlotCounts[slot] || 0) + 1;
+    });
+    const docksCap = sp.rlhDocks || 0;
     const routeInfo = routes.map(r => {
+      // Co-Loading lane (2026-08-19) — never enters the dispatch-time search at all: its Cutoff is
+      // fixed master data, and its TAT is entered per-DC directly (not distance/speed-derived).
+      // Hold still applies on top, same formula as a real route's own DC, per product direction.
+      if (r.isCoLoadLane) {
+        const parts = String(r.laneCutoff || '00:00').split(':');
+        const dispatchMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        let routeHoldMin = 0;
+        const dcInfo = this.genDcRows(r).map(dc => {
+          const travelMin = Number(dc.tat) || 0;
+          const arrivalMin = dispatchMin + travelMin;
+          const holdMin = holdForArrival(arrivalMin, dc.code);
+          const landingMin = arrivalMin + holdMin;
+          const effectiveCutoffMin = resolveDcCutoffMin(dc.code);
+          routeHoldMin += holdMin;
+          return { dc, isLocal: true, breakdownDistKm: 0, breakdownTatHrs: +(travelMin / 60).toFixed(2), arrivalMin, landingMin, holdMin, effectiveCutoffMin, isCoLoadDc: true };
+        });
+        return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, isCoLoadLane: true };
+      }
       const dcRows = this.genDcRows(r);
       // Accepted Dispatch Cutoff feedback (Stage 1/3, from SC/LH/back-solved-LM) overrides the
       // synthetic base draw outright for this route — same "explicit override wins" convention
@@ -9149,9 +9471,11 @@ class NDCApp extends React.Component {
       const hasCutoffOverride = !!cutoffOverrideStr;
       // computeAt(dispatchCandidate) — the per-DC breakdown for one candidate dispatch time,
       // reused both to evaluate the base draw and (when Hold Time is On) each step of the
-      // constraint search below.
+      // constraint search below. dockViol (2026-08-19) flags whether this candidate's own slot is
+      // already filled to capacity by KNOWN Co-Loading lanes alone.
       const computeAt = (dispatchCandidate) => {
         let maxViolation = 0;
+        const dockViol = (laneSlotCounts[slotOf(dispatchCandidate)] || 0) >= docksCap && docksCap > 0 ? 1 : 0;
         const perDc = dcRows.map((dc) => {
           const isLocal = (hash(dc.code + seed) % 2) === 0;
           const speed = isLocal ? localSpeed : nonLocalSpeed;
@@ -9168,21 +9492,26 @@ class NDCApp extends React.Component {
           maxViolation = Math.max(maxViolation, holdMin - cap);
           return { dc, isLocal, breakdownDistKm, travelMin, arrivalMin, holdMin, hasTatOverride: tatOverrideMin != null };
         });
-        return { perDc, maxViolation };
+        return { perDc, maxViolation, dockViol };
       };
       let dispatchMin = baseDispatch;
       let chosen = computeAt(baseDispatch);
-      if (holdOn && !hasCutoffOverride && chosen.maxViolation > 0) {
+      // score() only counts hold violations when Hold Time is actually On for this run — dock-
+      // avoidance, by contrast, is unconditional (a lane's static occupancy is a physical fact
+      // regardless of the Hold Time toggle).
+      const score = (c) => c.dockViol * 100000 + (holdOn ? c.maxViolation : 0);
+      const needsSearch = !hasCutoffOverride && score(chosen) > 0;
+      if (needsSearch) {
         // Bounded local search — the DS algorithm looking for a later dispatch time that keeps
-        // every DC's hold within its Local/Non-Local cap, stopping at the first fully-compliant
-        // time found (or the least-violating one tried, if none fully satisfy within 8 hrs).
-        // 30-min steps keep every candidate on-grid automatically. Skipped once a route's cutoff
-        // is an accepted override — that decision already went through its own dock-capacity
-        // check at Accept time and should win outright, not get silently nudged later by this
-        // search.
-        for (let shift = 30; shift <= 480 && chosen.maxViolation > 0; shift += 30) {
+        // every DC's hold within its Local/Non-Local cap AND avoids a slot already filled by known
+        // Co-Loading lanes, stopping at the first fully-compliant time found (or the
+        // least-violating one tried, if none fully satisfy within 8 hrs). 30-min steps keep every
+        // candidate on-grid automatically. Skipped once a route's cutoff is an accepted override —
+        // that decision already went through its own dock-capacity check at Accept time and should
+        // win outright, not get silently nudged later by this search.
+        for (let shift = 30; shift <= 480 && score(chosen) > 0; shift += 30) {
           const candidate = computeAt(baseDispatch + shift);
-          if (candidate.maxViolation < chosen.maxViolation) { chosen = candidate; dispatchMin = baseDispatch + shift; }
+          if (score(candidate) < score(chosen)) { chosen = candidate; dispatchMin = baseDispatch + shift; }
         }
       }
       let routeHoldMin = 0;
@@ -9192,9 +9521,9 @@ class NDCApp extends React.Component {
         routeHoldMin += holdMin;
         return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), arrivalMin, landingMin, holdMin, effectiveCutoffMin };
       });
-      return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin };
+      return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, dockStillViolated: chosen.dockViol === 1 };
     });
-    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp };
+    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp, laneSlotCounts, slotOf };
   }
   computeSchedulerMetricsFor(sp) {
     const info = this.schedulerRouteDcInfo(sp);
@@ -9333,6 +9662,27 @@ class NDCApp extends React.Component {
     const headers = {};
     info.routeInfo.forEach(ri => {
       const routeCode = ri.route.routeCode;
+      // Co-Loading lane (2026-08-19) — a wholly different, much simpler affordance than a real
+      // route: one Needs-Change + remark for the WHOLE lane (not per route/DC-level like real
+      // routes), since Cutoff/TAT are LMDC Master data, not something this flow can override.
+      if (ri.isCoLoadLane) {
+        const lf = this.laneFlagFor(sp.parentPlanId, routeCode);
+        const laneStatus = lf && lf.flagged ? 'Needs Change' : 'Aligned';
+        headers[routeCode] = {
+          routeCode, dcCount: ri.dcInfo.length, dispatchLabel: info.fmtTime(ri.dispatchMin),
+          isCoLoadLane: true, laneFlag: lf,
+          status: laneStatus, decChip: laneStatus,
+          opsBg: laneStatus === 'Aligned' ? '#E7F4EC' : '#FBF1DF', opsFg: laneStatus === 'Aligned' ? '#128A3E' : '#C77B00',
+          editable: !frozen, // SC/LH/LM can all flag a lane regardless of stage — it's not a stage-scoped field
+          alignBg: laneStatus === 'Aligned' ? '#128A3E' : '#fff', alignFg: laneStatus === 'Aligned' ? '#fff' : '#128A3E',
+          ncBg: laneStatus === 'Needs Change' ? '#C77B00' : '#fff', ncFg: laneStatus === 'Needs Change' ? '#fff' : '#C77B00',
+          onAlign: () => this.withdrawLaneFlag(sp.parentPlanId, routeCode),
+          onNeeds: () => this.openLaneFlag(sp.parentPlanId, routeCode),
+          plannerCanReview: false, onReview: () => {}, pendingCount: 0,
+          lockedNote: frozen ? 'Frozen — Planner reviewing' : '',
+        };
+        return;
+      }
       const bucket = this.schedRouteBucket(sp.id, routeCode);
       const items = (bucket.items || []).filter(x => stageFields.indexOf(x.field) >= 0);
       const pendingItems = items.filter(x => x.status === 'Pending');
@@ -9496,6 +9846,13 @@ class NDCApp extends React.Component {
     const colSet = {};
     ds.cols.forEach(c => { colSet[Math.floor(c.min / step) * step] = true; });
     const dockCols = Object.keys(colSet).map(Number).sort((a, b) => a - b).map(min => ({ min, label: ds.fmtTime(min) }));
+    // Dock-breach marker (2026-08-19) — per-column count vs. this SC's own dock capacity, so a
+    // breached slot (including one caused by a Co-Loading lane's static occupancy) is visible
+    // directly on the grid header, not just in Validate/the card's flag chip.
+    const docksForBreach = sp.rlhDocks || 0;
+    const colDepartureCount = {};
+    ds.docks.forEach(dock => { ds.cols.forEach(c => { const n = (ds.cells[dock + ':' + c.min] || []).length; if (n > 0) { const b = Math.floor(c.min / step) * step; colDepartureCount[b] = (colDepartureCount[b] || 0) + n; } }); });
+    dockCols.forEach(c => { c.departed = colDepartureCount[c.min] || 0; c.breached = docksForBreach > 0 && c.departed > docksForBreach; });
     const dockCells = {};
     ds.docks.forEach(dock => {
       ds.cols.forEach(c => {
@@ -9555,6 +9912,12 @@ class NDCApp extends React.Component {
   // `splitVehicle` for the new route's vehicle type (required at the UI level, defensively defaulted
   // here if missing).
   computeHypotheticalPlan(plan, effectiveFbByIdx) {
+    // Co-Loading lanes (2026-08-19) never enter the DS/simulation engine below — pulled out here
+    // and spliced back into the final `routes` list unchanged, so Validate/Simulate/Route View's
+    // shared "what would the plan look like" math can't accidentally re-cluster or re-vehicle a
+    // lane's real DCs the way it would a normal route's.
+    const laneRows = (plan.rows || []).filter(r => r.isCoLoadLane);
+    if (laneRows.length) plan = Object.assign({}, plan, { rows: plan.rows.filter(r => !r.isCoLoadLane) });
     const d = this.state.data;
     const scLat = plan.rows[0] ? plan.rows[0].oLat : 0;
     const scLng = plan.rows[0] ? plan.rows[0].oLng : 0;
@@ -9692,7 +10055,13 @@ class NDCApp extends React.Component {
       : null;
     const originalScCPS = originalHyp ? originalHyp.scCPS : scCPS;
 
-    return { routes, scVolume, scCost, scCPS, originalScCPS, errors, warnings, hasErrors: errors.length > 0, warningsOnly: errors.length === 0 && warnings.length > 0, clean: errors.length === 0 && warnings.length === 0 };
+    // Splice Co-Loading lanes back in unchanged — see the guard at the top of this function.
+    const laneAsRoutes = laneRows.map(r => ({
+      routeCode: r.routeCode, isNewRoute: false, vehName: r.veh, dcCodes: r.dcs.slice(), tpOrder: r.dcs.map((_, i) => i + 1),
+      distance: 0, returnLeg: 0, volume: r.volume, costPerKm: 0, cost: 0, cps: 0, isCoLoadLane: true,
+    }));
+    const allRoutes = routes.concat(laneAsRoutes);
+    return { routes: allRoutes, scVolume: scVolume + laneRows.reduce((a, r) => a + (r.volume || 0), 0), scCost, scCPS, originalScCPS, errors, warnings, hasErrors: errors.length > 0, warningsOnly: errors.length === 0 && warnings.length > 0, clean: errors.length === 0 && warnings.length === 0 };
   }
 
   // 2026-07-13 — Route View pivot rows, built directly from a computeHypotheticalPlan() result
@@ -9919,6 +10288,25 @@ class NDCApp extends React.Component {
       const hypTpByRoute = {};
       (flagsHyp.routes || []).forEach(rt => { const m = {}; rt.dcCodes.forEach((code, i) => { m[code] = rt.tpOrder[i]; }); hypTpByRoute[rt.routeCode] = m; });
       const rows = plan.rows.map((r, idx) => {
+        // Co-Loading lane row (2026-08-19) — never went through the DS algorithm or the ops
+        // feedback pipeline, so short-circuit with a purpose-built minimal row rather than run it
+        // through the review/flag machinery below, which assumes a normal DS-planned route.
+        if (r.isCoLoadLane) {
+          const lf = this.laneFlagFor(plan.id, r.routeCode);
+          const laneNeedsChange = !!(lf && lf.flagged);
+          return { idx, routeCode: r.routeCode, veh: '\u2014', tp: r.tp, ops: 'Pending', opsChip: laneNeedsChange ? 'Needs Change' : 'Aligned', opsBg: laneNeedsChange ? '#FBF1DF' : '#E7F4EC', opsFg: laneNeedsChange ? '#C77B00' : '#128A3E', needsAttn: laneNeedsChange, hasFb: laneNeedsChange, noFb: !laneNeedsChange, fbText: lf ? lf.remark : '', cells: [], dcChips: [], hasDcChips: false,
+            proposedBy: lf ? lf.by : null, hasProposed: laneNeedsChange, proposedLabel: laneNeedsChange ? ('Flagged by ' + lf.by) : '', autoApproved: false, autoApprovedLabel: '',
+            dcCount: r.dcs.length, rtDist: '\u2014', cps: '\u2014', tat: '\u2014',
+            vol: r.volume, util: '\u2014', cap: '\u2014', routeMeta: 'Vol ' + r.volume + ' \u00b7 Lane ' + r.routeCode + ' \u2014 not DS-planned',
+            mlVehTxt: '\u2014', mlTpTxt: '' + r.tp, mlDcsTxt: '' + r.dcs.length, mlDistTxt: '\u2014', mlCpsTxt: '\u2014', mlVolTxt: '' + r.volume, mlUtilTxt: '\u2014',
+            mlVehBg: 'transparent', mlVehFg: '#5A5E66', mlVehWt: '400', mlTpBg: 'transparent', mlTpFg: '#5A5E66', mlTpWt: '400', mlDistBg: 'transparent', mlDistFg: '#5A5E66', mlDistWt: '400',
+            isCoLoadLane: true, laneName: r.routeCode, laneCutoff: r.laneCutoff, laneFlag: lf, changeTotal: 0, changeDecidedCount: 0, allChangesDecided: true, changeList: [],
+            // Display-only for the Planner, per product direction — no Accept/Reject exists for a
+            // lane's remark, they just see it and act on it directly in LMDC Master if warranted.
+            editable: false, alignBg: '#fff', alignFg: '#8E96A3', ncBg: '#fff', ncFg: '#8E96A3',
+            onReview: () => {}, onAlign: () => {}, onNeeds: () => {},
+          };
+        }
         // 2026-07-10 — a plan still Pushed (pending feedback) must never show a flagged change to the
         // Planner, even if a row carries co-reviewer-visibility demo data (r.ops/r.fb seeded for the
         // Ops Lead side's "see what another reviewer already proposed" demo, see buildSeed()'s
@@ -10261,7 +10649,7 @@ class NDCApp extends React.Component {
         detailOpen: !!st.alignDetailOpen, showCard: !st.alignDetailOpen,
         openDetail: () => this.setState({ alignDetailOpen: true }), backToCards: () => this.setState({ alignDetailOpen: false }),
         onMapView: () => this.openStandaloneMap(plan.scCode, 'Ops Alignment · Planner'),
-        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, r.rtDist, r.breakdownTat, r.outCutoff, r.volume, Math.round(r.util * 100) + '%', r.cps.toFixed(2)].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
+        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, (r.isCoLoadLane ? '\u2014' : r.rtDist), (r.isCoLoadLane ? '\u2014' : r.breakdownTat), r.outCutoff, r.volume, (r.isCoLoadLane ? '\u2014' : (Math.round(r.util * 100) + '%')), (r.isCoLoadLane ? '\u2014' : r.cps.toFixed(2))].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
         // Finalised-card warnings -- same thresholds/wording as Design Review's validation flags, since
         // this is the same underlying plan just further along the lifecycle (no separate flag data model here).
         cardWarnings: (() => {
@@ -10998,6 +11386,25 @@ class NDCApp extends React.Component {
       const opsHypTop = this.computeHypotheticalPlan(plan, opsMergedFbTop);
       const opsNcRowsTop = plan.rows.filter((r, i) => dec[i] === 'Needs Change' || r.ops === 'Needs Change');
       const rows = plan.rows.map((r, idx) => { const dv = dec[idx] || 'Pending'; const op = OP[dv];
+        // Co-Loading lane (2026-08-19) — one Needs-Change + remark for the WHOLE lane, not the
+        // normal per-route TP/vehicle/DC feedback flow real routes get. Short-circuits with a
+        // purpose-built minimal row rather than run the touch-point/vehicle machinery below,
+        // which assumes a real DS-planned route.
+        if (r.isCoLoadLane) {
+          const lf = this.laneFlagFor(plan.id, r.routeCode);
+          const laneDv = lf && lf.flagged ? 'Needs Change' : 'Aligned';
+          const laneOpStyle = OP[laneDv] || { bg: 'transparent', fg: '#C3C9D4' };
+          return { idx, routeCode: r.routeCode, veh: '\u2014', tp: r.tp, dcs: r.dcs.length, rtDist: '\u2014', cps: '\u2014',
+            decision: laneDv, decChip: laneDv, opsBg: laneOpStyle.bg, opsFg: laneOpStyle.fg,
+            aligned: laneDv === 'Aligned', notAligned: laneDv !== 'Aligned', needsChange: laneDv === 'Needs Change', submitted, editable: !planLocked,
+            alignBg: laneDv === 'Aligned' ? '#128A3E' : '#fff', alignFg: laneDv === 'Aligned' ? '#fff' : '#128A3E',
+            ncBg: laneDv === 'Needs Change' ? '#C77B00' : '#fff', ncFg: laneDv === 'Needs Change' ? '#fff' : '#C77B00',
+            proposedBy: null, hasProposed: false, proposedLabel: '', proposedRemark: lf ? lf.remark : '',
+            vol: r.volume, util: '\u2014', cap: '\u2014', routeMeta: 'Vol ' + r.volume + ' \u00b7 Lane ' + r.routeCode + ' \u2014 not DS-planned',
+            onAlign: () => this.withdrawLaneFlag(plan.id, r.routeCode), onNeeds: () => this.openLaneFlag(plan.id, r.routeCode),
+            expanded: false, onToggleExpand: () => {}, dcRows: [], notEditable: planLocked, isCoLoadLane: true, laneFlag: lf,
+            tpReorderTouched: false, tpReorderValid: true, tpReorderMsg: '' };
+        }
         // §10 O2 — show a co-reviewer's already-proposed change to THIS (second) reviewer, so opening
         // the plan never shows a blank slate. Prefer live submitted feedback, else the seeded row.
         const liveFb = (st.opsRowFb[plan.id] || {})[idx];
@@ -11133,8 +11540,8 @@ class NDCApp extends React.Component {
         planFlags: opsPlanFlags, hasPlanFlags: opsPlanFlags.length > 0, noPlanFlags: opsPlanFlags.length === 0,
         detailOpen: !!st.opsDetailOpen, showCard: !st.opsDetailOpen,
         openDetail: () => this.setState({ opsDetailOpen: true }), backToCards: () => this.setState({ opsDetailOpen: false }),
-        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, r.rtDist, r.breakdownTat, r.outCutoff, r.volume, Math.round(r.util * 100) + '%', r.cps.toFixed(2)].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
-        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, r.rtDist, r.breakdownTat, r.outCutoff, r.volume, Math.round(r.util * 100) + '%', r.cps.toFixed(2)].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
+        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, (r.isCoLoadLane ? '\u2014' : r.rtDist), (r.isCoLoadLane ? '\u2014' : r.breakdownTat), r.outCutoff, r.volume, (r.isCoLoadLane ? '\u2014' : (Math.round(r.util * 100) + '%')), (r.isCoLoadLane ? '\u2014' : r.cps.toFixed(2))].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
+        onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, (r.isCoLoadLane ? '\u2014' : r.rtDist), (r.isCoLoadLane ? '\u2014' : r.breakdownTat), r.outCutoff, r.volume, (r.isCoLoadLane ? '\u2014' : (Math.round(r.util * 100) + '%')), (r.isCoLoadLane ? '\u2014' : r.cps.toFixed(2))].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
         rows, alignedN, ncN, pendN, rowCount: rows.length, allReviewed: pendN === 0, reviewLabel: (rows.length - pendN) + ' / ' + rows.length + ' reviewed',
         hasProp: oProp > 0 && !submitted, propN: oProp, propSummary: (propByNames.join(' & ') || 'A co-reviewer') + ' proposed ' + oProp + ' change' + (oProp === 1 ? '' : 's') + ' on this plan', coReviewerLabel, hasCoReviewers: coReviewerLabel.length > 0,
         submittedRecord: submitted ? ('Submitted by ' + subBySel + (subAtSel ? ' · ' + subAtSel : '')) : '',
@@ -11587,20 +11994,41 @@ class NDCApp extends React.Component {
     const runChosen = !!(st.mapRunId && srcRun && srcRun.id === st.mapRunId);
     let srcRows;
     if (srcPlan && !runChosen) {
-      srcRows = srcPlan.rows.map(r => ({ id: r.routeCode, veh: r.veh, tpN: r.dcs.length, rtDist: r.rtDist }));
+      srcRows = srcPlan.rows.map(r => ({ id: r.routeCode, veh: r.veh, tpN: r.dcs.length, rtDist: r.rtDist, isCoLoadLane: r.isCoLoadLane, laneDcInfo: r.laneDcInfo }));
     } else if (srcRun) {
       srcRows = Array.from({ length: srcRun.routes }, (_, i) => {
         const tpN = Math.max(2, Math.round(srcRun.avgTP));
         return { id: sc.cityCode + '-R' + String(i + 1).padStart(2, '0'), veh: (srcRun.vehByType && (srcRun.vehByType.find(v => v.n > 0) || {}).name) || 'Bolero / 8ft', tpN, rtDist: Math.round(srcRun.distance / srcRun.routes) };
       });
     } else if (srcPlan) {
-      srcRows = srcPlan.rows.map(r => ({ id: r.routeCode, veh: r.veh, tpN: r.dcs.length, rtDist: r.rtDist }));
+      srcRows = srcPlan.rows.map(r => ({ id: r.routeCode, veh: r.veh, tpN: r.dcs.length, rtDist: r.rtDist, isCoLoadLane: r.isCoLoadLane, laneDcInfo: r.laneDcInfo }));
     } else { srcRows = []; }
 
     const routes = srcRows.map((sr, r) => {
       const color = PALETTE[r % PALETTE.length];
       const tpN = Math.max(1, sr.tpN);
       const N = Math.max(1, srcRows.length);
+      // Co-Loading lane (2026-08-19) — a lane isn't a sequential route (SC→DC1→DC2→...), it's a
+      // set of independent SC→DC trips that happen to share one dispatch/dock slot. Drawn as
+      // straight origin-destination lines, one per member DC, instead of one curved multi-hop
+      // arc — "grouped under a lane" per product direction, not stitched into a fake sequence.
+      // Selecting this lane's id from the existing Route filter (fRoute, below) already isolates
+      // just these lines — no separate filter mechanism needed.
+      if (sr.isCoLoadLane && sr.laneDcInfo) {
+        const laneColor = '#C77B00';
+        const N2 = Math.max(1, sr.laneDcInfo.length);
+        const dcs = sr.laneDcInfo.map((dc, k) => {
+          const baseTheta = -Math.PI / 2 + (r + (k + 0.5) / N2) / N * 6.283185;
+          const theta = baseTheta + (R() - 0.5) * 0.4;
+          const reachFactor = 0.55 + R() * 0.35;
+          const maxRx = (cx - 74) * reachFactor, maxRy = (cy - 56) * reachFactor;
+          const x = +(cx + Math.cos(theta) * maxRx).toFixed(1), y = +(cy + Math.sin(theta) * maxRy).toFixed(1);
+          return { code: dc.code, name: sr.id, x, y };
+        });
+        const lines = dcs.map(dc => 'M' + scPt.x + ',' + scPt.y + ' L' + dc.x + ',' + dc.y);
+        const midDc = dcs[Math.floor(dcs.length / 2)] || scPt;
+        return { id: sr.id, color: laneColor, veh: '\u2014', tpN, dcs, d: lines.join(' '), lines, midX: midDc.x, midY: midDc.y, vehN: 1, rtDist: '\u2014', isCoLoadLane: true, laneName: sr.id };
+      }
       // Organic spoke — seeded bearing jitter + per-route reach variation kill the symmetric clock-even spider.
       // Nodes scatter like a real city delivery network radiating unevenly along roads. Deterministic per SC via R().
       const baseTheta = -Math.PI / 2 + (r + 0.5) / N * 6.283185;
@@ -11629,7 +12057,7 @@ class NDCApp extends React.Component {
       }
       const midDc = dcs[Math.floor(dcs.length / 2)] || dcs[0] || scPt;
       const vehN = Math.max(1, Math.ceil(tpN / 2));
-      return { id: sr.id, color, veh: sr.veh, tpN, dcs, d: arcD, midX: midDc.x, midY: midDc.y, vehN, rtDist: sr.rtDist };
+      return { id: sr.id, color, veh: sr.veh, tpN, dcs, d: arcD, midX: midDc.x, midY: midDc.y, vehN, rtDist: sr.rtDist, isCoLoadLane: false };
     });
     const fRoute = st.mapRoute || 'All', fVeh = st.mapVeh || 'All', dcq = (st.mapSearch || '').toLowerCase();
     const searchActive = dcq.length > 0;
@@ -11643,7 +12071,7 @@ class NDCApp extends React.Component {
     const legend = vis.map(rt => ({ id: rt.id, color: rt.color }));
     // B7 — per-route vehicle count (digest L24 "vehicle counts, e.g. 19ft ×5"). One arc = one vehicle assignment;
     // a route with more touchpoints needs more vehicle trips, so derive count from the route's own TP count.
-    const rows = vis.map(rt => { const vehN = Math.max(1, Math.ceil(rt.tpN / 2)); return { id: rt.id, color: rt.color, veh: rt.veh, vehN, tp: rt.tpN, dcs: rt.dcs.length, rtDist: rt.rtDist + ' km' }; });
+    const rows = vis.map(rt => { const vehN = Math.max(1, Math.ceil(rt.tpN / 2)); return { id: rt.id, color: rt.color, veh: rt.veh, vehN, tp: rt.tpN, dcs: rt.dcs.length, rtDist: rt.isCoLoadLane ? '\u2014' : (rt.rtDist + ' km'), isCoLoadLane: rt.isCoLoadLane }; });
 
     // Part B.1 — arrowheads at the DC (delivery) end of each arc
     const arrowHeads = vis.map(rt => {

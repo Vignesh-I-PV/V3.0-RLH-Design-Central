@@ -8510,7 +8510,8 @@ class NDCApp extends React.Component {
     const canPushToLM = sp.status === 'Acknowledged' && schedStage === 'stage1' && stagePendingCount === 0;
     const canFinaliseSched = sp.status === 'Acknowledged' && schedStage === 'stage2' && stagePendingCount === 0;
     const activeRole = st.schedOpsRole || 'SC';
-    const canSubmitFeedback = (sp.status === 'Pushed' || sp.status === 'In Alignment') && this.schedStageRoles(schedStage).indexOf(activeRole) >= 0 && !stageSub[activeRole];
+    const activeStageSub = schedStage === 'stage2' ? stage2Sub : stage1Sub;
+    const canSubmitFeedback = (sp.status === 'Pushed' || sp.status === 'In Alignment') && this.schedStageRoles(schedStage).indexOf(activeRole) >= 0 && !activeStageSub[activeRole];
     const card = {
       id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone,
       scCoords: sc ? (Number(sc.lat).toFixed(4) + ', ' + Number(sc.lng).toFixed(4)) : '\u2014',

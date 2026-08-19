@@ -462,11 +462,17 @@ function View(B, self) {
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={scSearch} onInput={onInputsSearch} placeholder={"Search SC code or name…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:190px;`)} />
 </div>
-<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)}>
-{(zoneChips || []).map((z, __i15) => (<React.Fragment key={__i15}>
-<button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label}</button>
+<details style={css(`position:relative;`)}>
+<summary style={css(`list-style:none; display:flex; align-items:center; gap:6px; border:1px solid ${inputsZoneSel.hasSelection ? '#003F98' : '#E6EBF2'}; background:${inputsZoneSel.hasSelection ? '#EAEEFB' : '#fff'}; color:${inputsZoneSel.hasSelection ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>Zone: {inputsZoneSel.label}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></summary>
+<div style={css(`position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:170px; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 8px 24px rgba(11,20,48,0.14); padding:8px;`)}>
+{(inputsZoneSel.options || []).map((o, __iZ1) => (<React.Fragment key={__iZ1}>
+<label style={css(`display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`)} onMouseEnter={(e) => hoverOn(e, `background:#F4F5F8;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`, `background:#F4F5F8;`)}>
+<input type={"checkbox"} checked={o.checked} onChange={o.onToggle} style={css(`width:14px; height:14px; cursor:pointer; accent-color:#003F98;`)} />{o.zone}
+</label>
 </React.Fragment>))}
+{(inputsZoneSel.hasSelection) ? (<><button onClick={inputsZoneSel.onClear} style={css(`width:100%; margin-top:4px; padding:6px 8px; border:none; background:transparent; color:#003F98; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; text-align:left;`)}>Clear selection</button></>) : null}
 </div>
+</details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{scShown}</strong> of <strong style={css(`color:#14171F;`)}>{scTotal}</strong> SCs</span>
 <button onClick={addSc} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add SC</button>
@@ -792,9 +798,21 @@ function View(B, self) {
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={lmdcSearch} onInput={onLmdcSearch} placeholder={"Search LMDC or LMSC code…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:190px;`)} />
 </div>
-<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)}>
-{(lmdcZoneChips || []).map((z, __i41) => (<React.Fragment key={__i41}>
-<button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label}</button>
+<details style={css(`position:relative;`)}>
+<summary style={css(`list-style:none; display:flex; align-items:center; gap:6px; border:1px solid ${lmdcZoneSel.hasSelection ? '#003F98' : '#E6EBF2'}; background:${lmdcZoneSel.hasSelection ? '#EAEEFB' : '#fff'}; color:${lmdcZoneSel.hasSelection ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>Zone: {lmdcZoneSel.label}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></summary>
+<div style={css(`position:absolute; z-index:20; top:calc(100% + 5px); left:0; min-width:170px; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 8px 24px rgba(11,20,48,0.14); padding:8px;`)}>
+{(lmdcZoneSel.options || []).map((o, __iZ2) => (<React.Fragment key={__iZ2}>
+<label style={css(`display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`)} onMouseEnter={(e) => hoverOn(e, `background:#F4F5F8;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; color:#14171F;`, `background:#F4F5F8;`)}>
+<input type={"checkbox"} checked={o.checked} onChange={o.onToggle} style={css(`width:14px; height:14px; cursor:pointer; accent-color:#003F98;`)} />{o.zone}
+</label>
+</React.Fragment>))}
+{(lmdcZoneSel.hasSelection) ? (<><button onClick={lmdcZoneSel.onClear} style={css(`width:100%; margin-top:4px; padding:6px 8px; border:none; background:transparent; color:#003F98; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; text-align:left;`)}>Clear selection</button></>) : null}
+</div>
+</details>
+<div style={css(`width:1px; height:24px; background:#E6EBF2;`)} />
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)} title={"Filter to just Co-Loading or MDC rows"}>
+{(lmdcModeChips || []).map((z, __i41b) => (<React.Fragment key={__i41b}>
+<button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button>
 </React.Fragment>))}
 </div>
 <div style={css(`flex:1;`)} />
@@ -828,15 +846,15 @@ function View(B, self) {
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>CAPACITY</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LMSC ACTIVE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; white-space:nowrap; background:#EEEAFB;`)}>MDC / LANE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EEEAFB;`)} title={"DC-level \u2014 LMSC to this DC transit time, varies within the same lane"}>TAT</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>OPEN</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>CLOSE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>D0 CUTOFF</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap; background:#DFF1F1;`)}>MAX VEHICLE SIZE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>UNLOADING TIME (MIN)</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #5B4FA0;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; white-space:nowrap;`)}>MDC / LANE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"DC-level \u2014 LMSC to this DC transit time, varies within the same lane"}>TAT</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #0D7377;`)}>OPEN</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>D0 CUTOFF</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap;`)}>MAX VEHICLE SIZE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>UNLOADING TIME (MIN)</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
@@ -846,28 +864,28 @@ function View(B, self) {
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
 <div style={css(`padding:10px 10px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${l.active ? '#E7F4EC' : '#FBEAEA'}; color:${l.active ? '#128A3E' : '#D14B4B'}; white-space:nowrap;`)}>{l.statusLabel}</span></div>
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; background:#F9F7FE;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#F9F7FE;`)}>{l.isMdc ? l.mdcCode : (l.isCoLoad ? l.laneName : '\u2014')}</div></>) : null}
-{(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC\u2026</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
-{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><input type={"text"} value={l.draftLaneName} onInput={l.onDraftLaneName} placeholder={"e.g. CL-01"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
-{(l.editing && !l.draftIsMdc && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; background:#F9F7FE;`)}>\u2014</div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; font-variant-numeric:tabular-nums; color:#14171F; background:#F9F7FE;`)}>{l.isCoLoad ? l.cutoff : '\u2014'}</div></>) : null}
-{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftCutoff} onChange={l.onDraftCutoff} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcCutoffOptions || []).map((co, __iCO) => (<React.Fragment key={__iCO}><option value={co}>{co}</option></React.Fragment>))}</select></div></>) : null}
-{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; background:#F9F7FE;`)}>\u2014</div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; background:#F9F7FE;`)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
-{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; background:#F9F7FE;`)}><select value={l.draftTat} onChange={l.onDraftTat} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTatOptions || []).map((tm, __iTM) => (<React.Fragment key={__iTM}><option value={tm}>{tm} min</option></React.Fragment>))}</select></div></>) : null}
-{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; background:#F9F7FE;`)}>\u2014</div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.open}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.close}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftClose} onChange={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i46) => (<React.Fragment key={__i46}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA; color:${l.d0Cutoff === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.d0Cutoff === 'Default' ? 'italic' : 'normal'};`)}>{l.d0Cutoff}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftD0} onChange={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcD0Options || []).map((d0, __i47) => (<React.Fragment key={__i47}><option value={d0}>{d0}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:#F2FAFA;`)}>{l.maxVehicle}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{l.unloadMin}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; background:#F2FAFA;`)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; border-left:3px solid #5B4FA0;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #5B4FA0;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; `)}>{l.isMdc ? l.mdcCode : (l.isCoLoad ? l.laneName : '\u2014')}</div></>) : null}
+{(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC\u2026</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"text"} value={l.draftLaneName} onInput={l.onDraftLaneName} placeholder={"e.g. CL-01"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+{(l.editing && !l.draftIsMdc && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; `)}>\u2014</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; font-variant-numeric:tabular-nums; color:#14171F; `)}>{l.isCoLoad ? l.cutoff : '\u2014'}</div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftCutoff} onChange={l.onDraftCutoff} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcCutoffOptions || []).map((co, __iCO) => (<React.Fragment key={__iCO}><option value={co}>{co}</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; `)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
+{(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftTat} onChange={l.onDraftTat} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTatOptions || []).map((tm, __iTM) => (<React.Fragment key={__iTM}><option value={tm}>{tm} min</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; border-left:3px solid #0D7377;`)}>{l.open}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #0D7377;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.close}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftClose} onChange={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i46) => (<React.Fragment key={__i46}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums;  color:${l.d0Cutoff === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.d0Cutoff === 'Default' ? 'italic' : 'normal'};`)}>{l.d0Cutoff}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftD0} onChange={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcD0Options || []).map((d0, __i47) => (<React.Fragment key={__i47}><option value={d0}>{d0}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; `)}>{l.maxVehicle}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.unloadMin}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end;`)}><button onClick={l.onEdit} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; display:flex; gap:4px; justify-content:flex-end;`)}><button onClick={l.onSaveRow} title={"Save"} aria-label={"Save " + l.code} style={css(`width:28px; height:28px; border:none; background:#003F98; color:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={l.onCancelRow} title={"Cancel"} aria-label={"Cancel editing " + l.code} style={css(`width:28px; height:28px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button></div></>) : null}
 </div>
@@ -2197,14 +2215,12 @@ function View(B, self) {
 {(reviewList || []).map((r, __i59) => (<React.Fragment key={__i59}>
 <div style={css(`padding:0 2px; margin-bottom:3px;`)}>
 <button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; min-width:0; text-align:left; padding:9px 10px; border:1px solid ${r.bd}; border-radius:8px; background:${r.bg}; cursor:pointer; font-family:inherit;`)}>
-<span title={r.sevTitle} style={css(`width:9px; height:9px; border-radius:50%; background:${r.sevDot}; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</span></div>
 <div style={css(`font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div>
 </div>
 <div style={css(`text-align:right; flex-shrink:0;`)}>
 <span style={css(`display:inline-block; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:${r.verdictBg}; color:${r.verdictFg};`)}>{r.verdict}</span>
-<div style={css(`font-size:11px; color:#5A5E66; margin-top:3px; font-variant-numeric:tabular-nums;`)}>CPS ₹{r.cps}</div>
 </div>
 </button>
 </div>
@@ -2515,7 +2531,6 @@ function View(B, self) {
 </>) : ((schedReviewList || []).map((r, __i61) => (<React.Fragment key={__i61}>
 <div style={css(`padding:0 2px; margin-bottom:3px;`)}>
 <button onClick={r.onClick} style={css(`width:100%; display:flex; align-items:center; gap:9px; min-width:0; text-align:left; padding:9px 10px; border:1px solid ${r.bd}; border-radius:8px; background:${r.bg}; cursor:pointer; font-family:inherit;`)}>
-<span title={r.sevTitle} style={css(`width:9px; height:9px; border-radius:50%; background:${r.sevDot}; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#003F98;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66;`)}>{r.zone}</span></div>
 <div style={css(`font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div>
@@ -2875,7 +2890,6 @@ function View(B, self) {
 <div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
 {(schedAlignEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter.</div></>) : ((schedAlignList || []).map((r, __iA3) => (<React.Fragment key={__iA3}>
 <button onClick={r.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${r.active ? '#0D7377' : '#E6EBF2'}; border-radius:9px; background:${r.active ? '#E9F5F5' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
-<span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66; margin-left:6px;`)}>{r.zone}</span><div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div></div>
 <span style={css(`font-size:10.5px; color:#8E96A3; flex-shrink:0;`)}>{r.runCountLabel}</span>
 </button>
@@ -2906,7 +2920,7 @@ function View(B, self) {
     fix), just without push/finalise actions (those only ever happen from Design Review) */}
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(schedAlignRunCards || []).map((c, __iA4) => (<React.Fragment key={__iA4}>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; border-left:4px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:2px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
@@ -2974,7 +2988,7 @@ function View(B, self) {
 <span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
 {(c.hasFeedbackLeads) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{c.schedStage === 'stage2' ? 'LM:' : 'SC/LH:'}</span>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>FEEDBACK:</span>
 {(c.feedbackLeadChips || []).map((ol, __iA6) => (<React.Fragment key={__iA6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
@@ -3910,7 +3924,6 @@ function View(B, self) {
 <div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
 {(schedOpsEmpty) ? (<><div style={css(`padding:30px 14px; text-align:center; font-size:12px; color:#8E96A3;`)}>No plans in this filter for {schedOpsRole}.</div></>) : ((schedOpsList || []).map((r, __iC3) => (<React.Fragment key={__iC3}>
 <button onClick={r.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${r.active ? '#0D7377' : '#E6EBF2'}; border-radius:9px; background:${r.active ? '#E9F5F5' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
-<span style={css(`width:9px; height:9px; border-radius:50%; background:${r.hasWarning ? '#C77B00' : '#128A3E'}; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}><span style={css(`font-size:12.5px; font-weight:700; color:#0D7377;`)}>{r.code}</span><span style={css(`font-size:11px; color:#5A5E66; margin-left:6px;`)}>{r.zone}</span><div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{r.name}</div></div>
 <span style={css(`font-size:10.5px; color:#8E96A3; flex-shrink:0;`)}>{r.runCountLabel}</span>
 </button>
@@ -3941,7 +3954,7 @@ function View(B, self) {
     2026-08-18 stage chip and this role's own Submit Feedback action */}
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(schedOpsRunCards || []).map((c, __iC4) => (<React.Fragment key={__iC4}>
-<div style={css(`width:100%; box-sizing:border-box; border:1px solid #E6EBF2; border-left:4px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
+<div style={css(`width:100%; box-sizing:border-box; border:2px solid ${c.cardBorderColor}; background:#fff; border-radius:13px; padding:16px 20px;`)}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
@@ -4005,7 +4018,7 @@ function View(B, self) {
 <span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.flagBg}; color:${c.flagFg};`)}><span style={css(`width:7px; height:7px; border-radius:50%; background:${c.flagDot};`)} />{c.flagLabel}</span>
 {(c.hasFeedbackLeads) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{c.schedStage === 'stage2' ? 'LM:' : 'SC/LH:'}</span>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>FEEDBACK:</span>
 {(c.feedbackLeadChips || []).map((ol, __iC6) => (<React.Fragment key={__iC6}><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${ol.chipBg}; color:${ol.chipFg};`)}>{ol.mark} {ol.name}</span></React.Fragment>))}
 </div>
 </>) : null}
@@ -5423,7 +5436,7 @@ class NDCApp extends React.Component {
       toast: null,
       inputsTab: 'volume',
       mastersTab: 'sc',
-      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZone: 'All', lmdcSearch: '', lmdcUploadErrors: [],
+      lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZones: [], lmdcModeFilter: 'All', lmdcSearch: '', lmdcUploadErrors: [],
       // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
       // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
@@ -5471,7 +5484,7 @@ class NDCApp extends React.Component {
       vehRemoved: {},
       nodesTab: 'autodml',
       inputsSearch: '',
-      inputsZone: 'All',
+      inputsZones: [],
       autodmlOpen: null,
       nodeWarnFilter: 'all',
       nodeShow: 'all',
@@ -5544,6 +5557,28 @@ class NDCApp extends React.Component {
   // both buildSeed() (Route Scheduler demo seeding) and the Ops Alignment reviewer-pool lookup.
   // Mirrors scMasterVals()' own POC_ROLES index mapping exactly (odd positions are the "LH Ops
   // ZH/CH" roles) so the two never drift on which POC counts as SC vs LH.
+  // buildZoneMultiSelect(selected, stateKey, extraResetKeys) (2026-08-19) — a reusable multi-
+  // select zone filter, replacing the single-select "All/North/South/East/West" chip row on
+  // Design Inputs' own screens (SC Master, SC Vehicle Availability, LMDC Master) with one
+  // dropdown supporting several zones at once. `selected` is the current array (empty = every
+  // zone); `matches(zone)` is what filter logic should call instead of a single equality check.
+  buildZoneMultiSelect(selected, stateKey, extraResetKeys) {
+    const ZONES = ['North', 'South', 'East', 'West'];
+    const sel = selected || [];
+    const label = sel.length === 0 || sel.length === ZONES.length ? 'All Zones' : sel.join(', ');
+    const options = ZONES.map(z => ({
+      zone: z, checked: sel.indexOf(z) >= 0,
+      onToggle: () => {
+        const cur = sel.indexOf(z) >= 0 ? sel.filter(x => x !== z) : sel.concat([z]);
+        this.setState(Object.assign({ [stateKey]: cur }, extraResetKeys || {}));
+      },
+    }));
+    return {
+      label, options, hasSelection: sel.length > 0 && sel.length < ZONES.length,
+      onClear: () => this.setState(Object.assign({ [stateKey]: [] }, extraResetKeys || {})),
+      matches: (zone) => sel.length === 0 || sel.indexOf(zone) >= 0,
+    };
+  }
   deriveScPocRoles(pocs) {
     const POC_ROLES = ['Ops ZH', 'LH Ops ZH', 'Ops CH', 'LH Ops CH', 'Ops AM-1', 'Ops AM-2'];
     const scNames = [], lhNames = [];
@@ -6382,7 +6417,7 @@ class NDCApp extends React.Component {
       return;
     }
     const sc = Object.assign({ code: code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, dcCount: 0, volume: num(f.volCap), hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0 }, patch, { lat: lat != null ? lat : 0, lng: lng != null ? lng : 0 });
-    this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZone: 'All', inputsSearch: '' });
+    this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZones: [], inputsSearch: '' });
     this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
   }
   // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
@@ -7226,13 +7261,13 @@ class NDCApp extends React.Component {
         }));
     const volFilesShown = volumeFiles.length, volFilesTotal = allVol.length;
     const q = (st.inputsSearch || '').toLowerCase();
-    const zf = st.inputsZone || 'All';
-    const zoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ inputsZone: z, pgScMaster: 1, pgAvail: 1 }) }));
+    const inputsZoneSel = this.buildZoneMultiSelect(st.inputsZones, 'inputsZones', { pgScMaster: 1, pgAvail: 1 });
+    const zf = inputsZoneSel.matches;
     const nstep = st.nodeStep || 'active';
     const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
     const nodeSteps = nodeStepMeta.map(s => ({ label: s[1] + ' (' + s[2] + ')', tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
-    const anFiltered = d.scs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
+    const anFiltered = d.scs.filter(s => zf(s.zone) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     // AutoDML flagged-link table (matches Vignesh AutoDML Node View). Each d.autodmlNodes row is one
     // flagged LMSC→LMDC link; enrich it with a synthesized LMDC name, capacity, link status, mapped SCs
     // and a colored warning chip, then filter by the click-to-filter tile (nodeWarnFilter) + LMSC dropdown.
@@ -7329,7 +7364,7 @@ class NDCApp extends React.Component {
     const volErrModal = st.volErrModal || { name: '', rows: [] };
     const closeVolErrModal = () => this.setState({ volErrModal: null });
     const volErrModalReplace = () => { const m = st.volErrModal; this.setState({ volErrModal: null }); if (m && m.type) replaceVolFile(m.name, m.type); };
-    const _addedScs = (st.addedScs || []).filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
+    const _addedScs = (st.addedScs || []).filter(s => zf(s.zone) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
     const scRemovedMap = st.scRemoved || {};
     const scFiltered = _addedScs.concat(anFiltered).filter(s => !scRemovedMap[s.code]);
     // PARITY §6 — identity columns City / State + Type. State is the representative state for the SC's
@@ -7383,9 +7418,20 @@ class NDCApp extends React.Component {
     const rlhFeasibleVehNames = (d.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0).map(v => v.name);
     const lmdcEdits = st.lmdcEdits || {};
     const lq = (st.lmdcSearch || '').toLowerCase();
-    const lz = st.lmdcZone || 'All';
-    const lmdcFiltered = (d.lmdcs || []).filter(l => (lz === 'All' || l.zone === lz) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || (l.lmscCode || '').toLowerCase().indexOf(lq) >= 0));
-    const lmdcZoneChips = ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === lz, bg: z === lz ? '#003F98' : '#fff', fg: z === lz ? '#fff' : '#5A5E66', bd: z === lz ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ lmdcZone: z, pgLmdc: 1 }) }));
+    const lmdcZoneSel = this.buildZoneMultiSelect(st.lmdcZones, 'lmdcZones', { pgLmdc: 1 });
+    const lz = lmdcZoneSel.matches;
+    // lmdcModeFilter (2026-08-19) — filter to just Co-Loading or MDC rows, so a Planner can jump
+    // straight to auditing those without scrolling past every plain Valmo RLH row. Checks the
+    // EFFECTIVE rlhMode (base row merged with any live edit), not the stale base value, so
+    // filtering stays correct immediately after editing a row's mode.
+    const lmdcModeFilter = st.lmdcModeFilter || 'All';
+    const effRlhMode = (l) => (lmdcEdits[l.code] && lmdcEdits[l.code].rlhMode) || l.rlhMode || 'Valmo RLH';
+    const lmdcFiltered = (d.lmdcs || []).filter(l => lz(l.zone) && (lmdcModeFilter === 'All' || effRlhMode(l) === lmdcModeFilter) && (!lq || l.code.toLowerCase().indexOf(lq) >= 0 || (l.lmscCode || '').toLowerCase().indexOf(lq) >= 0));
+    const LMDC_MODE_FILTER_OPTS = [['All', 'All'], ['MDC', 'MDC'], ['Co-Loading', 'Co-Loading']];
+    const lmdcModeChips = LMDC_MODE_FILTER_OPTS.map(o => ({ label: o[1], active: lmdcModeFilter === o[0],
+      bg: lmdcModeFilter === o[0] ? '#5B4FA0' : '#fff', fg: lmdcModeFilter === o[0] ? '#fff' : '#5A5E66', bd: lmdcModeFilter === o[0] ? '#5B4FA0' : '#E6EBF2',
+      count: o[0] === 'All' ? (d.lmdcs || []).length : (d.lmdcs || []).filter(l => effRlhMode(l) === o[0]).length,
+      onClick: () => this.setState({ lmdcModeFilter: o[0], pgLmdc: 1 }) }));
     const lmdcPager = this.pager(lmdcFiltered, st.pgLmdc, 'pgLmdc');
     const lmdcEditCode = st.lmdcEditCode;
     const lmdcDraft = st.lmdcEditDraft || {};
@@ -7633,7 +7679,7 @@ class NDCApp extends React.Component {
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
       autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
-      zoneChips, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
+      inputsZoneSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
       scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 40px' + (st.scNlhOpen ? ' 80px' : '') + ' 140px 80px',
@@ -7652,7 +7698,7 @@ class NDCApp extends React.Component {
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
       scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Hold Time (On/Off)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
-      lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneChips,
+      lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeChips,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
       rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS, lmdcTatOptions: LMDC_TAT_OPTIONS,
@@ -8418,8 +8464,9 @@ class NDCApp extends React.Component {
     // know where a run actually stood. This gives one 2-node progress tracker instead:
     //   ●━━━━━━○  Stage 1: SC/LH  →  Stage 2: LM  →  ✓ Finalised
     //     (sub-status shown only under whichever stage is currently active)
-    // Card border color is a simple at-a-glance signal, independent of the tracker: amber while
-    // in Stage 1, blue in Stage 2, dark green once Finalised (terminal color always wins).
+    // Card border color is a simple at-a-glance signal, independent of the tracker: yellow while
+    // in Stage 1, orange/amber in Stage 2, dark green once Finalised (terminal color always wins;
+    // 2026-08-19 — updated from the original amber/blue scheme, matched below on the tracker too).
     const schedStage = sp.schedStage || 'stage1';
     const isFinalisedRun = sp.status === 'Finalised';
     const inStage2 = schedStage === 'stage2';
@@ -8427,21 +8474,29 @@ class NDCApp extends React.Component {
     const stage1Done = inStage2 || isFinalisedRun;
     const stage2Done = isFinalisedRun;
     const stageTracker = {
-      node1: { label: 'Stage 1: SC/LH', state: stage1Done ? 'done' : 'active', subLabel: stage1Done ? '' : (STAGE_SUBLABEL[sp.status] || ''), color: stage1Done ? '#128A3E' : '#C77B00' },
-      node2: { label: 'Stage 2: LM', state: stage2Done ? 'done' : (inStage2 ? 'active' : 'pending'), subLabel: (inStage2 && !stage2Done) ? (STAGE_SUBLABEL[sp.status] || '') : '', color: stage2Done ? '#128A3E' : (inStage2 ? '#1E6FB8' : '#C3C9D4') },
+      node1: { label: 'Stage 1: SC/LH', state: stage1Done ? 'done' : 'active', subLabel: stage1Done ? '' : (STAGE_SUBLABEL[sp.status] || ''), color: stage1Done ? '#128A3E' : '#EAB308' },
+      node2: { label: 'Stage 2: LM', state: stage2Done ? 'done' : (inStage2 ? 'active' : 'pending'), subLabel: (inStage2 && !stage2Done) ? (STAGE_SUBLABEL[sp.status] || '') : '', color: stage2Done ? '#128A3E' : (inStage2 ? '#D9822B' : '#C3C9D4') },
       node3: { label: 'Finalised', state: stage2Done ? 'done' : 'pending', color: stage2Done ? '#128A3E' : '#C3C9D4' },
       line1Filled: stage1Done, line2Filled: stage2Done,
     };
-    const cardBorderColor = isFinalisedRun ? '#128A3E' : (inStage2 ? '#1E6FB8' : '#C77B00');
+    // Card border color (2026-08-19 update) — yellow for Stage 1, orange/amber for Stage 2, dark
+    // green once Finalised (terminal always wins). Applied as a full border, not just a left edge.
+    const cardBorderColor = isFinalisedRun ? '#128A3E' : (inStage2 ? '#D9822B' : '#EAB308');
     // Stage chip kept (used in a couple of compact contexts — rail entries, CSV export) but the
     // full tracker above is what the card/overlay actually render now.
     const stageLabel = schedStage === 'stage2' ? 'Stage 2 · LM' : 'Stage 1 · SC/LH';
     const stageBg = schedStage === 'stage2' ? '#F0EDFB' : '#E9F5F5', stageFg = schedStage === 'stage2' ? '#5B4FA0' : '#0D7377';
     const scPoc = this.deriveScPocRoles(sc ? sc.pocs : []);
-    const stageSub = ((st.schedSubmitted || {})[sp.id] || {})[schedStage] || {};
-    const feedbackLeads = schedStage === 'stage2'
-      ? [{ name: 'LM', role: 'LM', done: !!stageSub.LM }]
-      : [{ name: 'SC', role: 'SC', done: !!stageSub.SC }, { name: 'LH', role: 'LH', done: !!stageSub.LH }];
+    const stage1Sub = ((st.schedSubmitted || {})[sp.id] || {}).stage1 || {};
+    const stage2Sub = ((st.schedSubmitted || {})[sp.id] || {}).stage2 || {};
+    // 2026-08-19 — always show all 3 roles' status (SC/LH/LM), not just the current stage's —
+    // an SC's stage1 submission should stay visible on the card even once the run has moved into
+    // stage2, rather than disappearing the moment LM's own chip takes over.
+    const feedbackLeads = [
+      { name: 'SC', role: 'SC', done: !!stage1Sub.SC },
+      { name: 'LH', role: 'LH', done: !!stage1Sub.LH },
+      { name: 'LM', role: 'LM', done: !!stage2Sub.LM },
+    ];
     const feedbackLeadChips = feedbackLeads.map(fl => ({ name: fl.role + ' User', done: fl.done, mark: fl.done ? '\u2713' : '\u23f3',
       chipBg: fl.done ? '#E7F4EC' : '#F2F5FA', chipFg: fl.done ? '#128A3E' : '#5A5E66' }));
     // Lifecycle-gate availability — computed here (not JSX-time) so both Design Review and Ops

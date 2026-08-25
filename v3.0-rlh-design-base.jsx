@@ -221,6 +221,125 @@ function View(B, self) {
 </>) : null}
 {/* CONTENT */}
 <main style={css(`flex:1; overflow-y:auto; overflow-x:hidden;`)}>
+{/* ===== LANDING (2026-08-25) — pick a design leg before anything else ===== */}
+{(isLanding) ? (<>
+<div style={css(`padding:48px 40px; max-width:980px; margin:0 auto;`)}>
+<div style={css(`font-size:22px; font-weight:700; color:#14171F; margin-bottom:6px;`)}>Network Design Central</div>
+<div style={css(`font-size:13.5px; color:#5A5E66; margin-bottom:32px;`)}>Choose a design leg to continue. Each leg runs its own independent design cycle.</div>
+<div style={css(`display:flex; flex-direction:column; gap:14px;`)}>
+{(landingCards || []).map((c, __iLand) => (<React.Fragment key={__iLand}>
+<div onClick={c.onSelect} style={css(`display:flex; flex-direction:column; gap:6px; padding:22px 24px; border:1px solid #E6EBF2; border-radius:12px; background:#fff; cursor:pointer; transition:all 140ms;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; box-shadow:0 2px 10px rgba(0,63,152,0.08);`)} onMouseLeave={(e) => hoverOff(e, `display:flex; flex-direction:column; gap:6px; padding:22px 24px; border:1px solid #E6EBF2; border-radius:12px; background:#fff; cursor:pointer; transition:all 140ms;`, `border-color:#003F98; box-shadow:0 2px 10px rgba(0,63,152,0.08);`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{c.title}</div>
+<div style={css(`font-size:12.5px; color:#5A5E66;`)}>{c.subtitle}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</>) : null}
+{/* ===== LEG STUB (2026-08-25) — NLH / FM Carting shell: cycle selector + Design Inputs placeholder.
+     Real masters/uploads for these legs are a later build pass -- this is nav + cycle infra only. ===== */}
+{(isLegStub) ? (<>
+<div style={css(`padding:28px 34px;`)}>
+<div style={css(`display:flex; align-items:center; gap:12px; margin-bottom:22px;`)}>
+<button onClick={goLanding} style={css(`display:flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#5A5E66;`)}>
+<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+All modules
+</button>
+<div style={css(`position:relative;`)}>
+<button onClick={toggleLegCycle} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
+              {legCycleLabel}
+{(legCycleIsPast) ? (<><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"}><path d={"M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
+<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</button>
+{(legCycleOpen) ? (<>
+<div style={css(`position:absolute; top:36px; left:0; width:220px; max-height:280px; overflow-y:auto; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.08); z-index:20; padding:6px;`)}>
+{(legCycleOptions || []).map((o, __iLegCyc) => (<React.Fragment key={__iLegCyc}>
+<div onClick={o.onSelect} style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border-radius:6px; cursor:pointer; background:${o.active ? '#EEF2FB' : 'transparent'};`)}>
+<span style={css(`font-size:12.5px; font-weight:${o.active ? '700' : '500'}; color:#14171F;`)}>{o.label}</span>
+{(o.isPast) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#8E96A3;`)}>PAST</span></>) : null}
+{(o.isCurrent) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#128A3E;`)}>CURRENT</span></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:20px;`)}>
+{(legTabs || []).map((t, __iLegTab) => (<React.Fragment key={__iLegTab}>
+<button onClick={t.onClick} style={css(`height:38px; padding:0 16px; border:none; border-bottom:2px solid ${t.active ? '#003F98' : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.active ? '700' : '500'}; color:${t.active ? '#003F98' : '#5A5E66'};`)}>{t.label}</button>
+</React.Fragment>))}
+</div>
+{(legIsMastersTab) ? (<>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Shared columns (name, zone, capacity) come from the network-wide SC registry — editable from any leg. {(legIsNlh) ? 'NLH Dock Capacity and Lane Name are NLH-local, visible only here.' : 'Add FM-specific columns here once they\u2019re defined.'}</div>
+{(legMastersEmpty) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No Sort Centres visible yet for this cycle.</div>
+</>) : (<>
+<div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; background:#F7F8FB; border-bottom:1px solid #E6EBF2; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`padding:9px 10px;`)}>Code</div>
+<div style={css(`padding:9px 10px;`)}>Name</div>
+<div style={css(`padding:9px 10px;`)}>Zone</div>
+<div style={css(`padding:9px 10px;`)}>Sort Cap</div>
+<div style={css(`padding:9px 10px;`)}>Vol Cap</div>
+{(legIsNlh) ? (<><div style={css(`padding:9px 10px;`)}>NLH Dock Cap</div><div style={css(`padding:9px 10px;`)}>Lane Name</div></>) : null}
+</div>
+{(legMastersRows || []).slice(0, 40).map((r, __iLegRow) => (<React.Fragment key={__iLegRow}>
+<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; border-bottom:1px solid #F2F5FA; font-size:12px; color:#14171F;`)}>
+<div style={css(`padding:8px 10px; font-weight:600;`)}>{r.code}</div>
+<div style={css(`padding:8px 10px;`)}>{r.name}</div>
+<div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.zone}</div>
+<div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.sortCap}</div>
+<div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.volCap}</div>
+{(legIsNlh) ? (<>
+<div style={css(`padding:5px 8px;`)}><input value={r.nlhDockCap} onInput={r.onDockChange} style={css(`width:70px; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} /></div>
+<div style={css(`padding:5px 8px;`)}><input value={r.laneName} onInput={r.onLaneChange} placeholder={"Lane name"} style={css(`width:100%; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} /></div>
+</>) : null}
+</div>
+</React.Fragment>))}
+</div>
+{(legMastersRows.length > 40) ? (<><div style={css(`font-size:11px; color:#8E96A3; margin-top:8px;`)}>Showing first 40 of {legMastersRows.length} Sort Centres.</div></>) : null}
+</>)}
+</>) : null}
+{(legIsUploadsTab) ? (<>
+<div style={css(`display:flex; flex-direction:column; gap:12px;`)}>
+{(legUploadSlots || []).map((u, __iLegUp) => (<React.Fragment key={__iLegUp}>
+<div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px;`)}>
+<div>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:3px;`)}>{u.label}</div>
+{(u.hasFile) ? (<><div style={css(`font-size:11.5px; color:#128A3E;`)}>{u.fileName} · uploaded {u.uploadedAt}</div></>) : (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>No file uploaded for this cycle</div></>)}
+</div>
+<label style={css(`display:flex; align-items:center; height:34px; padding:0 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#5A5E66; flex-shrink:0;`)}>
+{(u.hasFile) ? 'Replace file' : 'Choose file'}
+<input type={"file"} onChange={u.onFile} style={css(`display:none;`)} />
+</label>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{(legIsIngestionTab) ? (<>
+<div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it\u2019s available to RLH\u2019s Route Scheduler picker for this same cycle month.</div>
+<div style={css(`display:flex; gap:10px;`)}>
+<input value={legIngestFileName} onInput={onLegIngestFileName} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px;`)} />
+<button onClick={submitLegIngest} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)}>Ingest</button>
+</div>
+</div>
+{(legIngestedEmpty) ? (<>
+<div style={css(`padding:22px; border:1px dashed #D7DCE5; border-radius:10px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No plans ingested yet for this cycle.</div>
+</>) : (<>
+<div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
+{(legIngestedPlans || []).map((p, __iLegPlan) => (<React.Fragment key={__iLegPlan}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:11px 14px; border-bottom:1px solid #F2F5FA; font-size:12.5px;`)}>
+<span style={css(`font-weight:600; color:#14171F;`)}>{p.fileName}</span>
+<span style={css(`color:#8E96A3;`)}>ingested {p.ingestedAt}</span>
+</div>
+</React.Fragment>))}
+</div>
+</>)}
+</>) : null}
+</div>
+</>) : null}
 {/* ===== COMMAND CENTER ===== */}
 {(isCommand) ? (<>
 <div style={css(`padding:${contentPad}; max-width:1560px; margin:0 auto;`)}>
@@ -451,6 +570,12 @@ function View(B, self) {
 {(mastersTabs || []).map((m, __i14) => (<React.Fragment key={__i14}><button onClick={m.onClick} style={css(`display:flex; align-items:center; gap:7px; padding:6px 12px; border:1px solid ${m.bd}; background:${m.bg}; border-radius:8px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:${m.weight}; color:${m.color};`)}>{m.label}<span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; opacity:0.7;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>{m.tip}</span></span></button></React.Fragment>))}
 </div>
 {(isScMaster) ? (<>
+{(rlhCyclePast) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 16px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:14px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{rlhCycleLabel}</strong> is a past cycle — Design Inputs are read-only. New designs can still be created against this cycle, and Finalise Directly remains available from Design Review; Push to Alignment does not.</span>
+</div>
+</>) : null}
 <div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
@@ -1908,13 +2033,28 @@ function View(B, self) {
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
 {(isSchedStep1) ? (<>
 {/* NLH Plan Selection — merged into Step 1 (2026-08-10), mirroring Route Planner's own Step 1
-    shape: pick the file first, then the SC/plan list below reveals once it's picked. */}
+    shape: pick the file first, then the SC/plan list below reveals once it's picked.
+    2026-08-25 — NLH Design Ingestion now lives exclusively on the NLH card; this picker just
+    references whichever cycle-month's plans NLH has ingested. */}
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>NLH Plan Selection</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; margin-bottom:12px; line-height:1.5;`)}>One NLH Landing Plan covers every SC (LMSC-wise) — the same file applies to every SC you select below.</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; margin-bottom:10px; line-height:1.5;`)}>One NLH Landing Plan covers every SC (LMSC-wise) — the same file applies to every SC you select below. Ingested on the SC-SC and NLH Design card, referenced here by cycle month.</div>
+<div style={css(`position:relative; display:inline-block; margin-bottom:14px;`)}>
+<button onClick={toggleSchedNlhMonth} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
+NLH cycle: {schedNlhMonthLabel}
+<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+</button>
+{(schedNlhMonthOpen) ? (<>
+<div style={css(`position:absolute; top:36px; left:0; width:200px; max-height:260px; overflow-y:auto; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.08); z-index:20; padding:6px;`)}>
+{(schedNlhMonthOptions || []).map((o, __iSchedNlhM) => (<React.Fragment key={__iSchedNlhM}>
+<div onClick={o.onSelect} style={css(`padding:8px 10px; border-radius:6px; cursor:pointer; font-size:12.5px; font-weight:${o.active ? '700' : '500'}; color:#14171F; background:${o.active ? '#EEF2FB' : 'transparent'};`)}>{o.label}</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+</div>
 {(schedulerNlhEmpty) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:40px 20px; text-align:center; border:1px dashed #E6EBF2; border-radius:10px; margin-bottom:20px;`)}>
-<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH Landing Plans ingested yet</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Ingest one under Design Inputs → Design Ingestion → NLH Plan, then come back here.</div>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH Landing Plans ingested for {schedNlhMonthLabel}</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Ingest one on the SC-SC and NLH Design card's Design Ingestion tab for this cycle month, or pick a different month above.</div>
 </div>
 </>) : (<>
 <input value={schedulerNlhSearch} onChange={onSchedulerNlhSearch} placeholder={"Search by plan name"} style={css(`width:100%; max-width:520px; height:34px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; margin-bottom:10px; box-sizing:border-box;`)} />
@@ -5403,6 +5543,594 @@ function NDC_haversineKm(lat1, lng1, lat2, lng2) {
   // without needing a real road-network router. Replace this with a real distance service call
   // when one exists -- this is a stand-in, not a claim about real-world road distance.
 }
+// =========================================================================
+// NDC MULTI-LEG DATA LAYER (Part 1 of the FM/NLH/RLH cycle+master rebuild)
+// -------------------------------------------------------------------------
+// Built and unit-tested standalone (see dataLayerHarness.js in the repo's
+// tooling, not shipped to the browser) before being spliced in here. NOT YET
+// WIRED into NDCApp's state or any screen -- this section is inert, additive
+// code. Existing RLH behavior is unchanged until a later part rewires the
+// masters screens to read/write through resolveField() etc. instead of the
+// flat this.state fields they use today.
+// =========================================================================
+
+// ===== NDC Multi-Leg Data Layer =====
+// Implements the A/B/D master-field classification engine agreed for the
+// FM Carting / NLH / RLH leg split (see 01_Complete_Context.md-style docs,
+// once those get updated). Pure functions, no React/JSX, no dependency on
+// NDCApp -- testable standalone via dataLayerHarness.js. Wiring this into
+// NDCApp's state/screens is a later build part.
+//
+// Classes:
+//   A -- true global. One value, forever, shared by every leg. (SC identity:
+//        name/lat/lng/zone.) Never cycle-versioned.
+//   B -- cross-leg, cycle-versioned. One value per (code, cycleMonth), shared
+//        live by whichever legs are "in" that month. (SC Type, Capacity, HTP.)
+//        First touch of a new month clones forward from the nearest earlier
+//        month that has a value (chronological chain, not "current").
+//   D -- fully local. One value per (leg, table, cycleMonth, entityCode).
+//        Cloned forward the same way as B, but scoped to one leg only --
+//        never visible to, or affected by, any other leg.
+//   F -- file uploads. Deliberately NOT modeled here -- never resolved
+//        through resolveField, never cloned by any mechanism, always fresh
+//        per (leg, cycleMonth, slot). Callers just read/write
+//        store.uploads[leg][cycleMonth][slot] directly.
+//
+// Row existence (add / delete / deactivate) is its own mechanic, layered on
+// top of the A store: an effective-month status log per SC code, walked to
+// find "what was true as of this cycleMonth" -- independent of which leg's
+// clock got there first, and independent of local/B-field cloning.
+
+const LEGS = ['fm', 'nlh', 'rlh'];
+
+// ---------------------------------------------------------------------------
+// Cycle-month utilities. Months are 'YYYY-MM' strings, which sort correctly
+// with plain string comparison -- monthCompare below just makes that explicit
+// rather than relying on callers to remember it.
+// ---------------------------------------------------------------------------
+
+function monthKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function addMonths(monthStr, n) {
+  const [y, m] = monthStr.split('-').map(Number);
+  const d = new Date(y, (m - 1) + n, 1);
+  return monthKey(d);
+}
+
+function currentMonthKey(now = new Date()) {
+  return monthKey(now);
+}
+
+// Rolling window: 6 past + current + 6 future, chronological order.
+function cycleWindow(centerMonth = currentMonthKey()) {
+  const out = [];
+  for (let i = -6; i <= 6; i++) out.push(addMonths(centerMonth, i));
+  return out;
+}
+
+function monthCompare(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+function monthIsPast(m, centerMonth = currentMonthKey()) { return monthCompare(m, centerMonth) < 0; }
+function monthIsFuture(m, centerMonth = currentMonthKey()) { return monthCompare(m, centerMonth) > 0; }
+
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function monthLabel(m) {
+  const [y, mo] = m.split('-').map(Number);
+  return `${MONTH_NAMES[mo - 1]} ${y}`;
+}
+
+// ---------------------------------------------------------------------------
+// Field classification registry. This is the single source of truth the rest
+// of the engine consults -- adding a field later is a one-line entry here,
+// not a schema migration.
+// ---------------------------------------------------------------------------
+
+const FIELD_CLASS = {
+  // Class A -- true global identity. Lives in scRegistry, not scCycleFields.
+  'sc.name': { class: 'A' },
+  'sc.lat': { class: 'A' },
+  'sc.lng': { class: 'A' },
+  'sc.zone': { class: 'A' },
+
+  // Class B -- cross-leg, cycle-versioned.
+  'sc.type': { class: 'B' },
+  'sc.sortCap': { class: 'B' },
+  'sc.volCap': { class: 'B' },
+  'sc.htp': { class: 'B' },
+
+  // Class D -- fully local. `leg` fixed = single-leg-only module (e.g. RLH's
+  // own Local/Non-Local Speed, RLH Docks, LMDC Master). `leg: null` = present
+  // on every leg but each leg owns its own independent copy (Vehicle Master,
+  // SC Vehicle Availability).
+  'rlh.localSpeed': { class: 'D', leg: 'rlh' },
+  'rlh.nonLocalSpeed': { class: 'D', leg: 'rlh' },
+  'rlh.docks': { class: 'D', leg: 'rlh' },
+  'lmdc.capacity': { class: 'D', leg: 'rlh' }, // LMDC Master (RLH-only module); location field intentionally kept OUT of this shared engine per product decision -- stays inside RLH's own local screen state, not even class-D-registered here, revisit later.
+  'vehicleMaster.type': { class: 'D', leg: null },
+  'vehicleMaster.capacity': { class: 'D', leg: null },
+  'scVehicleAvail.override': { class: 'D', leg: null },
+  'nlh.dock': { class: 'D', leg: 'nlh' },
+  'nlh.lane': { class: 'D', leg: 'nlh' },
+  'fm.hub': { class: 'D', leg: 'fm' },
+
+  // ---- Added during the real RLH SC-editor wire-up (2026-08-25) ----
+  // These came out of the ACTUAL edit-SC form fields, not the earlier abstract
+  // matrix discussion -- classified here as judgment calls, flagged for visibility:
+  'rlh.rlhDocks2': { class: 'D', leg: 'rlh' }, // (kept distinct key name unused; rlh.docks above already covers RLH Docks)
+  'rlh.nlhDocks': { class: 'D', leg: 'rlh' },  // true home is NLH's own scMaster table once it exists; stays under RLH for now since RLH's edit form is the only UI that writes it
+  'rlh.localTp': { class: 'D', leg: 'rlh' },
+  'rlh.nonLocalTp': { class: 'D', leg: 'rlh' },
+  'rlh.openTime': { class: 'D', leg: 'rlh' },
+  'rlh.closeTime': { class: 'D', leg: 'rlh' },
+  'rlh.holdTimeOn': { class: 'D', leg: 'rlh' },
+  'rlh.maxHoldLocal': { class: 'D', leg: 'rlh' },
+  'rlh.maxHoldNonLocal': { class: 'D', leg: 'rlh' },
+  'rlh.pocs': { class: 'D', leg: 'rlh' }, // judgment call -- contacts kept RLH-local rather than global; revisit if NLH/FM need their own reviewer pools
+};
+
+function classOf(fieldKey) {
+  const entry = FIELD_CLASS[fieldKey];
+  if (!entry) throw new Error(`Unknown field key: ${fieldKey} -- add it to FIELD_CLASS before use.`);
+  return entry;
+}
+
+// ---------------------------------------------------------------------------
+// Storage shape
+// ---------------------------------------------------------------------------
+
+function makeEmptyStore() {
+  return {
+    // Class A -- { [code]: { name, lat, lng, zone, statusLog: [{status, effectiveMonth}] } }
+    scRegistry: {},
+    // Class B -- { [code]: { [cycleMonth]: { scType, sortCap, volCap, htp, _clonedFrom } } }
+    scCycleFields: {},
+    // Class D -- { [leg]: { [table]: { [cycleMonth]: { [entityCode]: {...fields, _clonedFrom} } } } }
+    localMaster: {},
+    // Class F -- { [leg]: { [cycleMonth]: { [slot]: { fileMeta, rows } } } } -- never cloned.
+    uploads: {},
+    // NLH's ingested (not-yet-finalised) plans, referenced by RLH's Route Scheduler picker.
+    // { [cycleMonth]: [ { planId, fileMeta, ingestedAt, rows } ] }
+    nlhIngestedPlans: {},
+    // Which (leg, cycleMonth) combos have actually been "started" by a user --
+    // distinguishes "never touched" from "touched, all fields still default".
+    cyclesCreated: { fm: [], nlh: [], rlh: [] },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Row existence (Class A lifecycle: add / delete / deactivate)
+// ---------------------------------------------------------------------------
+
+function ensureScRegistryRow(store, code) {
+  if (!store.scRegistry[code]) {
+    store.scRegistry[code] = { name: '', lat: null, lng: null, zone: null, statusLog: [] };
+  }
+  return store.scRegistry[code];
+}
+
+// status: 'active' | 'deleted' | 'deactivated'
+function setSCStatus(store, code, status, effectiveMonth) {
+  const row = ensureScRegistryRow(store, code);
+  row.statusLog.push({ status, effectiveMonth });
+  row.statusLog.sort((a, b) => monthCompare(a.effectiveMonth, b.effectiveMonth));
+}
+
+function addSC(store, code, identity, effectiveMonth) {
+  const row = ensureScRegistryRow(store, code);
+  Object.assign(row, identity);
+  setSCStatus(store, code, 'active', effectiveMonth);
+}
+
+// What was true for this code as of cycleMonth -- independent of which leg is asking.
+function resolveExistence(store, code, cycleMonth) {
+  const row = store.scRegistry[code];
+  if (!row || !row.statusLog.length) return 'not-yet-added';
+  let best = null;
+  for (const entry of row.statusLog) {
+    if (monthCompare(entry.effectiveMonth, cycleMonth) <= 0) {
+      // >= (not >) is deliberate: when two statusLog entries share the exact same
+      // effectiveMonth (e.g. a delete immediately followed by an "undo" re-activation
+      // within the same month), the most-recently-pushed one must win, not the first.
+      // statusLog is sorted stably by effectiveMonth, so for ties this walk visits them
+      // in push order -- >= lets each later same-month entry override the earlier one.
+      if (!best || monthCompare(entry.effectiveMonth, best.effectiveMonth) >= 0) best = entry;
+    }
+  }
+  return best ? best.status : 'not-yet-added';
+}
+
+function isVisible(store, code, cycleMonth) {
+  return resolveExistence(store, code, cycleMonth) === 'active';
+}
+
+// ---------------------------------------------------------------------------
+// Class B -- cross-leg, cycle-versioned
+// ---------------------------------------------------------------------------
+
+function nearestEarlierMonth(monthsAvailable, cycleMonth) {
+  const earlier = monthsAvailable.filter(m => monthCompare(m, cycleMonth) < 0).sort(monthCompare);
+  return earlier.length ? earlier[earlier.length - 1] : null;
+}
+
+// Read-through, non-mutating: what WOULD this resolve to, without materializing it.
+function peekClassB(store, code, cycleMonth) {
+  const rec = store.scCycleFields[code];
+  if (!rec) return null;
+  if (rec[cycleMonth]) return rec[cycleMonth];
+  const from = nearestEarlierMonth(Object.keys(rec), cycleMonth);
+  return from ? rec[from] : null;
+}
+
+// Materializing = the act of a leg "touching" this cycleMonth for the first
+// time -- clones forward from the nearest earlier month with data (or seeds
+// blank if none exists yet), then this month is independently editable from
+// that point on without touching any other month.
+function ensureClassBMaterialized(store, code, cycleMonth) {
+  if (!store.scCycleFields[code]) store.scCycleFields[code] = {};
+  const rec = store.scCycleFields[code];
+  if (rec[cycleMonth]) return rec[cycleMonth];
+  const from = nearestEarlierMonth(Object.keys(rec), cycleMonth);
+  rec[cycleMonth] = from
+    ? { ...rec[from], _clonedFrom: from }
+    : { scType: null, sortCap: null, volCap: null, htp: null, _clonedFrom: null };
+  return rec[cycleMonth];
+}
+
+function setClassBField(store, code, cycleMonth, field, value) {
+  const rec = ensureClassBMaterialized(store, code, cycleMonth);
+  rec[field] = value;
+  return rec;
+}
+
+// ---------------------------------------------------------------------------
+// Class D -- fully local (per leg, per table, per cycle, per entity)
+// ---------------------------------------------------------------------------
+
+function peekClassD(store, leg, table, cycleMonth, entityCode) {
+  const byMonth = (store.localMaster[leg] || {})[table] || {};
+  if (byMonth[cycleMonth] && byMonth[cycleMonth][entityCode]) return byMonth[cycleMonth][entityCode];
+  const from = nearestEarlierMonth(Object.keys(byMonth), cycleMonth);
+  return from && byMonth[from][entityCode] ? byMonth[from][entityCode] : null;
+}
+
+function ensureClassDMaterialized(store, leg, table, cycleMonth, entityCode, defaults) {
+  store.localMaster[leg] = store.localMaster[leg] || {};
+  store.localMaster[leg][table] = store.localMaster[leg][table] || {};
+  const byMonth = store.localMaster[leg][table];
+  byMonth[cycleMonth] = byMonth[cycleMonth] || {};
+  if (byMonth[cycleMonth][entityCode]) return byMonth[cycleMonth][entityCode];
+
+  const priorMonths = Object.keys(byMonth).filter(m => m !== cycleMonth);
+  const from = nearestEarlierMonth(priorMonths.filter(m => byMonth[m][entityCode]), cycleMonth);
+  byMonth[cycleMonth][entityCode] = from
+    ? { ...byMonth[from][entityCode], _clonedFrom: from }
+    : { ...defaults, _clonedFrom: null };
+  return byMonth[cycleMonth][entityCode];
+}
+
+function setClassDField(store, leg, table, cycleMonth, entityCode, field, value, defaults) {
+  const rec = ensureClassDMaterialized(store, leg, table, cycleMonth, entityCode, defaults || {});
+  rec[field] = value;
+  return rec;
+}
+
+// ---------------------------------------------------------------------------
+// Cycle creation -- the explicit "start a cycle for this leg" action.
+// Eagerly snapshots every currently-visible SC's class-D local tables (per
+// the product decision: "by default carry forward the masters as is" --
+// no inherit/fresh prompt anymore). Class A/B need no per-cycle action here;
+// they resolve live through the functions above regardless of whether a
+// cycle was ever explicitly "created".
+// ---------------------------------------------------------------------------
+
+function createCycle(store, leg, cycleMonth, { tables = [] } = {}) {
+  if (!store.cyclesCreated[leg].includes(cycleMonth)) {
+    store.cyclesCreated[leg].push(cycleMonth);
+    store.cyclesCreated[leg].sort(monthCompare);
+  }
+  const visibleCodes = Object.keys(store.scRegistry).filter(code => isVisible(store, code, cycleMonth));
+  tables.forEach(({ table, defaults }) => {
+    visibleCodes.forEach(code => {
+      ensureClassDMaterialized(store, leg, table, cycleMonth, code, defaults);
+    });
+  });
+  return { cycleMonth, scCount: visibleCodes.length };
+}
+
+function isCycleCreated(store, leg, cycleMonth) {
+  return store.cyclesCreated[leg].includes(cycleMonth);
+}
+
+// ---------------------------------------------------------------------------
+// Unified field resolver -- routes any FIELD_CLASS key to the right store.
+// ---------------------------------------------------------------------------
+
+function resolveField(store, fieldKey, { code, leg, table, cycleMonth, entityCode } = {}) {
+  const { class: cls } = classOf(fieldKey);
+  if (cls === 'A') {
+    const row = store.scRegistry[code];
+    const prop = fieldKey.split('.')[1];
+    return row ? row[prop] : null;
+  }
+  if (cls === 'B') {
+    const rec = peekClassB(store, code, cycleMonth);
+    if (!rec) return null;
+    const prop = fieldKey.split('.')[1];
+    const map = { type: 'scType', sortCap: 'sortCap', volCap: 'volCap', htp: 'htp' };
+    return rec[map[prop] || prop];
+  }
+  if (cls === 'D') {
+    const rec = peekClassD(store, leg, table, cycleMonth, entityCode || code);
+    return rec ? rec[fieldKey.split('.')[1]] : null;
+  }
+  throw new Error(`resolveField: unhandled class ${cls}`);
+}
+
+// ---------------------------------------------------------------------------
+// Output snapshotting -- freeze whatever A/B values a plan actually used at
+// generation/finalise time, so the plan stays historically accurate even if
+// the live globals move on afterward.
+// ---------------------------------------------------------------------------
+
+function snapshotForOutput(store, cycleMonth, codes) {
+  const snap = {};
+  codes.forEach(code => {
+    const identity = store.scRegistry[code];
+    const b = peekClassB(store, code, cycleMonth);
+    snap[code] = {
+      name: identity ? identity.name : null,
+      lat: identity ? identity.lat : null,
+      lng: identity ? identity.lng : null,
+      zone: identity ? identity.zone : null,
+      scType: b ? b.scType : null,
+      sortCap: b ? b.sortCap : null,
+      volCap: b ? b.volCap : null,
+      htp: b ? b.htp : null,
+      _snapshotMonth: cycleMonth,
+    };
+  });
+  return snap;
+}
+
+// ---------------------------------------------------------------------------
+// RLH master-table seeding + materialization (2026-08-25 wire-up)
+// -- Generates fresh, large-scale demo data directly into the engine's store
+// shapes (identity=A, capacity/type/htp=B, everything RLH-specific=D), then
+// materializes it back into the exact flat shapes RLH's existing screens and
+// formulas already expect -- so Route Planner/Route Scheduler/validation
+// don't need to change at all, they just consume a differently-sourced array
+// of the same shape. Per product decision, this REPLACES the old seed data
+// rather than trying to preserve it (it was test data, not production data).
+// ---------------------------------------------------------------------------
+
+const RLH_GENESIS_MONTH = '2020-01'; // safely before any realistic cycle window, so seeded rows are visible everywhere by default
+
+function rngFactory(seed) {
+  let s = seed;
+  const R = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+  return { R, ri: (a, b) => a + Math.floor(R() * (b - a + 1)), rf: (a, b) => a + R() * (b - a) };
+}
+
+const RLH_ZONES = [
+  { z: 'North', cities: [['Delhi', 'DEL'], ['Gurugram', 'GGN'], ['Noida', 'NOI'], ['Jaipur', 'JAI'], ['Lucknow', 'LKO'], ['Kanpur', 'KNP'], ['Chandigarh', 'CHD'], ['Ludhiana', 'LDH'], ['Agra', 'AGR'], ['Meerut', 'MRT'], ['Amritsar', 'ASR'], ['Dehradun', 'DDN']], lat: [26.5, 30.8], lng: [74.5, 80.5] },
+  { z: 'West', cities: [['Mumbai', 'BOM'], ['Pune', 'PNQ'], ['Ahmedabad', 'AMD'], ['Surat', 'STV'], ['Nagpur', 'NAG'], ['Nashik', 'ISK'], ['Rajkot', 'RAJ'], ['Vadodara', 'BDQ'], ['Indore', 'IDR'], ['Bhopal', 'BHO'], ['Thane', 'TNA'], ['Gwalior', 'GWL'], ['Ujjain', 'UJN']], lat: [18.4, 23.6], lng: [70.0, 77.2] },
+  { z: 'South', cities: [['Bengaluru', 'BLR'], ['Chennai', 'MAA'], ['Hyderabad', 'HYD'], ['Coimbatore', 'CJB'], ['Kochi', 'COK'], ['Madurai', 'IXM'], ['Mysuru', 'MYS'], ['Vijayawada', 'VGA'], ['Vizag', 'VTZ'], ['Trichy', 'TRZ'], ['Salem', 'SXV']], lat: [9.5, 17.6], lng: [75.5, 83.2] },
+  { z: 'East', cities: [['Kolkata', 'CCU'], ['Patna', 'PAT'], ['Bhubaneswar', 'BBI'], ['Ranchi', 'IXR'], ['Guwahati', 'GAU'], ['Siliguri', 'IXB'], ['Cuttack', 'CTC'], ['Durgapur', 'RDP'], ['Asansol', 'ASN'], ['Raipur', 'RPR'], ['Jabalpur', 'JLR'], ['Bilaspur', 'PAB']], lat: [21.5, 27.2], lng: [83.5, 92.0] },
+];
+
+// Returns the list of SC codes seeded (mostly for test/inspection convenience).
+function seedRLHMasterData(store, opts = {}) {
+  const genesisMonth = opts.genesisMonth || RLH_GENESIS_MONTH;
+  const count = opts.count || 80;
+  const { R, ri, rf } = rngFactory(opts.seed || 20260825);
+  const NAMES = ['Aarti Nair', 'Rahul Sharma', 'Imran Khan', 'Deepa Rao', 'Suresh Menon', 'Neha Tiwari', 'Vivek Pillai', 'Karthik Varma', 'Pooja Gupta', 'Sandeep Lal', 'Megha Bose', 'Arjun Desai'];
+
+  const generated = [];
+  let zi = 0, ci = 0, guard = 0;
+  while (generated.length < count && guard < 800) {
+    guard++;
+    const zone = RLH_ZONES[zi % RLH_ZONES.length];
+    const cityArr = zone.cities;
+    const city = cityArr[ci % cityArr.length];
+    const variant = generated.filter(x => x.cityCode === city[1]).length;
+    if (variant === 0 || (variant < 2 && R() < 0.45)) {
+      const code = variant === 0 ? city[1] + 'S' : city[1] + (variant + 1);
+      const dcCount = ri(95, 205);
+      const volume = Math.round(dcCount * rf(230, 420));
+      const lat = +rf(zone.lat[0], zone.lat[1]).toFixed(3);
+      const lng = +rf(zone.lng[0], zone.lng[1]).toFixed(3);
+      const h = code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const zeroVolDc = (variant + city[1].charCodeAt(0)) % 5 === 0 ? ri(1, 4) : 0;
+      const missRaw = (variant + city[1].charCodeAt(1)) % 4 === 0 ? ri(2, 9) : 0;
+      generated.push({
+        code, name: city[0], cityCode: city[1], zone: zone.z, lat, lng, dcCount, volume,
+        sortCap: Math.min(250, dcCount + ri(10, 40)),
+        volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000,
+        docks: ri(3, 9), rlhDocks: 2 + ((h >> 3) % 6), nlhDocks: 3 + (h % 7),
+        localTp: 4 + (h % 3), nonLocalTp: 2 + ((h >> 2) % 3),
+        localSpeed: 22 + (h % 8), nonLocalSpeed: 32 + ((h >> 5) % 10),
+        openTime: String(5 + (h % 3)).padStart(2, '0') + ':00',
+        closeTime: String(21 + ((h >> 4) % 3)).padStart(2, '0') + ':00',
+        holdTimeOn: true, maxHoldLocal: 30, maxHoldNonLocal: 120,
+        hasRef: R() < 0.82, htp: 40 + ri(0, 60),
+        farDist: (generated.length % 17 === 7) || (generated.length % 19 === 6) || (generated.length % 23 === 1)
+          ? Math.round(270 + rf(0, 1) * 250) : Math.round(150 + rf(0, 1) * 85),
+        zeroVolDc, missVolDc: Math.min(missRaw, Math.max(0, 6 - zeroVolDc)),
+        pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]),
+        nodeKind: 'SC',
+      });
+    }
+    ci++;
+    if (ci % cityArr.length === 0) zi++;
+  }
+
+  const MDC_NAMES = [['Panvel MDC', 'PNVL'], ['Sonipat MDC', 'SNPT'], ['Hosur MDC', 'HSUR']];
+  const MDC_ZONES = ['West', 'North', 'South'];
+  MDC_NAMES.forEach((mn, mi) => {
+    const zone = MDC_ZONES[mi];
+    const near = generated.find(s => s.zone === zone) || generated[0];
+    generated.push({
+      code: 'MDC-' + (mi + 1), name: mn[0], cityCode: mn[1], zone,
+      dcCount: 0, volume: 0, lat: near ? +(near.lat + 0.15).toFixed(3) : 20, lng: near ? +(near.lng + 0.15).toFixed(3) : 77,
+      sortCap: 60, volCap: 40000, docks: ri(3, 5), rlhDocks: ri(3, 5), nlhDocks: 0,
+      localTp: 4, nonLocalTp: 2, localSpeed: 24, nonLocalSpeed: 36,
+      openTime: '05:00', closeTime: '23:00', holdTimeOn: true, maxHoldLocal: 30, maxHoldNonLocal: 120,
+      hasRef: false, htp: 60, farDist: 0, zeroVolDc: 0, missVolDc: 0,
+      pocs: Array.from({ length: ri(2, 3) }, () => NAMES[Math.floor(R() * NAMES.length)]),
+      nodeKind: 'MDC',
+    });
+  });
+
+  generated.forEach(sc => {
+    addSC(store, sc.code, { name: sc.name, lat: sc.lat, lng: sc.lng, zone: sc.zone }, genesisMonth);
+    setClassBField(store, sc.code, genesisMonth, 'scType', sc.nodeKind === 'MDC' ? 'MDC' : 'LMSC');
+    setClassBField(store, sc.code, genesisMonth, 'sortCap', sc.sortCap);
+    setClassBField(store, sc.code, genesisMonth, 'volCap', sc.volCap);
+    setClassBField(store, sc.code, genesisMonth, 'htp', sc.htp);
+    const dFields = {
+      cityCode: sc.cityCode, dcCount: sc.dcCount, volume: sc.volume, docks: sc.docks,
+      rlhDocks: sc.rlhDocks, nlhDocks: sc.nlhDocks, localTp: sc.localTp, nonLocalTp: sc.nonLocalTp,
+      localSpeed: sc.localSpeed, nonLocalSpeed: sc.nonLocalSpeed, openTime: sc.openTime, closeTime: sc.closeTime,
+      holdTimeOn: sc.holdTimeOn, maxHoldLocal: sc.maxHoldLocal, maxHoldNonLocal: sc.maxHoldNonLocal,
+      hasRef: sc.hasRef, farDist: sc.farDist, zeroVolDc: sc.zeroVolDc, missVolDc: sc.missVolDc,
+      pocs: sc.pocs, nodeKind: sc.nodeKind,
+    };
+    ensureClassDMaterialized(store, 'rlh', 'scMaster', genesisMonth, sc.code, dFields);
+  });
+
+  return generated.map(s => s.code);
+}
+
+// Flat shape matches what buildSeed()'s downstream plan/route generation already expects --
+// field names (open/close, not openTime/closeTime) deliberately mirror the existing form's
+// `patch` object in submitAddSc() so both directions (materialize <-> save) agree.
+function materializeRLHScs(store, cycleMonth) {
+  const codes = Object.keys(store.scRegistry).filter(code => isVisible(store, code, cycleMonth));
+  return codes.map(code => {
+    const identity = store.scRegistry[code];
+    const b = peekClassB(store, code, cycleMonth) || {};
+    const d = peekClassD(store, 'rlh', 'scMaster', cycleMonth, code) || {};
+    return {
+      code, name: identity.name, cityCode: d.cityCode || code.slice(0, 3), zone: identity.zone,
+      lat: identity.lat, lng: identity.lng,
+      dcCount: d.dcCount || 0, volume: d.volume || 0,
+      sortCap: b.sortCap != null ? b.sortCap : 0, volCap: b.volCap != null ? b.volCap : 0,
+      htp: b.htp != null ? b.htp : 0,
+      docks: d.docks || 0, rlhDocks: d.rlhDocks, nlhDocks: d.nlhDocks,
+      localTp: d.localTp, nonLocalTp: d.nonLocalTp, localSpeed: d.localSpeed, nonLocalSpeed: d.nonLocalSpeed,
+      open: d.openTime, close: d.closeTime, holdTimeOn: d.holdTimeOn, maxHoldLocal: d.maxHoldLocal, maxHoldNonLocal: d.maxHoldNonLocal,
+      hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
+      pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
+    };
+  });
+}
+
+// Vehicle Master / SC Vehicle Availability -- own table per leg (per product decision), no
+// row-existence lifecycle modeled yet (nothing deletes a vehicle type today), so materialize
+// just unions every code ever seen up to cycleMonth and resolves each through peekClassD.
+function seedVehicleMasterLeg(store, leg, genesisMonth, vehArray) {
+  vehArray.forEach(v => { ensureClassDMaterialized(store, leg, 'vehicleMaster', genesisMonth, v.name, { ...v }); });
+}
+function materializeVehicleMasterLeg(store, leg, cycleMonth) {
+  const byMonth = (store.localMaster[leg] || {})['vehicleMaster'] || {};
+  const codes = new Set();
+  Object.keys(byMonth).filter(m => monthCompare(m, cycleMonth) <= 0).forEach(m => Object.keys(byMonth[m]).forEach(c => codes.add(c)));
+  return Array.from(codes).map(name => peekClassD(store, leg, 'vehicleMaster', cycleMonth, name)).filter(Boolean);
+}
+
+function seedScVehAvailLeg(store, leg, genesisMonth, groups) {
+  groups.forEach(g => { ensureClassDMaterialized(store, leg, 'scVehicleAvail', genesisMonth, g.code, { name: g.name, zone: g.zone, rows: g.rows }); });
+}
+function materializeScVehAvailLeg(store, leg, cycleMonth) {
+  const byMonth = (store.localMaster[leg] || {})['scVehicleAvail'] || {};
+  const codes = new Set();
+  Object.keys(byMonth).filter(m => monthCompare(m, cycleMonth) <= 0).forEach(m => Object.keys(byMonth[m]).forEach(c => codes.add(c)));
+  return Array.from(codes).map(code => {
+    const rec = peekClassD(store, leg, 'scVehicleAvail', cycleMonth, code);
+    return rec ? { code, name: rec.name, zone: rec.zone, rows: rec.rows } : null;
+  }).filter(Boolean);
+}
+
+// LMDC Master -- deliberately a thin passthrough this phase (see build notes): the DC-pool
+// generation algorithm itself (Co-Loading/MDC assignment, hold-time draws, etc.) is NOT
+// rewritten here, just given a home inside the engine's per-cycle storage shape so it's
+// structurally ready for real per-cycle editing later, without risking that complex logic now.
+function seedLmdcRawLeg(store, leg, genesisMonth, lmdcArray) {
+  ensureClassDMaterialized(store, leg, 'lmdc', genesisMonth, 'ALL', { rows: lmdcArray });
+}
+function materializeLmdcRawLeg(store, leg, cycleMonth) {
+  const rec = peekClassD(store, leg, 'lmdc', cycleMonth, 'ALL');
+  return rec ? rec.rows : [];
+}
+
+// Generic per-leg SC-master view -- used by NLH/FM Carting (RLH keeps its own richer
+// materializeRLHScs() since it carries many more RLH-specific generation fields). Returns each
+// visible SC's shared A+B fields plus whichever leg-local D fields the caller asks for.
+function materializeLegScMasterView(store, leg, cycleMonth, dFieldNames) {
+  const codes = Object.keys(store.scRegistry).filter(code => isVisible(store, code, cycleMonth));
+  return codes.map(code => {
+    const identity = store.scRegistry[code];
+    const b = peekClassB(store, code, cycleMonth) || {};
+    const d = peekClassD(store, leg, 'scMaster', cycleMonth, code) || {};
+    const row = {
+      code, name: identity.name, zone: identity.zone, lat: identity.lat, lng: identity.lng,
+      sortCap: b.sortCap != null ? b.sortCap : 0, volCap: b.volCap != null ? b.volCap : 0, htp: b.htp != null ? b.htp : 0,
+    };
+    (dFieldNames || []).forEach(f => { row[f] = d[f] != null ? d[f] : null; });
+    return row;
+  });
+}
+
+// Generic per-leg local-field writer -- reads the existing D record (if any) as the clone
+// base, then writes the one field. Reused by NLH/FM's own masters screens so they don't each
+// need their own bespoke setter, the way RLH's submitAddSc() has its own richer one.
+function setLegScLocalField(store, leg, cycleMonth, code, field, value) {
+  const existing = peekClassD(store, leg, 'scMaster', cycleMonth, code) || {};
+  setClassDField(store, leg, 'scMaster', cycleMonth, code, field, value, existing);
+}
+
+// ---------------------------------------------------------------------------
+// Uploads (Class F) -- thin, deliberately un-clever. Never cloned.
+// ---------------------------------------------------------------------------
+
+function setUpload(store, leg, cycleMonth, slot, payload) {
+  store.uploads[leg] = store.uploads[leg] || {};
+  store.uploads[leg][cycleMonth] = store.uploads[leg][cycleMonth] || {};
+  store.uploads[leg][cycleMonth][slot] = payload;
+}
+
+function getUpload(store, leg, cycleMonth, slot) {
+  return ((store.uploads[leg] || {})[cycleMonth] || {})[slot] || null;
+}
+
+// ---------------------------------------------------------------------------
+// NLH ingested plans (referenced by RLH's Route Scheduler picker)
+// ---------------------------------------------------------------------------
+
+function ingestNlhPlan(store, cycleMonth, planRecord) {
+  store.nlhIngestedPlans[cycleMonth] = store.nlhIngestedPlans[cycleMonth] || [];
+  store.nlhIngestedPlans[cycleMonth].push(planRecord);
+  return planRecord;
+}
+
+function listNlhIngestedPlans(store, cycleMonth) {
+  return store.nlhIngestedPlans[cycleMonth] || [];
+}
+
+// Looks up an ingested NLH plan by planId across EVERY cycle-month, not just one -- needed
+// because a schedulerPlans row only stores the planId (set at trigger time from whichever
+// month the Step 2 picker was browsing), not which month it came from. planIds are
+// timestamp-based (effectively unique), so a full scan across the (small) set of months that
+// have ever had anything ingested is correct and cheap enough for this prototype's scale.
+function findNlhIngestedPlanById(store, planId) {
+  for (const month of Object.keys(store.nlhIngestedPlans)) {
+    const found = (store.nlhIngestedPlans[month] || []).find(p => p.planId === planId);
+    if (found) return found;
+  }
+  return null;
+}
+
 class NDCApp extends React.Component {
   constructor(props) {
     super(props);
@@ -5420,6 +6148,12 @@ class NDCApp extends React.Component {
     // 2026-07-30 — built once up front so the seeded demo NLH plan below can reference real SC
     // codes (needed so validation rule #1 has something real to check if this demo file is ever
     // re-selected live, rather than crashing on a null/placeholder scCodes list).
+    // 2026-08-25 — multi-leg data-layer engine setup, must exist before buildSeed() runs since
+    // buildSeed() now seeds/materializes RLH's masters through it. this.activeCycleMonth is a
+    // fixed instance property for this build phase (real per-leg cycle SWITCHING via the sidebar
+    // selector is a later part) — all three legs default to the real current month.
+    this.engineStore = makeEmptyStore();
+    this.activeCycleMonth = { rlh: currentMonthKey(), nlh: currentMonthKey(), fm: currentMonthKey() };
     const _seedForNlh = this.buildSeed();
     const _demoNlhScCodes = (_seedForNlh.scs || []).slice(0, Math.ceil((_seedForNlh.scs || []).length * 0.8)).map(s => s.code);
     this.state = {
@@ -5433,7 +6167,12 @@ class NDCApp extends React.Component {
       // of always being hardcoded to Rahul Sharma, so more-than-one-reviewer scenarios can actually be
       // simulated (submit as A, switch to B, submit differently, see the co-reviewer overlay update).
       opsActingPersona: null,
-      view: 'inputs', // Command Center hidden for now -- see nav comment near plannerNav
+      view: 'landing', // Command Center hidden for now -- see nav comment near plannerNav
+      // 2026-08-25 — multi-leg landing: user picks FM/NLH/RLH before anything else. activeLeg is
+      // null until a card is picked; activeCycleMonth mirrors the constructor-time snapshot
+      // (this.activeCycleMonth) into real state so switching cycles actually re-renders.
+      activeLeg: null, activeCycleMonth: Object.assign({}, this.activeCycleMonth), legCycleOpen: false,
+      legInputsTab: 'masters', legIngestFileName: '', engineTick: 0,
       showCoach: props.showFtux !== false,
       toast: null,
       inputsTab: 'volume',
@@ -5624,11 +6363,25 @@ class NDCApp extends React.Component {
     const rf = (a, b) => a + R() * (b - a);
     const pick = (arr) => arr[Math.floor(R() * arr.length)];
 
-    // Local Speed / Non-Local Speed (km/h) added 2026-07-30 — Route Scheduler's base default
-    // travel speed per vehicle type, for local- vs. non-local-zone DCs. SC Vehicle Availability
-    // can override per-SC; SC Master carries a further per-SC blanket value Route Scheduler
-    // actually defaults from. Larger/highway-oriented vehicles get a bigger non-local/local gap.
-    const VEH = [
+    // ===== 2026-08-25 rewire — SC Master / Vehicle Master now live in the multi-leg data-layer
+    // engine (see the NDC MULTI-LEG DATA LAYER section above the class definition), not generated
+    // inline here as a flat throwaway array. `this.engineStore` and `this.activeCycleMonth` are
+    // set up in the constructor BEFORE buildSeed() is called. seedRLHMasterData()/materializeRLHScs()
+    // replace the old 80-SC generation loop + MDC push entirely (removed data, per product decision
+    // — this was test data, no need to preserve the exact old values) but hand back the SAME flat
+    // shape (code/name/zone/dcCount/volume/lat/lng/sortCap/volCap/docks/hasRef/farDist/zeroVolDc/
+    // missVolDc/pocs/nodeKind, PLUS the previously-lazy resolveScFields() fields now materialized
+    // directly: rlhDocks/nlhDocks/localTp/nonLocalTp/localSpeed/nonLocalSpeed/open/close/
+    // holdTimeOn/maxHoldLocal/maxHoldNonLocal) — so every line below this point that consumes `scs`
+    // keeps working completely unchanged.
+    seedRLHMasterData(this.engineStore, { genesisMonth: RLH_GENESIS_MONTH });
+    const scs = materializeRLHScs(this.engineStore, this.activeCycleMonth.rlh);
+
+    // Vehicle Master — same "seed once, then always read through the engine" pattern. VEH_SEED is
+    // the genesis definition (identical values to the old hardcoded array); VEH is what every line
+    // below actually consumes, now sourced from materializeVehicleMasterLeg() so a future SC Master/
+    // Vehicle Master edit made through the engine is reflected here without touching this function.
+    const VEH_SEED = [
       { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'], localSpeed: 20, nonLocalSpeed: 30 },
       { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'], localSpeed: 22, nonLocalSpeed: 34 },
       { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'], localSpeed: 24, nonLocalSpeed: 38 },
@@ -5638,75 +6391,10 @@ class NDCApp extends React.Component {
       { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'], localSpeed: 24, nonLocalSpeed: 45 },
       { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'], localSpeed: 22, nonLocalSpeed: 48 },
     ];
+    seedVehicleMasterLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, VEH_SEED);
+    const VEH = materializeVehicleMasterLeg(this.engineStore, 'rlh', this.activeCycleMonth.rlh);
 
     const NAMES = ['Aarti Nair','Rahul Sharma','Imran Khan','Deepa Rao','Suresh Menon','Neha Tiwari','Vivek Pillai','Karthik Varma','Pooja Gupta','Sandeep Lal','Megha Bose','Arjun Desai'];
-
-    const Z = [
-      { z: 'North', cities: [['Delhi','DEL'],['Gurugram','GGN'],['Noida','NOI'],['Jaipur','JAI'],['Lucknow','LKO'],['Kanpur','KNP'],['Chandigarh','CHD'],['Ludhiana','LDH'],['Agra','AGR'],['Meerut','MRT'],['Amritsar','ASR'],['Dehradun','DDN']], lat: [26.5, 30.8], lng: [74.5, 80.5] },
-      { z: 'West', cities: [['Mumbai','BOM'],['Pune','PNQ'],['Ahmedabad','AMD'],['Surat','STV'],['Nagpur','NAG'],['Nashik','ISK'],['Rajkot','RAJ'],['Vadodara','BDQ'],['Indore','IDR'],['Bhopal','BHO'],['Thane','TNA'],['Gwalior','GWL'],['Ujjain','UJN']], lat: [18.4, 23.6], lng: [70.0, 77.2] },
-      { z: 'South', cities: [['Bengaluru','BLR'],['Chennai','MAA'],['Hyderabad','HYD'],['Coimbatore','CJB'],['Kochi','COK'],['Madurai','IXM'],['Mysuru','MYS'],['Vijayawada','VGA'],['Vizag','VTZ'],['Trichy','TRZ'],['Salem','SXV']], lat: [9.5, 17.6], lng: [75.5, 83.2] },
-      { z: 'East', cities: [['Kolkata','CCU'],['Patna','PAT'],['Bhubaneswar','BBI'],['Ranchi','IXR'],['Guwahati','GAU'],['Siliguri','IXB'],['Cuttack','CTC'],['Durgapur','RDP'],['Asansol','ASN'],['Raipur','RPR'],['Jabalpur','JLR'],['Bilaspur','PAB']], lat: [21.5, 27.2], lng: [83.5, 92.0] },
-    ];
-
-    const scs = [];
-    let zi = 0, ci = 0, guard = 0;
-    while (scs.length < 80 && guard < 600) {
-      guard++;
-      const zone = Z[zi % Z.length];
-      const cityArr = zone.cities;
-      const city = cityArr[ci % cityArr.length];
-      const variant = scs.filter(x => x.cityCode === city[1]).length;
-      if (variant === 0 || (variant < 2 && R() < 0.45)) {
-        const code = variant === 0 ? city[1] + 'S' : city[1] + (variant + 1);
-        const dcCount = ri(95, 205);
-        const volume = Math.round(dcCount * rf(230, 420));
-        const lat = rf(zone.lat[0], zone.lat[1]);
-        const lng = rf(zone.lng[0], zone.lng[1]);
-        // farDist = farthest-DC round-trip distance for this SC (km) — used by the Step-3 distance-limit
-        // validation. Seed distribution (deterministic, index-driven): most SCs sit comfortably within the
-        // common vehicle range (~150–235 km < TATA ACE's 250 km limit), and a realistic handful exceed it
-        // (~270–520 km) so the demo trips the distance flag on only a few SCs by default, not on almost all.
-        // Uses exactly ONE rf() draw to preserve the deterministic RNG stream for all later seeded fields.
-        const farIdx = scs.length;
-        const farOverLimit = (farIdx % 17 === 7) || (farIdx % 19 === 6) || (farIdx % 23 === 1);
-        const farDist = farOverLimit ? Math.round(270 + rf(0, 1) * 250) : Math.round(150 + rf(0, 1) * 85);
-        const zeroVolDc = (variant + city[1].charCodeAt(0)) % 5 === 0 ? ri(1, 4) : 0;
-        // Cap the volume-gap total (zero + miss) at 6 so it never exceeds the 6 droppable LMDC rows
-        // (expand list indices 0-5). This keeps the "drop the zero/missing-volume DCs" resolution
-        // genuinely completable per SC — the planner can always drive volGap to 0 by dropping, without
-        // being forced to de-select the SC just because the seeded gap outran the droppable rows.
-        const missRaw = (variant + city[1].charCodeAt(1)) % 4 === 0 ? ri(2, 9) : 0;
-        const missVolDc = Math.min(missRaw, Math.max(0, 6 - zeroVolDc));
-        // 2026-07-29 — Sort Capacity redefined: it's the number of DCs an SC can serve (a
-        // count, not a shipment-volume figure), realistically 50-250. Always >= dcCount (the SC
-        // can't be seeded already over its own capacity), with modest headroom. Volume Capacity
-        // stays a genuine shipment-volume figure — the two are separate metrics.
-        scs.push({ code, name: city[0], cityCode: city[1], zone: zone.z, dcCount, volume, lat: +lat.toFixed(3), lng: +lng.toFixed(3), sortCap: Math.min(250, dcCount + ri(10, 40)), volCap: Math.round(volume * rf(0.96, 1.3) / 1000) * 1000, docks: ri(3, 9), hasRef: R() < 0.82, farDist, zeroVolDc, missVolDc, pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]), nodeKind: 'SC' });
-      }
-      ci++;
-      if (ci % cityArr.length === 0) zi++;
-    }
-
-    // ===== MDC nodes (2026-08-19) — Multi-Distribution-Centre nodes, added by a Planner in SC
-    // Master exactly like a real SC (nodeKind: 'MDC' distinguishes them everywhere downstream).
-    // Once a DC is tagged RLH Mode = "MDC" on LMDC Master and mapped to one of these, that DC's
-    // link moves here entirely (AutoDML gives it a direct MDC→DC link, no LMSC→DC link at all —
-    // see 04_Rule_Engine.md) — Route Planner then runs FROM the MDC exactly as it would from any
-    // real SC. 3 demo MDCs seeded here so Co-Loading/MDC master-data screens aren't empty on
-    // first load; DC reassignment itself happens in the DC-pool generation right below.
-    const MDC_NAMES = [['Panvel MDC', 'PNVL'], ['Sonipat MDC', 'SNPT'], ['Hosur MDC', 'HSUR']];
-    const MDC_ZONES = ['West', 'North', 'South'];
-    MDC_NAMES.forEach((mn, mi) => {
-      const zone = MDC_ZONES[mi];
-      const near = scs.find(s => s.zone === zone) || scs[0];
-      scs.push({
-        code: 'MDC-' + (mi + 1), name: mn[0], cityCode: mn[1], zone,
-        dcCount: 0, volume: 0, lat: near ? near.lat + 0.15 : 20, lng: near ? near.lng + 0.15 : 77,
-        sortCap: 60, volCap: 40000, docks: ri(3, 5), hasRef: false, farDist: false, zeroVolDc: 0, missVolDc: 0,
-        pocs: Array.from({ length: ri(2, 3) }, () => NAMES[Math.floor(R() * NAMES.length)]),
-        nodeKind: 'MDC',
-      });
-    });
 
     // ===== Canonical DC pool (2026-08-08) ==================================================
     // One shared pool of DC identities per SC, seeded HERE — before plans/routes exist — so every
@@ -6081,7 +6769,7 @@ class NDCApp extends React.Component {
     // vehicle COUNT and the Zone-Feasibility (Both / Local / Non-Local).
     const vehDist = (name) => { const v = VEH.find(x => x.name === name); return v ? v.dist : 600; };
     const ZFEAS = ['Both', 'Local', 'Non-Local'];
-    const scVehAvail = scs.slice(0, 6).map((sc, scIdx) => {
+    const scVehAvailSeed = scs.slice(0, 6).map((sc, scIdx) => {
       const nTypes = scIdx === 0 ? ri(4, 5) : ri(2, 3);
       const rows = [];
       const used = {};
@@ -6103,6 +6791,11 @@ class NDCApp extends React.Component {
       }
       return { code: sc.code, name: sc.name + ' LMSC', zone: sc.zone, rows };
     });
+    // 2026-08-25 — registered into the engine (per-leg Class D, "own table per leg" per product
+    // decision) for structural presence/future cycle-clone support. Generation logic above is
+    // UNCHANGED — this just gives the already-generated data a home in the new storage shape.
+    seedScVehAvailLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, scVehAvailSeed);
+    const scVehAvail = materializeScVehAvailLeg(this.engineStore, 'rlh', this.activeCycleMonth.rlh);
     // 2026-07-29 — schedulerPlans: a SEPARATE entity from `plans` (RLH Route & Vehicle Plans), by
     // design decision. Each row is created live by "Run Scheduler" (Ops Alignment, Finalised RLH
     // plans, planner view only) or by starting fresh from Route Scheduler's own Plan Selection step.
@@ -6197,6 +6890,12 @@ class NDCApp extends React.Component {
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
     // See the stitching pass further below (after `plans` is built).
+    // 2026-08-25 — LMDC Master registered into the engine as a structural passthrough (see build
+    // notes: the DC-pool/Co-Loading/MDC generation algorithm itself is intentionally NOT rewritten
+    // this phase, just given a home in the per-cycle storage shape). Registered here, after every
+    // mutation above has settled, so the frozen copy matches exactly what's returned below.
+    seedLmdcRawLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
+
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
@@ -6428,18 +7127,75 @@ class NDCApp extends React.Component {
     const editing = !!st.addScEditCode;
     return { addScOpen: !!st.addScOpen, addScCore: addScCore, addScRlh: addScRlh, addScNlh: addScNlh, addScContacts: addScContacts, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
   }
+  // 2026-08-25 rewrite — data.scs is now ALWAYS the live materialization from the engine (see
+  // refreshScs() below), so there's no more scEdits/addedScs overlay to merge here: every field
+  // on `sc` is already resolved (A+B+D combined), never null for an engine-sourced SC. Reads
+  // this.state.activeCycleMonth.rlh (not the constructor-time instance property) so a cycle
+  // switch made through the new selector actually changes what gets materialized.
+  refreshScs() {
+    const scs = materializeRLHScs(this.engineStore, this.state.activeCycleMonth.rlh);
+    this.setState({ data: Object.assign({}, this.state.data, { scs }) });
+  }
+  // selectLeg() -- landing-card click. RLH goes straight into the existing full experience
+  // (view: 'inputs', unchanged). NLH/FM Carting go to the new leg-stub shell (Design Inputs
+  // scaffolding only this build -- see LEG_META in renderVals()).
+  selectLeg(leg) {
+    createCycle(this.engineStore, leg, this.state.activeCycleMonth[leg], { tables: [] }); // no-op for nlh/fm until their own masters exist; marks the cycle "started" either way
+    this.setState({ activeLeg: leg, view: leg === 'rlh' ? 'inputs' : 'legstub', legCycleOpen: false });
+  }
+  // switchCycle() -- per-leg cycle selector. Ensures the target cycle is "created" (eager
+  // carry-forward of local tables, per product decision -- no inherit/fresh prompt), then for
+  // RLH specifically re-materializes every master table so the whole app reflects the new month.
+  switchCycle(leg, month) {
+    createCycle(this.engineStore, leg, month, leg === 'rlh' ? { tables: [{ table: 'scMaster', defaults: {} }] } : { tables: [] });
+    const activeCycleMonth = Object.assign({}, this.state.activeCycleMonth, { [leg]: month });
+    if (leg === 'rlh') {
+      const scs = materializeRLHScs(this.engineStore, month);
+      const VEH = materializeVehicleMasterLeg(this.engineStore, 'rlh', month);
+      const scVehAvail = materializeScVehAvailLeg(this.engineStore, 'rlh', month);
+      const lmdcs = materializeLmdcRawLeg(this.engineStore, 'rlh', month);
+      this.setState({ activeCycleMonth, legCycleOpen: false, data: Object.assign({}, this.state.data, { scs, VEH, scVehAvail, lmdcs }) });
+    } else {
+      this.setState({ activeCycleMonth, legCycleOpen: false });
+    }
+    this.showToast('Switched to ' + monthLabel(month), '#003F98');
+  }
+  // 2026-08-25 (Phase 4) — NLH/FM Carting masters + uploads + (NLH-only) Design Ingestion.
+  // bumpEngineTick() is the cheap "force a re-render" mechanism for edits that mutate
+  // this.engineStore directly without going through this.state.data (unlike RLH's scs/VEH/etc,
+  // which get re-materialized into state.data on every change) -- there's no separate flat
+  // mirror for NLH/FM's masters, renderVals() just reads the engine live each render.
+  bumpEngineTick() { this.setState({ engineTick: (this.state.engineTick || 0) + 1 }); }
+  setLegField(code, field, value) {
+    setLegScLocalField(this.engineStore, this.state.activeLeg, this.state.activeCycleMonth[this.state.activeLeg], code, field, value);
+    this.bumpEngineTick();
+  }
+  onLegUploadFile(slot, file) {
+    if (!file) return;
+    const leg = this.state.activeLeg, cycleMonth = this.state.activeCycleMonth[leg];
+    setUpload(this.engineStore, leg, cycleMonth, slot, { fileMeta: { name: file.name, size: file.size }, uploadedAt: new Date().toLocaleString() });
+    this.bumpEngineTick();
+    this.showToast(file.name + ' uploaded', '#128A3E');
+  }
+  submitLegIngest() {
+    const name = (this.state.legIngestFileName || '').trim();
+    if (!name) { this.showToast('Enter a file name to ingest', '#C77B00'); return; }
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    ingestNlhPlan(this.engineStore, cycleMonth, { planId: 'NLH-ING-' + Date.now(), fileMeta: { name }, ingestedAt: new Date().toLocaleString() });
+    this.setState({ legIngestFileName: '' });
+    this.bumpEngineTick();
+    this.showToast(name + ' ingested — available to RLH\u2019s Route Scheduler picker', '#128A3E');
+  }
   // C10 — open the SC editor pre-filled from an existing SC (real inline-equivalent edit, not a dead control).
   openScEdit(code) {
     const st = this.state;
-    const base = (st.data.scs || []).concat(st.addedScs || []).find(s => s.code === code);
-    if (!base) { this.comingSoon('Edit SC'); return; }
-    const sc = (st.scEdits || {})[code] ? Object.assign({}, base, st.scEdits[code]) : base;
-    const rf = this.resolveScFields(sc);
+    const sc = (st.data.scs || []).find(s => s.code === code);
+    if (!sc) { this.comingSoon('Edit SC'); return; }
     const pl = sc.pocs || [];
     const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
       lat: sc.lat != null ? String(sc.lat) : '', lng: sc.lng != null ? String(sc.lng) : '',
-      nlhDocks: String(rf.nlhDocks), rlhDocks: String(rf.rlhDocks), localTp: String(rf.localTp), nonLocalTp: String(rf.nonLocalTp), localSpeed: String(rf.localSpeed), nonLocalSpeed: String(rf.nonLocalSpeed), open: rf.openTime, close: rf.closeTime,
-      holdTimeOn: rf.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(rf.maxHoldLocal), maxHoldNonLocal: String(rf.maxHoldNonLocal),
+      nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp), localSpeed: String(sc.localSpeed), nonLocalSpeed: String(sc.nonLocalSpeed), open: sc.open, close: sc.close,
+      holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
       opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '' };
     this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null });
   }
@@ -6458,6 +7214,11 @@ class NDCApp extends React.Component {
     this.setAvailField(scCode, vehType, 'cnt', (isNaN(n) || n < 0) ? 0 : n);
   }
   submitAddSc() {
+    if (this.isRlhCyclePast()) {
+      this.setState({ addScOpen: false, addScEditCode: null, addScForm: {} });
+      this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00');
+      return;
+    }
     const st = this.state; const f = st.addScForm || {};
     const code = (f.code || '').trim().toUpperCase();
     if (!code) { this.showToast('SC Code is required', '#C77B00'); return; }
@@ -6473,27 +7234,46 @@ class NDCApp extends React.Component {
     }
     const pocs = ['opsZh', 'opsCh', 'opsAm1', 'opsAm2'].map(k => (f[k] || '').trim()).filter(Boolean);
     const rlhDocksN = opt(f.rlhDocks), nlhDocksN = opt(f.nlhDocks);
-    const patch = {
-      name: (f.name || '').trim() || code, zone: f.zone || 'South', sortCap: num(f.sortCap), volCap: num(f.volCap),
+    const name = (f.name || '').trim() || code;
+    const zone = f.zone || 'South';
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const editing = !!st.addScEditCode;
+
+    // 2026-08-25 rewrite — writes straight through the engine instead of the old scEdits/
+    // addedScs overlay. Class A (name/zone/lat/lng) updates the shared identity registry
+    // directly (or calls addSC() for a brand-new code); Class B (sortCap/volCap) versions by
+    // cycle-month via setClassBField; everything else on this form is Class D, RLH-local.
+    if (!this.engineStore.scRegistry[code]) {
+      addSC(this.engineStore, code, { name, zone, lat: lat != null ? lat : 0, lng: lng != null ? lng : 0 }, cycleMonth);
+    } else {
+      const row = this.engineStore.scRegistry[code];
+      row.name = name; row.zone = zone;
+      if (lat != null) row.lat = lat;
+      if (lng != null) row.lng = lng;
+    }
+    setClassBField(this.engineStore, code, cycleMonth, 'sortCap', num(f.sortCap));
+    setClassBField(this.engineStore, code, cycleMonth, 'volCap', num(f.volCap));
+
+    const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
+    const dPatch = {
       rlhDocks: rlhDocksN, nlhDocks: nlhDocksN, docks: (rlhDocksN || 0) + (nlhDocksN || 0),
-      localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp), open: f.open || null, close: f.close || null,
+      localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp), openTime: f.open || null, closeTime: f.close || null,
       localSpeed: opt(f.localSpeed), nonLocalSpeed: opt(f.nonLocalSpeed),
       holdTimeOn: f.holdTimeOn === 'Off' ? false : true, maxHoldLocal: opt(f.maxHoldLocal), maxHoldNonLocal: opt(f.maxHoldNonLocal),
-      lat, lng, pocs: pocs.length ? pocs : ['\u2014'],
+      pocs: pocs.length ? pocs : ['\u2014'],
     };
-    if (st.addScEditCode) {
-      // Edit mode — apply changes to a session-edited overlay so the existing SC row reflects them.
-      const edits = Object.assign({}, st.scEdits || {});
-      edits[st.addScEditCode] = patch;
-      // also patch any session-added SC in place
-      const addedScs = (st.addedScs || []).map(s => s.code === st.addScEditCode ? Object.assign({}, s, patch) : s);
-      this.setState({ scEdits: edits, addedScs: addedScs, addScOpen: false, addScEditCode: null, addScForm: {} });
-      this.showToast('Sort Centre ' + st.addScEditCode + ' updated', '#128A3E');
-      return;
+    if (!editing) {
+      // Brand-new SC has no DC pool of its own yet -- seed the generation-time fields to sane
+      // empty defaults (matches what the old addedScs path used to do).
+      Object.assign(dPatch, { dcCount: 0, volume: num(f.volCap), cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, nodeKind: 'SC', hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0 });
     }
-    const sc = Object.assign({ code: code, cityCode: code.replace(/[^A-Z]/g, '').slice(0, 3) || code, dcCount: 0, volume: num(f.volCap), hasRef: false, farDist: 0, zeroVolDc: 0, missVolDc: 0 }, patch, { lat: lat != null ? lat : 0, lng: lng != null ? lng : 0 });
-    this.setState({ addedScs: [sc].concat(st.addedScs || []), addScOpen: false, addScForm: {}, inputsZones: [], inputsSearch: '' });
-    this.showToast('Sort Centre ' + code + ' added to the master', '#128A3E');
+    Object.keys(dPatch).forEach(field => {
+      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, field, dPatch[field], dBase);
+    });
+
+    this.refreshScs();
+    this.setState({ addScOpen: false, addScEditCode: null, addScForm: {}, inputsZones: [], inputsSearch: '' });
+    this.showToast(editing ? ('Sort Centre ' + code + ' updated') : ('Sort Centre ' + code + ' added to the master'), '#128A3E');
   }
   // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
   // fields into st.lmdcEdits, keyed by LMDC Code — never mutates d.lmdcs itself.
@@ -7481,7 +8261,12 @@ class NDCApp extends React.Component {
         pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
-        rowEdit: () => this.openScEdit(s.code), rowDelete: () => { const r = Object.assign({}, this.state.scRemoved || {}); r[s.code] = true; this.setState({ scRemoved: r }); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[s.code]; this.setState({ scRemoved: rr }); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
+        // 2026-08-25 rewrite — delete/undo now go through the engine's effective-month existence
+        // log (setSCStatus) instead of the old scRemoved session overlay. The undo toast re-adds
+        // an 'active' entry at the SAME effective month as the delete -- this only resolves
+        // correctly because of the resolveExistence tie-break fix (later-pushed same-month entry
+        // wins), verified in dataLayerHarness.js.
+        rowEdit: () => this.openScEdit(s.code), rowDelete: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'deleted', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
     });
     // ===== LMDC Master (2026-08-06, fixed dropdowns 2026-08-07) =========================
     // Search + zone filter + pagination over d.lmdcs (thousands of rows — generated once in
@@ -7761,7 +8546,7 @@ class NDCApp extends React.Component {
     const ing = st.ingestionTab || 'rlh';
     // 2026-07-29 — NLH Plan ingestion activated (was "arriving next cycle"). Feeds Route
     // Scheduler's NLH Landing Plan Selection step. FM Carting stays a future-cycle stub.
-    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['nlh', 'NLH Plan', false, 'Ingest an NLH Landing Plan (inbound linehaul arrivals at this LMSC) — feeds Route Scheduler\u2019s NLH Landing Plan Selection step.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0] }) }));
+    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['nlh', 'NLH Plan', true, 'Moved — ingest NLH plans on the SC-SC and NLH Design card\u2019s Design Ingestion tab. Route Scheduler\u2019s Step 2 references them from there by cycle month.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0] }) }));
     const isIngComingSoon = ing === 'fm';
     return {
       gate,
@@ -7781,6 +8566,9 @@ class NDCApp extends React.Component {
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
       scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 40px' + (st.scNlhOpen ? ' 80px' : '') + ' 140px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
+      // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
+      // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
+      rlhCyclePast: this.isRlhCyclePast(), rlhCycleLabel: monthLabel(st.activeCycleMonth.rlh),
       mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.'], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Every LMDC across the network, one row per DC — location/capacity/status from AutoDML & Node Inputs; a few operating parameters editable here.']].map(t => ({ label: t[1] + ' (' + t[2] + ')', tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
       scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
       addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
@@ -8360,7 +9148,7 @@ class NDCApp extends React.Component {
     // earlier approach of nesting SC-DC Mapping under RLH's own row, which mis-represented it as
     // part of RLH — Node Mapping is its own peer tier, just not built yet.
     const creationTierName = st.creationTier || 'RLH';
-    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
     const creationTierSeg = CTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: creationTierName === t[0],
       bg: creationTierName === t[0] ? '#EAEEFB' : '#fff', bd: creationTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: creationTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: creationTierName === t[0] ? '700' : '600',
@@ -8520,7 +9308,11 @@ class NDCApp extends React.Component {
     const parentSp = d.plans.find(p => p.id === sp.parentPlanId);
     const sc = d.scs.find(s => s.code === sp.scCode);
     const m = this.computeSchedulerMetricsFor(sp) || {};
-    const nlhP = (st.ingestedNlhPlans || []).find(p => p.runId === sp.nlhPlanId);
+    // 2026-08-25 rewrite — NLH plans now live in the engine, not st.ingestedNlhPlans (see the
+    // Route Scheduler Step 2 rewrite). Only `.name` is used here (nlhPlanName below), so the
+    // adapted shape just needs that one field.
+    const nlhPRaw = sp.nlhPlanId ? findNlhIngestedPlanById(this.engineStore, sp.nlhPlanId) : null;
+    const nlhP = nlhPRaw ? { runId: nlhPRaw.planId, name: nlhPRaw.fileMeta.name } : null;
     // 2026-07-31 — a plan Finalised via "Finalise Directly" is tracked distinctly from one that went
     // through the full alignment loop, so the card can say "Pushed Without Alignment" instead of a
     // plain "Finalised" that would imply Ops actually reviewed it. See doSchedPush().
@@ -8659,7 +9451,18 @@ class NDCApp extends React.Component {
   // Directly. Simpler than RLH's doPush: a schedulerPlans row is already fully formed at Trigger
   // time (no separate run-vs-plan promotion needed), so this just flips status + reviewer fields.
   // Reviewer pool = the SC's own POCs (SC Master), same list RLH uses — confirmed by Vignesh.
+  // 2026-08-25 (Phase 7) — real past-cycle enforcement, based on the actual per-leg
+  // activeCycleMonth (NOT the older cosmetic st.designCycle/isPastCycle, which still drives
+  // sidebar nav exactly as before and is intentionally left untouched -- unifying the two is a
+  // follow-up, flagged rather than silently left inconsistent). Design Inputs edits and
+  // Push-to-Alignment are blocked for a past RLH cycle; Finalise Directly stays available.
+  isRlhCyclePast() { return monthIsPast(this.state.activeCycleMonth.rlh, currentMonthKey()); }
   doSchedPush(finaliseDirect) {
+    if (!finaliseDirect && this.isRlhCyclePast()) {
+      this.setState({ schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });
+      this.showToast('This cycle is in the past — Push to Alignment is disabled. Finalise Directly is still available.', '#C77B00');
+      return;
+    }
     const st = this.state, d = st.data;
     const spId = st.schedPushPlanId || st.schedFinaliseDirectPlanId;
     const idx = (d.schedulerPlans || []).findIndex(sp => sp.id === spId);
@@ -8675,6 +9478,11 @@ class NDCApp extends React.Component {
     else this.showToast('Pushed ' + spId + ' to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
   }
   doPush(finaliseDirect) {
+    if (!finaliseDirect && this.isRlhCyclePast()) {
+      this.setState({ pushOpen: false, finDirectOpen: false });
+      this.showToast('This cycle is in the past — Push to Alignment is disabled. Finalise Directly is still available.', '#C77B00');
+      return;
+    }
     const st = this.state, d = st.data, code = st.pushSCcode;
     const targetStatus = finaliseDirect ? 'Finalised' : 'Pushed';
     const sc = d.scs.find(s => s.code === code);
@@ -9007,7 +9815,15 @@ class NDCApp extends React.Component {
     if (!parents.length) return;
     // Defensive re-check of validation rule #1 (blocking) — the button above isn't a real HTML
     // `disabled`, just styled to look inert, so this guard is what actually stops the trigger.
-    const chosenNlh = (st.ingestedNlhPlans || []).find(p => p.runId === st.schedulerNlhPlanId);
+    // 2026-08-25 rewrite — chosenNlh now resolves through the engine (see Route Scheduler Step 2
+    // rewrite), not st.ingestedNlhPlans. scCodes/volumeBySC carry the same known simplification
+    // noted at the Step 2 rewrite (stubbed as "covers every current RLH SC at its own volume" --
+    // no real per-DC NLH landing data exists yet).
+    const chosenNlhRaw = findNlhIngestedPlanById(this.engineStore, st.schedulerNlhPlanId);
+    const chosenNlh = chosenNlhRaw ? {
+      runId: chosenNlhRaw.planId, name: chosenNlhRaw.fileMeta.name,
+      scCodes: d.scs.map(s => s.code), volumeBySC: d.scs.reduce((acc, s) => { acc[s.code] = s.volume; return acc; }, {}),
+    } : null;
     const uncovered = parents.filter(p => !(chosenNlh && chosenNlh.scCodes && chosenNlh.scCodes.indexOf(p.scCode) >= 0));
     if (!chosenNlh || uncovered.length > 0) {
       this.showToast('Blocked \u2014 ' + (uncovered.length || parents.length) + ' SC' + ((uncovered.length || parents.length) === 1 ? '' : 's') + ' missing NLH landing data', '#D14B4B');
@@ -9127,8 +9943,23 @@ class NDCApp extends React.Component {
     const scsWithFinalEmpty = scsWithFinal.length === 0;
 
     // ===== STEP 2 — NLH Plan Selection: one GLOBAL file for the whole batch (LMSC-wise, like the volume file). =====
+    // 2026-08-25 rewrite — RLH no longer owns its own NLH-file upload here. NLH Design Ingestion
+    // now lives exclusively on the NLH card (see Phase 4); this picker reads whatever NLH has
+    // ingested for a chosen NLH cycle-month via listNlhIngestedPlans(), then adapts each record
+    // into the SAME shape this Step 2 (and Step 4's validation rules #1/#2) already expects --
+    // so nothing downstream of `allNlhPlans` needs to change. Known simplification, stated
+    // plainly rather than silently: the engine's ingestion record carries no real per-DC
+    // volume/coverage data (NLH's own Design Creation solver doesn't exist yet), so scCodes/
+    // volumeBySC are stubbed as "covers every currently-selected RLH SC, at that SC's own RLH
+    // volume" -- validation rules #1/#2 will not meaningfully fire against an NLH-sourced plan
+    // until NLH's own solver (and real per-DC landing data) exists.
+    const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || currentMonthKey();
     const q2 = (st.schedulerNlhSearch || '').toLowerCase();
-    const allNlhPlans = st.ingestedNlhPlans || [];
+    const allNlhPlans = listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth).map(p => ({
+      runId: p.planId, name: p.fileMeta.name, rows: 0, by: 'NLH Design Ingestion', date: p.ingestedAt, status: 'Validated', errors: 0,
+      scCount: d.scs.length, scCodes: d.scs.map(s => s.code),
+      volumeBySC: d.scs.reduce((acc, s) => { acc[s.code] = s.volume; return acc; }, {}),
+    }));
     const nlhPlansFiltered = allNlhPlans.filter(p => !q2 || p.name.toLowerCase().indexOf(q2) >= 0);
     const chosenNlhRunId = st.schedulerNlhPlanId;
     const schedulerNlhCards = nlhPlansFiltered.map(p => ({ runId: p.runId, name: p.name, rows: fmtIntSch(p.rows), scCount: p.scCount, date: p.date, by: p.by,
@@ -9138,6 +9969,17 @@ class NDCApp extends React.Component {
     const canNextScheduler1 = selectedPlanIds.length > 0 && nlhPicked;
     const schedulerNlhNoResults = allNlhPlans.length > 0 && nlhPlansFiltered.length === 0;
     const schedulerNlhEmpty = allNlhPlans.length === 0;
+    // NLH source-month picker -- independent of RLH's own active cycle, since NLH runs its own
+    // cycle clock (per the independent-cycles-per-leg decision). Switching it re-queries
+    // listNlhIngestedPlans() for that month; the currently-chosen plan (if any) is cleared since
+    // it may not exist in the newly-picked month.
+    const schedNlhMonthOptions = cycleWindow(schedulerNlhSourceMonth).map(m => ({
+      month: m, label: monthLabel(m), active: m === schedulerNlhSourceMonth,
+      onSelect: () => this.setState({ schedulerNlhSourceMonth: m, schedulerNlhPlanId: null, schedNlhMonthOpen: false }),
+    }));
+    const schedNlhMonthLabel = monthLabel(schedulerNlhSourceMonth);
+    const schedNlhMonthOpen = !!st.schedNlhMonthOpen;
+    const toggleSchedNlhMonth = () => this.setState({ schedNlhMonthOpen: !st.schedNlhMonthOpen });
 
     // ===== STEP 3 — Operating Mode: global default + per-SC override, for HW/D0/Docks/Speed.
     // Hold Time (On/Off + Max Hold Local/Non-Local) has no overall-default tier — SC-level fact,
@@ -9382,6 +10224,7 @@ class NDCApp extends React.Component {
       allVisibleSelected, onSelectAllVisible,
       // Step 2
       schedulerNlhCards, canNextScheduler2, schedulerNlhNoResults, schedulerNlhEmpty,
+      schedNlhMonthOptions, schedNlhMonthLabel, schedNlhMonthOpen, toggleSchedNlhMonth,
       schedulerNlhSearch: st.schedulerNlhSearch || '', onSchedulerNlhSearch: (e) => this.setState({ schedulerNlhSearch: e.target.value }),
       // Step 3
       schedHwGlobal: hwGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler2,
@@ -10332,7 +11175,7 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Own state key (st.alignTier /
     // st.alignRlhMode) — independent of the other two modules' choices.
     const alignTierName = st.alignTier || 'RLH';
-    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
     const alignTierSeg = ATIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: alignTierName === t[0],
       bg: alignTierName === t[0] ? '#EAEEFB' : '#fff', bd: alignTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: alignTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: alignTierName === t[0] ? '700' : '600',
@@ -12375,7 +13218,7 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Independent state key from
     // Design Creation's (st.creationRlhMode) — each module remembers its own tier/mode choice.
     const reviewTierName = st.reviewTier || 'RLH';
-    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['NLH', 'National Linehaul — arriving in a future cycle', true], ['FM Carting', 'First-Mile carting — arriving in a future cycle', true], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
     const reviewTierSeg = RTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: reviewTierName === t[0],
       bg: reviewTierName === t[0] ? '#EAEEFB' : '#fff', bd: reviewTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: reviewTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: reviewTierName === t[0] ? '700' : '600',
@@ -12775,8 +13618,21 @@ class NDCApp extends React.Component {
       }),
     }));
 
+    // 2026-08-25 — multi-leg landing/shell additions. LEG_META is the single source for each
+    // leg's display name/subtitle, reused by the landing cards, the leg-stub header, and the
+    // cycle-selector label -- keeps all three in sync without repeating the copy three times.
+    const LEG_META = {
+      fm: { title: 'FM Hub Mapping & FM Carting Design', short: 'FM Carting', subtitle: 'First-mile hub mapping and carting design — Design Inputs only this build' },
+      nlh: { title: 'SC-SC and NLH Design', short: 'NLH', subtitle: 'National Linehaul (SC↔SC) design — Design Inputs & Design Ingestion this build' },
+      rlh: { title: 'LM Mapping & RLH Design', short: 'RLH', subtitle: 'Regional Linehaul (SC→LMDC) design — Route Planner, Route Scheduler, SC-DC Mapping' },
+    };
+    const legStubTitle = (LEG_META[st.activeLeg] || {}).title || 'Design Leg';
+    const legStubSubtitle = (LEG_META[st.activeLeg] || {}).subtitle || '';
+
     const TITLES = {
       command: ['Command Center', 'July 2026 design cycle · ' + (planner ? 'Central Network Planner' : 'Ops Lead')],
+      landing: ['Network Design Central', 'Choose a design leg to continue'],
+      legstub: [legStubTitle, legStubSubtitle],
       inputs: ['Design Inputs', 'Volume files · masters · AutoDML gate · node changes'],
       creation: ['Design Creation', 'RLH route planning · plan & centres → vehicles → trigger'],
       review: ['Design Review', 'Run metrics, validation flags & historical-weight comparison'],
@@ -13063,7 +13919,66 @@ class NDCApp extends React.Component {
       personaName: planner ? 'Pranita Sapkal' : this.opsPersonaName(),
       personaRole: planner ? 'Central Network Planner' : 'Ops Lead · South',
       personaInitials: planner ? 'PS' : this.opsPersonaName().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(),
-      view: st.view, isCommand: st.view === 'command', isInputs: st.view === 'inputs', isStub: !(st.view === 'command' || st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'map' || st.view === 'finalise' || st.view === 'cyclesummary'),
+      view: st.view, isCommand: st.view === 'command', isInputs: st.view === 'inputs', isStub: !(st.view === 'command' || st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'map' || st.view === 'finalise' || st.view === 'cyclesummary' || st.view === 'landing' || st.view === 'legstub'),
+      // ===== Multi-leg landing + per-leg cycle shell (2026-08-25) =====
+      isLanding: st.view === 'landing', isLegStub: st.view === 'legstub',
+      goLanding: () => this.setState({ view: 'landing' }),
+      activeLeg: st.activeLeg, activeLegShort: (LEG_META[st.activeLeg] || {}).short || '',
+      landingCards: ['fm', 'nlh', 'rlh'].map(leg => ({
+        leg, title: LEG_META[leg].title, subtitle: LEG_META[leg].subtitle,
+        onSelect: () => this.selectLeg(leg),
+      })),
+      // Per-leg cycle selector -- rolling 6-past/6-future window (cycleWindow()), independent per
+      // leg (st.activeCycleMonth[leg]), past months shown locked (no Design-Inputs editing, no
+      // Push-to-Alignment -- enforcement itself is a later phase, this is just the picker).
+      legCycleOptions: (LEG_META[st.activeLeg] ? cycleWindow(st.activeCycleMonth[st.activeLeg]) : []).map(m => {
+        const isPast = monthIsPast(m, currentMonthKey());
+        const isCurrent = m === currentMonthKey();
+        return {
+          month: m, label: monthLabel(m), isPast, isCurrent, isFuture: !isPast && !isCurrent,
+          active: m === st.activeCycleMonth[st.activeLeg],
+          onSelect: () => this.switchCycle(st.activeLeg, m),
+        };
+      }),
+      legCycleLabel: st.activeLeg ? monthLabel(st.activeCycleMonth[st.activeLeg]) : '',
+      legCycleOpen: !!st.legCycleOpen, toggleLegCycle: () => this.setState({ legCycleOpen: !st.legCycleOpen }),
+      legCycleIsPast: st.activeLeg ? monthIsPast(st.activeCycleMonth[st.activeLeg], currentMonthKey()) : false,
+      // ===== Phase 4 (2026-08-25) — NLH/FM Design Inputs: masters + uploads + (NLH-only) ingestion.
+      // legTabs' shape differs per leg (NLH gets 3 tabs, FM gets 2 -- no Design Ingestion for FM,
+      // nothing references its output yet, per product decision).
+      legTabs: (st.activeLeg === 'nlh' ? [['masters', 'Masters'], ['uploads', 'Manifestation Uploads'], ['ingestion', 'Design Ingestion']]
+        : st.activeLeg === 'fm' ? [['masters', 'Masters'], ['uploads', 'FM Hub Manifestation']] : []).map(t => ({
+        key: t[0], label: t[1], active: (st.legInputsTab || 'masters') === t[0], onClick: () => this.setState({ legInputsTab: t[0] }),
+      })),
+      legIsMastersTab: (st.legInputsTab || 'masters') === 'masters',
+      legIsUploadsTab: (st.legInputsTab || 'masters') === 'uploads',
+      legIsIngestionTab: (st.legInputsTab || 'masters') === 'ingestion' && st.activeLeg === 'nlh',
+      legIsNlh: st.activeLeg === 'nlh',
+      legMastersRows: st.activeLeg ? materializeLegScMasterView(
+        this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg],
+        st.activeLeg === 'nlh' ? ['nlhDockCap', 'laneName'] : []
+      ).map(r => ({
+        code: r.code, name: r.name, zone: r.zone, sortCap: r.sortCap, volCap: r.volCap,
+        nlhDockCap: r.nlhDockCap != null ? r.nlhDockCap : '', laneName: r.laneName || '',
+        onDockChange: (e) => this.setLegField(r.code, 'nlhDockCap', parseInt(e.target.value, 10) || 0),
+        onLaneChange: (e) => this.setLegField(r.code, 'laneName', e.target.value),
+      })) : [],
+      legMastersEmpty: st.activeLeg ? materializeLegScMasterView(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], []).length === 0 : true,
+      legUploadSlots: (st.activeLeg === 'nlh' ? [['fmscManifestation', 'FMSC Manifestation'], ['lmscLanding', 'LMSC Landing']]
+        : st.activeLeg === 'fm' ? [['fmHubManifestation', 'FM Hub Manifestation']] : []).map(t => {
+        const up = st.activeLeg ? getUpload(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], t[0]) : null;
+        return {
+          slot: t[0], label: t[1], hasFile: !!up, fileName: up ? up.fileMeta.name : '', uploadedAt: up ? up.uploadedAt : '',
+          onFile: (e) => this.onLegUploadFile(t[0], e.target.files && e.target.files[0]),
+        };
+      }),
+      legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
+        planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt,
+      })) : [],
+      legIngestedEmpty: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).length === 0 : true,
+      legIngestFileName: st.legIngestFileName || '',
+      onLegIngestFileName: (e) => this.setState({ legIngestFileName: e.target.value }),
+      submitLegIngest: () => this.submitLegIngest(),
       ...this.creationVals(),
       ...this.reviewVals(),
       ...this.alignVals(),

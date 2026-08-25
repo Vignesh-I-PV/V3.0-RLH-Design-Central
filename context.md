@@ -1682,3 +1682,110 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - Companion docs (`01_Complete_Context.md` through `05_Core_Flows.md`, `PROJECT_CONTEXT.md`)
     remain un-updated through this entire 2026-08-11 → 08-17 span — the gap flagged after nearly
     every session continues to widen and would benefit from a dedicated pass.
+
+- **2026-08-19** — Large session covering four areas: the `with(B)`-scope bug recurring a third
+  time, a full rebuild of Route Scheduler's Ops Alignment lifecycle, the end-to-end Co-Loading &
+  MDC module, and a systemic seed-data bug found via a new execution-harness technique. This entry
+  reconstructs what should have been written up at the time — drafted from the handover note plus
+  a direct check against the shipped `.jsx`, not from a session transcript, so treat specifics here
+  as verified-against-code rather than a first-hand account.
+  - **The `with(B)`-scope bug bit a third time.** Same class as 2026-08-11 and 2026-08-14: a bare
+    identifier referenced in JSX/render logic but never added to its owning `*Vals()`/`buildSchedCard()`
+    method's own `return {...}`. This time it was a rename — `stageSub` was split into `stage1Sub`/
+    `stage2Sub` inside `buildSchedCard()` (now present at lines ~8587-8588, feeding `canSubmitFeedback`
+    at ~8611), and one leftover reference to the old `stageSub` name was missed in the rename sweep.
+    Caught by the user's own deploy-test, not by anything in-session — reinforcing the standing rule
+    that any rename touching a `*Vals()`/`buildSchedCard`-style method needs a full-body grep for the
+    old name, not just a check of the lines that were intentionally touched. Compile checks
+    (`@babel/preset-react` transform) remain necessary but structurally cannot catch this bug class.
+  - **Route Scheduler's Ops Alignment rebuilt into a real, working 2-stage lifecycle**, replacing the
+    2026-08-17 rebuild (which got the visual shape right per Route Planner's own Needs-Change/
+    Review-Changes pattern, but whose underlying status machinery didn't actually work — Acknowledged
+    inverted to *lock* rather than unlock the Planner's Review action, and there was no real path to
+    reach Acknowledged outside of seed data). New `schedStage` field on `schedulerPlans` drives it:
+    **Stage 1** (SC + LH propose Cutoff/TAT) → Submit → Acknowledge & Freeze → Planner decides
+    (contradicting proposals resolve to a new **Superseded** status rather than being silently
+    overwritten) → Push to LM Alignment → **Stage 2** (LM proposes Landing Time) → same
+    submit/decide cycle → Finalise. By design, the SC/LH persona's own status tab pins to
+    "Acknowledged" through the entirety of Stage 2 (their part is done; the stage has simply moved
+    on to LM). Full mechanics live in `04_Rule_Engine.md` — that file, like the others, still needs
+    its own pass to actually reflect this (see gap below).
+  - **Co-Loading & MDC built end-to-end** — a new concept for DCs/routes that occupy real dock
+    capacity but aren't planned by this tool's own DS algorithm, or are planned from a different
+    origin node entirely:
+    - LMDC Master gained 5 new columns: **RLH Mode** (Valmo RLH / MDC / Co-Loading), **MDC Code**,
+      **Lane Name**, **Cutoff**, **TAT**.
+    - An **MDC** is a full SC-Master-schema entity — routable exactly like a real SC once added.
+      Exclusion of an MDC-routed DC from its *originating* SC's own draw pool is enforced structurally,
+      before that SC's DC draw-queue is even built (`isMdc`/`rlhMode` checks feeding pool construction
+      around the SC/LMDC generation logic) — not just a display-time label applied after the fact.
+    - **Co-Loading lanes are frozen into their originating SC's RLH plan at generation time** and
+      never touch the DS algorithm at all. They're explicitly guarded out of
+      `computeHypotheticalPlan()`'s own re-clustering engine via `isCoLoadLane` checks (e.g. the
+      `rt.isCoLoadLane && prior` short-circuit around line 9445) — flagged as the single highest-risk
+      spot in this build, since without that guard a lane's real DCs could have been silently
+      reassigned by the clustering logic on any Validate/Simulate pass.
+    - **Route Scheduler treats a Co-Loading lane as a fixed occupant**: no dispatch-time search runs
+      for it (`isCoLoadLane` branches in the scheduler's dispatch/hold logic, ~9599-9622), and real
+      routes' own dispatch search now actively avoids dock slots a lane already occupies
+      (`laneCounts` tracked alongside `counts` per slot, ~6789).
+    - Dock-capacity breaches from lane occupancy are flagged at 4 surfaces (consistent with how RLH's
+      own dock breaches are already surfaced elsewhere in the app).
+    - Full mechanics: `02_Logics_and_Formulae.md` and `04_Rule_Engine.md` (both still pending their
+      own update pass).
+  - **Local/Non-Local reclassified as a real, permanent per-DC attribute** — `isLocal = haversine(SC,
+    DC) ≤ 100km` (line ~5748), replacing the old per-route hash coin-flip. Real routes now generate
+    **Locality-homogeneous** by construction; Ops Alignment feedback can still override the classification
+    afterward, by design — the change is to how it's *generated*, not a removal of override capability.
+  - **A systemic seed-data bug found via a new execution-harness technique, not by reading the
+    generator.** `buildSeed()` plus its one dependency (`resolveScFields()`) were extracted into a
+    standalone Node harness and actually run, with automated cross-reference assertions against the
+    real output (plan/run/`schedulerPlan` → SC references, route/DC ownership, locality homogeneity,
+    RLH-mode leakage, lane consistency, duplicate codes). This surfaced a real, previously invisible
+    bug: DC codes were generated as `cityCode + '-' + N`, but 68 of the 80 seeded SCs share a city
+    with a second SC, so codes collided across entirely unrelated SCs' pools — quantified at **4,764
+    duplicate LMDC codes out of 12,547 (38% of the pool)**. This was the actual root cause of a
+    previously-reported, previously-unexplained bug ("GGNS shows missing SC Master inputs"). **Fixed
+    at the source** (line ~5719, explicitly commented in the code as a 2026-08-19 fix): codes now key
+    off `sc.code` (guaranteed-unique) instead of `sc.cityCode`. Re-validated against the harness at
+    zero collisions afterward. This pattern — extract the pure generator, run it for real, assert
+    against real output — is now the recommended approach any time seed-data consistency needs
+    checking again; reasoning about the generator by re-reading it missed this bug entirely.
+  - **Smaller, related fixes bundled into the same session:**
+    - **TAT is hours everywhere now** (was minutes, briefly a fixed dropdown) — free numeric input,
+      step 0.25, always rounds up to the display grid.
+    - **Grid rounding** (30-min Dispatch Cutoff, 15-min Travel/Hold, always rounding **up**, never
+      down or nearest) centralised into one shared `roundUp(min, step)` helper (~line 9541) and used
+      at every computation site that previously had its own inline rounding.
+    - **Multi-select filters** (Zone, RLH Mode, SC Type) replaced single-select chip rows via one
+      reusable `buildMultiSelect(selected, allOptions, stateKey, extraResetKeys, allLabel)` (~line
+      5571), with the pre-existing zone-chip helper now delegating to it rather than duplicating logic.
+  - **Compile-check command, unchanged, still the standing first-pass gate** (not sufficient alone —
+    see the `with(B)` note above):
+    ```
+    node -e "const babel=require('@babel/core'); const fs=require('fs');
+    const code=fs.readFileSync('app.jsx','utf8');
+    babel.transformSync(code,{presets:[['@babel/preset-react',{runtime:'classic'}]],sourceType:'script',filename:'app.jsx'});
+    console.log('COMPILE OK');"
+    ```
+  - **No live render/browser test has been done at any point in this project, still true as of this
+    session.** The user deploy-tests separately and reports back. The execution-harness pattern above
+    is a genuinely strong complement for seed-data specifically, but it is not a substitute for an
+    actual render/click-through, and nothing in this session changes that standing limitation.
+  - **Still open / explicitly flagged, unchanged from the handover:**
+    - `schedAcceptAllRemaining`/`schedRejectAllRemaining`'s batch dock-capacity interaction (later
+      items in a batch seeing already-updated counts from earlier ones in the *same* batch — intended,
+      but never exercised by an actual click-through; flagged 2026-08-17, still open here).
+    - Map Visualization's arrowhead-drawing logic assumes one endpoint per route; a Co-Loading lane
+      with multiple DCs likely draws one arrowhead instead of one per line — cosmetic, not fixed.
+    - SC-DC Mapping ("Node Mapping" tier) remains an unbuilt "Coming Soon" stub, explicitly unrelated
+      to the new MDC concept despite the similar-sounding name — see `06_Future_Scope_SC-DC_Mapping.md`
+      for the disambiguation note added this session.
+    - **The companion docs (`01_Complete_Context.md` through `05_Core_Flows.md`, `PROJECT_CONTEXT.md`)
+      are now stale across two full build sessions** (still dated 2026-08-04 in the project's
+      knowledge base as of this write-up) — they predate the entire 2026-08-11 → 08-19 span: the
+      3-stage-then-2-stage feedback loop rebuilds, the Co-Loading/MDC module, the Local/Non-Local
+      reclassification, and the DC-code collision fix are not reflected there at all. This is the
+      single most valuable next piece of housekeeping if picking this up fresh — everything above
+      is verified against the `.jsx`, but the companion docs still describe an earlier version of
+      the app.

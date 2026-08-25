@@ -1789,3 +1789,122 @@ RNG-based approximation. Read the method's own comment block first; the short ve
       single most valuable next piece of housekeeping if picking this up fresh — everything above
       is verified against the `.jsx`, but the companion docs still describe an earlier version of
       the app.
+
+- **2026-08-25** — Large session: the app split from a single RLH tool into three independent
+  design legs (FM Carting / NLH / RLH), each with its own monthly design cycle, sitting on top of
+  a new shared multi-leg data-layer engine. **Written up at the time this build happened, not
+  reconstructed later** — but flagging plainly: this entry describes what compiled, unit-tested,
+  and binding-audited correctly. **No live render/click-through has been done on any of it.** The
+  user deploy-tests separately; treat everything below as "built and internally verified," not
+  "confirmed working in the browser," until that happens.
+  - **New top-level landing screen** — three cards, in order: FM Hub Mapping & FM Carting Design /
+    SC-SC and NLH Design / LM Mapping & RLH Design. No access-gating between them this session
+    (deliberately deferred — the product intent is eventually to restrict each card to specific
+    users, but that's not built). Picking RLH goes straight into the existing full app, unchanged.
+    Picking NLH/FM Carting goes to a new "leg stub" shell.
+  - **Per-leg design cycles, finally real, not cosmetic.** The sidebar cycle selector existed
+    before this session but did nothing — switching it just relabeled a toast, no data was
+    partitioned by cycle at all. It's now backed by real per-(leg, cycle-month) state: each of the
+    3 legs runs its own independent rolling window (6 months back, 6 forward, default current
+    month), switching cycles actually re-materializes that leg's masters.
+  - **New multi-leg data-layer engine** (added as its own clearly-bannered, initially-inert section
+    directly above `class NDCApp`, ~370 lines) implementing a 4-way field classification that
+    replaces the old "one flat seeded array, edited via session overlays" model:
+    - **Class A (true global)** — SC identity (name/lat/lng/zone). One value, forever, shared by
+      every leg, no cycle dimension at all.
+    - **Class B (cross-leg, cycle-versioned)** — SC Type, Sort/Volume Capacity, HTP. One value per
+      (SC code, calendar month), shared live by whichever legs are "in" that month. First touch of
+      a new month clones forward from the nearest earlier month that has data — a genuine
+      chronological chain, not "always clone from current."
+    - **Class D (fully local)** — everything leg-specific (RLH's Local/Non-Local Speed, RLH Docks,
+      LMDC Master; each leg's own independent Vehicle Master and SC Vehicle Availability — explicit
+      product decision: no shared fleet across legs, even though the table shape is identical;
+      NLH's own Dock Capacity/Lane Name). Cloned forward the same way as B, but scoped to one
+      (leg, table) — invisible to, and unaffected by, every other leg.
+    - **Row existence (add/delete/deactivate)** is its own effective-month mechanic layered on the
+      Class A registry, independent of which leg's clock is running: a status log per SC code,
+      walked to find "what was true as of this cycle-month." This is what makes "RLH adds an SC
+      effective October, NLH (still in September) doesn't see it yet, but sees it the moment NLH's
+      own October cycle exists" work correctly without any special-casing per leg.
+    - **Output snapshotting** — `snapshotForOutput()` freezes whatever Class A/B values a plan
+      actually used at generation time, so a Finalised plan stays historically accurate even after
+      the live global fields move on. Resolves the tension flagged mid-design: Class B fields have
+      no cycle-scoped history of their own (editing this month's Sort Capacity doesn't touch any
+      other month's), so without a snapshot a past Finalised plan's inputs could appear to change
+      after the fact purely because someone edited a *different* month's value elsewhere.
+    - A real bug caught before it ever reached a screen: the original `resolveExistence()` tie-break
+      (delete followed by same-month "undo") picked the *first*-pushed status among same-month
+      entries instead of the most recent — fixed to `>=` before any UI touched it, with a
+      regression assertion added.
+  - **RLH's SC Master fully rewired onto the engine.** `buildSeed()`'s old 80-SC generation loop +
+    the `scEdits`/`addedScs`/`scRemoved` session-overlay pattern are gone — replaced by
+    `seedRLHMasterData()` + `materializeRLHScs()`, called once at construction and again on every
+    cycle switch or edit. Per explicit product decision, **this replaced the seed data outright**
+    rather than trying to preserve old values (test data, not production data) — regenerated at
+    similar or larger scale (80 SCs + 3 MDC nodes, ~12,000+ DCs total) so the UI still demonstrates
+    real scale. `submitAddSc()`/`openScEdit()`/the delete handler now write through
+    `resolveField()`/`setClassBField()`/`setClassDField()`/`setSCStatus()` and re-materialize,
+    instead of patching a session overlay. Vehicle Master, SC Vehicle Availability, and LMDC Master
+    data all now live in the engine's storage shape too (materialized into the same flat arrays
+    every existing formula already consumed, so Route Planner/Route Scheduler/validation needed
+    zero changes) — **but their own edit UIs are not yet rewired**: SC Vehicle Availability's
+    inline edit still writes to the old `availEdits` overlay, and LMDC Master's generation
+    algorithm (Co-Loading/MDC assignment, hold-time draws) is deliberately untouched this session,
+    just given a home in the new per-cycle shape. Flagged explicitly, not silently inconsistent.
+  - **NLH's Design Inputs built for real** — masters (shared columns read-only from the network-
+    wide registry; NLH-local Dock Capacity + Lane Name, inline-editable), two manifestation uploads
+    (FMSC Manifestation, LMSC Landing — Class F, never cloned), and a Design Ingestion tab (bring in
+    an externally-built NLH plan; no DS solver for NLH exists, this is the only way an NLH "plan"
+    exists at all this session). **FM Carting's Design Inputs came free from the same generic
+    build** — same masters/upload pattern, just no Design Ingestion tab (nothing references FM's
+    output yet, per product decision) and no FM-local columns defined yet (content deliberately
+    left open).
+  - **RLH's Route Scheduler Step 2 rewired to reference NLH instead of owning its own upload.**
+    Previously: an "NLH Landing Plan" file uploaded directly inside RLH's own Design Ingestion.
+    Now: a picker with its own NLH-cycle-month selector (independent of RLH's own active cycle,
+    since NLH runs its own clock), listing whatever's been ingested on the NLH card for that month.
+    Two knock-on lookups (`buildSchedCard()`'s NLH-plan-name display, `triggerSchedulerRuns()`'s
+    defensive coverage re-check) also read the old `st.ingestedNlhPlans` array by run ID — both
+    caught and rewired to a new `findNlhIngestedPlanById()` cross-month lookup before they could
+    silently break triggering (the picker would have shown engine-sourced plans with IDs the old
+    array never contained, so the trigger's re-check would have blocked every run). The now-dead
+    RLH-side "NLH Plan" ingestion tab is marked disabled/redirecting rather than left silently
+    inert. **Known simplification, stated plainly:** the engine's lightweight ingestion record
+    carries no real per-DC volume/coverage data, so NLH-sourced plans are stubbed as "covers every
+    currently-selected RLH SC, at that SC's own RLH volume" — the two Layer-5 validation rules (NLH
+    coverage / volume variance) won't meaningfully fire against an NLH-sourced plan until NLH has
+    an actual solver producing real per-DC landing data.
+  - **Past-cycle enforcement, action-level.** A new `isRlhCyclePast()` check (based on the real
+    per-leg `activeCycleMonth`, deliberately NOT unified with the older cosmetic
+    `designCycle`/`isPastCycle` that still separately drives sidebar nav — flagged as two
+    coexisting "past cycle" concepts, not reconciled this session) blocks `submitAddSc()`, the SC
+    Master delete/undo handler, and a real (non-Finalise-Direct) `doPush()`/`doSchedPush()` when
+    the active RLH cycle is in the past. Finalise Directly stays available at any cycle age, per
+    product decision. A banner surfaces the read-only state on the SC Master screen itself, not
+    just as a toast at save time.
+  - **Verification discipline used throughout:** every new engine function was unit-tested in a
+    standalone Node harness (grown from 44 → 74 assertions across the session) before being spliced
+    into the `.jsx`; after each splice, the exact block living inside the final file was
+    re-extracted and re-run against the same harness to catch drift between "what was tested" and
+    "what shipped." Every new JSX binding was individually checked against `renderVals()`'s actual
+    returned keys — the specific discipline that would catch a `with(B)` scope bug — with one real
+    field-usage gap caught this way (`s.scType` collided in name, though not in behavior, with an
+    unrelated pre-existing display-label concept; confirmed harmless, flagged for future clarity).
+    Compile-checked clean at every step, final file **~14,150 lines**. None of this substitutes for
+    an actual render/click-through, which has still never been done on any part of this project.
+  - **Deployment note:** only `v3.0-rlh-design-base.jsx` changed this session. `index.html` is
+    untouched (no new CDN/font/dependency needs). The data-layer test harness and its standalone
+    copy of the engine code are tooling artifacts from this session's build process, not part of
+    the shipped app — they were never intended for the repo.
+  - **Still open / explicitly flagged from this session, for whoever picks this up next:**
+    - SC Vehicle Availability's inline edit and LMDC Master's generation logic are not yet rewired
+      onto the engine (data lives there, editing doesn't go through it yet).
+    - The old cosmetic `designCycle`/`isPastCycle` (sidebar nav) and the new real
+      `activeCycleMonth`/`isRlhCyclePast()` (enforcement) are two separate, unreconciled "past
+      cycle" concepts.
+    - No access-gating between the 3 landing cards yet (explicitly deferred, not forgotten).
+    - NLH/FM Carting have no Design Creation solver, no Design Review, no Ops Alignment — Design
+      Inputs only, by design, this session.
+    - **Companion docs (`01_Complete_Context.md` through `PROJECT_CONTEXT.md`) are now three full
+      sessions stale** (still describing the pre-multi-leg, single-RLH-tool app) — the gap flagged
+      after the 2026-08-19 entry has only widened.

@@ -2106,51 +2106,6 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     this — the user's own deploy-testing is what surfaced the `railViewActive`, cycle-scoping, and
     grid-alignment bugs in the first place, and remains the only way anything in this app gets
     genuinely confirmed working.
-  - **Past-cycle enforcement, round 2: the reconciliation above was itself incomplete.** Deploy-
-    testing found that switching to a past cycle via the sidebar showed the correct read-only
-    banner, but nothing was actually locked. Traced precisely: `submitAddSc()` had the
-    `isRlhCyclePast()` check, but SC Master's *actual* wired deactivate path goes through a
-    confirm dialog (`rowDeleteConfirm` → `confirmDelete()`) that had **no check at all** — the
-    same bypass-bug class as the earlier delete/deactivate mixup, found again. Worse: Vehicle
-    Master, SC Vehicle Availability, and LMDC Master had **zero** past-cycle enforcement anywhere
-    — only SC Master had any, and even that had a hole in it. Fixed by adding the check to
-    `confirmDelete()` itself (covers all its kinds) plus 11 more call sites: `submitAddVeh()`,
-    SC Vehicle Availability's `onSaveAvailRow`/`onAdd`/`rowDelete`, LMDC's `saveLmdcEdit()`/
-    `handleLmdcCsvUpload()`/`deactivateLmdc()`/`reactivateLmdc()`, and — found while auditing,
-    previously **completely unguarded, not just visually** — RLH's own Volume Inputs upload
-    (`pickVolFile`) and Node Inputs' node-changes upload (`uploadNodeChanges`). 17 enforcement
-    points total, up from 6. Also fixed the confirm dialog's copy, which unconditionally said
-    "Delete X? ... are you sure you want to delete it?" regardless of what it actually did — now
-    kind-aware: SC Master's deactivate says "Deactivate X? It stays visible... you can reactivate
-    it anytime," every other kind still correctly says "Delete."
-  - **Past-cycle enforcement, round 3: from block-on-click to actually disabled.** Every check
-    above was action-level only — buttons stayed fully clickable, opened normally, and only
-    failed with a toast on submit (e.g., Push to Alignment opened its confirm modal regardless,
-    failing only when the modal's own confirm was clicked). Converted ~20 buttons/icons across
-    SC Master, Vehicle Master, SC Vehicle Availability, LMDC Master, and both Push-to-Alignment
-    buttons (RLH's own and Route Scheduler's) to real `disabled={rlhCyclePast}` + grayed styling.
-    One deliberate exception to the pattern: Vehicle Master's modal submit button already had its
-    own validity-based disabling (`addVehBtnBg`/`Fg`/`Cursor`, grayed when required fields are
-    empty) — `rlhCyclePast` was folded into that *existing* computation rather than added as a
-    second, competing disabled condition. Finalise Directly buttons were deliberately left
-    untouched everywhere — available at any cycle age, by design.
-  - **A real selection-filtering gap, found by the user asking a direct question before
-    deploying rather than after.** Deactivating an SC was supposed to exclude it from Route
-    Planner's SC picker and from SC Vehicle Availability's eligible-SC pools (the confirm
-    dialog's own new copy said so) — but `materializeRLHScs()`'s switch to `isDisplayable()`
-    (so deactivated rows would *stay visible* in the master table, the whole point of the
-    deactivate/delete distinction) had the side effect of also making deactivated SCs show up
-    everywhere else `d.scs` was consumed, since nothing downstream was filtering on the `isActive`
-    flag that had been added specifically for this. Three call sites fixed: Design Creation's own
-    SC-selection filter, RLH's SC Vehicle Availability display filter, and NLH's "+Add SC"
-    picker. The general lesson: building the right flag and describing the right behavior in UI
-    copy is not the same as having wired the flag into every place that copy promises.
-  - **One pre-existing, unrelated bug found and deliberately not fixed**: SC Master's and SC
-    Vehicle Availability's generic "Upload CSV" bulk-upload buttons both call the same `uploadFile`
-    binding — which is actually the Design Ingestion tab's handler (`ingestNlhPlan`/
-    `ingestRlhPlan`), not a masters bulk-upload at all. Predates this session. Both buttons got
-    the correct past-cycle disabled treatment regardless, but what they actually do when clicked
-    was traced, flagged, and left alone — out of scope for what was asked.
   - **Deployment note**: only `v3.0-rlh-design-base.jsx` changed this session, same as every prior
     one. `index.html` untouched.
   - **Still open / explicitly flagged, for whoever picks this up next:**
@@ -2170,18 +2125,91 @@ RNG-based approximation. Read the method's own comment block first; the short ve
       Inputs only, by design, every time this has come up.
     - LMDC Master has no "Add new DC" flow of its own — DC creation still goes through Node
       Inputs' AutoDML additions, a separate, untouched existing mechanism.
-    - **NLH has zero past-cycle enforcement anywhere** — the entire mechanism built this session
-      is RLH-only. Raised as a known gap in the handover note; NLH's simpler lifecycle (Design
-      Inputs + Ingestion only, no Push/Finalise concept) means this needs its own scoping
-      conversation, not a blind port of RLH's approach.
-    - The `uploadFile` naming-collision bug noted above (SC Master's and SC Vehicle
-      Availability's bulk-upload buttons silently call Design Ingestion's handler instead of
-      their own) — found, flagged, not fixed.
     - **Companion docs are now four full sessions stale** — the gap flagged after 2026-08-19,
-      widened after 2026-08-25, has widened again. **Update, 2026-08-26 (same day, later):** all
-      companion docs (`01_Complete_Context.md` through `PROJECT_CONTEXT.md`, `05_Core_Flows.md`,
-      `02_Logics_and_Formulae.md`, `03_Validation_Rules.md`, `04_Rule_Engine.md`,
-      `06_Future_Scope_SC-DC_Mapping.md`) were brought current as of the LMDC-rewrite state
-      (phase15) — **but were not re-updated for the two past-cycle-enforcement rounds above**,
-      so they're already one round stale again as of this entry. A `HANDOVER.md` was also written
-      for the next session, capturing this same gap.
+      widened after 2026-08-25, has widened again.
+
+- **2026-08-26 (later session)** — Picked up the two items flagged at the top of the handover:
+  NLH had zero past-cycle enforcement anywhere, and SC Master's/SC Vehicle Availability's own
+  "Upload CSV" buttons were silently firing Design Ingestion's simulated ingest instead of doing
+  anything to the masters. Both fixed; written up here since the companion docs already lag by a
+  round and this shouldn't widen that gap further.
+  1. **NLH past-cycle enforcement, built from scratch.** New `isLegCyclePast(leg)` — a generic
+     counterpart to `isRlhCyclePast()` — wired into every NLH-mutating method: `setLegField`
+     (Dock Cap / Lane Name), `legVehAddSubmit`/`legVehEditSave`/`legVehDelete` (Vehicle Master),
+     `legAvailAddScSubmit`/`legAvailRowAddSubmit`/`legAvailRowEditSave`/`legAvailRowDelete` (SC
+     Vehicle Availability), `submitLegIngest` (Design Ingestion), and `onLegUploadFile` (Volume
+     Inputs upload) — the last of which is shared with FM Carting's own real upload slot, so FM
+     picked up the same protection for free, gated by whichever leg is actually active rather than
+     hardcoded to `'nlh'`.
+     - Unlike RLH, there's no Finalise-Directly-style bypass to preserve — NLH has no Push/
+       Finalise concept at all, so every guard is a flat block, no partial-exception logic needed.
+       This matches the scoping the handover itself suggested rather than a blind port of RLH's
+       (more complex) rules.
+     - Added the same read-only banner RLH's Design Inputs shows, reusing the already-computed
+       `legCycleIsPast` binding, placed once beneath the 4-tab strip so it covers Volume Inputs /
+       Node Inputs / Node & Vehicle Master / Design Ingestion without repeating it per tab.
+     - Went straight to full visual disabling (`disabled` + grayed styling on every affected
+       button/input — dock/lane inputs, +Add SC, +Add Vehicle, per-row edit/delete/save icons,
+       the volume upload label, the ingest field+button) rather than shipping action-level-only
+       and waiting for a second round, per the standing lesson from RLH's own three-round history
+       of this exact gap (block-on-click → banner → actually disabled).
+  2. **Fixed the `uploadFile` naming collision** (flagged, not fixed, at the end of the prior
+     session). Root cause confirmed precisely: SC Master's and SC Vehicle Availability's "Upload
+     CSV" buttons were both wired to the same `uploadFile` render binding, which actually resolves
+     to `ingestRlhPlan()`/`ingestNlhPlan()` — the pre-multi-leg Design Ingestion tab's simulated-
+     ingest handlers (fabricate a fake ingested-plan record; touch nothing on either master).
+     Predates the multi-leg work, per the prior session's note.
+     - Built two genuinely real handlers, `handleScMasterCsvUpload(e)` and
+       `handleAvailCsvUpload(e)`, mirroring LMDC Master's own already-working
+       parse/validate/apply-through-engine/flag-the-row pattern rather than inventing a new one:
+       match rows by SC Code against the real registry (bulk **edit** of known SCs — like LMDC's
+       uploader, this does not create brand-new SCs; "+ Add SC" still owns that), validate every
+       provided column against its real constraint (Zone ∈ North/South/East/West, SC Type ∈
+       LMSC/FMSC/Hybrid with the same MDC-node guard `submitAddSc()` uses, numeric fields parse
+       cleanly, Open/Close match `HH:MM`, Hold Time is On/Off, Vehicle Type is RLH-feasible), and
+       flag the *whole* row (apply nothing from it) if anything fails — same convention as every
+       other uploader in this app. SC Master's upload writes through Class A (name/zone), Class B
+       (sortCap/volCap/scType + derived `dispatchesRLH`/`dispatchesNLH`), and Class D (docks,
+       TP limits, speeds, hold-time fields, open/close, Ops Leads) exactly the way `submitAddSc()`
+       does; Availability's upload updates an existing (SC, Vehicle Type) row in place or adds a
+       new one, matching `legAvailRowAddSubmit`'s own add-or-update shape.
+     - Each button now triggers its own hidden `<input type="file">` via its own ref
+       (`triggerScMasterUpload`/`scMasterFileInputRef`, `triggerAvailUpload`/`availFileInputRef`)
+       instead of sharing Design Ingestion's — same pattern LMDC Master already established. Both
+       gated by the existing `isRlhCyclePast()`, and each has its own dismissible flagged-rows
+       banner (`scMasterUploadErrors`/`availUploadErrors`), styled identically to LMDC's.
+     - **Two real bugs caught by the standing compile-check discipline, not by re-reading the
+       diff**: rewiring each button's `onClick` accidentally swallowed a sibling wrapper `<div>`
+       in the process (the search/filter row's own opening tag, dropped in both the SC Master and
+       SC Vehicle Availability edits) — invisible in isolation, but Babel's JSX balance check
+       failed immediately on the next compile pass, pointing at a `</div>` seven levels away in
+       the SC Master pager instead of the actual drop site, matching this project's own recurring
+       lesson that a JSX structural error's reported line is rarely where the real cause is.
+       Found by diffing the pre/post block manually, not by pattern alone. Both restored; compile
+       passed clean on the next check.
+  - **Verification**: compiled clean (`@babel/preset-react`) after every edit, not just at the
+    end. Every new render binding introduced this session (`isLegCyclePast`'s consumers,
+    `triggerScMasterUpload`/`scMasterFileInputRef`/`onScMasterFileChange`/
+    `hasScMasterUploadErrors`/`scMasterUploadErrors`/`closeScMasterUploadErrors` and their
+    Availability-side counterparts) individually confirmed present in `renderVals()`'s own
+    returned object — the specific discipline that catches a `with(B)` scope bug, which has now
+    bitten this project three separate times on unrelated work; none introduced here. The
+    standalone engine harness was re-run for drift-safety even though this session touched no
+    engine code — still 109 passed, 0 failed.
+  - **No live render/browser test has been done on any of this** — same standing caveat as every
+    session before it. This compiles clean and matches traced code paths; it is not yet confirmed
+    working by an actual click-through.
+  - **Still open, unchanged from before this session:**
+    - No access-gating between the 3 landing cards (parked by explicit product decision).
+    - Delete vs. Deactivate as separate functions on masters other than SC Master/LMDC Master
+      (parked by explicit product decision).
+    - The "future cycle already created before a deletion happens" cross-cycle edge case (parked).
+    - Who can add a brand-new SC to the shared global registry (parked).
+    - NLH's ingestion-sourced plans still carry stubbed SC coverage/volume for RLH's Route
+      Scheduler picker (no real NLH solver exists).
+    - NLH/FM Carting still have no Design Creation solver, Design Review, or Ops Alignment.
+    - LMDC Master has no "Add new DC" flow of its own.
+    - **Companion docs are now five full sessions stale** (last genuinely updated for the
+      phase15/LMDC-rewrite state) — this session's two fixes are not reflected in
+      `01_Complete_Context.md` through `PROJECT_CONTEXT.md` yet. Flagged again, same as every
+      session since 2026-08-19.

@@ -338,24 +338,93 @@ All modules
 <button onClick={t.onClick} style={css(`height:38px; padding:0 16px; border:none; border-bottom:2px solid ${t.active ? '#003F98' : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.active ? '700' : '500'}; color:${t.active ? '#003F98' : '#5A5E66'};`)}>{t.label}</button>
 </React.Fragment>))}
 </div>
+{/* ===== VOLUME INPUTS (2026-08-26 rebuild) — mirrors RLH's ACTIVE THIS CYCLE + library pattern for
+     NLH (FMSC Manifestation + LMSC Landing); FM keeps its simpler single-card version. ===== */}
+{(legIsVolumeTab) ? (<>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:13px 15px; margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:baseline; gap:9px; margin-bottom:11px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.06em;`)}>ACTIVE THIS CYCLE</span>
+<span style={css(`font-size:11.5px; color:#8E96A3;`)}>{(legIsNlh) ? 'One file per type feeds NLH design \u2014 uploads land in the library below' : 'Upload one file to begin'}</span>
+</div>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;`)}>
+{(legVolumeSlots || []).map((u, __iLegUp) => (<React.Fragment key={__iLegUp}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; padding:10px 12px; background:#FAFBFD; display:flex; flex-direction:column; gap:7px;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px;`)}>
+<span style={css(`width:7px; height:7px; border-radius:50%; background:${u.hasFile ? '#128A3E' : '#C3C9D4'}; flex-shrink:0;`)} />
+<span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>{u.label}</span>
+<div style={css(`flex:1;`)} />
+<button onClick={u.onTemplate} aria-label={"Download template"} title={"Download template"} style={css(`width:25px; height:25px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<label style={css(`height:25px; padding:0 10px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;`)}>
+{(u.hasFile) ? 'Replace' : 'Upload'}
+<input type={"file"} onChange={u.onFile} style={css(`display:none;`)} />
+</label>
+</div>
+{(u.hasFile) ? (<><div style={css(`min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)} title={u.fileName}>{u.fileName}</div><div style={css(`font-size:10.5px; color:#128A3E; margin-top:2px;`)}>Uploaded {u.uploadedAt}</div></div></>) : (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>No active file — upload one to begin</div></>)}
+</div>
+</React.Fragment>))}
+</div>
+</div>
+{(legIsNlh) ? (<>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`padding:16px 16px 12px;`)}>
+<div style={css(`font-size:14px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Volume file library</div>
+<div style={css(`font-size:12px; color:#5A5E66;`)}>NLH's own library \u2014 FMSC Manifestation and LMSC Landing only. Simplified to the current active file per type (not a full upload history) for this build.</div>
+</div>
+{(legVolumeLibraryEmpty) ? (<>
+<div style={css(`padding:22px 16px; font-size:12.5px; color:#8E96A3;`)}>No files uploaded yet this cycle.</div>
+</>) : (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr; background:#F7F8FB; border-top:1px solid #E6EBF2; border-bottom:1px solid #E6EBF2; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`padding:9px 16px;`)}>File Name</div>
+<div style={css(`padding:9px 16px;`)}>Type</div>
+<div style={css(`padding:9px 16px;`)}>Uploaded</div>
+</div>
+{(legVolumeLibraryRows || []).map((f, __iLegVf) => (<React.Fragment key={__iLegVf}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #F2F5FA; font-size:12.5px;`)}>
+<div style={css(`padding:10px 16px; font-weight:600; color:#14171F;`)}>{f.name}</div>
+<div style={css(`padding:10px 16px; color:#5A5E66;`)}>{f.type}</div>
+<div style={css(`padding:10px 16px; color:#8E96A3;`)}>{f.uploadedAt}</div>
+</div>
+</React.Fragment>))}
+</>)}
+</div>
+</>) : null}
+</>) : null}
+{/* ===== NODE INPUTS (2026-08-26, new) — tab created, deliberately left blank per product decision. ===== */}
+{(legIsNodesTab) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Node Inputs \u2014 not built for {activeLegShort} yet.</div>
+</>) : null}
+{/* ===== NODE & VEHICLE MASTER (2026-08-26 rebuild) — 3 sub-tabs: Sort Centre Master, SC Vehicle
+     Availability, Vehicle Master. NLH gets real content in all 3; FM shows the tab shell only,
+     every sub-panel empty, per product decision. ===== */}
 {(legIsMastersTab) ? (<>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Shared columns (name, zone, capacity) come from the network-wide SC registry — editable from any leg. {(legIsNlh) ? 'NLH Dock Capacity and Lane Name are NLH-local, visible only here.' : 'Add FM-specific columns here once they\u2019re defined.'}</div>
+<div style={css(`display:flex; align-items:center; gap:4px; margin-bottom:16px; padding:4px; background:#F7F8FB; border-radius:9px; width:fit-content;`)}>
+{(legMastersSubTabs || []).map((t, __iLegSub) => (<React.Fragment key={__iLegSub}>
+<button onClick={t.onClick} style={css(`height:32px; padding:0 14px; border:none; border-radius:7px; background:${t.active ? '#fff' : 'transparent'}; box-shadow:${t.active ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'}; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:${t.active ? '700' : '500'}; color:${t.active ? '#003F98' : '#5A5E66'};`)}>{t.label}</button>
+</React.Fragment>))}
+</div>
+{(legIsScSubTab) ? (<>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Shared columns (name, zone, capacity, dispatch role) come from the network-wide SC registry — editable from any leg. {(legIsNlh) ? 'NLH Dock Capacity and Lane Name are NLH-local, visible only here.' : 'Add FM-specific columns here once they\u2019re defined.'}</div>
+{(legIsFm) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Sort Centre Master \u2014 not built for FM Carting yet.</div>
+</>) : (<>
 {(legMastersEmpty) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No Sort Centres visible yet for this cycle.</div>
 </>) : (<>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
-<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; background:#F7F8FB; border-bottom:1px solid #E6EBF2; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; background:#F7F8FB; border-bottom:1px solid #E6EBF2; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
 <div style={css(`padding:9px 10px;`)}>Code</div>
 <div style={css(`padding:9px 10px;`)}>Name</div>
+<div style={css(`padding:9px 10px;`)}>Dispatch</div>
 <div style={css(`padding:9px 10px;`)}>Zone</div>
 <div style={css(`padding:9px 10px;`)}>Sort Cap</div>
 <div style={css(`padding:9px 10px;`)}>Vol Cap</div>
 {(legIsNlh) ? (<><div style={css(`padding:9px 10px;`)}>NLH Dock Cap</div><div style={css(`padding:9px 10px;`)}>Lane Name</div></>) : null}
 </div>
 {(legMastersRows || []).slice(0, 40).map((r, __iLegRow) => (<React.Fragment key={__iLegRow}>
-<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; border-bottom:1px solid #F2F5FA; font-size:12px; color:#14171F;`)}>
+<div style={css(`display:grid; grid-template-columns:90px 1fr 90px 90px 100px 100px${(legIsNlh) ? ' 120px 160px' : ''}; gap:0; border-bottom:1px solid #F2F5FA; font-size:12px; color:#14171F;`)}>
 <div style={css(`padding:8px 10px; font-weight:600;`)}>{r.code}</div>
 <div style={css(`padding:8px 10px;`)}>{r.name}</div>
+<div style={css(`padding:8px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#EAEEFB; color:#2F4FC6;`)}>{r.dispatchRoleType}</span></div>
 <div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.zone}</div>
 <div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.sortCap}</div>
 <div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.volCap}</div>
@@ -368,24 +437,85 @@ All modules
 </div>
 {(legMastersRows.length > 40) ? (<><div style={css(`font-size:11px; color:#8E96A3; margin-top:8px;`)}>Showing first 40 of {legMastersRows.length} Sort Centres.</div></>) : null}
 </>)}
+</>)}
 </>) : null}
-{(legIsUploadsTab) ? (<>
-<div style={css(`display:flex; flex-direction:column; gap:12px;`)}>
-{(legUploadSlots || []).map((u, __iLegUp) => (<React.Fragment key={__iLegUp}>
-<div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:space-between; gap:16px;`)}>
-<div>
-<div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:3px;`)}>{u.label}</div>
-{(u.hasFile) ? (<><div style={css(`font-size:11.5px; color:#128A3E;`)}>{u.fileName} · uploaded {u.uploadedAt}</div></>) : (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>No file uploaded for this cycle</div></>)}
+{(legIsAvailSubTab) ? (<>
+{(legIsFm) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>SC Vehicle Availability \u2014 not built for FM Carting yet.</div>
+</>) : (<>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) \u2014 NLH originates only from FMSCs.</div>
+{(legAvailEmpty) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No SC vehicle availability configured yet for this cycle.</div>
+</>) : (<>
+{(legAvailGroups || []).map((g, __iLegAvailG) => (<React.Fragment key={__iLegAvailG}>
+<div style={css(`margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
+<span style={css(`font-size:13.5px; font-weight:700; color:#003F98;`)}>{g.code}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{g.name}</span>
+<span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{g.zone}</span>
 </div>
-<label style={css(`display:flex; align-items:center; height:34px; padding:0 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#5A5E66; flex-shrink:0;`)}>
-{(u.hasFile) ? 'Replace file' : 'Choose file'}
-<input type={"file"} onChange={u.onFile} style={css(`display:none;`)} />
-</label>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`padding:8px 12px;`)}>Vehicle Type</div>
+<div style={css(`padding:8px 12px;`)}>Vehicles</div>
+<div style={css(`padding:8px 12px;`)}>TP Limit</div>
+<div style={css(`padding:8px 12px;`)}>Local Spd</div>
+<div style={css(`padding:8px 12px;`)}>Non-Local Spd</div>
+<div style={css(`padding:8px 12px;`)}>Zone Feasibility</div>
+</div>
+{(g.rows || []).map((r, __iLegAvailR) => (<React.Fragment key={__iLegAvailR}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; border-top:1px solid #F2F5FA; font-size:12.5px;`)}>
+<div style={css(`padding:9px 12px; font-weight:600; color:#14171F;`)}>{r.vehicleType}</div>
+<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.vehicleCount}</div>
+<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.tpLimit}</div>
+<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.localSpeed}</div>
+<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.nonLocalSpeed}</div>
+<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.zoneFeas}</div>
 </div>
 </React.Fragment>))}
 </div>
+</div>
+</React.Fragment>))}
+</>)}
+</>)}
 </>) : null}
+{(legIsVehicleSubTab) ? (<>
+{(legIsFm) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Vehicle Master \u2014 not built for FM Carting yet.</div>
+</>) : (<>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
+{(legVehicleEmpty) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No vehicle types configured yet.</div>
+</>) : (<>
+<div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`padding:9px 14px;`)}>Vehicle Type</div>
+<div style={css(`padding:9px 14px;`)}>Capacity</div>
+<div style={css(`padding:9px 14px;`)}>Dist Limit</div>
+<div style={css(`padding:9px 14px;`)}>TP Limit</div>
+<div style={css(`padding:9px 14px;`)}>Local Spd</div>
+<div style={css(`padding:9px 14px;`)}>Non-Local Spd</div>
+</div>
+{(legVehicleRows || []).map((v, __iLegVeh) => (<React.Fragment key={__iLegVeh}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr; border-top:1px solid #F2F5FA; font-size:13px;`)}>
+<div style={css(`padding:11px 14px; font-weight:700; color:#14171F;`)}>{v.name}</div>
+<div style={css(`padding:11px 14px; color:#14171F;`)}>{v.capacity}</div>
+<div style={css(`padding:11px 14px; color:#14171F;`)}>{v.dist} km</div>
+<div style={css(`padding:11px 14px; color:#14171F;`)}>{v.tp}</div>
+<div style={css(`padding:11px 14px; color:#14171F;`)}>{v.localSpeed}</div>
+<div style={css(`padding:11px 14px; color:#14171F;`)}>{v.nonLocalSpeed}</div>
+</div>
+</React.Fragment>))}
+</div>
+</>)}
+</>)}
+</>) : null}
+</>) : null}
+{/* ===== DESIGN INGESTION — NLH real (unchanged), FM empty. ===== */}
 {(legIsIngestionTab) ? (<>
+{(legIsFm) ? (<>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Design Ingestion \u2014 not built for FM Carting yet.</div>
+</>) : (<>
 <div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
 <div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
 <div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it’s available to RLH’s Route Scheduler picker for this same cycle month.</div>
@@ -405,6 +535,7 @@ All modules
 </div>
 </React.Fragment>))}
 </div>
+</>)}
 </>)}
 </>) : null}
 </div>
@@ -750,8 +881,10 @@ All modules
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.holdTimeOn ? s.maxHoldLocal + ' min' : '\u2014'}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.holdTimeOn ? s.maxHoldNonLocal + ' min' : '\u2014'}</div>
 </>) : null}
-<div />
-{/* 2026-08-26 fix — NLH Docks body cell removed alongside the header/toggle above. */}
+{/* 2026-08-26 fix — NLH Docks body cell removed alongside the header/toggle above. The
+    unconditional placeholder <div/> that used to pair with the (now-removed) NLH-toggle header
+    cell is ALSO removed here — leaving it in was exactly what broke row alignment (14 body
+    cells vs. 13 header cells), pushing edit/delete onto a wrapped second grid row. */}
 <div style={css(`padding:10px 10px;`)}>
 <button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.pocSummary}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
@@ -915,7 +1048,7 @@ All modules
 <div style={css(`display:flex; align-items:center; gap:12px; margin-bottom:14px;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; padding:10px 14px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px; flex:1;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#1E6FB8; font-weight:600;`)}>Touch Point Limit is the reference cap — SC Vehicle Availability and plan creation flag (don't block) when a vehicle's TPs exceed it. RLH-feasible types default to 7; setting a limit above 7 here is also flagged.</span>
+<span style={css(`font-size:12px; color:#1E6FB8; font-weight:600;`)}>Touch Point Limit is the reference cap — SC Vehicle Availability and plan creation flag (don't block) when a vehicle's TPs exceed it. Default cap is 7; setting a limit above 7 here is also flagged.</span>
 </div> {(addVehNotOpen) ? (<><button onClick={addVehType} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add Vehicle Type</button></>) : null}
 {(addVehOpen) ? (<><span style={css(`font-size:12px; color:#5A5E66; white-space:nowrap;`)}>{addVehInlineHint}</span></>) : null}
 </div>
@@ -949,14 +1082,10 @@ All modules
 <div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>TP Non-Local</div>
 <input type={"number"} min={"0"} value={addVehNonLocalTp} onInput={onAddVehNonLocalTp} placeholder={"0"} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box; background:#fff;`)} />
 </div>
-<div style={css(`flex:1.4; min-width:150px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:5px;`)}>LH Feasibility</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px;`)}>
-{(addVehFeasChips || []).map((fc, __i24) => (<React.Fragment key={__i24}>
-<button type={"button"} onClick={fc.onToggle} aria-pressed={fc.on} style={css(`display:inline-flex; align-items:center; height:36px; padding:0 13px; border:1px solid ${fc.bd}; background:${fc.bg}; color:${fc.fg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}>{fc.label}</button>
-</React.Fragment>))}
-</div>
-</div>
+{/* 2026-08-26 fix — LH Feasibility field removed from the add/edit panel: every vehicle here is
+    now implicitly RLH-only (RLH has its own leg-scoped Vehicle Master), so there's nothing left
+    to toggle. Underlying feas:['RLH'] data is left untouched so Route Planner's existing
+    filtering logic keeps working unchanged. */}
 <button onClick={closeAddVeh} style={css(`height:36px; padding:0 16px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}>Cancel</button>
 <button onClick={submitAddVeh} style={css(`height:36px; padding:0 20px; border:none; background:${addVehBtnBg}; color:${addVehBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${addVehBtnCursor}; white-space:nowrap;`)}>{addVehSubmitLabel}</button>
 </div>
@@ -964,19 +1093,18 @@ All modules
 </>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 {/* 1.8 Vehicle Master — sticky header */}
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 1.1fr 84px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 84px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY (SHIPMENTS)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT (KMS)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>TOUCH POINT LIMIT</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)} title={"Route Scheduler's default local-zone travel speed for this vehicle type"}>LOCAL SPD (KM/H)</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)} title={"Route Scheduler's default non-local-zone travel speed for this vehicle type"}>NON-LOCAL SPD (KM/H)</div>
-<div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LH FEASIBILITY</div>
 <div style={css(`padding:10px 14px;`)} />
 </div>
 <div style={css(`max-height:360px; overflow-y:auto;`)}>
 {(vehMaster || []).map((v, __i27) => (<React.Fragment key={__i27}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 1.1fr 84px; align-items:center; border-top:1px solid #EEF1F6; background:${v.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.85fr 0.85fr 0.75fr 0.8fr 0.8fr 84px; align-items:center; border-top:1px solid #EEF1F6; background:${v.editing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(v.notEditing) ? (<><div style={css(`padding:13px 14px; font-size:13px; font-weight:700; color:#14171F;`)}>{v.name}</div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px;`)}><input value={v.draftVtype} onInput={v.onDraftVtype} placeholder={"Vehicle type"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:700; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; background:#fff;`)} /></div></>) : null}
@@ -992,9 +1120,7 @@ All modules
 {/* LOCAL / NON-LOCAL SPEED (2026-07-30) — read-only here; edit at SC Master for the actual per-SC override Route Scheduler uses. */}
 <div style={css(`padding:13px 14px; text-align:right; font-size:13px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{v.localSpeed}</div>
 <div style={css(`padding:13px 14px; text-align:right; font-size:13px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{v.nonLocalSpeed}</div>
-{/* LH FEASIBILITY */}
-{(v.notEditing) ? (<><div style={css(`padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px;`)}>{(v.feas || []).map((lf, __i25) => (<React.Fragment key={__i25}><span style={css(`padding:3px 10px; border-radius:6px; font-size:11px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{lf}</span></React.Fragment>))}</div></>) : null}
-{(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; flex-wrap:wrap; gap:5px; align-items:center;`)}>{(v.evFeasChips || []).map((fc, __i26) => (<React.Fragment key={__i26}><button onClick={fc.onToggle} style={css(`height:26px; padding:0 9px; border:1px solid ${fc.bd}; background:${fc.bg}; color:${fc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{fc.label}</button></React.Fragment>))}</div></>) : null}
+{/* 2026-08-26 fix — LH FEASIBILITY column removed (see add/edit panel removal above for why). */}
 {/* ACTION CELL */}
 {(v.notEditing) ? (<><div style={css(`padding:7px 14px; display:flex; justify-content:flex-end; gap:6px;`)}><button onClick={v.onEdit} title={"Edit vehicle type"} aria-label={`Edit ${v.name}`} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={v.onDeleteConfirm} title={"Remove vehicle type"} aria-label={`Remove ${v.name}`} style={css(`width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)} onMouseEnter={(e) => hoverOn(e, `background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #F2C9C9; background:#FDF3F3; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`, `background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
 {(v.editing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end; gap:6px;`)}><button onClick={v.onSaveRow} title={"Save changes"} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>Save</button><button onClick={v.onCancelRow} title={"Cancel"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#8E96A3;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`, `border-color:#8E96A3;`)}>Cancel</button></div></>) : null}
@@ -5759,6 +5885,13 @@ const FIELD_CLASS = {
 
   // Class B -- cross-leg, cycle-versioned.
   'sc.type': { class: 'B' },
+  // 2026-08-26 — real dispatch-role facts (which leg(s) this SC actually dispatches), replacing
+  // the old cosmetic "Hybrid/LMSC/FMSC" label that was really just a dcCount-size threshold with
+  // nothing behind it. An FMSC receives from FM Hubs and dispatches NLH; an LMSC receives from
+  // NLH and dispatches RLH; a Hybrid node does both. SC Type (above) is now DERIVED from these
+  // two flags at display time, not seeded independently.
+  'sc.dispatchesRLH': { class: 'B' },
+  'sc.dispatchesNLH': { class: 'B' },
   'sc.sortCap': { class: 'B' },
   'sc.volCap': { class: 'B' },
   'sc.htp': { class: 'B' },
@@ -6106,9 +6239,25 @@ function seedRLHMasterData(store, opts = {}) {
     });
   });
 
+  // 2026-08-26 — real dispatch-role assignment, replacing the old placeholder ('LMSC' for every
+  // non-MDC node). Ratio per product decision: ~75:100:7.5 (LMSC-only : FMSC-only : Hybrid) on a
+  // full ~180-node network, applied proportionally to however many SCs are actually seeded here
+  // (not a literal node count to hit) -- works out to roughly 41% / 55% / 4% on 80 SCs.
+  const nonMdc = generated.filter(s => s.nodeKind !== 'MDC');
+  const lmscOnlyCount = Math.round(nonMdc.length * 0.41);
+  const fmscOnlyCount = Math.round(nonMdc.length * 0.548);
+  nonMdc.forEach((sc, idx) => {
+    if (idx < lmscOnlyCount) { sc.dispatchesRLH = true; sc.dispatchesNLH = false; sc.scType = 'LMSC'; }
+    else if (idx < lmscOnlyCount + fmscOnlyCount) { sc.dispatchesRLH = false; sc.dispatchesNLH = true; sc.scType = 'FMSC'; }
+    else { sc.dispatchesRLH = true; sc.dispatchesNLH = true; sc.scType = 'Hybrid'; }
+  });
+  generated.filter(s => s.nodeKind === 'MDC').forEach(sc => { sc.dispatchesRLH = true; sc.dispatchesNLH = false; sc.scType = 'MDC'; });
+
   generated.forEach(sc => {
     addSC(store, sc.code, { name: sc.name, lat: sc.lat, lng: sc.lng, zone: sc.zone }, genesisMonth);
-    setClassBField(store, sc.code, genesisMonth, 'scType', sc.nodeKind === 'MDC' ? 'MDC' : 'LMSC');
+    setClassBField(store, sc.code, genesisMonth, 'scType', sc.scType);
+    setClassBField(store, sc.code, genesisMonth, 'dispatchesRLH', sc.dispatchesRLH);
+    setClassBField(store, sc.code, genesisMonth, 'dispatchesNLH', sc.dispatchesNLH);
     setClassBField(store, sc.code, genesisMonth, 'sortCap', sc.sortCap);
     setClassBField(store, sc.code, genesisMonth, 'volCap', sc.volCap);
     setClassBField(store, sc.code, genesisMonth, 'htp', sc.htp);
@@ -6146,6 +6295,10 @@ function materializeRLHScs(store, cycleMonth) {
       open: d.openTime, close: d.closeTime, holdTimeOn: d.holdTimeOn, maxHoldLocal: d.maxHoldLocal, maxHoldNonLocal: d.maxHoldNonLocal,
       hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
       pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
+      // 2026-08-26 — real dispatch-role facts, exposed for the SC Master screen's SC TYPE column
+      // (now derived from these, not a dcCount-size guess) and for filtering RLH/NLH's own SC
+      // Vehicle Availability screens to the SCs that actually dispatch that leg.
+      dispatchRoleType: b.scType || 'LMSC', dispatchesRLH: b.dispatchesRLH !== false, dispatchesNLH: !!b.dispatchesNLH,
     };
   });
 }
@@ -6200,6 +6353,9 @@ function materializeLegScMasterView(store, leg, cycleMonth, dFieldNames) {
     const row = {
       code, name: identity.name, zone: identity.zone, lat: identity.lat, lng: identity.lng,
       sortCap: b.sortCap != null ? b.sortCap : 0, volCap: b.volCap != null ? b.volCap : 0, htp: b.htp != null ? b.htp : 0,
+      // 2026-08-26 — real dispatch-role facts, shared across legs (same underlying SC, same
+      // physical fact) -- used to filter NLH's own SC Vehicle Availability to FMSC/Hybrid nodes.
+      dispatchRoleType: b.scType || 'LMSC', dispatchesRLH: b.dispatchesRLH !== false, dispatchesNLH: !!b.dispatchesNLH,
     };
     (dFieldNames || []).forEach(f => { row[f] = d[f] != null ? d[f] : null; });
     return row;
@@ -6542,6 +6698,28 @@ class NDCApp extends React.Component {
       { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'], localSpeed: 22, nonLocalSpeed: 48 },
     ];
     seedVehicleMasterLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, VEH_SEED);
+    // 2026-08-26 — NLH's own Vehicle Master: distinct linehaul-scale vehicle types (NLH runs
+    // longer SC-to-SC hauls, not last-mile delivery), no LH Feasibility concept at all (each leg
+    // now has its own vehicle master, so the old cross-leg feasibility tag doesn't apply).
+    const NLH_VEH_SEED = [
+      { name: '20ft Container', tp: 8, cap: 9000, dist: 1000, localSpeed: 30, nonLocalSpeed: 46 },
+      { name: '32ft SXL',       tp: 10, cap: 16000, dist: 1600, localSpeed: 28, nonLocalSpeed: 50 },
+      { name: '32ft MXL',       tp: 12, cap: 21000, dist: 1800, localSpeed: 27, nonLocalSpeed: 48 },
+      { name: '40ft Trailer',   tp: 14, cap: 26000, dist: 2200, localSpeed: 26, nonLocalSpeed: 52 },
+    ];
+    seedVehicleMasterLeg(this.engineStore, 'nlh', RLH_GENESIS_MONTH, NLH_VEH_SEED);
+    // NLH's own SC Vehicle Availability -- scoped to dispatchesNLH SCs (FMSC + Hybrid), per the
+    // "NLH originates only from FMSCs" product decision. Picks a handful of real FMSC/Hybrid
+    // codes from what was just seeded above rather than hardcoding codes that might not exist.
+    const nlhEligibleScs = materializeRLHScs(this.engineStore, RLH_GENESIS_MONTH).filter(s => s.dispatchesNLH).slice(0, 6);
+    const NLH_AVAIL_SEED = nlhEligibleScs.map(sc => ({
+      code: sc.code, name: sc.name + ' ' + sc.dispatchRoleType, zone: sc.zone,
+      rows: [
+        { vehicleType: '20ft Container', vehicleCount: 3, tpLimit: 8, localSpeed: 30, nonLocalSpeed: 46, zoneFeas: 'Non-Local' },
+        { vehicleType: '32ft SXL', vehicleCount: 2, tpLimit: 10, localSpeed: 28, nonLocalSpeed: 50, zoneFeas: 'Non-Local' },
+      ],
+    }));
+    seedScVehAvailLeg(this.engineStore, 'nlh', RLH_GENESIS_MONTH, NLH_AVAIL_SEED);
     const VEH = materializeVehicleMasterLeg(this.engineStore, 'rlh', this.activeCycleMonth.rlh);
 
     const NAMES = ['Aarti Nair','Rahul Sharma','Imran Khan','Deepa Rao','Suresh Menon','Neha Tiwari','Vivek Pillai','Karthik Varma','Pooja Gupta','Sandeep Lal','Megha Bose','Arjun Desai'];
@@ -8433,7 +8611,7 @@ class NDCApp extends React.Component {
       const rf = this.resolveScFields(s);
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC', isMdc: s.nodeKind === 'MDC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
+      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.nodeKind === 'MDC' ? 'MDC' : s.dispatchRoleType, isMdc: s.nodeKind === 'MDC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
         coords: rf.lat.toFixed(4) + ', ' + rf.lng.toFixed(4),
         nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
         holdTimeOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
@@ -8726,7 +8904,9 @@ class NDCApp extends React.Component {
     const ing = st.ingestionTab || 'rlh';
     // 2026-07-29 — NLH Plan ingestion activated (was "arriving next cycle"). Feeds Route
     // Scheduler's NLH Landing Plan Selection step. FM Carting stays a future-cycle stub.
-    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.'], ['nlh', 'NLH Plan', true, 'Moved — ingest NLH plans on the SC-SC and NLH Design card\u2019s Design Ingestion tab. Route Scheduler\u2019s Step 2 references them from there by cycle month.'], ['fm', 'FM Carting', true, 'First-Mile carting ingestion — arriving next cycle.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0] }) }));
+    // 2026-08-26 fix — NLH/FM Carting tabs removed entirely (not just disabled): both now have
+    // their own real Design Ingestion elsewhere, so a disabled placeholder here is pure clutter.
+    const ingTabs = [['rlh', 'RLH Plan', false, 'Ingest an externally-built RLH route plan to validate and push into the alignment loop.']].map(t => ({ label: t[1], soon: t[2], tip: t[3], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0] }) }));
     const isIngComingSoon = ing === 'fm';
     return {
       gate,
@@ -14160,35 +14340,70 @@ class NDCApp extends React.Component {
       legCycleLabel: st.activeLeg ? monthLabel(st.activeCycleMonth[st.activeLeg]) : '',
       legCycleOpen: !!st.legCycleOpen, toggleLegCycle: () => this.setState({ legCycleOpen: !st.legCycleOpen }),
       legCycleIsPast: st.activeLeg ? monthIsPast(st.activeCycleMonth[st.activeLeg], currentMonthKey()) : false,
-      // ===== Phase 4 (2026-08-25) — NLH/FM Design Inputs: masters + uploads + (NLH-only) ingestion.
-      // legTabs' shape differs per leg (NLH gets 3 tabs, FM gets 2 -- no Design Ingestion for FM,
-      // nothing references its output yet, per product decision).
-      legTabs: (st.activeLeg === 'nlh' ? [['masters', 'Masters'], ['uploads', 'Manifestation Uploads'], ['ingestion', 'Design Ingestion']]
-        : st.activeLeg === 'fm' ? [['masters', 'Masters'], ['uploads', 'FM Hub Manifestation']] : []).map(t => ({
-        key: t[0], label: t[1], active: (st.legInputsTab || 'masters') === t[0], onClick: () => this.setState({ legInputsTab: t[0] }),
+      // ===== 2026-08-26 rebuild — NLH/FM Design Inputs now mirrors RLH's exact 4-tab shape
+      // (Volume Inputs / Node Inputs / Node & Vehicle Master / Design Ingestion) instead of the
+      // earlier simplified 3-tab version. FM gets all 4 tabs too (structural parity, per product
+      // decision) but every panel renders empty.
+      legTabs: (st.activeLeg ? [['volume', 'Volume Inputs'], ['nodes', 'Node Inputs'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']] : []).map(t => ({
+        key: t[0], label: t[1], active: (st.legInputsTab || 'volume') === t[0], onClick: () => this.setState({ legInputsTab: t[0] }),
       })),
-      legIsMastersTab: (st.legInputsTab || 'masters') === 'masters',
-      legIsUploadsTab: (st.legInputsTab || 'masters') === 'uploads',
-      legIsIngestionTab: (st.legInputsTab || 'masters') === 'ingestion' && st.activeLeg === 'nlh',
-      legIsNlh: st.activeLeg === 'nlh',
-      legMastersRows: st.activeLeg ? materializeLegScMasterView(
+      legIsVolumeTab: (st.legInputsTab || 'volume') === 'volume',
+      legIsNodesTab: (st.legInputsTab || 'volume') === 'nodes',
+      legIsMastersTab: (st.legInputsTab || 'volume') === 'masters',
+      legIsIngestionTab: (st.legInputsTab || 'volume') === 'ingestion',
+      legIsNlh: st.activeLeg === 'nlh', legIsFm: st.activeLeg === 'fm',
+      // Node & Vehicle Master's own second-level tabs (SC Master / SC Vehicle Availability /
+      // Vehicle Master) -- mirrors RLH's shape minus LMDC Master, which is an RLH-only concept.
+      legMastersSubTabs: (st.activeLeg ? [['sc', 'Sort Centre Master'], ['avail', 'SC Vehicle Availability'], ['vehicle', 'Vehicle Master']] : []).map(t => ({
+        key: t[0], label: t[1], active: (st.legMastersSubTab || 'sc') === t[0], onClick: () => this.setState({ legMastersSubTab: t[0] }),
+      })),
+      legIsScSubTab: (st.legMastersSubTab || 'sc') === 'sc',
+      legIsAvailSubTab: (st.legMastersSubTab || 'sc') === 'avail',
+      legIsVehicleSubTab: (st.legMastersSubTab || 'sc') === 'vehicle',
+      legMastersRows: (st.activeLeg && st.activeLeg !== 'fm') ? materializeLegScMasterView(
         this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg],
         st.activeLeg === 'nlh' ? ['nlhDockCap', 'laneName'] : []
       ).map(r => ({
-        code: r.code, name: r.name, zone: r.zone, sortCap: r.sortCap, volCap: r.volCap,
+        code: r.code, name: r.name, zone: r.zone, sortCap: r.sortCap, volCap: r.volCap, dispatchRoleType: r.dispatchRoleType,
         nlhDockCap: r.nlhDockCap != null ? r.nlhDockCap : '', laneName: r.laneName || '',
         onDockChange: (e) => this.setLegField(r.code, 'nlhDockCap', parseInt(e.target.value, 10) || 0),
         onLaneChange: (e) => this.setLegField(r.code, 'laneName', e.target.value),
       })) : [],
-      legMastersEmpty: st.activeLeg ? materializeLegScMasterView(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], []).length === 0 : true,
-      legUploadSlots: (st.activeLeg === 'nlh' ? [['fmscManifestation', 'FMSC Manifestation'], ['lmscLanding', 'LMSC Landing']]
+      legMastersEmpty: (st.activeLeg && st.activeLeg !== 'fm') ? materializeLegScMasterView(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], []).length === 0 : true,
+      // SC Vehicle Availability -- NLH-only real content, scoped to dispatchesNLH SCs (FMSC +
+      // Hybrid), per "NLH originates only from FMSCs". FM shows nothing (legAvailEmpty always true).
+      legAvailGroups: (st.activeLeg === 'nlh') ? materializeScVehAvailLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(g => ({
+        code: g.code, name: g.name, zone: g.zone, rows: (g.rows || []).map(r => ({
+          vehicleType: r.vehicleType, vehicleCount: r.vehicleCount, tpLimit: r.tpLimit, localSpeed: r.localSpeed, nonLocalSpeed: r.nonLocalSpeed, zoneFeas: r.zoneFeas,
+        })),
+      })) : [],
+      legAvailEmpty: !(st.activeLeg === 'nlh' && materializeScVehAvailLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length > 0),
+      // Vehicle Master -- NLH-only real content, no LH Feasibility column (each leg owns its own
+      // fleet now). FM shows nothing.
+      legVehicleRows: (st.activeLeg === 'nlh') ? materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(v => ({
+        name: v.name, capacity: v.cap, dist: v.dist, tp: v.tp, localSpeed: v.localSpeed, nonLocalSpeed: v.nonLocalSpeed,
+      })) : [],
+      legVehicleEmpty: !(st.activeLeg === 'nlh' && materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length > 0),
+      // Volume Inputs -- NLH gets a real "ACTIVE THIS CYCLE" strip + library, mirroring RLH's
+      // pattern, scoped to FMSC Manifestation + LMSC Landing. FM's own upload slot stays on the
+      // simpler single-card pattern from before (still real, just one type, per product decision
+      // that only NLH needed the fuller RLH-style treatment called out explicitly).
+      legVolumeSlots: (st.activeLeg === 'nlh' ? [['fmscManifestation', 'FMSC Manifestation'], ['lmscLanding', 'LMSC Landing']]
         : st.activeLeg === 'fm' ? [['fmHubManifestation', 'FM Hub Manifestation']] : []).map(t => {
         const up = st.activeLeg ? getUpload(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], t[0]) : null;
         return {
           slot: t[0], label: t[1], hasFile: !!up, fileName: up ? up.fileMeta.name : '', uploadedAt: up ? up.uploadedAt : '',
           onFile: (e) => this.onLegUploadFile(t[0], e.target.files && e.target.files[0]),
+          onTemplate: () => this.showToast('Template download — coming soon', '#003F98'),
         };
       }),
+      // Volume file library -- a simplified library (current active file per type, not a full
+      // upload history) given the engine's Class-F storage keeps one file per slot, not a list.
+      legVolumeLibraryRows: (st.activeLeg && st.activeLeg !== 'fm') ? (st.activeLeg === 'nlh' ? [['fmscManifestation', 'FMSC Manifestation'], ['lmscLanding', 'LMSC Landing']] : []).map(t => {
+        const up = getUpload(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], t[0]);
+        return up ? { name: up.fileMeta.name, type: t[1], uploadedAt: up.uploadedAt } : null;
+      }).filter(Boolean) : [],
+      legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? getUpload(this.engineStore, 'nlh', st.activeCycleMonth.nlh, 'fmscManifestation') == null && getUpload(this.engineStore, 'nlh', st.activeCycleMonth.nlh, 'lmscLanding') == null : true,
       legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
         planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt,
       })) : [],

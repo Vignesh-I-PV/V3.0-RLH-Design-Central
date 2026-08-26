@@ -368,7 +368,11 @@ All modules
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 <div style={css(`padding:16px 16px 12px;`)}>
 <div style={css(`font-size:14px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Volume file library</div>
-<div style={css(`font-size:12px; color:#5A5E66;`)}>NLH's own library \u2014 FMSC Manifestation and LMSC Landing only. Simplified to the current active file per type (not a full upload history) for this build.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:12px;`)}>NLH's own library \u2014 every FMSC Manifestation and LMSC Landing upload made this cycle, newest first.</div>
+<div style={css(`display:flex; align-items:center; gap:8px; height:34px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; width:240px;`)}>
+<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={legVolumeSearch} onInput={onLegVolumeSearch} placeholder={"Search file name…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; width:100%;`)} />
+</div>
 </div>
 {(legVolumeLibraryEmpty) ? (<>
 <div style={css(`padding:22px 16px; font-size:12.5px; color:#8E96A3;`)}>No files uploaded yet this cycle.</div>
@@ -443,7 +447,19 @@ All modules
 {(legIsFm) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>SC Vehicle Availability \u2014 not built for FM Carting yet.</div>
 </>) : (<>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) \u2014 NLH originates only from FMSCs.</div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) \u2014 NLH originates only from FMSCs.</div>
+<button onClick={onLegAvailAddScOpen} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; flex-shrink:0;`)}>+ Add SC</button>
+</div>
+{(legAvailAddScOpen) ? (<>
+<div style={css(`padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:14px; display:flex; gap:10px; align-items:center;`)}>
+<select onChange={onLegAvailAddScSelect} defaultValue={""} style={css(`flex:1; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px; background:#fff;`)}>
+<option value={""} disabled>Select an SC (FMSC / Hybrid only)…</option>
+{(legAvailAddScOptions || []).map((o, __iAsc) => (<React.Fragment key={__iAsc}><option value={o.value}>{o.label}</option></React.Fragment>))}
+</select>
+<button onClick={onLegAvailAddScCancel} style={css(`height:34px; padding:0 12px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Cancel</button>
+</div>
+</>) : null}
 {(legAvailEmpty) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No SC vehicle availability configured yet for this cycle.</div>
 </>) : (<>
@@ -453,24 +469,50 @@ All modules
 <span style={css(`font-size:13.5px; font-weight:700; color:#003F98;`)}>{g.code}</span>
 <span style={css(`font-size:12px; color:#5A5E66;`)}>{g.name}</span>
 <span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{g.zone}</span>
+<div style={css(`flex:1;`)} />
+<button onClick={g.onAddRow} style={css(`height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add Vehicle</button>
 </div>
+{(legAvailRowAddSc === g.code) ? (<>
+<div style={css(`padding:10px 12px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:8px; display:flex; gap:8px; align-items:center;`)}>
+<select value={legAvailRowAddForm.vehicleType} onChange={onLegAvailRowAddType} style={css(`flex:1; height:30px; border:1px solid #C3C9D4; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px; background:#fff;`)}>
+<option value={""} disabled>Vehicle type…</option>
+{(legAvailRowAddOptions || []).map((o, __iAvt) => (<React.Fragment key={__iAvt}><option value={o.value}>{o.label}</option></React.Fragment>))}
+</select>
+<input type={"number"} min={"0"} value={legAvailRowAddForm.vehicleCount} onInput={onLegAvailRowAddCount} placeholder={"Count"} style={css(`width:70px; height:30px; border:1px solid #C3C9D4; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} />
+<input type={"number"} min={"0"} value={legAvailRowAddForm.tpLimit} onInput={onLegAvailRowAddTp} placeholder={"TP limit"} style={css(`width:80px; height:30px; border:1px solid #C3C9D4; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} />
+<button onClick={legAvailRowAddSubmit} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Add</button>
+<button onClick={legAvailRowAddCancel} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+</div>
+</>) : null}
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.9fr 70px; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
 <div style={css(`padding:8px 12px;`)}>Vehicle Type</div>
 <div style={css(`padding:8px 12px;`)}>Vehicles</div>
 <div style={css(`padding:8px 12px;`)}>TP Limit</div>
 <div style={css(`padding:8px 12px;`)}>Local Spd</div>
 <div style={css(`padding:8px 12px;`)}>Non-Local Spd</div>
 <div style={css(`padding:8px 12px;`)}>Zone Feasibility</div>
+<div style={css(`padding:8px 12px;`)} />
 </div>
 {(g.rows || []).map((r, __iLegAvailR) => (<React.Fragment key={__iLegAvailR}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; border-top:1px solid #F2F5FA; font-size:12.5px;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.9fr 70px; border-top:1px solid #F2F5FA; font-size:12.5px; align-items:center;`)}>
 <div style={css(`padding:9px 12px; font-weight:600; color:#14171F;`)}>{r.vehicleType}</div>
-<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.vehicleCount}</div>
-<div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.tpLimit}</div>
+{(r.notEditing) ? (<><div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.vehicleCount}</div><div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.tpLimit}</div></>) : (<>
+<div style={css(`padding:5px 8px;`)}><input value={r.draftCount} onInput={r.onDraftCount} style={css(`width:100%; height:26px; border:1px solid #C3C9D4; border-radius:5px; padding:0 6px; font-family:inherit; font-size:12px;`)} /></div>
+<div style={css(`padding:5px 8px;`)}><input value={r.draftTp} onInput={r.onDraftTp} style={css(`width:100%; height:26px; border:1px solid #C3C9D4; border-radius:5px; padding:0 6px; font-family:inherit; font-size:12px;`)} /></div>
+</>)}
 <div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.localSpeed}</div>
 <div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.nonLocalSpeed}</div>
 <div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.zoneFeas}</div>
+<div style={css(`padding:6px 8px; display:flex; gap:3px;`)}>
+{(r.notEditing) ? (<>
+<button onClick={r.onEdit} title={"Edit"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onDelete} title={"Delete"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</>) : (<>
+<button onClick={r.onSave} title={"Save"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#E7F4EC; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onCancel} title={"Cancel"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}>✕</button>
+</>)}
+</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -483,27 +525,56 @@ All modules
 {(legIsFm) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Vehicle Master \u2014 not built for FM Carting yet.</div>
 </>) : (<>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
+<button onClick={legVehAddOpenClick} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; flex-shrink:0;`)}>+ Add Vehicle Type</button>
+</div>
+{(legVehAddOpen) ? (<>
+<div style={css(`padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;`)}>
+<input value={legVehAddForm.name} onInput={onLegVehAddName} placeholder={"Vehicle type, e.g. 24ft SXL"} style={css(`flex:1.4; min-width:160px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
+<input type={"number"} min={"0"} value={legVehAddForm.capacity} onInput={onLegVehAddCapacity} placeholder={"Capacity"} style={css(`width:100px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
+<input type={"number"} min={"0"} value={legVehAddForm.dist} onInput={onLegVehAddDist} placeholder={"Dist limit"} style={css(`width:100px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
+<input type={"number"} min={"0"} value={legVehAddForm.tp} onInput={onLegVehAddTp} placeholder={"TP limit"} style={css(`width:90px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
+<button onClick={legVehAddSubmit} style={css(`height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Add</button>
+<button onClick={legVehAddCancel} style={css(`height:34px; padding:0 12px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Cancel</button>
+</div>
+</>) : null}
 {(legVehicleEmpty) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No vehicle types configured yet.</div>
 </>) : (<>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr 70px; background:#F7F8FB; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; text-transform:uppercase;`)}>
 <div style={css(`padding:9px 14px;`)}>Vehicle Type</div>
 <div style={css(`padding:9px 14px;`)}>Capacity</div>
 <div style={css(`padding:9px 14px;`)}>Dist Limit</div>
 <div style={css(`padding:9px 14px;`)}>TP Limit</div>
 <div style={css(`padding:9px 14px;`)}>Local Spd</div>
 <div style={css(`padding:9px 14px;`)}>Non-Local Spd</div>
+<div style={css(`padding:9px 14px;`)} />
 </div>
 {(legVehicleRows || []).map((v, __iLegVeh) => (<React.Fragment key={__iLegVeh}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr; border-top:1px solid #F2F5FA; font-size:13px;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.9fr 0.8fr 0.9fr 0.9fr 70px; border-top:1px solid #F2F5FA; font-size:13px; align-items:center;`)}>
 <div style={css(`padding:11px 14px; font-weight:700; color:#14171F;`)}>{v.name}</div>
+{(v.notEditing) ? (<>
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.capacity}</div>
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.dist} km</div>
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.tp}</div>
+</>) : (<>
+<div style={css(`padding:6px 8px;`)}><input value={v.draftCapacity} onInput={v.onDraftCapacity} style={css(`width:100%; height:28px; border:1px solid #C3C9D4; border-radius:5px; padding:0 6px; font-family:inherit; font-size:12.5px;`)} /></div>
+<div style={css(`padding:6px 8px;`)}><input value={v.draftDist} onInput={v.onDraftDist} style={css(`width:100%; height:28px; border:1px solid #C3C9D4; border-radius:5px; padding:0 6px; font-family:inherit; font-size:12.5px;`)} /></div>
+<div style={css(`padding:6px 8px;`)}><input value={v.draftTp} onInput={v.onDraftTp} style={css(`width:100%; height:28px; border:1px solid #C3C9D4; border-radius:5px; padding:0 6px; font-family:inherit; font-size:12.5px;`)} /></div>
+</>)}
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.localSpeed}</div>
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.nonLocalSpeed}</div>
+<div style={css(`padding:6px 8px; display:flex; gap:3px;`)}>
+{(v.notEditing) ? (<>
+<button onClick={v.onEdit} title={"Edit"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={v.onDelete} title={"Delete"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</>) : (<>
+<button onClick={v.onSave} title={"Save"} style={css(`width:26px; height:26px; border:1px solid #128A3E; background:#E7F4EC; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={v.onCancel} title={"Cancel"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}>✕</button>
+</>)}
+</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -860,7 +931,7 @@ All modules
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
 <div style={css(`display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}{(s.isMdc) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EEEAFB; color:#5B4FA0;`)} title={"Multi-Distribution-Centre node \u2014 not a real Sort Centre; DCs tagged 'MDC' on LMDC Master route from here instead"}>MDC</span></>) : null}</div>
+<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}{(s.isMdc) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EEEAFB; color:#5B4FA0;`)} title={"Multi-Distribution-Centre node \u2014 not a real Sort Centre; DCs tagged 'MDC' on LMDC Master route from here instead"}>MDC</span></>) : null}{(!s.rowIsActive) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)} title={"Deactivated \u2014 excluded from Route Planner and SC Vehicle Availability selection"}>INACTIVE</span></>) : null}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:${s.isMdc ? '#EEEAFB' : '#EAEEFB'}; color:${s.isMdc ? '#5B4FA0' : '#2F4FC6'}; white-space:nowrap;`)}>{s.isMdc ? 'MDC' : s.scType}</span></div>
@@ -890,7 +961,14 @@ All modules
 </div>
 <div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={s.rowEdit} aria-label={"Edit row"} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={s.rowDeleteConfirm} aria-label={"Delete row"} title={"Delete"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#D14B4B; color:#D14B4B;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#D14B4B; color:#D14B4B;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+{/* 2026-08-26 fix (#3) — SC Master's row action is Deactivate/Reactivate, not Delete. Active
+    rows show a Deactivate button (still routes through the same confirm dialog, now fixed to
+    deactivate through the engine); inactive rows show a direct Reactivate button instead. */}
+{(s.rowIsActive) ? (<>
+<button onClick={s.rowDeleteConfirm} aria-label={"Deactivate row"} title={"Deactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#C77B00; color:#C77B00;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 2v10M18.4 6.6a9 9 0 11-12.8 0"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</>) : (<>
+<button onClick={s.rowReactivate} aria-label={"Reactivate row"} title={"Reactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#128A3E; background:#E7F4EC;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`, `border-color:#128A3E; background:#E7F4EC;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</>)}
 </div>
 </div>
 {(s.pocOpen) ? (<>
@@ -1229,7 +1307,11 @@ All modules
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.unloadMin}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; justify-content:flex-end;`)}><button onClick={l.onEdit} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
+<button onClick={l.onEdit} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+{/* 2026-08-26 fix (#11) — Deactivate/Reactivate, same pattern as SC Master, now that LMDC rows have real per-DC existence tracking. */}
+{(l.rowIsActive) ? (<><button onClick={l.onDeactivate} aria-label={"Deactivate " + l.code} title={"Deactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#C77B00; color:#C77B00;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 2v10M18.4 6.6a9 9 0 11-12.8 0"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : (<><button onClick={l.onReactivate} aria-label={"Reactivate " + l.code} title={"Reactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#128A3E; background:#E7F4EC;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`, `border-color:#128A3E; background:#E7F4EC;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>)}
+</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; display:flex; gap:4px; justify-content:flex-end;`)}><button onClick={l.onSaveRow} title={"Save"} aria-label={"Save " + l.code} style={css(`width:28px; height:28px; border:none; background:#003F98; color:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button><button onClick={l.onCancelRow} title={"Cancel"} aria-label={"Cancel editing " + l.code} style={css(`width:28px; height:28px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button></div></>) : null}
 </div>
 </React.Fragment>))}
@@ -5946,6 +6028,8 @@ function makeEmptyStore() {
     localMaster: {},
     // Class F -- { [leg]: { [cycleMonth]: { [slot]: { fileMeta, rows } } } } -- never cloned.
     uploads: {},
+    uploadHistory: {},
+    lmdcRegistry: {},
     // NLH's ingested (not-yet-finalised) plans, referenced by RLH's Route Scheduler picker.
     // { [cycleMonth]: [ { planId, fileMeta, ingestedAt, rows } ] }
     nlhIngestedPlans: {},
@@ -5999,6 +6083,76 @@ function resolveExistence(store, code, cycleMonth) {
 
 function isVisible(store, code, cycleMonth) {
   return resolveExistence(store, code, cycleMonth) === 'active';
+}
+
+// 2026-08-26 — the deactivate/delete distinction: a deactivated row STAYS visible/displayable
+// (shown in the master list, tagged Inactive) but is excluded from active SELECTION anywhere
+// downstream (Route Planner's SC picker, SC Vehicle Availability's SC picker). A deleted row is
+// excluded from both. isDisplayable() is the broader check; isVisible() (above, unchanged) stays
+// the stricter "is this genuinely active" check, used wherever selection/eligibility matters.
+function isDisplayable(store, code, cycleMonth) {
+  const status = resolveExistence(store, code, cycleMonth);
+  return status === 'active' || status === 'deactivated';
+}
+
+// ---------------------------------------------------------------------------
+// LMDC existence registry (2026-08-26, #11) -- a parallel registry to scRegistry, one entry per
+// individual DC code, with the SAME effective-month statusLog mechanism SC identity uses. LMDC
+// Master is RLH-only (no other leg references individual DCs), so unlike scRegistry this never
+// needs a Class-A "shared across legs" layer -- existence is the only thing that needs its own
+// registry; every actual field (capacity, RLH Mode, MDC/Lane, Cutoff, TAT, etc.) lives as
+// ordinary Class D under leg='rlh', table='lmdc', keyed by DC code, exactly like every other
+// per-entity Class D record elsewhere in this engine.
+// ---------------------------------------------------------------------------
+
+function ensureLmdcRegistryRow(store, code) {
+  store.lmdcRegistry = store.lmdcRegistry || {};
+  if (!store.lmdcRegistry[code]) store.lmdcRegistry[code] = { statusLog: [] };
+  return store.lmdcRegistry[code];
+}
+
+function setLmdcStatus(store, code, status, effectiveMonth) {
+  const row = ensureLmdcRegistryRow(store, code);
+  row.statusLog.push({ status, effectiveMonth });
+  row.statusLog.sort((a, b) => monthCompare(a.effectiveMonth, b.effectiveMonth));
+}
+
+function addLmdc(store, code, effectiveMonth) {
+  ensureLmdcRegistryRow(store, code);
+  setLmdcStatus(store, code, 'active', effectiveMonth);
+}
+
+// Same tie-break logic as resolveExistence() (>= not >, so a same-month undo correctly wins).
+function resolveLmdcExistence(store, code, cycleMonth) {
+  const row = (store.lmdcRegistry || {})[code];
+  if (!row || !row.statusLog.length) return 'not-yet-added';
+  let best = null;
+  for (const entry of row.statusLog) {
+    if (monthCompare(entry.effectiveMonth, cycleMonth) <= 0) {
+      if (!best || monthCompare(entry.effectiveMonth, best.effectiveMonth) >= 0) best = entry;
+    }
+  }
+  return best ? best.status : 'not-yet-added';
+}
+
+function isLmdcDisplayable(store, code, cycleMonth) {
+  const status = resolveLmdcExistence(store, code, cycleMonth);
+  return status === 'active' || status === 'deactivated';
+}
+
+// Seeds every DC in `lmdcArray` as its own Class D entity (not one giant blob) -- 12,607 rows at
+// current scale, each getting its own addLmdc() + ensureClassDMaterialized() call. One-time
+// constructor cost; fine at this scale for a browser.
+function seedLmdcEntities(store, leg, genesisMonth, lmdcArray) {
+  lmdcArray.forEach(dc => {
+    addLmdc(store, dc.code, genesisMonth);
+    ensureClassDMaterialized(store, leg, 'lmdc', genesisMonth, dc.code, dc);
+  });
+}
+
+function materializeLmdcEntities(store, leg, cycleMonth) {
+  const codes = Object.keys(store.lmdcRegistry || {}).filter(code => isLmdcDisplayable(store, code, cycleMonth));
+  return codes.map(code => peekClassD(store, leg, 'lmdc', cycleMonth, code)).filter(Boolean);
 }
 
 // ---------------------------------------------------------------------------
@@ -6279,7 +6433,7 @@ function seedRLHMasterData(store, opts = {}) {
 // field names (open/close, not openTime/closeTime) deliberately mirror the existing form's
 // `patch` object in submitAddSc() so both directions (materialize <-> save) agree.
 function materializeRLHScs(store, cycleMonth) {
-  const codes = Object.keys(store.scRegistry).filter(code => isVisible(store, code, cycleMonth));
+  const codes = Object.keys(store.scRegistry).filter(code => isDisplayable(store, code, cycleMonth));
   return codes.map(code => {
     const identity = store.scRegistry[code];
     const b = peekClassB(store, code, cycleMonth) || {};
@@ -6299,6 +6453,10 @@ function materializeRLHScs(store, cycleMonth) {
       // (now derived from these, not a dcCount-size guess) and for filtering RLH/NLH's own SC
       // Vehicle Availability screens to the SCs that actually dispatch that leg.
       dispatchRoleType: b.scType || 'LMSC', dispatchesRLH: b.dispatchesRLH !== false, dispatchesNLH: !!b.dispatchesNLH,
+      // 2026-08-26 — deactivate/delete distinction: isActive=false means "deactivated, shown but
+      // not selectable anywhere downstream" -- isDisplayable() above already excludes true
+      // deletes entirely, so anything reaching this point is either active or deactivated.
+      isActive: resolveExistence(store, code, cycleMonth) === 'active',
     };
   });
 }
@@ -6313,7 +6471,10 @@ function materializeVehicleMasterLeg(store, leg, cycleMonth) {
   const byMonth = (store.localMaster[leg] || {})['vehicleMaster'] || {};
   const codes = new Set();
   Object.keys(byMonth).filter(m => monthCompare(m, cycleMonth) <= 0).forEach(m => Object.keys(byMonth[m]).forEach(c => codes.add(c)));
-  return Array.from(codes).map(name => peekClassD(store, leg, 'vehicleMaster', cycleMonth, name)).filter(Boolean);
+  // 2026-08-26 (#6) — .filter(v => !v._removed) added so a delete (setting _removed:true on the
+  // record for this cycle month, via setClassDField) actually excludes it going forward. Vehicle
+  // Master had no delete mechanism at all before this -- an entity, once seeded, was permanent.
+  return Array.from(codes).map(name => peekClassD(store, leg, 'vehicleMaster', cycleMonth, name)).filter(Boolean).filter(v => !v._removed);
 }
 
 function seedScVehAvailLeg(store, leg, genesisMonth, groups) {
@@ -6345,7 +6506,7 @@ function materializeLmdcRawLeg(store, leg, cycleMonth) {
 // materializeRLHScs() since it carries many more RLH-specific generation fields). Returns each
 // visible SC's shared A+B fields plus whichever leg-local D fields the caller asks for.
 function materializeLegScMasterView(store, leg, cycleMonth, dFieldNames) {
-  const codes = Object.keys(store.scRegistry).filter(code => isVisible(store, code, cycleMonth));
+  const codes = Object.keys(store.scRegistry).filter(code => isDisplayable(store, code, cycleMonth));
   return codes.map(code => {
     const identity = store.scRegistry[code];
     const b = peekClassB(store, code, cycleMonth) || {};
@@ -6356,6 +6517,7 @@ function materializeLegScMasterView(store, leg, cycleMonth, dFieldNames) {
       // 2026-08-26 — real dispatch-role facts, shared across legs (same underlying SC, same
       // physical fact) -- used to filter NLH's own SC Vehicle Availability to FMSC/Hybrid nodes.
       dispatchRoleType: b.scType || 'LMSC', dispatchesRLH: b.dispatchesRLH !== false, dispatchesNLH: !!b.dispatchesNLH,
+      isActive: resolveExistence(store, code, cycleMonth) === 'active',
     };
     (dFieldNames || []).forEach(f => { row[f] = d[f] != null ? d[f] : null; });
     return row;
@@ -6378,10 +6540,21 @@ function setUpload(store, leg, cycleMonth, slot, payload) {
   store.uploads[leg] = store.uploads[leg] || {};
   store.uploads[leg][cycleMonth] = store.uploads[leg][cycleMonth] || {};
   store.uploads[leg][cycleMonth][slot] = payload;
+  // 2026-08-26 (#7) — also append to a running per-(leg,cycleMonth) history, so the volume
+  // library can show every upload ever made this cycle (matching RLH's own fuller library),
+  // not just the single current-active file per slot the way it worked before.
+  store.uploadHistory = store.uploadHistory || {};
+  store.uploadHistory[leg] = store.uploadHistory[leg] || {};
+  store.uploadHistory[leg][cycleMonth] = store.uploadHistory[leg][cycleMonth] || [];
+  store.uploadHistory[leg][cycleMonth].push(Object.assign({ slot }, payload));
 }
 
 function getUpload(store, leg, cycleMonth, slot) {
   return ((store.uploads[leg] || {})[cycleMonth] || {})[slot] || null;
+}
+
+function listUploadHistory(store, leg, cycleMonth) {
+  return (((store.uploadHistory || {})[leg] || {})[cycleMonth] || []).slice().reverse();
 }
 
 // ---------------------------------------------------------------------------
@@ -7218,11 +7391,11 @@ class NDCApp extends React.Component {
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
     // See the stitching pass further below (after `plans` is built).
-    // 2026-08-25 — LMDC Master registered into the engine as a structural passthrough (see build
-    // notes: the DC-pool/Co-Loading/MDC generation algorithm itself is intentionally NOT rewritten
-    // this phase, just given a home in the per-cycle storage shape). Registered here, after every
-    // mutation above has settled, so the frozen copy matches exactly what's returned below.
-    seedLmdcRawLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
+    // 2026-08-26 (#11) — LMDC Master now genuinely entity-based: each DC is its own Class D
+    // record with its own effective-month existence tracking (lmdcRegistry), mirroring SC
+    // Master exactly, replacing the old single-blob-keyed-'ALL' passthrough. Registered here,
+    // after every mutation above has settled, so the frozen copy matches what's returned below.
+    seedLmdcEntities(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
 
     return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
@@ -7489,7 +7662,7 @@ class NDCApp extends React.Component {
         scs: materializeRLHScs(this.engineStore, month),
         VEH: materializeVehicleMasterLeg(this.engineStore, 'rlh', month),
         scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', month),
-        lmdcs: materializeLmdcRawLeg(this.engineStore, 'rlh', month),
+        lmdcs: materializeLmdcEntities(this.engineStore, 'rlh', month),
       });
     }
     this.setState(patch, () => {
@@ -7532,6 +7705,106 @@ class NDCApp extends React.Component {
     setLegScLocalField(this.engineStore, this.state.activeLeg, this.state.activeCycleMonth[this.state.activeLeg], code, field, value);
     this.bumpEngineTick();
   }
+  // 2026-08-26 (#6) — NLH Vehicle Master full CRUD (functional over polished, per product
+  // decision). Simple inline add-form + edit-in-place + delete-with-undo, same engine-backed
+  // pattern as everywhere else, just lighter UI than RLH's own Vehicle Master screen.
+  legVehAddOpen() { this.setState({ legVehAddForm: { name: '', capacity: '', dist: '', tp: '' } }); }
+  legVehAddCancel() { this.setState({ legVehAddForm: null }); }
+  legVehAddSubmit() {
+    const f = this.state.legVehAddForm || {};
+    const name = (f.name || '').trim();
+    if (!name) { this.showToast('Vehicle type name is required', '#C77B00'); return; }
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
+    ensureClassDMaterialized(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'name', name, {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'cap', num(f.capacity), {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'dist', num(f.dist), {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'tp', num(f.tp) || 7, {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'localSpeed', 26, {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'nonLocalSpeed', 48, {});
+    this.setState({ legVehAddForm: null });
+    this.bumpEngineTick();
+    this.showToast(name + ' added to NLH Vehicle Master', '#128A3E');
+  }
+  legVehEditOpen(name, v) { this.setState({ legVehEditName: name, legVehEditForm: { capacity: String(v.capacity || ''), dist: String(v.dist || ''), tp: String(v.tp || '') } }); }
+  legVehEditCancel() { this.setState({ legVehEditName: null, legVehEditForm: null }); }
+  legVehEditSave() {
+    const name = this.state.legVehEditName, f = this.state.legVehEditForm || {};
+    if (!name) return;
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'cap', num(f.capacity), {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'dist', num(f.dist), {});
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, 'tp', num(f.tp) || 7, {});
+    this.setState({ legVehEditName: null, legVehEditForm: null });
+    this.bumpEngineTick();
+    this.showToast(name + ' updated', '#128A3E');
+  }
+  legVehDelete(name) {
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, '_removed', true, {});
+    this.bumpEngineTick();
+    this.showToast(name + ' removed from NLH Vehicle Master', '#D14B4B', () => {
+      setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, '_removed', false, {});
+      this.bumpEngineTick();
+    });
+  }
+  // 2026-08-26 (#6) — NLH SC Vehicle Availability full CRUD, same functional-first approach.
+  legAvailAddScOpen() { this.setState({ legAvailAddScCode: '' }); }
+  legAvailAddScSubmit(code) {
+    if (!code) return;
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const scs = materializeRLHScs(this.engineStore, cycleMonth);
+    const sc = scs.find(s => s.code === code) || { name: code, zone: '' };
+    const existing = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code);
+    if (!existing) {
+      ensureClassDMaterialized(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code, { name: sc.name + ' ' + sc.dispatchRoleType, zone: sc.zone, rows: [] });
+    }
+    this.setState({ legAvailAddScCode: null });
+    this.bumpEngineTick();
+    this.showToast(code + ' added to NLH SC Vehicle Availability', '#128A3E');
+  }
+  legAvailRowAddOpen(code) { this.setState({ legAvailAddRowSc: code, legAvailAddRowForm: { vehicleType: '', vehicleCount: '1', tpLimit: '' } }); }
+  legAvailRowAddCancel() { this.setState({ legAvailAddRowSc: null, legAvailAddRowForm: null }); }
+  legAvailRowAddSubmit() {
+    const code = this.state.legAvailAddRowSc, f = this.state.legAvailAddRowForm || {};
+    if (!code || !f.vehicleType) { this.showToast('Pick a vehicle type', '#C77B00'); return; }
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
+    const veh = materializeVehicleMasterLeg(this.engineStore, 'nlh', cycleMonth).find(v => v.name === f.vehicleType) || {};
+    const blob = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
+    const newRow = { vehicleType: f.vehicleType, vehicleCount: num(f.vehicleCount) || 1, tpLimit: num(f.tpLimit) || veh.tp || 7, localSpeed: veh.localSpeed, nonLocalSpeed: veh.nonLocalSpeed, zoneFeas: 'Non-Local' };
+    setClassDField(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code, 'rows', (blob.rows || []).concat([newRow]), blob);
+    this.setState({ legAvailAddRowSc: null, legAvailAddRowForm: null });
+    this.bumpEngineTick();
+    this.showToast(f.vehicleType + ' added to ' + code, '#128A3E');
+  }
+  legAvailRowEditOpen(code, vehicleType, row) { this.setState({ legAvailEditKey: code + '|' + vehicleType, legAvailEditForm: { vehicleCount: String(row.vehicleCount || ''), tpLimit: String(row.tpLimit || '') } }); }
+  legAvailRowEditCancel() { this.setState({ legAvailEditKey: null, legAvailEditForm: null }); }
+  legAvailRowEditSave(code, vehicleType) {
+    const f = this.state.legAvailEditForm || {};
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
+    const blob = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
+    const newRows = (blob.rows || []).map(row => row.vehicleType === vehicleType ? Object.assign({}, row, { vehicleCount: num(f.vehicleCount), tpLimit: num(f.tpLimit) }) : row);
+    setClassDField(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code, 'rows', newRows, blob);
+    this.setState({ legAvailEditKey: null, legAvailEditForm: null });
+    this.bumpEngineTick();
+    this.showToast(vehicleType + ' updated in ' + code, '#128A3E');
+  }
+  legAvailRowDelete(code, vehicleType) {
+    const cycleMonth = this.state.activeCycleMonth.nlh;
+    const blob = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
+    const removed = (blob.rows || []).find(row => row.vehicleType === vehicleType);
+    setClassDField(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code, 'rows', (blob.rows || []).filter(row => row.vehicleType !== vehicleType), blob);
+    this.bumpEngineTick();
+    this.showToast(vehicleType + ' removed from ' + code, '#D14B4B', () => {
+      const blob2 = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
+      setClassDField(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code, 'rows', (blob2.rows || []).concat([removed]), blob2);
+      this.bumpEngineTick();
+    });
+  }
   onLegUploadFile(slot, file) {
     if (!file) return;
     const leg = this.state.activeLeg, cycleMonth = this.state.activeCycleMonth[leg];
@@ -7554,7 +7827,7 @@ class NDCApp extends React.Component {
     const sc = (st.data.scs || []).find(s => s.code === code);
     if (!sc) { this.comingSoon('Edit SC'); return; }
     const pl = sc.pocs || [];
-    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
+    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: sc.dispatchRoleType || 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
       lat: sc.lat != null ? String(sc.lat) : '', lng: sc.lng != null ? String(sc.lng) : '',
       nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp), localSpeed: String(sc.localSpeed), nonLocalSpeed: String(sc.nonLocalSpeed), open: sc.open, close: sc.close,
       holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
@@ -7615,6 +7888,22 @@ class NDCApp extends React.Component {
     }
     setClassBField(this.engineStore, code, cycleMonth, 'sortCap', num(f.sortCap));
     setClassBField(this.engineStore, code, cycleMonth, 'volCap', num(f.volCap));
+    // 2026-08-26 fix (#5) — SC Type dropdown was always in the form but never actually applied.
+    // Now genuinely governs dispatch role: LMSC = RLH only, FMSC = NLH only, Hybrid = both.
+    // Cycle-versioned like every other Class B field, so this only takes effect from THIS cycle
+    // month onward, per the "governing rules" — past cycles keep whatever was true then. MDC
+    // nodes are skipped entirely -- they're not a real SC and aren't one of the 3 dropdown
+    // options, so saving an MDC's edit form must never silently downgrade it to 'LMSC'.
+    const existingDForType = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code);
+    const isMdcNode = existingDForType && existingDForType.nodeKind === 'MDC';
+    if (!isMdcNode) {
+      const scType = f.type || 'LMSC';
+      const dispatchesRLH = scType === 'LMSC' || scType === 'Hybrid';
+      const dispatchesNLH = scType === 'FMSC' || scType === 'Hybrid';
+      setClassBField(this.engineStore, code, cycleMonth, 'scType', scType);
+      setClassBField(this.engineStore, code, cycleMonth, 'dispatchesRLH', dispatchesRLH);
+      setClassBField(this.engineStore, code, cycleMonth, 'dispatchesNLH', dispatchesNLH);
+    }
 
     const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
     const dPatch = {
@@ -8109,7 +8398,11 @@ class NDCApp extends React.Component {
     const st = this.state;
     const f = st.lmdcEditDraft || {};
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
-    const edits = Object.assign({}, st.lmdcEdits || {});
+    // 2026-08-26 fix (#11) — writes straight through the per-DC engine entity instead of the old
+    // lmdcEdits session overlay (which never persisted across a cycle switch -- the actual bug
+    // this fixes). Lane-sibling lookup now reads d.lmdcs directly, no overlay merge needed, since
+    // d.lmdcs is always freshly re-materialized from the engine after every edit.
+    const cycleMonth = this.state.activeCycleMonth.rlh;
     const rlhMode = f.rlhMode || 'Valmo RLH';
     const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null };
     let laneCorrected = false;
@@ -8117,29 +8410,41 @@ class NDCApp extends React.Component {
       patch.mdcCode = f.mdcCode || null;
     } else if (rlhMode === 'Co-Loading') {
       patch.laneName = (f.laneName || '').trim() || null;
-      // TAT (2026-08-19) — free numeric hours input now; converted to minutes and rounded UP to
-      // the nearest 15-min grid at save time (0.25hr = 15min, same underlying grid rule as
-      // before, just a different input unit). Stored internally as minutes, unchanged, since
-      // every downstream consumer (schedulerRouteDcInfo, the lane stitching) already works in
-      // minutes.
       patch.tat = (f.tat !== '' && f.tat != null) ? String(this.hrsToMinRoundUp(f.tat)) : null;
       let cutoff = f.cutoff || null;
       if (patch.laneName) {
         const d = st.data;
         const thisRow = (d.lmdcs || []).find(l => l.code === code) || {};
-        const lmscCode = edits[code] && edits[code].lmscCode ? edits[code].lmscCode : thisRow.lmscCode;
-        const sibling = (d.lmdcs || []).find(l => l.code !== code && l.lmscCode === lmscCode &&
-          ((edits[l.code] && edits[l.code].laneName) || l.laneName) === patch.laneName);
-        if (sibling) {
-          const siblingCutoff = (edits[sibling.code] && edits[sibling.code].cutoff) || sibling.cutoff;
-          if (siblingCutoff && siblingCutoff !== cutoff) { laneCorrected = true; cutoff = siblingCutoff; }
-        }
+        const lmscCode = thisRow.lmscCode;
+        const sibling = (d.lmdcs || []).find(l => l.code !== code && l.lmscCode === lmscCode && l.laneName === patch.laneName);
+        if (sibling && sibling.cutoff && sibling.cutoff !== cutoff) { laneCorrected = true; cutoff = sibling.cutoff; }
       }
       patch.cutoff = cutoff;
     }
-    edits[code] = Object.assign({}, edits[code], patch);
-    this.setState({ lmdcEdits: edits, lmdcEditCode: null, lmdcEditDraft: {} });
+    const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
+    Object.keys(patch).forEach(field => setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, code, field, patch[field], existing));
+    this.refreshLmdcs();
+    this.setState({ lmdcEditCode: null, lmdcEditDraft: {} });
     this.showToast(laneCorrected ? (code + ' updated \u2014 Cutoff corrected to match Lane ' + patch.laneName + "'s existing " + patch.cutoff) : (code + ' updated'), laneCorrected ? '#C77B00' : '#128A3E');
+  }
+  // 2026-08-26 (#11) — LMDC Master gets the same Deactivate/Reactivate pattern as SC Master,
+  // now that it has real per-DC existence tracking to back it.
+  deactivateLmdc(code) {
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    setLmdcStatus(this.engineStore, code, 'deactivated', cycleMonth);
+    this.refreshLmdcs();
+    this.showToast(code + ' deactivated', '#C77B00', () => { setLmdcStatus(this.engineStore, code, 'active', cycleMonth); this.refreshLmdcs(); });
+  }
+  reactivateLmdc(code) {
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    setLmdcStatus(this.engineStore, code, 'active', cycleMonth);
+    this.refreshLmdcs();
+    this.showToast(code + ' reactivated', '#128A3E');
+  }
+  // 2026-08-26 (#11) — re-materializes data.lmdcs from the engine, same pattern as refreshScs().
+  refreshLmdcs() {
+    const lmdcs = materializeLmdcEntities(this.engineStore, 'rlh', this.state.activeCycleMonth.rlh);
+    this.setState({ data: Object.assign({}, this.state.data, { lmdcs }) });
   }
   // handleLmdcCsvUpload(e) (2026-08-06) — reads a CSV, matches rows by LMDC Code against the real
   // master list, and applies ONLY the 5 editable fields present in that row into st.lmdcEdits.
@@ -8180,7 +8485,9 @@ class NDCApp extends React.Component {
         const D0_SET = { 'Default': true }; for (let m = 7 * 60; m <= 15 * 60; m += 30) D0_SET[String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')] = true;
         const UNLOAD_SET = {}; for (let m = 15; m <= 60; m += 5) UNLOAD_SET[m] = true;
         const VEH_SET = {}; (((this.state.data || {}).VEH || [])).filter(v => (v.feas || []).indexOf('RLH') >= 0).forEach(v => { VEH_SET[v.name] = true; });
-        const edits = Object.assign({}, this.state.lmdcEdits || {});
+        // 2026-08-26 fix (#11) — writes straight through each matched DC's engine entity instead
+        // of the old lmdcEdits session overlay (same bug/fix as saveLmdcEdit above).
+        const cycleMonth = this.state.activeCycleMonth.rlh;
         const errorRows = [];
         let matched = 0, skipped = 0;
         for (let i = 1; i < lines.length; i++) {
@@ -8196,10 +8503,12 @@ class NDCApp extends React.Component {
           if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not 15\u201360 in steps of 5'); }
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(patch).length === 0) { skipped++; continue; }
-          edits[code] = Object.assign({}, edits[code], patch);
+          const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
+          Object.keys(patch).forEach(field => setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, code, field, patch[field], existing));
           matched++;
         }
-        this.setState({ lmdcEdits: edits, lmdcUploadErrors: errorRows });
+        this.refreshLmdcs();
+        this.setState({ lmdcUploadErrors: errorRows });
         this.showToast('LMDC Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : '') + (errorRows.length ? ', ' + errorRows.length + ' flagged' : ''), errorRows.length ? '#C77B00' : (matched > 0 ? '#128A3E' : '#C77B00'));
       } catch (err) {
         this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
@@ -8488,8 +8797,13 @@ class NDCApp extends React.Component {
     // SC Type filter (2026-08-19, new) — LMSC/FMSC/Hybrid is derived from dcCount, not a stored
     // field, so the filter has to apply the SAME formula scRows itself uses below, or the two
     // could disagree on what a given SC's type actually is.
-    const scTypeOf = (s) => s.dcCount >= 170 ? 'Hybrid' : s.dcCount >= 110 ? 'LMSC' : 'FMSC';
-    const SC_TYPE_VALUES = ['LMSC', 'FMSC', 'Hybrid'];
+    // 2026-08-26 fix (#14) — was using the old fake dcCount-threshold derivation (never matched
+    // what the table itself displays); now reads the real seeded dispatch-role fields. Filter
+    // keeps all 4 options (LMSC/FMSC/Hybrid/MDC) per product decision — SC Master shows every SC
+    // regardless of leg, "RLH relevant only" scoping applies to SC Vehicle Availability and Route
+    // Planner's own SC selection instead, not this browsing filter.
+    const scTypeOf = (s) => s.nodeKind === 'MDC' ? 'MDC' : s.dispatchRoleType;
+    const SC_TYPE_VALUES = ['LMSC', 'FMSC', 'Hybrid', 'MDC'];
     const scTypeSel = this.buildMultiSelect(st.inputsScTypes, SC_TYPE_VALUES, 'inputsScTypes', { pgScMaster: 1 }, 'All Types');
     const tf = scTypeSel.matches;
     const nstep = st.nodeStep || 'active';
@@ -8624,7 +8938,15 @@ class NDCApp extends React.Component {
         // an 'active' entry at the SAME effective month as the delete -- this only resolves
         // correctly because of the resolveExistence tie-break fix (later-pushed same-month entry
         // wins), verified in dataLayerHarness.js.
-        rowEdit: () => this.openScEdit(s.code), rowDelete: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'deleted', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' removed from SC master', '#D14B4B', () => { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); }); }, rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
+        rowEdit: () => this.openScEdit(s.code), rowIsActive: s.isActive,
+        // 2026-08-26 fix (#3) — SC Master's row action is Deactivate, not Delete (delete stays
+        // as-is everywhere else it already exists). A deactivated row stays visible in the
+        // table (tagged Inactive, see isActive above) rather than disappearing; Reactivate is a
+        // persistent action on the row itself, not just a 5-second undo toast, since deactivating
+        // an SC is a considered decision, not a one-off accidental click to quietly reverse.
+        rowDeactivate: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'deactivated', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' deactivated', '#C77B00', () => { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); }); },
+        rowReactivate: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' reactivated', '#128A3E'); },
+        rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }) };
     });
     // ===== LMDC Master (2026-08-06, fixed dropdowns 2026-08-07) =========================
     // Search + zone filter + pagination over d.lmdcs (thousands of rows — generated once in
@@ -8672,10 +8994,15 @@ class NDCApp extends React.Component {
       const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
       const editing = lmdcEditCode === l.code;
       const isMdc = l.rlhMode === 'MDC', isCoLoad = l.rlhMode === 'Co-Loading';
+      // 2026-08-26 (#11) — rowIsActive is the NEW per-DC deactivate mechanism (separate from the
+      // pre-existing `active`/`pending` fields above, which mean "is the LMSC parent active per
+      // AutoDML" -- a different, unrelated concept this doesn't touch).
+      const rowIsActive = resolveLmdcExistence(this.engineStore, l.code, this.state.activeCycleMonth.rlh) === 'active';
       return {
         code: l.code, lmscCode: l.lmscCode || 'Pending', pending: !!l.pending, coords: (l.lat || l.lng) ? (l.lat.toFixed(4) + ', ' + l.lng.toFixed(4)) : '\u2014',
         capacity: l.capacity > 0 ? fmtInt(l.capacity) : '0', zeroCap: l.capacity === 0,
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
+        rowIsActive, onDeactivate: () => this.deactivateLmdc(l.code), onReactivate: () => this.reactivateLmdc(l.code),
         open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
         rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (this.minToHrsLabel(l.tat) + ' hrs') : '\u2014',
@@ -8826,7 +9153,15 @@ class NDCApp extends React.Component {
         onTpChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { tp: parseInt(e.target.value) || 1 }) }),
         onCapChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { cap: e.target.value }) }),
         onZoneFeasChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { zoneFeas: e.target.value }) }),
-        onAdd: () => { const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both' }; const add = Object.assign({}, this.state.availAdded || {}); add[code] = (add[code] || []).concat([nr]); this.setState({ availAdded: add, addingAvailSC: null, availAddForm: null }); this.showToast(f.vehicleType + ' added to ' + code, '#128A3E'); },
+        onAdd: () => { const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both' };
+          // 2026-08-26 fix (#12) — writes straight through the engine instead of the old
+          // availAdded session overlay.
+          const cycleMonth = this.state.activeCycleMonth.rlh;
+          const scForBlob = scByCode(code);
+          const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code) || { name: (scForBlob.name || code) + ' LMSC', zone: scForBlob.zone, rows: [] };
+          setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code, 'rows', (blob.rows || []).concat([nr]), blob);
+          this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }), addingAvailSC: null, availAddForm: null });
+          this.showToast(f.vehicleType + ' added to ' + code, '#128A3E'); },
         onCancel: () => this.setState({ addingAvailSC: null, availAddForm: null, editingAvail: null }) };
     };
     // Inline-row-edit state for SC Vehicle Availability
@@ -8834,7 +9169,9 @@ class NDCApp extends React.Component {
     const ead = st.editAvailDraft || {};
     const eadSet = (patch) => { this.setState({ editAvailDraft: Object.assign({}, this.state.editAvailDraft || {}, patch) }); };
     const ZF_OPTS = ['Both', 'Local', 'Non-Local'];
-    const scVehAvailRows = (d.scVehAvail || []).map(g => {
+    // 2026-08-26 fix (#13) — RLH's SC Vehicle Availability scoped to dispatchesRLH SCs (LMSC +
+    // Hybrid) only, mirroring the same rule now applied to NLH's own availability screen.
+    const scVehAvailRows = (d.scVehAvail || []).filter(g => { const sc = scByCode(g.code); return sc.dispatchesRLH !== false; }).map(g => {
       const src = scByCode(g.code);
       const rows = g.rows.concat(availAdded[g.code] || []).filter(r => !availRemovedMap[g.code + '|' + r.vehicleType]).map(r => {
         const availKey = g.code + '|' + r.vehicleType;
@@ -8878,16 +9215,38 @@ class NDCApp extends React.Component {
           onSaveAvailRow: () => {
             const d2 = this.state.editAvailDraft || {};
             const pi = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
-            const ov2 = Object.assign({}, this.state.availEdits || {});
-            ov2[availKey] = { cnt: pi(d2.cnt), tp: pi(d2.tp), zf: d2.zf || zf, type: d2.type || displayType, cap: d2.cap != null ? pi(d2.cap) : cap, dist: d2.dist != null ? pi(d2.dist) : distNum };
-            this.setState({ availEdits: ov2, editAvailKey: null, editAvailDraft: null });
+            // 2026-08-26 fix (#12) — writes straight through the engine instead of the old
+            // availEdits session overlay: fetch this SC's Class-D blob, mutate the matching row
+            // in place, write the whole blob back, then re-materialize data.scVehAvail so the
+            // change survives a cycle switch instead of being lost (the bug this was fixing).
+            const cycleMonth = this.state.activeCycleMonth.rlh;
+            const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code) || { name: g.name, zone: g.zone, rows: [] };
+            const newRows = (blob.rows || []).map(row => row.vehicleType === r.vehicleType
+              ? Object.assign({}, row, { vehicleCount: pi(d2.cnt), tpLimit: pi(d2.tp), zoneFeas: d2.zf || zf, vehicleType: d2.type || displayType, capacity: d2.cap != null ? pi(d2.cap) : cap, distanceLimit: (d2.dist != null ? pi(d2.dist) : distNum) + ' km' })
+              : row);
+            setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code, 'rows', newRows, blob);
+            this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }), editAvailKey: null, editAvailDraft: null });
             this.showToast((d2.type || displayType) + ' updated in ' + g.code, '#128A3E');
           },
           onCancelAvailRow: () => this.setState({ editAvailKey: null, editAvailDraft: null }),
           onCntInput: (e) => this.setAvailRow(g.code, r.vehicleType, e.target.value),
           onTpInput: (e) => this.setAvailField(g.code, r.vehicleType, 'tp', parseInt(e.target.value) || r.tpLimit),
           onZoneInput: (e) => this.setAvailField(g.code, r.vehicleType, 'zf', e.target.value),
-          rowDelete: () => { const rm = Object.assign({}, this.state.availRemoved || {}); rm[availKey] = true; this.setState({ availRemoved: rm }); this.showToast(r.vehicleType + ' removed from ' + g.code, '#D14B4B', () => { const rm2 = Object.assign({}, this.state.availRemoved || {}); delete rm2[availKey]; this.setState({ availRemoved: rm2 }); }); }
+          // 2026-08-26 fix (#12) — engine-backed delete with undo, same pattern as SC Master's
+          // row delete, replacing the old availRemoved session-only overlay.
+          rowDelete: () => {
+            const cycleMonth = this.state.activeCycleMonth.rlh;
+            const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code) || { name: g.name, zone: g.zone, rows: [] };
+            const removedRow = (blob.rows || []).find(row => row.vehicleType === r.vehicleType);
+            const newRows = (blob.rows || []).filter(row => row.vehicleType !== r.vehicleType);
+            setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code, 'rows', newRows, blob);
+            this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }) });
+            this.showToast(r.vehicleType + ' removed from ' + g.code, '#D14B4B', () => {
+              const blob2 = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code) || { name: g.name, zone: g.zone, rows: [] };
+              setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code, 'rows', (blob2.rows || []).concat([removedRow]), blob2);
+              this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }) });
+            });
+          }
         };
       });
       const totalCount = rows.reduce((a, x) => a + (parseInt(x.cnt) || 0), 0);
@@ -8982,8 +9341,13 @@ class NDCApp extends React.Component {
     if (!dc) return;
     this.setState({ delConfirm: null });
     if (dc.kind === 'sc') {
-      const r = Object.assign({}, this.state.scRemoved || {}); r[dc.key] = true; this.setState({ scRemoved: r });
-      this.showToast(dc.key + ' removed from SC master', '#D14B4B', () => { const rr = Object.assign({}, this.state.scRemoved || {}); delete rr[dc.key]; this.setState({ scRemoved: rr }); });
+      // 2026-08-26 fix (#3) — this confirm-dialog path was STILL writing to the old scRemoved
+      // session overlay, bypassing the engine migration entirely (the rowDeactivate/rowReactivate
+      // handlers built alongside it were never actually reachable through this confirm flow).
+      // Now correctly deactivates through the engine, with real effective-month semantics.
+      setSCStatus(this.engineStore, dc.key, 'deactivated', this.state.activeCycleMonth.rlh);
+      this.refreshScs();
+      this.showToast(dc.key + ' deactivated', '#C77B00', () => { setSCStatus(this.engineStore, dc.key, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); });
     } else if (dc.kind === 'veh') {
       const r = Object.assign({}, this.state.vehRemoved); r[dc.key] = true; this.setState({ vehRemoved: r });
       this.showToast(dc.label + ' removed from vehicle master', '#D14B4B', () => { const rr = Object.assign({}, this.state.vehRemoved); delete rr[dc.key]; this.setState({ vehRemoved: rr }); });
@@ -9034,7 +9398,10 @@ class NDCApp extends React.Component {
 
     const q = (st.creationSearch || '').toLowerCase();
     const zf = st.creationZone || 'All';
-    const filtered = d.scs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
+    // 2026-08-26 fix (#5 cascade) — Route Planner's own SC selection now filters to
+    // dispatchesRLH SCs (governing-rule cascade: changing an SC to FMSC removes it from RLH's
+    // Design Creation pool entirely, per the worked example in the product decision).
+    const filtered = d.scs.filter(s => s.dispatchesRLH !== false && (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     const ZONES = ['North', 'South', 'East', 'West'];
     const scGroups = ZONES.map(z => {
       const list = filtered.filter(s => s.zone === z);
@@ -13975,7 +14342,15 @@ class NDCApp extends React.Component {
       { label: 'REVIEW & ALIGN', items: [{ key: 'review', label: 'Design Review' }, { key: 'align', label: 'Ops Alignment' }, { key: 'map', label: 'Network Map' }] },
     ];
     const TBG = { warn: '#C77B00', accent: '#2F4FC6', new: '#128A3E' };
-    const navGroups = (st.activeLeg !== 'rlh' ? legNav : (isPastCycle ? pastNav : (planner ? plannerNav : opsNav))).map(g => ({
+    // 2026-08-26 fix (#19) — reconciled the two past-cycle concepts: navigation no longer
+    // branches on the old cosmetic isPastCycle/pastNav at all. Past-cycle restriction is already
+    // correctly enforced at the action level (isRlhCyclePast() — the Design Inputs banner, and
+    // blocked Push-to-Alignment) rather than by swapping out entire nav sections, so RLH always
+    // shows its normal nav regardless of which cycle is active. pastNav/isPastCycle/cyclesummary
+    // are left in place as inert dead code rather than torn out, to avoid any risk to code that
+    // might still reference them elsewhere -- nothing sets view:'cyclesummary' anymore, so that
+    // view is already unreachable in practice.
+    const navGroups = (st.activeLeg !== 'rlh' ? legNav : (planner ? plannerNav : opsNav)).map(g => ({
       label: g.label,
       items: g.items.map(it => {
         const active = it.key === st.view;
@@ -14373,17 +14748,64 @@ class NDCApp extends React.Component {
       // SC Vehicle Availability -- NLH-only real content, scoped to dispatchesNLH SCs (FMSC +
       // Hybrid), per "NLH originates only from FMSCs". FM shows nothing (legAvailEmpty always true).
       legAvailGroups: (st.activeLeg === 'nlh') ? materializeScVehAvailLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(g => ({
-        code: g.code, name: g.name, zone: g.zone, rows: (g.rows || []).map(r => ({
-          vehicleType: r.vehicleType, vehicleCount: r.vehicleCount, tpLimit: r.tpLimit, localSpeed: r.localSpeed, nonLocalSpeed: r.nonLocalSpeed, zoneFeas: r.zoneFeas,
-        })),
+        code: g.code, name: g.name, zone: g.zone,
+        onAddRow: () => this.legAvailRowAddOpen(g.code),
+        rows: (g.rows || []).map(r => {
+          const key = g.code + '|' + r.vehicleType;
+          const editing = st.legAvailEditKey === key;
+          const ef = st.legAvailEditForm || {};
+          return {
+            vehicleType: r.vehicleType, vehicleCount: r.vehicleCount, tpLimit: r.tpLimit, localSpeed: r.localSpeed, nonLocalSpeed: r.nonLocalSpeed, zoneFeas: r.zoneFeas,
+            editing, notEditing: !editing,
+            draftCount: editing ? ef.vehicleCount : String(r.vehicleCount || ''), draftTp: editing ? ef.tpLimit : String(r.tpLimit || ''),
+            onDraftCount: (e) => this.setState({ legAvailEditForm: Object.assign({}, this.state.legAvailEditForm, { vehicleCount: e.target.value }) }),
+            onDraftTp: (e) => this.setState({ legAvailEditForm: Object.assign({}, this.state.legAvailEditForm, { tpLimit: e.target.value }) }),
+            onEdit: () => this.legAvailRowEditOpen(g.code, r.vehicleType, r), onSave: () => this.legAvailRowEditSave(g.code, r.vehicleType), onCancel: () => this.legAvailRowEditCancel(),
+            onDelete: () => this.legAvailRowDelete(g.code, r.vehicleType),
+          };
+        }),
       })) : [],
       legAvailEmpty: !(st.activeLeg === 'nlh' && materializeScVehAvailLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length > 0),
+      // "Add SC" picker for SC Vehicle Availability -- eligible SCs are dispatchesNLH (FMSC +
+      // Hybrid) ones not already in the list, matching the same rule the screen itself enforces.
+      legAvailAddScOpen: st.legAvailAddScCode !== undefined && st.legAvailAddScCode !== null,
+      legAvailAddScOptions: (st.activeLeg === 'nlh') ? (() => {
+        const existing = new Set(materializeScVehAvailLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(g => g.code));
+        return materializeRLHScs(this.engineStore, st.activeCycleMonth.nlh).filter(s => s.dispatchesNLH && !existing.has(s.code)).map(s => ({ value: s.code, label: s.code + ' \u2014 ' + s.name }));
+      })() : [],
+      onLegAvailAddScSelect: (e) => this.legAvailAddScSubmit(e.target.value),
+      onLegAvailAddScOpen: () => this.legAvailAddScOpen(), onLegAvailAddScCancel: () => this.setState({ legAvailAddScCode: null }),
+      // Row-add form (for adding a vehicle to an existing SC's availability group)
+      legAvailRowAddSc: st.legAvailAddRowSc || null,
+      legAvailRowAddOptions: (st.activeLeg === 'nlh') ? materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(v => ({ value: v.name, label: v.name })) : [],
+      legAvailRowAddForm: st.legAvailAddRowForm || { vehicleType: '', vehicleCount: '1', tpLimit: '' },
+      onLegAvailRowAddType: (e) => this.setState({ legAvailAddRowForm: Object.assign({}, this.state.legAvailAddRowForm, { vehicleType: e.target.value }) }),
+      onLegAvailRowAddCount: (e) => this.setState({ legAvailAddRowForm: Object.assign({}, this.state.legAvailAddRowForm, { vehicleCount: e.target.value }) }),
+      onLegAvailRowAddTp: (e) => this.setState({ legAvailAddRowForm: Object.assign({}, this.state.legAvailAddRowForm, { tpLimit: e.target.value }) }),
+      legAvailRowAddSubmit: () => this.legAvailRowAddSubmit(), legAvailRowAddCancel: () => this.legAvailRowAddCancel(),
       // Vehicle Master -- NLH-only real content, no LH Feasibility column (each leg owns its own
       // fleet now). FM shows nothing.
-      legVehicleRows: (st.activeLeg === 'nlh') ? materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(v => ({
-        name: v.name, capacity: v.cap, dist: v.dist, tp: v.tp, localSpeed: v.localSpeed, nonLocalSpeed: v.nonLocalSpeed,
-      })) : [],
+      legVehicleRows: (st.activeLeg === 'nlh') ? materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).map(v => {
+        const editing = st.legVehEditName === v.name;
+        const ef = st.legVehEditForm || {};
+        return {
+          name: v.name, capacity: v.cap, dist: v.dist, tp: v.tp, localSpeed: v.localSpeed, nonLocalSpeed: v.nonLocalSpeed,
+          editing, notEditing: !editing,
+          draftCapacity: editing ? ef.capacity : String(v.cap || ''), draftDist: editing ? ef.dist : String(v.dist || ''), draftTp: editing ? ef.tp : String(v.tp || ''),
+          onDraftCapacity: (e) => this.setState({ legVehEditForm: Object.assign({}, this.state.legVehEditForm, { capacity: e.target.value }) }),
+          onDraftDist: (e) => this.setState({ legVehEditForm: Object.assign({}, this.state.legVehEditForm, { dist: e.target.value }) }),
+          onDraftTp: (e) => this.setState({ legVehEditForm: Object.assign({}, this.state.legVehEditForm, { tp: e.target.value }) }),
+          onEdit: () => this.legVehEditOpen(v.name, v), onSave: () => this.legVehEditSave(), onCancel: () => this.legVehEditCancel(),
+          onDelete: () => this.legVehDelete(v.name),
+        };
+      }) : [],
       legVehicleEmpty: !(st.activeLeg === 'nlh' && materializeVehicleMasterLeg(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length > 0),
+      legVehAddOpen: st.legVehAddForm != null, legVehAddForm: st.legVehAddForm || { name: '', capacity: '', dist: '', tp: '' },
+      onLegVehAddName: (e) => this.setState({ legVehAddForm: Object.assign({}, this.state.legVehAddForm, { name: e.target.value }) }),
+      onLegVehAddCapacity: (e) => this.setState({ legVehAddForm: Object.assign({}, this.state.legVehAddForm, { capacity: e.target.value }) }),
+      onLegVehAddDist: (e) => this.setState({ legVehAddForm: Object.assign({}, this.state.legVehAddForm, { dist: e.target.value }) }),
+      onLegVehAddTp: (e) => this.setState({ legVehAddForm: Object.assign({}, this.state.legVehAddForm, { tp: e.target.value }) }),
+      legVehAddOpenClick: () => this.legVehAddOpen(), legVehAddCancel: () => this.legVehAddCancel(), legVehAddSubmit: () => this.legVehAddSubmit(),
       // Volume Inputs -- NLH gets a real "ACTIVE THIS CYCLE" strip + library, mirroring RLH's
       // pattern, scoped to FMSC Manifestation + LMSC Landing. FM's own upload slot stays on the
       // simpler single-card pattern from before (still real, just one type, per product decision
@@ -14397,13 +14819,18 @@ class NDCApp extends React.Component {
           onTemplate: () => this.showToast('Template download — coming soon', '#003F98'),
         };
       }),
-      // Volume file library -- a simplified library (current active file per type, not a full
-      // upload history) given the engine's Class-F storage keeps one file per slot, not a list.
-      legVolumeLibraryRows: (st.activeLeg && st.activeLeg !== 'fm') ? (st.activeLeg === 'nlh' ? [['fmscManifestation', 'FMSC Manifestation'], ['lmscLanding', 'LMSC Landing']] : []).map(t => {
-        const up = getUpload(this.engineStore, st.activeLeg, st.activeCycleMonth[st.activeLeg], t[0]);
-        return up ? { name: up.fileMeta.name, type: t[1], uploadedAt: up.uploadedAt } : null;
-      }).filter(Boolean) : [],
-      legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? getUpload(this.engineStore, 'nlh', st.activeCycleMonth.nlh, 'fmscManifestation') == null && getUpload(this.engineStore, 'nlh', st.activeCycleMonth.nlh, 'lmscLanding') == null : true,
+      // 2026-08-26 fix (#7) — full volume file library, matching RLH's own pattern: every
+      // upload made this cycle (not just the current active file per slot), newest first,
+      // searchable by name.
+      legVolumeLibraryRows: (st.activeLeg === 'nlh') ? (() => {
+        const TYPE_LABEL = { fmscManifestation: 'FMSC Manifestation', lmscLanding: 'LMSC Landing' };
+        const q = (st.legVolumeSearch || '').toLowerCase();
+        return listUploadHistory(this.engineStore, 'nlh', st.activeCycleMonth.nlh)
+          .filter(f => !q || f.fileMeta.name.toLowerCase().indexOf(q) >= 0)
+          .map(f => ({ name: f.fileMeta.name, type: TYPE_LABEL[f.slot] || f.slot, uploadedAt: f.uploadedAt }));
+      })() : [],
+      legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? listUploadHistory(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length === 0 : true,
+      legVolumeSearch: st.legVolumeSearch || '', onLegVolumeSearch: (e) => this.setState({ legVolumeSearch: e.target.value }),
       legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
         planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt,
       })) : [],

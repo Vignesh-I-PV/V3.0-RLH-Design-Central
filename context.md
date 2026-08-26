@@ -1908,3 +1908,222 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     - **Companion docs (`01_Complete_Context.md` through `PROJECT_CONTEXT.md`) are now three full
       sessions stale** (still describing the pre-multi-leg, single-RLH-tool app) — the gap flagged
       after the 2026-08-19 entry has only widened.
+
+- **2026-08-26** — Very large session, entirely deploy-test-driven: three rounds of user click-
+  through on the 2026-08-25 multi-leg build surfaced real bugs and real scope gaps, fixed in
+  sequence, followed by a deliberate "what did we skip" audit that closed out most of the
+  remaining list. Written up as one entry since it was one continuous working session, organized
+  by theme rather than strict chronological order.
+  - **Root-cause bug, found via screen recording: a header-level mechanism nobody had leg-gated.**
+    When NLH's screens were reported as "broken" (RLH's own Design Inputs tab strip and 5-stage
+    lifecycle rail rendering on top of NLH's content, fully functional but completely disconnected
+    from what was underneath), the actual cause wasn't the content-level guards (`isInputs` etc.,
+    already correctly gated to `st.activeLeg === 'rlh'`) — it was `railViewActive`, a *separate*
+    construct living in the page header that drives both the visual stage-rail and the Volume
+    Inputs/Node Inputs/Node & Vehicle Master/Design Ingestion sub-tab strip, checked only
+    `st.view`, never `activeLeg`. Fixed with one added condition
+    (`st.activeLeg === 'rlh' && (...)`), which correctly cascaded to both things it drives. Worth
+    remembering: leg-gating the *obvious* guards doesn't guarantee every rendering path is caught —
+    this file has more than one mechanism keyed off `st.view` alone.
+  - **Cycle-flow UX rebuilt end to end**, after the first round of testing showed the sidebar
+    appearing regardless of leg, "start a new cycle" doing nothing real for RLH, and no way to
+    switch leg or cycle without a hard refresh:
+    - Every leg (including RLH, which previously skipped straight to content) now stops at an
+      explicit `view: 'cyclepick'` screen — a real custom dropdown (not a native `<select>`, to
+      match the app's own established dropdown pattern) with two groups: existing cycles for that
+      leg, and "start new cycle" for every other month in the rolling window. Nothing is
+      pre-selected.
+    - The sidebar's navy band is now **always present** (previously hidden during
+      landing/cyclepick, which read as "the app just went plain white") — only the nav items and
+      cycle switcher are conditionally shown, once `activeLeg` and a real content view exist.
+    - RLH's own sidebar cycle switcher — a pre-existing but entirely cosmetic control, hardcoded to
+      `['July 2026', 'June 2026']` — is now wired to real `engineStore.cyclesCreated.rlh` data and
+      the real current date, reusing the same UI shell.
+    - The sidebar logo/brand block is now clickable (`goLanding()`), resets `activeLeg` to null,
+      and doubles as the "switch leg" affordance that didn't exist before.
+  - **RLH's plans/runs/schedulerPlans made genuinely per-cycle** (previously generated once in the
+    constructor and shared identically across every cycle month — the literal bug report was
+    "I select June, but the plan says triggered in July, and July/August show the exact same
+    plans"). Full-correctness approach, not a display-only patch:
+    - `componentDidUpdate(prevProps, prevState)` transparently persists whatever's in
+      `this.state.data` (every field except the 4 engine-driven master fields — `scs`/`VEH`/
+      `scVehAvail`/`lmdcs`) into a per-(leg, cycle-month) bucket (`engineStore.rlhCycleData`)
+      whenever it changes, or whenever the cycle switches away from a month. **Zero changes to any
+      existing mutation site** in Design Creation/Review/Alignment/Route Scheduler — none of that
+      code needed to learn the engine exists.
+    - `pickCycle()` loads the target month's bucket (or field-appropriate empty defaults —
+      `emptyRlhTransactional()`, checked against the real shapes: `autodmlDetails` is an object
+      map, everything else is an array) instead of always showing whatever the constructor
+      happened to generate.
+    - Seeded May/Jun/Jul/Aug/Sep 2026 with real (not empty) data; October created but genuinely
+      empty, ready for the user to trigger into; everything else (Feb–Apr, Nov onward)
+      deliberately left un-created.
+    - **Known, stated simplification**: rather than independently regenerating each of the 5
+      seeded months (would have meant rewriting ~440 lines of tightly-coupled, sequential
+      generation logic — high risk, unverifiable without a browser), May/Jun/Aug/Sep were derived
+      from the one July dataset via `retargetMonthStrings()` (a generic deep-clone + find/replace
+      of month abbreviation/full-name strings) plus `suffixRlhIdsForMonth()` (appends `-<month>`
+      to every plan/run/schedulerPlan id and remaps `parentPlanId` accordingly). The id-suffixing
+      was necessary, not cosmetic: ids like `'GGN01-HW1'` don't contain "Jul", so without
+      suffixing, the 5 retargeted months would share identical ids — which would have let
+      auxiliary per-id state (`schedFeedback`/`schedSubmitted`, seeded via
+      `seedSchedDemoFeedback()`, now re-run once per newly-visited month, guarded by
+      `this._seedFeedbackDone[month]` so revisiting a month doesn't stomp on real edits) bleed
+      across months the exact same way the original bug did, just one layer deeper. The 5 seeded
+      months therefore share identical underlying route/plan *structure* — only dates and ids
+      differ — rather than being independently generated; the isolation architecture going forward
+      is genuinely correct, the seed *content* is a derived clone.
+  - **Landing cards redesigned** — side-by-side (3 columns) instead of stacked, each with a
+    navy/blue icon badge and centered content, matching the app's existing accent language.
+  - **RLH's Volume Inputs tab trimmed to LMDC Landing only** — was still showing all 4 upload
+    types (LMDC/LMSC/FMSC/FM Hub) from before the leg split existed; `VF`, `volTypeMap`,
+    `volTypeChips`, `VSHORT`, and `allVol`'s filter all correspondingly cut down to RLH's own type.
+  - **A real dispatch-role model, replacing a fake one.** RLH's SC Master "SC TYPE" column
+    (Hybrid/LMSC/FMSC) had always been a `dcCount`-size threshold guess with nothing behind it —
+    confirmed by finding the SC Type *dropdown already sitting in the edit form*, wired to nothing:
+    `openScEdit()` hardcoded it to `'LMSC'` on every open, `submitAddSc()` never read it back.
+    - New Class B fields `dispatchesRLH`/`dispatchesNLH` — the real fact of which leg(s) a
+      physical SC actually dispatches (an FMSC receives from FM Hubs and dispatches NLH; an LMSC
+      receives from NLH and dispatches RLH; a Hybrid node does both — "focus on what the node
+      dispatches," per the product decision that unlocked this). SC Type is now *derived* from
+      these two flags everywhere it's displayed or filtered, not seeded as its own independent
+      guess.
+    - Seeded at the product-specified ratio (~75:100:7.5 LMSC-only:FMSC-only:Hybrid on a full
+      ~180-node network, applied proportionally — not literally — to the 80 SCs actually seeded
+      here: ~41%/~55%/~4%).
+    - **Now genuinely editable**, cycle-versioned like every other Class B field (an edit only
+      takes effect from that cycle month onward, never retroactive) — with an MDC-node guard so
+      saving an MDC's edit form can't silently downgrade it to `'LMSC'` (MDC isn't one of the 3
+      dropdown options).
+    - **Governing-rule cascade, not just a label change**: Route Planner's own SC-selection list
+      (Design Creation Step 1) now filters to `dispatchesRLH` SCs — changing an SC to FMSC
+      genuinely removes it from RLH's Design Creation pool, matching the exact worked example from
+      the product conversation. The same filter was applied to RLH's own SC Vehicle Availability
+      (previously unfiltered; NLH's analogous screen already filtered to `dispatchesNLH`, so this
+      closes a real inconsistency between the two).
+    - Also fixed: `scTypeOf()` (the SC Master screen's own type-filter predicate) was reading the
+      same fake `dcCount` threshold as the display column, so the filter dropdown was already
+      silently broken before this — now reads the real field. Filter keeps all 4 options
+      (LMSC/FMSC/Hybrid/MDC) for browsing, per product decision — SC Master always shows every SC
+      regardless of leg; "RLH relevant only" scoping applies to selection screens, not this filter.
+  - **NLH rebuilt to genuinely mirror RLH's shape**, not the simpler 3-tab version from
+    2026-08-25: Volume Inputs (real "ACTIVE THIS CYCLE" cards + a **full** file library — see
+    upload-history note below, not just the single current-active file per type from before),
+    Node Inputs (tab exists, deliberately blank), Node & Vehicle Master (3 sub-tabs: Sort Centre
+    Master showing global + NLH-local columns; SC Vehicle Availability, scoped to
+    `dispatchesNLH` SCs, **now with full add/edit/delete**, not read-only; Vehicle Master, NLH's
+    own seeded linehaul-scale fleet, **also full add/edit/delete**, no LH Feasibility column at
+    all), Design Ingestion (unchanged, already matched the pattern). CRUD is functional-first, not
+    matched pixel-for-pixel to RLH's own polish, per explicit product decision.
+    - `materializeVehicleMasterLeg()` gained an actual delete mechanism (`_removed` flag, filtered
+      at materialize time) — Vehicle Master had never had one at all before this; a seeded vehicle
+      type was permanent.
+  - **FM Carting's Design Inputs now shows the same 4 tabs** (structural parity, per product
+    decision) with every panel rendering a plain "not built yet" message — no real content
+    anywhere for FM this session, deliberately.
+  - **Volume file library, actually full now.** The engine's Class-F upload storage kept exactly
+    one file per (leg, cycle-month, slot) — fine for "what's currently active," useless for a
+    library. Added `uploadHistory` (a running, never-overwritten list, appended to on every
+    `setUpload()` call) and `listUploadHistory()`; NLH's library now shows every upload made this
+    cycle, newest first, with a working search box — not just the current file per type.
+  - **RLH's Vehicle Master lost its "LH Feasibility" column** (the add/edit toggle-chips and the
+    table column) — every vehicle in a leg's own Vehicle Master is now implicitly that leg's only,
+    so there was nothing left to toggle. The underlying `feas: ['RLH']` **data field was
+    deliberately left untouched** — Route Planner's own filtering (`rlhFeasibleVehNames`, a
+    `VEH_SET` lookup) and a validation message both still read it, and rewiring those was outside
+    what this fix needed to touch.
+  - **SC Master: real Deactivate/Reactivate, not Delete.** Per product decision, SC Master's row
+    action is deactivate-only (every *other* master's delete stays exactly as it was). A
+    deactivated row **stays visible** in the table (tagged "Inactive", grayed) rather than
+    disappearing the way a delete would — excluded from Route Planner/SC Vehicle Availability
+    selection, but the row persists for continuity, with a real persistent Reactivate action, not
+    a 5-second undo toast (deactivating is a considered decision, not an accidental click).
+    - `isDisplayable()` added alongside the existing `isVisible()` — the broader check (active OR
+      deactivated) used for display; `isVisible()` stays the strict "genuinely active" check used
+      for selection eligibility everywhere downstream.
+    - **A real bug caught mid-build**: the SC Master row's *actual* wired delete button went
+      through a confirm-dialog flow (`rowDeleteConfirm` → `delConfirm` state → `confirmDelete()`)
+      that was a **completely different code path** from the `rowDelete` handler fixed back in the
+      original Phase 2 engine migration — meaning that earlier "fix" had never actually been
+      reachable through the UI at all; the button was still writing to the old `scRemoved` session
+      overlay the entire time. Found only by tracing the literal onClick chain, not by re-reading
+      the handler that seemed obviously responsible. Fixed `confirmDelete()`'s `'sc'` branch
+      directly.
+  - **LMDC Master rewritten to real per-DC entities** — the largest single piece this session.
+    Previously one giant blob (all ~12,607 rows keyed under a single `'ALL'` entity) that never
+    persisted edits across a cycle switch at all (`saveLmdcEdit()` and the CSV bulk-upload handler
+    both wrote to a session-only `lmdcEdits` overlay, same class of bug as SC Master's original
+    `scEdits` before its Phase 2 migration — confirmed by tracing the actual write paths, not
+    assumed).
+    - New `lmdcRegistry` — a parallel registry to `scRegistry`, same effective-month `statusLog`
+      mechanism, scoped to individual DC codes. No Class-A "shared across legs" layer needed
+      (LMDC Master is RLH-only) — existence tracking was the only genuinely new piece; every field
+      (capacity, RLH Mode, MDC/Lane, Cutoff, TAT, etc.) already fit as ordinary Class D.
+    - `seedLmdcEntities()`/`materializeLmdcEntities()` replace `seedLmdcRawLeg()`/
+      `materializeLmdcRawLeg()` — each of the ~12,607 DCs gets its own `addLmdc()` +
+      `ensureClassDMaterialized()` call at genesis.
+    - `saveLmdcEdit()` and `handleLmdcCsvUpload()` both rewired to write straight through
+      `setClassDField()` per DC, then `refreshLmdcs()` (same re-materialize pattern as
+      `refreshScs()`). The lane-sibling cutoff-correction logic (Co-Loading rows sharing a Lane
+      Name must show the same Cutoff) now reads `d.lmdcs` directly instead of merging against the
+      old overlay, since `d.lmdcs` is always fresh post-edit.
+    - Three *other* consumers of the old `lmdcEdits` overlay (two Route-Scheduler-timing sweep
+      functions, `lmdcEditsOverlaySweep`/`lmdcEditsOverlayS4`) were deliberately **not** individually
+      rewired — confirmed they degrade safely now that the overlay is permanently empty (their
+      `patch && patch.field` lookups just fall through to the base row, which is already correct
+      post-migration), the same reasoning that made the original SC Master Phase 2 migration safe
+      without touching every downstream reader.
+    - Added Deactivate/Reactivate per DC row, same pattern and same UI language as SC Master, now
+      that real existence tracking backs it.
+    - **Verified at actual scale, not just in the small**: the harness seeds and materializes
+      12,000 synthetic entities, checks a specific one deep in the set resolves its own correct
+      field value (not a neighbor's, the classic per-entity bug class), edits one without
+      disturbing its neighbor, and deactivates one without affecting the other 11,999 — not just
+      unit-level correctness on 2-3 rows.
+  - **Two unreconciled past-cycle concepts, reconciled.** The old cosmetic `designCycle`/
+    `isPastCycle`/`pastNav`/`cyclesummary` machinery (flagged, not fixed, in the 2026-08-25 entry)
+    is now retired rather than merged — RLH's nav always shows normally regardless of cycle age,
+    since past-cycle restriction was already correctly handled at the action level (the Design
+    Inputs banner, blocked Push-to-Alignment) and didn't need a second, nav-level mechanism.
+    `pastNav`/`isPastCycle`/`cyclesummary` left as inert dead code rather than torn out, to avoid
+    risk to anything still referencing them.
+  - **A real grid-alignment bug, root-caused precisely**: SC Master's edit/delete icons were
+    wrapping onto a new row. Traced to an exact cell-count mismatch introduced during the earlier
+    NLH-Docks-removal fix — the header lost 2 cell slots (a toggle button + a conditional column)
+    but the body rows only lost 1 (a leftover unconditional placeholder `<div/>` was never
+    removed), so every body row had one more grid cell than the header. Fixed by removing the
+    stray placeholder; the grid's `grid-template-columns` count and the actual rendered cell count
+    now agree again.
+  - **Verification discipline, same standard as every prior session, scaled up with it**: the
+    standalone harness grew from 74 → **109 assertions** across this session (new coverage for the
+    deactivate/`isDisplayable` distinction, `retargetMonthStrings()`/`suffixRlhIdsForMonth()`,
+    `extractRlhTransactional()`/`emptyRlhTransactional()` against the real shapes, upload history,
+    and the LMDC entity registry at both small and 12,000-row scale). Every harness run this
+    session was performed twice where it mattered — once standalone, once against the exact block
+    re-extracted from the final shipped file — to catch drift between what was tested and what
+    shipped; none was ever found. Compile-checked clean after every individual edit, not just at
+    the end. Final file **~15,030 lines**. No live render/browser test has been done on any of
+    this — the user's own deploy-testing is what surfaced the `railViewActive`, cycle-scoping, and
+    grid-alignment bugs in the first place, and remains the only way anything in this app gets
+    genuinely confirmed working.
+  - **Deployment note**: only `v3.0-rlh-design-base.jsx` changed this session, same as every prior
+    one. `index.html` untouched.
+  - **Still open / explicitly flagged, for whoever picks this up next:**
+    - No access-gating between the 3 landing cards (parked by explicit product decision, revisit
+      later).
+    - Delete vs. Deactivate as two genuinely separate functions across *every* master (only SC
+      Master and LMDC Master got the real deactivate treatment this session; other masters'
+      existing delete actions were explicitly left as-is per product decision).
+    - The "future cycle already created before a deletion happens" cross-cycle edge case (parked,
+      "we will define more as we move further").
+    - Who can add a brand-new SC to the shared global registry — decentralized vs. admin-only
+      (parked, "I will rethink this").
+    - NLH's ingestion-sourced plans still carry stubbed SC coverage/volume for RLH's Route
+      Scheduler picker (unchanged from 2026-08-25 — no real per-DC data flows from NLH's own
+      solver, which still doesn't exist).
+    - NLH/FM Carting still have no Design Creation solver, Design Review, or Ops Alignment — Design
+      Inputs only, by design, every time this has come up.
+    - LMDC Master has no "Add new DC" flow of its own — DC creation still goes through Node
+      Inputs' AutoDML additions, a separate, untouched existing mechanism.
+    - **Companion docs are now four full sessions stale** — the gap flagged after 2026-08-19,
+      widened after 2026-08-25, has widened again.

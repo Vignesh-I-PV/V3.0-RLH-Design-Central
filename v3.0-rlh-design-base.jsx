@@ -56,14 +56,15 @@ function View(B, self) {
       <>
 <div style={css(`display:flex; height:100vh; width:100%; overflow:hidden; background:#F4F5F8;`)}>
 {/* ============ SIDEBAR ============ */}
+{(showSidebar) ? (<>
 <aside style={css(`width:250px; flex-shrink:0; background:#0B1430; display:flex; flex-direction:column; border-right:1px solid #1A2447;`)}>
-<div style={css(`padding:18px 18px 14px; display:flex; align-items:center; gap:11px;`)}>
+<div onClick={goLanding} style={css(`padding:18px 18px 14px; display:flex; align-items:center; gap:11px; cursor:pointer;`)} title={"Back to all design legs"}>
 <div style={css(`width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#003F98,#2F4FC6); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(0,63,152,0.45);`)}>
 <svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"1.9"}><path d={"M5 18a2 2 0 100-.01M19 6a2 2 0 100-.01M7 17c4 0 3-9 10-9"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </div>
 <div style={css(`min-width:0;`)}>
 <div style={css(`font-size:13.5px; font-weight:700; color:#fff; line-height:1.15; white-space:nowrap;`)}>Network Design Central</div>
-<div style={css(`font-size:10px; font-weight:600; color:#8E9AC4; letter-spacing:0.04em;`)}>RLH · NETWORK DESIGN CENTRAL</div>
+<div style={css(`font-size:10px; font-weight:600; color:#8E9AC4; letter-spacing:0.04em;`)}>{activeLegShort} · ALL DESIGN LEGS</div>
 </div>
 </div>
 {/* design cycle selector */}
@@ -87,7 +88,7 @@ function View(B, self) {
 </button>
 </React.Fragment>))}
 <button onClick={toggleCyclePicker} style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:7px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#1E2C57;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:9px; width:100%; padding:7px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#1E2C57;`)}>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12px; font-weight:500; color:#9AB4FF;`)}>Pick a custom past month…</div></div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12px; font-weight:500; color:#9AB4FF;`)}>Start a new cycle for another month…</div></div>
 <svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#7E8AB8"} strokeWidth={"2.2"}><path d={cyclePickerChevron} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </button>
 {(cyclePickerOpen) ? (<>
@@ -97,9 +98,8 @@ function View(B, self) {
 {(p.active) ? (<><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#6E8BFF"} strokeWidth={"2.4"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
 </button>
 </React.Fragment>))}
+{(pastCycleOptions && pastCycleOptions.length === 0) ? (<><div style={css(`padding:8px 22px; font-size:11.5px; color:#6E7899;`)}>All months in the rolling window already have a cycle.</div></>) : null}
 </>) : null}
-<div style={css(`height:1px; background:#2A3866; margin:5px 6px;`)} />
-<button onClick={newCycle} style={css(`display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit; color:#9AB4FF; font-size:12.5px; font-weight:600;`)} onMouseEnter={(e) => hoverOn(e, `background:#1E2C57;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit; color:#9AB4FF; font-size:12.5px; font-weight:600;`, `background:#1E2C57;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Start new design cycle</button>
 </div>
 </>) : null}
 </div>
@@ -125,6 +125,7 @@ function View(B, self) {
 <span style={css(`font-size:10.5px; color:#8E9AC4;`)}>Network Design</span>
 </div>
 </aside>
+</>) : null}
 {/* ============ MAIN ============ */}
 <div style={css(`flex:1; display:flex; flex-direction:column; min-width:0;`)}>
 {/* HEADER */}
@@ -236,6 +237,34 @@ function View(B, self) {
 </div>
 </div>
 </>) : null}
+{/* ===== CYCLE PICK (2026-08-26 fix) — the explicit gate every leg passes through before any
+     sidebar/content loads. Real <select>, two groups: existing cycles vs. start a new one. ===== */}
+{(isCyclePick) ? (<>
+<div style={css(`padding:48px 40px; max-width:620px; margin:0 auto;`)}>
+<button onClick={goLanding} style={css(`display:flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#5A5E66; margin-bottom:24px;`)}>
+<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+All design legs
+</button>
+<div style={css(`font-size:20px; font-weight:700; color:#14171F; margin-bottom:5px;`)}>{cyclePickLegTitle}</div>
+<div style={css(`font-size:13px; color:#5A5E66; margin-bottom:28px;`)}>{cyclePickLegSubtitle}</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB;`)}>
+<div style={css(`display:flex; align-items:center; gap:9px; margin-bottom:14px;`)}>
+<svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 9.5h16M8.5 3v3.5M15.5 3v3.5"} strokeLinecap={"round"} /></svg>
+<span style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Select a cycle to continue</span>
+</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px;`)}>Pick an existing cycle to load its data, or start a new one — a new cycle inherits its masters from the most recent existing cycle for this leg, if any.</div>
+<select onChange={onCyclePickChange} defaultValue={""} style={css(`width:100%; height:42px; border:1px solid #D7DCE5; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13.5px; color:#14171F; background:#fff; cursor:pointer;`)}>
+<option value={""} disabled>Select a cycle…</option>
+{(cyclePickExisting.length > 0) ? (<><optgroup label={"Existing cycles"}>
+{(cyclePickExisting || []).map((o, __iCpe) => (<React.Fragment key={__iCpe}><option value={o.month}>{o.label}</option></React.Fragment>))}
+</optgroup></>) : null}
+<optgroup label={"Start new cycle"}>
+{(cyclePickNew || []).map((o, __iCpn) => (<React.Fragment key={__iCpn}><option value={o.month}>{o.label}</option></React.Fragment>))}
+</optgroup>
+</select>
+</div>
+</div>
+</>) : null}
 {/* ===== LEG STUB (2026-08-25) — NLH / FM Carting shell: cycle selector + Design Inputs placeholder.
      Real masters/uploads for these legs are a later build pass -- this is nav + cycle infra only. ===== */}
 {(isLegStub) ? (<>
@@ -319,7 +348,7 @@ All modules
 {(legIsIngestionTab) ? (<>
 <div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
 <div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it\u2019s available to RLH\u2019s Route Scheduler picker for this same cycle month.</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it’s available to RLH’s Route Scheduler picker for this same cycle month.</div>
 <div style={css(`display:flex; gap:10px;`)}>
 <input value={legIngestFileName} onInput={onLegIngestFileName} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px;`)} />
 <button onClick={submitLegIngest} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)}>Ingest</button>
@@ -7136,30 +7165,37 @@ class NDCApp extends React.Component {
     const scs = materializeRLHScs(this.engineStore, this.state.activeCycleMonth.rlh);
     this.setState({ data: Object.assign({}, this.state.data, { scs }) });
   }
-  // selectLeg() -- landing-card click. RLH goes straight into the existing full experience
-  // (view: 'inputs', unchanged). NLH/FM Carting go to the new leg-stub shell (Design Inputs
-  // scaffolding only this build -- see LEG_META in renderVals()).
+  // selectLeg() -- landing-card click. 2026-08-26 fix: no longer jumps straight into content.
+  // Every leg (including RLH) now stops at an explicit cycle-pick step first -- selecting a leg
+  // alone creates nothing and loads nothing.
   selectLeg(leg) {
-    createCycle(this.engineStore, leg, this.state.activeCycleMonth[leg], { tables: [] }); // no-op for nlh/fm until their own masters exist; marks the cycle "started" either way
-    this.setState({ activeLeg: leg, view: leg === 'rlh' ? 'inputs' : 'legstub', legCycleOpen: false });
+    this.setState({ activeLeg: leg, view: 'cyclepick', legCycleOpen: false });
   }
-  // switchCycle() -- per-leg cycle selector. Ensures the target cycle is "created" (eager
-  // carry-forward of local tables, per product decision -- no inherit/fresh prompt), then for
-  // RLH specifically re-materializes every master table so the whole app reflects the new month.
-  switchCycle(leg, month) {
+  // pickCycle() -- the ONE real place a cycle actually gets loaded/created, used by the initial
+  // cycle-pick screen AND by the in-app cycle switcher (old sidebar switcher for RLH, legstub's
+  // own switcher for NLH/FM) so there's exactly one code path, not two that could drift apart.
+  // createCycle() is idempotent -- if the month already exists, this just loads it; if not, it's
+  // created with local tables eagerly carried forward from the nearest earlier cycle (or blank
+  // Design Inputs if this is the leg's very first cycle ever) -- no separate inherit/fresh prompt,
+  // per product decision.
+  pickCycle(leg, month) {
+    const alreadyCreated = isCycleCreated(this.engineStore, leg, month);
     createCycle(this.engineStore, leg, month, leg === 'rlh' ? { tables: [{ table: 'scMaster', defaults: {} }] } : { tables: [] });
     const activeCycleMonth = Object.assign({}, this.state.activeCycleMonth, { [leg]: month });
+    const patch = { activeCycleMonth, legCycleOpen: false, cycleOpen: false, cyclePickerOpen: false, view: leg === 'rlh' ? 'inputs' : 'legstub' };
     if (leg === 'rlh') {
-      const scs = materializeRLHScs(this.engineStore, month);
-      const VEH = materializeVehicleMasterLeg(this.engineStore, 'rlh', month);
-      const scVehAvail = materializeScVehAvailLeg(this.engineStore, 'rlh', month);
-      const lmdcs = materializeLmdcRawLeg(this.engineStore, 'rlh', month);
-      this.setState({ activeCycleMonth, legCycleOpen: false, data: Object.assign({}, this.state.data, { scs, VEH, scVehAvail, lmdcs }) });
-    } else {
-      this.setState({ activeCycleMonth, legCycleOpen: false });
+      patch.data = Object.assign({}, this.state.data, {
+        scs: materializeRLHScs(this.engineStore, month),
+        VEH: materializeVehicleMasterLeg(this.engineStore, 'rlh', month),
+        scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', month),
+        lmdcs: materializeLmdcRawLeg(this.engineStore, 'rlh', month),
+      });
     }
-    this.showToast('Switched to ' + monthLabel(month), '#003F98');
+    this.setState(patch);
+    this.showToast(alreadyCreated ? ('Loaded ' + monthLabel(month)) : ('Started a new cycle for ' + monthLabel(month) + ' — masters inherited from the previous cycle'), '#003F98');
   }
+  // switchCycle() kept as a thin alias -- legstub's own selector already calls this name.
+  switchCycle(leg, month) { this.pickCycle(leg, month); }
   // 2026-08-25 (Phase 4) — NLH/FM Carting masters + uploads + (NLH-only) Design Ingestion.
   // bumpEngineTick() is the cheap "force a re-render" mechanism for edits that mutate
   // this.engineStore directly without going through this.state.data (unlike RLH's scs/VEH/etc,
@@ -13632,6 +13668,7 @@ class NDCApp extends React.Component {
     const TITLES = {
       command: ['Command Center', 'July 2026 design cycle · ' + (planner ? 'Central Network Planner' : 'Ops Lead')],
       landing: ['Network Design Central', 'Choose a design leg to continue'],
+      cyclepick: [legStubTitle || 'Select a design cycle', 'Choose an existing cycle, or start a new one, to continue'],
       legstub: [legStubTitle, legStubSubtitle],
       inputs: ['Design Inputs', 'Volume files · masters · AutoDML gate · node changes'],
       creation: ['Design Creation', 'RLH route planning · plan & centres → vehicles → trigger'],
@@ -13919,11 +13956,22 @@ class NDCApp extends React.Component {
       personaName: planner ? 'Pranita Sapkal' : this.opsPersonaName(),
       personaRole: planner ? 'Central Network Planner' : 'Ops Lead · South',
       personaInitials: planner ? 'PS' : this.opsPersonaName().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(),
-      view: st.view, isCommand: st.view === 'command', isInputs: st.view === 'inputs', isStub: !(st.view === 'command' || st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'map' || st.view === 'finalise' || st.view === 'cyclesummary' || st.view === 'landing' || st.view === 'legstub'),
+      view: st.view, isCommand: st.view === 'command', isInputs: st.view === 'inputs', isStub: !(st.view === 'command' || st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'map' || st.view === 'finalise' || st.view === 'cyclesummary' || st.view === 'landing' || st.view === 'legstub' || st.view === 'cyclepick'),
       // ===== Multi-leg landing + per-leg cycle shell (2026-08-25) =====
-      isLanding: st.view === 'landing', isLegStub: st.view === 'legstub',
-      goLanding: () => this.setState({ view: 'landing' }),
-      activeLeg: st.activeLeg, activeLegShort: (LEG_META[st.activeLeg] || {}).short || '',
+      isLanding: st.view === 'landing', isLegStub: st.view === 'legstub', isCyclePick: st.view === 'cyclepick',
+      goLanding: () => this.setState({ view: 'landing', activeLeg: null }),
+      activeLeg: st.activeLeg, activeLegShort: (LEG_META[st.activeLeg] || {}).short || 'Home',
+      // ===== Cycle-pick screen (2026-08-26 fix) — gates EVERY leg (including RLH) behind an
+      // explicit cycle choice before any sidebar/content loads. Existing cycles vs. "start new"
+      // are two separate groups in one real <select>, per the corrected spec.
+      cyclePickLegTitle: (LEG_META[st.activeLeg] || {}).title || '', cyclePickLegSubtitle: (LEG_META[st.activeLeg] || {}).subtitle || '',
+      cyclePickExisting: st.activeLeg ? (this.engineStore.cyclesCreated[st.activeLeg] || []).slice().sort(monthCompare).map(m => ({
+        month: m, label: monthLabel(m) + (m === currentMonthKey() ? ' — current' : monthIsPast(m, currentMonthKey()) ? ' — past, read-only inputs' : ' — future'),
+      })) : [],
+      cyclePickNew: st.activeLeg ? cycleWindow(currentMonthKey()).filter(m => !(this.engineStore.cyclesCreated[st.activeLeg] || []).includes(m)).map(m => ({
+        month: m, label: monthLabel(m) + (m === currentMonthKey() ? ' — current' : monthIsPast(m, currentMonthKey()) ? ' — past' : ' — future'),
+      })) : [],
+      onCyclePickChange: (e) => { if (e.target.value) this.pickCycle(st.activeLeg, e.target.value); },
       landingCards: ['fm', 'nlh', 'rlh'].map(leg => ({
         leg, title: LEG_META[leg].title, subtitle: LEG_META[leg].subtitle,
         onSelect: () => this.selectLeg(leg),
@@ -13995,15 +14043,27 @@ class NDCApp extends React.Component {
       uploadFile: () => (this.state.ingestionTab === 'nlh' ? this.ingestNlhPlan() : this.ingestRlhPlan()), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' } }),
       startCreation: () => this.go('creation'), recheckAutodml: () => this.showToast('AutoDML re-check queued', '#2F4FC6'),
       moduleTitle: tt[0], moduleSubtitle: tt[1], stubIcon: STUBICON[st.view] || ICON.dash,
-      navGroups, cycleName: st.designCycle || 'July 2026', cycleOpen: !!st.cycleOpen,
+      navGroups, cycleName: monthLabel(st.activeCycleMonth.rlh), cycleOpen: !!st.cycleOpen,
+      // 2026-08-26 fix — sidebar shown only once a cycle has actually been picked for RLH;
+      // NLH/FM Carting use their own self-contained legstub header instead of this nav.
+      showSidebar: st.activeLeg === 'rlh' && st.view !== 'landing' && st.view !== 'cyclepick',
       toggleCycle: () => this.setState({ cycleOpen: !st.cycleOpen }), closeCycle: () => this.setState({ cycleOpen: false }),
       newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false }); this.go('creation'); },
       isPastCycle,
-      toggleCyclePicker: () => this.setState({ cyclePickerOpen: !st.cyclePickerOpen }),
-      cyclePickerOpen: !!st.cyclePickerOpen,
+      toggleCyclePicker: () => this.setState({ cyclePickerOpen: !st.cyclePickerOpen }),      cyclePickerOpen: !!st.cyclePickerOpen,
       cyclePickerChevron: st.cyclePickerOpen ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',
-      cycleOptions: [['July 2026', 'Current · active', false], ['June 2026', 'Last month · Finalised', true]].map(c => ({ name: c[0], meta: c[1], active: (st.designCycle || 'July 2026') === c[0], rowBg: (st.designCycle || 'July 2026') === c[0] ? '#1E2C57' : 'transparent', onSelect: () => { this.setState({ designCycle: c[0], cycleOpen: false, cyclePickerOpen: false, view: c[2] ? 'cyclesummary' : 'inputs' }); this.showToast('Switched to ' + c[0], '#003F98'); } })),
-      pastCycleOptions: [['May 2026', 'Archived'], ['April 2026', 'Archived'], ['March 2026', 'Archived']].map(c => ({ name: c[0], meta: c[1], active: (st.designCycle || 'July 2026') === c[0], rowBg: (st.designCycle || 'July 2026') === c[0] ? '#1E2C57' : 'transparent', onSelect: () => { this.setState({ designCycle: c[0], cycleOpen: false, cyclePickerOpen: false, view: 'cyclesummary' }); this.showToast('Switched to ' + c[0] + ' · read-only', '#003F98'); } })),
+      // 2026-08-26 fix — real data, not the old hardcoded July/June 2026 pair. cycleOptions =
+      // cycles actually created for RLH (this.engineStore.cyclesCreated.rlh); pastCycleOptions =
+      // every OTHER month in the rolling 6-back/6-forward window, available via "start a new
+      // cycle" (both past and future months can be started this way, despite the old label).
+      cycleOptions: (this.engineStore.cyclesCreated.rlh || []).slice().sort(monthCompare).map(m => {
+        const tag = m === currentMonthKey() ? 'Current · active' : monthIsPast(m, currentMonthKey()) ? 'Past cycle' : 'Future cycle';
+        return { name: monthLabel(m), meta: tag, active: st.activeCycleMonth.rlh === m, rowBg: st.activeCycleMonth.rlh === m ? '#1E2C57' : 'transparent', onSelect: () => this.pickCycle('rlh', m) };
+      }),
+      pastCycleOptions: cycleWindow(currentMonthKey()).filter(m => !(this.engineStore.cyclesCreated.rlh || []).includes(m)).map(m => {
+        const tag = m === currentMonthKey() ? 'Current month' : monthIsPast(m, currentMonthKey()) ? 'Past' : 'Future';
+        return { name: monthLabel(m), meta: tag + ' · not started yet', active: false, rowBg: 'transparent', onSelect: () => this.pickCycle('rlh', m) };
+      }),
       freezeMiniText: daysToFreeze + 'd to freeze · ' + health.label, freezeMiniBg: health.miniBg, freezeMiniFg: health.miniFg,
       plannerSegBg: planner ? '#fff' : 'transparent', plannerSegFg: planner ? '#003F98' : '#5A5E66',
       opsSegBg: !planner ? '#fff' : 'transparent', opsSegFg: !planner ? '#003F98' : '#5A5E66',

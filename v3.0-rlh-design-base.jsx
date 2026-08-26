@@ -338,6 +338,15 @@ All modules
 <button onClick={t.onClick} style={css(`height:38px; padding:0 16px; border:none; border-bottom:2px solid ${t.active ? '#003F98' : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.active ? '700' : '500'}; color:${t.active ? '#003F98' : '#5A5E66'};`)}>{t.label}</button>
 </React.Fragment>))}
 </div>
+{/* Leg past-cycle read-only banner (later session) — NLH previously had zero past-cycle
+     enforcement; this mirrors RLH's own banner. NLH/FM have no Finalise-Directly-style bypass,
+     so unlike RLH's banner there's no "X remains available" carve-out to mention. */}
+{(legCycleIsPast) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 16px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{legCycleLabel}</strong> is a past cycle — Design Inputs are read-only for {activeLegShort}.</span>
+</div>
+</>) : null}
 {/* ===== VOLUME INPUTS (2026-08-26 rebuild) — mirrors RLH's ACTIVE THIS CYCLE + library pattern for
      NLH (FMSC Manifestation + LMSC Landing); FM keeps its simpler single-card version. ===== */}
 {(legIsVolumeTab) ? (<>
@@ -354,9 +363,9 @@ All modules
 <span style={css(`font-size:12px; font-weight:700; color:#14171F;`)}>{u.label}</span>
 <div style={css(`flex:1;`)} />
 <button onClick={u.onTemplate} aria-label={"Download template"} title={"Download template"} style={css(`width:25px; height:25px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<label style={css(`height:25px; padding:0 10px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;`)}>
+<label style={css(`height:25px; padding:0 10px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; display:inline-flex; align-items:center; gap:5px; flex-shrink:0;`)}>
 {(u.hasFile) ? 'Replace' : 'Upload'}
-<input type={"file"} onChange={u.onFile} style={css(`display:none;`)} />
+<input type={"file"} onChange={u.onFile} disabled={legCycleIsPast} style={css(`display:none;`)} />
 </label>
 </div>
 {(u.hasFile) ? (<><div style={css(`min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)} title={u.fileName}>{u.fileName}</div><div style={css(`font-size:10.5px; color:#128A3E; margin-top:2px;`)}>Uploaded {u.uploadedAt}</div></div></>) : (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>No active file — upload one to begin</div></>)}
@@ -433,8 +442,8 @@ All modules
 <div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.sortCap}</div>
 <div style={css(`padding:8px 10px; color:#5A5E66;`)}>{r.volCap}</div>
 {(legIsNlh) ? (<>
-<div style={css(`padding:5px 8px;`)}><input value={r.nlhDockCap} onInput={r.onDockChange} style={css(`width:70px; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} /></div>
-<div style={css(`padding:5px 8px;`)}><input value={r.laneName} onInput={r.onLaneChange} placeholder={"Lane name"} style={css(`width:100%; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} /></div>
+<div style={css(`padding:5px 8px;`)}><input value={r.nlhDockCap} onInput={r.onDockChange} disabled={legCycleIsPast} style={css(`width:70px; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} /></div>
+<div style={css(`padding:5px 8px;`)}><input value={r.laneName} onInput={r.onLaneChange} placeholder={"Lane name"} disabled={legCycleIsPast} style={css(`width:100%; height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} /></div>
 </>) : null}
 </div>
 </React.Fragment>))}
@@ -449,7 +458,7 @@ All modules
 </>) : (<>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
 <div style={css(`font-size:11.5px; color:#8E96A3;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) \u2014 NLH originates only from FMSCs.</div>
-<button onClick={onLegAvailAddScOpen} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; flex-shrink:0;`)}>+ Add SC</button>
+<button onClick={onLegAvailAddScOpen} disabled={legCycleIsPast} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>+ Add SC</button>
 </div>
 {(legAvailAddScOpen) ? (<>
 <div style={css(`padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:14px; display:flex; gap:10px; align-items:center;`)}>
@@ -470,7 +479,7 @@ All modules
 <span style={css(`font-size:12px; color:#5A5E66;`)}>{g.name}</span>
 <span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66;`)}>{g.zone}</span>
 <div style={css(`flex:1;`)} />
-<button onClick={g.onAddRow} style={css(`height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add Vehicle</button>
+<button onClick={g.onAddRow} disabled={legCycleIsPast} style={css(`height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'};`)}>+ Add Vehicle</button>
 </div>
 {(legAvailRowAddSc === g.code) ? (<>
 <div style={css(`padding:10px 12px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:8px; display:flex; gap:8px; align-items:center;`)}>
@@ -480,7 +489,7 @@ All modules
 </select>
 <input type={"number"} min={"0"} value={legAvailRowAddForm.vehicleCount} onInput={onLegAvailRowAddCount} placeholder={"Count"} style={css(`width:70px; height:30px; border:1px solid #C3C9D4; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} />
 <input type={"number"} min={"0"} value={legAvailRowAddForm.tpLimit} onInput={onLegAvailRowAddTp} placeholder={"TP limit"} style={css(`width:80px; height:30px; border:1px solid #C3C9D4; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12px;`)} />
-<button onClick={legAvailRowAddSubmit} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Add</button>
+<button onClick={legAvailRowAddSubmit} disabled={legCycleIsPast} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'};`)}>Add</button>
 <button onClick={legAvailRowAddCancel} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
 </div>
 </>) : null}
@@ -506,10 +515,10 @@ All modules
 <div style={css(`padding:9px 12px; color:#5A5E66;`)}>{r.zoneFeas}</div>
 <div style={css(`padding:6px 8px; display:flex; gap:3px;`)}>
 {(r.notEditing) ? (<>
-<button onClick={r.onEdit} title={"Edit"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={r.onDelete} title={"Delete"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onEdit} disabled={legCycleIsPast} title={"Edit"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onDelete} disabled={legCycleIsPast} title={"Delete"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </>) : (<>
-<button onClick={r.onSave} title={"Save"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#E7F4EC; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onSave} disabled={legCycleIsPast} title={"Save"} style={css(`width:24px; height:24px; border:1px solid #128A3E; background:#E7F4EC; border-radius:5px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={r.onCancel} title={"Cancel"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}>✕</button>
 </>)}
 </div>
@@ -527,7 +536,7 @@ All modules
 </>) : (<>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
 <div style={css(`font-size:11.5px; color:#8E96A3;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
-<button onClick={legVehAddOpenClick} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; flex-shrink:0;`)}>+ Add Vehicle Type</button>
+<button onClick={legVehAddOpenClick} disabled={legCycleIsPast} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>+ Add Vehicle Type</button>
 </div>
 {(legVehAddOpen) ? (<>
 <div style={css(`padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; margin-bottom:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;`)}>
@@ -535,7 +544,7 @@ All modules
 <input type={"number"} min={"0"} value={legVehAddForm.capacity} onInput={onLegVehAddCapacity} placeholder={"Capacity"} style={css(`width:100px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
 <input type={"number"} min={"0"} value={legVehAddForm.dist} onInput={onLegVehAddDist} placeholder={"Dist limit"} style={css(`width:100px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
 <input type={"number"} min={"0"} value={legVehAddForm.tp} onInput={onLegVehAddTp} placeholder={"TP limit"} style={css(`width:90px; height:34px; border:1px solid #C3C9D4; border-radius:7px; padding:0 10px; font-family:inherit; font-size:12.5px;`)} />
-<button onClick={legVehAddSubmit} style={css(`height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Add</button>
+<button onClick={legVehAddSubmit} disabled={legCycleIsPast} style={css(`height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'};`)}>Add</button>
 <button onClick={legVehAddCancel} style={css(`height:34px; padding:0 12px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Cancel</button>
 </div>
 </>) : null}
@@ -568,10 +577,10 @@ All modules
 <div style={css(`padding:11px 14px; color:#14171F;`)}>{v.nonLocalSpeed}</div>
 <div style={css(`padding:6px 8px; display:flex; gap:3px;`)}>
 {(v.notEditing) ? (<>
-<button onClick={v.onEdit} title={"Edit"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={v.onDelete} title={"Delete"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={v.onEdit} disabled={legCycleIsPast} title={"Edit"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={v.onDelete} disabled={legCycleIsPast} title={"Delete"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </>) : (<>
-<button onClick={v.onSave} title={"Save"} style={css(`width:26px; height:26px; border:1px solid #128A3E; background:#E7F4EC; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={v.onSave} disabled={legCycleIsPast} title={"Save"} style={css(`width:26px; height:26px; border:1px solid #128A3E; background:#E7F4EC; border-radius:6px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={v.onCancel} title={"Cancel"} style={css(`width:26px; height:26px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}>✕</button>
 </>)}
 </div>
@@ -591,8 +600,8 @@ All modules
 <div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
 <div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it’s available to RLH’s Route Scheduler picker for this same cycle month.</div>
 <div style={css(`display:flex; gap:10px;`)}>
-<input value={legIngestFileName} onInput={onLegIngestFileName} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px;`)} />
-<button onClick={submitLegIngest} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)}>Ingest</button>
+<input value={legIngestFileName} onInput={onLegIngestFileName} disabled={legCycleIsPast} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} />
+<button onClick={submitLegIngest} disabled={legCycleIsPast} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>Ingest</button>
 </div>
 </div>
 {(legIngestedEmpty) ? (<>
@@ -863,8 +872,21 @@ All modules
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={uploadFile} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+<button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+<input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
 </div>
+{(hasScMasterUploadErrors) ? (<>
+<div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{scMasterUploadErrors.length} row{scMasterUploadErrors.length === 1 ? '' : 's'} flagged — nothing from these rows was applied</span></div>
+<button onClick={closeScMasterUploadErrors} aria-label={"Dismiss"} style={css(`width:24px; height:24px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
+{(scMasterUploadErrors || []).slice(0, 20).map((er, __iScMe) => (<React.Fragment key={__iScMe}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
+{(scMasterUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {scMasterUploadErrors.length - 20} more</div></>) : null}
+</div>
+</div>
+</>) : null}
 <div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:13px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
@@ -1008,8 +1030,21 @@ All modules
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — SC Vehicle Availability</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per vehicle type per SC · upload replaces all prior records</div></div>
 <button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={uploadFile} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+<button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+<input ref={availFileInputRef} type={"file"} accept={".csv"} onChange={onAvailFileChange} style={css(`display:none;`)} />
 </div>
+{(hasAvailUploadErrors) ? (<>
+<div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{availUploadErrors.length} row{availUploadErrors.length === 1 ? '' : 's'} flagged — nothing from these rows was applied</span></div>
+<button onClick={closeAvailUploadErrors} aria-label={"Dismiss"} style={css(`width:24px; height:24px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
+{(availUploadErrors || []).slice(0, 20).map((er, __iAve) => (<React.Fragment key={__iAve}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
+{(availUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {availUploadErrors.length - 20} more</div></>) : null}
+</div>
+</div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; display:flex; align-items:center; gap:14px; margin-bottom:12px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
@@ -6654,6 +6689,7 @@ class NDCApp extends React.Component {
       inputsTab: 'volume',
       mastersTab: 'sc',
       lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZones: [], lmdcModes: [], lmdcSearch: '', lmdcUploadErrors: [],
+      scMasterUploadErrors: [], availUploadErrors: [],
       // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
       // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
@@ -7702,6 +7738,7 @@ class NDCApp extends React.Component {
   // mirror for NLH/FM's masters, renderVals() just reads the engine live each render.
   bumpEngineTick() { this.setState({ engineTick: (this.state.engineTick || 0) + 1 }); }
   setLegField(code, field, value) {
+    if (this.isLegCyclePast(this.state.activeLeg)) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     setLegScLocalField(this.engineStore, this.state.activeLeg, this.state.activeCycleMonth[this.state.activeLeg], code, field, value);
     this.bumpEngineTick();
   }
@@ -7711,6 +7748,7 @@ class NDCApp extends React.Component {
   legVehAddOpen() { this.setState({ legVehAddForm: { name: '', capacity: '', dist: '', tp: '' } }); }
   legVehAddCancel() { this.setState({ legVehAddForm: null }); }
   legVehAddSubmit() {
+    if (this.isLegCyclePast('nlh')) { this.setState({ legVehAddForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const f = this.state.legVehAddForm || {};
     const name = (f.name || '').trim();
     if (!name) { this.showToast('Vehicle type name is required', '#C77B00'); return; }
@@ -7730,6 +7768,7 @@ class NDCApp extends React.Component {
   legVehEditOpen(name, v) { this.setState({ legVehEditName: name, legVehEditForm: { capacity: String(v.capacity || ''), dist: String(v.dist || ''), tp: String(v.tp || '') } }); }
   legVehEditCancel() { this.setState({ legVehEditName: null, legVehEditForm: null }); }
   legVehEditSave() {
+    if (this.isLegCyclePast('nlh')) { this.setState({ legVehEditName: null, legVehEditForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const name = this.state.legVehEditName, f = this.state.legVehEditForm || {};
     if (!name) return;
     const cycleMonth = this.state.activeCycleMonth.nlh;
@@ -7742,6 +7781,7 @@ class NDCApp extends React.Component {
     this.showToast(name + ' updated', '#128A3E');
   }
   legVehDelete(name) {
+    if (this.isLegCyclePast('nlh')) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
     setClassDField(this.engineStore, 'nlh', 'vehicleMaster', cycleMonth, name, '_removed', true, {});
     this.bumpEngineTick();
@@ -7754,6 +7794,7 @@ class NDCApp extends React.Component {
   legAvailAddScOpen() { this.setState({ legAvailAddScCode: '' }); }
   legAvailAddScSubmit(code) {
     if (!code) return;
+    if (this.isLegCyclePast('nlh')) { this.setState({ legAvailAddScCode: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
     const scs = materializeRLHScs(this.engineStore, cycleMonth);
     const sc = scs.find(s => s.code === code) || { name: code, zone: '' };
@@ -7770,6 +7811,7 @@ class NDCApp extends React.Component {
   legAvailRowAddSubmit() {
     const code = this.state.legAvailAddRowSc, f = this.state.legAvailAddRowForm || {};
     if (!code || !f.vehicleType) { this.showToast('Pick a vehicle type', '#C77B00'); return; }
+    if (this.isLegCyclePast('nlh')) { this.setState({ legAvailAddRowSc: null, legAvailAddRowForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
     const veh = materializeVehicleMasterLeg(this.engineStore, 'nlh', cycleMonth).find(v => v.name === f.vehicleType) || {};
@@ -7783,6 +7825,7 @@ class NDCApp extends React.Component {
   legAvailRowEditOpen(code, vehicleType, row) { this.setState({ legAvailEditKey: code + '|' + vehicleType, legAvailEditForm: { vehicleCount: String(row.vehicleCount || ''), tpLimit: String(row.tpLimit || '') } }); }
   legAvailRowEditCancel() { this.setState({ legAvailEditKey: null, legAvailEditForm: null }); }
   legAvailRowEditSave(code, vehicleType) {
+    if (this.isLegCyclePast('nlh')) { this.setState({ legAvailEditKey: null, legAvailEditForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const f = this.state.legAvailEditForm || {};
     const cycleMonth = this.state.activeCycleMonth.nlh;
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
@@ -7794,6 +7837,7 @@ class NDCApp extends React.Component {
     this.showToast(vehicleType + ' updated in ' + code, '#128A3E');
   }
   legAvailRowDelete(code, vehicleType) {
+    if (this.isLegCyclePast('nlh')) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
     const blob = peekClassD(this.engineStore, 'nlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
     const removed = (blob.rows || []).find(row => row.vehicleType === vehicleType);
@@ -7808,6 +7852,7 @@ class NDCApp extends React.Component {
   onLegUploadFile(slot, file) {
     if (!file) return;
     const leg = this.state.activeLeg, cycleMonth = this.state.activeCycleMonth[leg];
+    if (this.isLegCyclePast(leg)) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     setUpload(this.engineStore, leg, cycleMonth, slot, { fileMeta: { name: file.name, size: file.size }, uploadedAt: new Date().toLocaleString() });
     this.bumpEngineTick();
     this.showToast(file.name + ' uploaded', '#128A3E');
@@ -7815,6 +7860,7 @@ class NDCApp extends React.Component {
   submitLegIngest() {
     const name = (this.state.legIngestFileName || '').trim();
     if (!name) { this.showToast('Enter a file name to ingest', '#C77B00'); return; }
+    if (this.isLegCyclePast('nlh')) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
     ingestNlhPlan(this.engineStore, cycleMonth, { planId: 'NLH-ING-' + Date.now(), fileMeta: { name }, ingestedAt: new Date().toLocaleString() });
     this.setState({ legIngestFileName: '' });
@@ -8514,6 +8560,179 @@ class NDCApp extends React.Component {
         this.refreshLmdcs();
         this.setState({ lmdcUploadErrors: errorRows });
         this.showToast('LMDC Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : '') + (errorRows.length ? ', ' + errorRows.length + ' flagged' : ''), errorRows.length ? '#C77B00' : (matched > 0 ? '#128A3E' : '#C77B00'));
+      } catch (err) {
+        this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
+      }
+    };
+    reader.readAsText(file);
+  }
+  // handleScMasterCsvUpload(e) (later session — fixes the uploadFile naming collision) — SC
+  // Master's "Upload CSV" button used to be wired to the same `uploadFile` binding as Design
+  // Ingestion's simulated ingest, so clicking it silently fabricated a fake ingested-plan record
+  // instead of touching SC Master at all. This is the real handler it should have had from the
+  // start: matches rows by SC Code against the existing registry (bulk EDIT of known SCs, same
+  // convention as LMDC's own uploader — it does not create brand-new SCs; use "+ Add SC" for
+  // that), applies whichever of the 18 template columns are present and valid on that row, and
+  // flags the whole row (applies nothing from it) if any provided value fails validation —
+  // same "flag it, don't guess" convention the LMDC and volume-file uploaders already use.
+  handleScMasterCsvUpload(e) {
+    if (this.isRlhCyclePast()) { e.target.value = ''; this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result || '');
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
+        const splitCsvLine = (line) => {
+          const out = []; let cur = ''; let inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const c = line[i];
+            if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; }
+            else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; }
+          }
+          out.push(cur);
+          return out.map(s => s.trim());
+        };
+        const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
+        const idx = (name) => headers.indexOf(name);
+        const codeIdx = idx('sc code');
+        if (codeIdx < 0) { this.showToast('Column "SC Code" not found in the uploaded file', '#D14B4B'); return; }
+        const nameIdx = idx('name'), zoneIdx = idx('zone'), typeIdx = idx('sc type'), volCapIdx = idx('volume capacity'), sortCapIdx = idx('sort capacity'),
+          rlhDocksIdx = idx('rlh docks'), localTpIdx = idx('local tp limit'), nonLocalTpIdx = idx('non-local tp limit'),
+          localSpeedIdx = idx('local speed (km/h)'), nonLocalSpeedIdx = idx('non-local speed (km/h)'),
+          holdOnIdx = idx('hold time (on/off)'), maxHoldLocalIdx = idx('max hold time - local (min)'), maxHoldNonLocalIdx = idx('max hold time - non-local (min)'),
+          openIdx = idx('open time'), closeIdx = idx('close time'), opsLeadsIdx = idx('ops leads');
+        const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
+        const ZONE_SET = { North: true, South: true, East: true, West: true };
+        const TYPE_SET = { LMSC: true, FMSC: true, Hybrid: true };
+        const TIME_RE = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+        const ONOFF_SET = { On: true, Off: true };
+        const cycleMonth = this.state.activeCycleMonth.rlh;
+        const errorRows = [];
+        let matched = 0, skipped = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const cols = splitCsvLine(lines[i]);
+          const code = (cols[codeIdx] || '').trim().toUpperCase();
+          if (!code || !validCodes[code]) { skipped++; continue; }
+          const rowErrs = [];
+          const bPatch = {}, dPatch = {};
+          if (nameIdx >= 0 && cols[nameIdx]) bPatch._name = cols[nameIdx]; // Class A, applied separately below
+          if (zoneIdx >= 0 && cols[zoneIdx]) { if (ZONE_SET[cols[zoneIdx]]) bPatch._zone = cols[zoneIdx]; else rowErrs.push('Zone "' + cols[zoneIdx] + '" is not North/South/East/West'); }
+          const existingD = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
+          const isMdcNode = existingD.nodeKind === 'MDC';
+          if (typeIdx >= 0 && cols[typeIdx] && !isMdcNode) { if (TYPE_SET[cols[typeIdx]]) bPatch.scType = cols[typeIdx]; else rowErrs.push('SC Type "' + cols[typeIdx] + '" is not LMSC/FMSC/Hybrid'); }
+          if (volCapIdx >= 0 && cols[volCapIdx] !== '') { const n = parseInt(cols[volCapIdx], 10); if (!isNaN(n)) bPatch.volCap = n; else rowErrs.push('Volume Capacity "' + cols[volCapIdx] + '" is not a number'); }
+          if (sortCapIdx >= 0 && cols[sortCapIdx] !== '') { const n = parseInt(cols[sortCapIdx], 10); if (!isNaN(n)) bPatch.sortCap = n; else rowErrs.push('Sort Capacity "' + cols[sortCapIdx] + '" is not a number'); }
+          if (rlhDocksIdx >= 0 && cols[rlhDocksIdx] !== '') { const n = parseInt(cols[rlhDocksIdx], 10); if (!isNaN(n)) { dPatch.rlhDocks = n; dPatch.docks = n; } else rowErrs.push('RLH Docks "' + cols[rlhDocksIdx] + '" is not a number'); }
+          if (localTpIdx >= 0 && cols[localTpIdx] !== '') { const n = parseInt(cols[localTpIdx], 10); if (!isNaN(n)) dPatch.localTp = n; else rowErrs.push('Local TP Limit "' + cols[localTpIdx] + '" is not a number'); }
+          if (nonLocalTpIdx >= 0 && cols[nonLocalTpIdx] !== '') { const n = parseInt(cols[nonLocalTpIdx], 10); if (!isNaN(n)) dPatch.nonLocalTp = n; else rowErrs.push('Non-Local TP Limit "' + cols[nonLocalTpIdx] + '" is not a number'); }
+          if (localSpeedIdx >= 0 && cols[localSpeedIdx] !== '') { const n = parseInt(cols[localSpeedIdx], 10); if (!isNaN(n)) dPatch.localSpeed = n; else rowErrs.push('Local Speed "' + cols[localSpeedIdx] + '" is not a number'); }
+          if (nonLocalSpeedIdx >= 0 && cols[nonLocalSpeedIdx] !== '') { const n = parseInt(cols[nonLocalSpeedIdx], 10); if (!isNaN(n)) dPatch.nonLocalSpeed = n; else rowErrs.push('Non-Local Speed "' + cols[nonLocalSpeedIdx] + '" is not a number'); }
+          if (holdOnIdx >= 0 && cols[holdOnIdx]) { if (ONOFF_SET[cols[holdOnIdx]]) dPatch.holdTimeOn = cols[holdOnIdx] === 'On'; else rowErrs.push('Hold Time (On/Off) "' + cols[holdOnIdx] + '" is not On/Off'); }
+          if (maxHoldLocalIdx >= 0 && cols[maxHoldLocalIdx] !== '') { const n = parseInt(cols[maxHoldLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldLocal = n; else rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); }
+          if (maxHoldNonLocalIdx >= 0 && cols[maxHoldNonLocalIdx] !== '') { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldNonLocal = n; else rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); }
+          if (openIdx >= 0 && cols[openIdx]) { if (TIME_RE.test(cols[openIdx])) dPatch.openTime = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not HH:MM'); }
+          if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_RE.test(cols[closeIdx])) dPatch.closeTime = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not HH:MM'); }
+          if (opsLeadsIdx >= 0 && cols[opsLeadsIdx]) dPatch.pocs = cols[opsLeadsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
+          if (Object.keys(bPatch).length === 0 && Object.keys(dPatch).length === 0) { skipped++; continue; }
+          // Class A (name/zone) — direct registry update, same as submitAddSc().
+          const row = this.engineStore.scRegistry[code];
+          if (row) {
+            if (bPatch._name) row.name = bPatch._name;
+            if (bPatch._zone) row.zone = bPatch._zone;
+          }
+          // Class B (sortCap/volCap/scType + derived dispatch flags) — cycle-versioned.
+          if (bPatch.volCap != null) setClassBField(this.engineStore, code, cycleMonth, 'volCap', bPatch.volCap);
+          if (bPatch.sortCap != null) setClassBField(this.engineStore, code, cycleMonth, 'sortCap', bPatch.sortCap);
+          if (bPatch.scType) {
+            const dispatchesRLH = bPatch.scType === 'LMSC' || bPatch.scType === 'Hybrid';
+            const dispatchesNLH = bPatch.scType === 'FMSC' || bPatch.scType === 'Hybrid';
+            setClassBField(this.engineStore, code, cycleMonth, 'scType', bPatch.scType);
+            setClassBField(this.engineStore, code, cycleMonth, 'dispatchesRLH', dispatchesRLH);
+            setClassBField(this.engineStore, code, cycleMonth, 'dispatchesNLH', dispatchesNLH);
+          }
+          // Class D (everything RLH-local) — same per-field write submitAddSc() uses.
+          Object.keys(dPatch).forEach(field => setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, field, dPatch[field], existingD));
+          matched++;
+        }
+        this.refreshScs();
+        this.setState({ scMasterUploadErrors: errorRows });
+        this.showToast('Sort Centre Master upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped (unrecognised code)' : '') + (errorRows.length ? ', ' + errorRows.length + ' flagged' : ''), errorRows.length ? '#C77B00' : (matched > 0 ? '#128A3E' : '#C77B00'));
+      } catch (err) {
+        this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
+      }
+    };
+    reader.readAsText(file);
+  }
+  // handleAvailCsvUpload(e) (later session — same fix, SC Vehicle Availability's own "Upload
+  // CSV" button had the identical uploadFile collision). Matches by SC Code against the real
+  // registry; within that SC's availability group, an existing Vehicle Type row is updated in
+  // place, an unrecognised-but-valid one is added as a new row (mirrors legAvailRowAddSubmit's
+  // own add-or-update shape for NLH). Vehicle Type is validated against RLH's own Vehicle
+  // Master (VEHMA-equivalent) so a typo doesn't silently create a phantom vehicle type.
+  handleAvailCsvUpload(e) {
+    if (this.isRlhCyclePast()) { e.target.value = ''; this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result || '');
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
+        const splitCsvLine = (line) => {
+          const out = []; let cur = ''; let inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const c = line[i];
+            if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; }
+            else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; }
+          }
+          out.push(cur);
+          return out.map(s => s.trim());
+        };
+        const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
+        const idx = (name) => headers.indexOf(name);
+        const codeIdx = idx('sc code'), vehIdx = idx('vehicle type'), cntIdx = idx('available count'), zfIdx = idx('zone feasibility');
+        if (codeIdx < 0) { this.showToast('Column "SC Code" not found in the uploaded file', '#D14B4B'); return; }
+        if (vehIdx < 0) { this.showToast('Column "Vehicle Type" not found in the uploaded file', '#D14B4B'); return; }
+        const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
+        const VEH_SET = {}; (((this.state.data || {}).VEH || [])).filter(v => (v.feas || []).indexOf('RLH') >= 0).forEach(v => { VEH_SET[v.name] = true; });
+        const ZFEAS_SET = { Both: true, Local: true, 'Non-Local': true };
+        const cycleMonth = this.state.activeCycleMonth.rlh;
+        const errorRows = [];
+        let matched = 0, skipped = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const cols = splitCsvLine(lines[i]);
+          const code = (cols[codeIdx] || '').trim().toUpperCase();
+          if (!code || !validCodes[code]) { skipped++; continue; }
+          const vehType = (cols[vehIdx] || '').trim();
+          if (!vehType) { skipped++; continue; }
+          const rowErrs = [];
+          if (!VEH_SET[vehType]) rowErrs.push('Vehicle Type "' + vehType + '" is not an RLH-feasible vehicle type');
+          let count = null;
+          if (cntIdx >= 0 && cols[cntIdx] !== '') { const n = parseInt(cols[cntIdx], 10); if (!isNaN(n) && n >= 0) count = n; else rowErrs.push('Available Count "' + cols[cntIdx] + '" is not a valid number'); }
+          let zoneFeas = null;
+          if (zfIdx >= 0 && cols[zfIdx]) { if (ZFEAS_SET[cols[zfIdx]]) zoneFeas = cols[zfIdx]; else rowErrs.push('Zone Feasibility "' + cols[zfIdx] + '" is not Both/Local/Non-Local'); }
+          if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
+          const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
+          const existingRow = (blob.rows || []).find(r => r.vehicleType === vehType);
+          let newRows;
+          if (existingRow) {
+            newRows = (blob.rows || []).map(r => r.vehicleType === vehType ? Object.assign({}, r, count != null ? { vehicleCount: count } : {}, zoneFeas ? { zoneFeas } : {}) : r);
+          } else {
+            const vm = (this.state.data.VEH || []).find(v => v.name === vehType) || {};
+            newRows = (blob.rows || []).concat([{ vehicleType: vehType, vehicleCount: count != null ? count : 1, tpLimit: vm.tp || 7, localSpeed: vm.localSpeed, nonLocalSpeed: vm.nonLocalSpeed, zoneFeas: zoneFeas || 'Both' }]);
+          }
+          setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code, 'rows', newRows, blob);
+          matched++;
+        }
+        this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }), availUploadErrors: errorRows });
+        this.showToast('SC Vehicle Availability upload \u00b7 ' + matched + ' updated' + (skipped ? ', ' + skipped + ' skipped' : '') + (errorRows.length ? ', ' + errorRows.length + ' flagged' : ''), errorRows.length ? '#C77B00' : (matched > 0 ? '#128A3E' : '#C77B00'));
       } catch (err) {
         this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
       }
@@ -9323,6 +9542,19 @@ class NDCApp extends React.Component {
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
       lmdcFileInputRef: (el) => { this.lmdcFileInputEl = el; },
       onLmdcFileChange: (e) => this.handleLmdcCsvUpload(e),
+      // Later session — SC Master's and SC Vehicle Availability's own real upload triggers,
+      // replacing the shared `uploadFile` binding that silently fired Design Ingestion's
+      // simulated ingest instead (see handleScMasterCsvUpload/handleAvailCsvUpload above).
+      triggerScMasterUpload: () => { if (this.scMasterFileInputEl) this.scMasterFileInputEl.click(); },
+      scMasterFileInputRef: (el) => { this.scMasterFileInputEl = el; },
+      onScMasterFileChange: (e) => this.handleScMasterCsvUpload(e),
+      scMasterUploadErrors: st.scMasterUploadErrors || [], hasScMasterUploadErrors: (st.scMasterUploadErrors || []).length > 0,
+      closeScMasterUploadErrors: () => this.setState({ scMasterUploadErrors: [] }),
+      triggerAvailUpload: () => { if (this.availFileInputEl) this.availFileInputEl.click(); },
+      availFileInputRef: (el) => { this.availFileInputEl = el; },
+      onAvailFileChange: (e) => this.handleAvailCsvUpload(e),
+      availUploadErrors: st.availUploadErrors || [], hasAvailUploadErrors: (st.availUploadErrors || []).length > 0,
+      closeAvailUploadErrors: () => this.setState({ availUploadErrors: [] }),
       changesTemplate: () => this.downloadTemplate('Node Changes', [{ k: 'Change Type' }, { k: 'DC Code' }, { k: 'DC Name' }, { k: 'SC Code' }, { k: 'From SC' }, { k: 'To SC' }, { k: 'Zone' }, { k: 'Capacity' }, { k: 'Reason' }]),
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
       ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),
@@ -10205,6 +10437,12 @@ class NDCApp extends React.Component {
   // follow-up, flagged rather than silently left inconsistent). Design Inputs edits and
   // Push-to-Alignment are blocked for a past RLH cycle; Finalise Directly stays available.
   isRlhCyclePast() { return monthIsPast(this.state.activeCycleMonth.rlh, currentMonthKey()); }
+  // 2026-08-26 (later session) — generic per-leg past-cycle check, extending the same mechanism
+  // to NLH (and, incidentally, FM Carting where it shares a code path with NLH, e.g.
+  // onLegUploadFile) — NLH previously had zero past-cycle enforcement anywhere. NLH has no
+  // Push/Finalise-Direct concept, so unlike RLH there's no bypass action to leave unguarded:
+  // every NLH mutation (masters, uploads, ingestion) is simply blocked outright for a past cycle.
+  isLegCyclePast(leg) { return monthIsPast(this.state.activeCycleMonth[leg], currentMonthKey()); }
   doSchedPush(finaliseDirect) {
     if (!finaliseDirect && this.isRlhCyclePast()) {
       this.setState({ schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });

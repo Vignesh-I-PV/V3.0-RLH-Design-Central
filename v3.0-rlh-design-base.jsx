@@ -722,12 +722,8 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On"}>MAX HOLD LOCAL</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On"}>MAX HOLD NON-LOCAL</div>
 </>) : null}
-<div style={css(`padding:5px; display:flex; align-items:center; justify-content:center;`)}>
-<button onClick={onToggleScNlh} aria-label={scNlhOpen ? "Collapse NLH-specific columns" : "Expand NLH-specific columns"} title={scNlhOpen ? "Collapse NLH-specific columns" : "Expand NLH-specific columns"} style={css(`width:24px; height:24px; border-radius:50%; border:1px solid ${scNlhOpen ? '#5A5E66' : '#C3C9D4'}; background:${scNlhOpen ? '#5A5E66' : '#fff'}; color:${scNlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:24px; height:24px; border-radius:50%; border:1px solid ${scNlhOpen ? '#5A5E66' : '#C3C9D4'}; background:${scNlhOpen ? '#5A5E66' : '#fff'}; color:${scNlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`, `border-color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}>{(scNlhOpen) ? (<><path d={"M5 12h14"} strokeLinecap={"round"} /></>) : (<><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></>)}</svg></button>
-</div>
-{(scNlhOpen) ? (<>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#EDEFF3;`)} title={"NLH-specific \u2014 slated to move into its own NLH Master section later"}>NLH DOCKS</div>
-</>) : null}
+{/* 2026-08-26 fix — NLH Docks column removed from RLH's SC Master table (see edit-form removal
+    above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
@@ -755,9 +751,7 @@ All modules
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.holdTimeOn ? s.maxHoldNonLocal + ' min' : '\u2014'}</div>
 </>) : null}
 <div />
-{(scNlhOpen) ? (<>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F4F5F7;`)}>{s.nlhDocks}</div>
-</>) : null}
+{/* 2026-08-26 fix — NLH Docks body cell removed alongside the header/toggle above. */}
 <div style={css(`padding:10px 10px;`)}>
 <button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.pocSummary}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
@@ -1366,21 +1360,9 @@ All modules
 </div>
 </React.Fragment>))}
 </div>
-{/* NLH-Specific Data (2026-08-05) — its own section rather than folded into RLH, since NLH Docks
-    isn't an RLH parameter. Just one field for now; a placeholder for whenever NLH gets its own
-    Design Creation/Review module and this section has somewhere real to grow. */}
-<div style={css(`display:flex; align-items:center; gap:8px; margin:22px 0 14px; padding:10px 13px; background:#F2F5FA; border:1px solid #D7DCE5; border-radius:8px;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}><strong>NLH-Specific Data</strong> — just NLH Docks for now, pending NLH's own module.</span>
-</div>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px 18px;`)}>
-{(addScNlh || []).map((f, __i40) => (<React.Fragment key={__i40}>
-<div>
-<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{f.label}{(f.req) ? (<><span style={css(`color:#D14B4B;`)}> *</span></>) : null}</div>
-{(f.isText) ? (<><input value={f.value} onInput={f.onInput} placeholder={f.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} /></>) : null}
-</div>
-</React.Fragment>))}
-</div>
+{/* 2026-08-26 fix — the old "NLH-Specific Data" section (NLH Docks) removed from RLH's own SC
+    edit form: it's now a confusing duplicate of NLH's own real Dock Capacity field on the SC-SC
+    and NLH Design card's own masters screen, which is where this genuinely belongs now. */}
 <div style={css(`display:flex; align-items:center; gap:8px; margin:20px 0 14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 7l8 6 8-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12px; color:#14171F;`)}>Contact fields below are email IDs (ops contacts).</span>
@@ -7284,12 +7266,10 @@ class NDCApp extends React.Component {
       txt('maxHoldLocal', 'Max Hold Time \u2014 Local (min)', false, 'e.g. 30'),
       txt('maxHoldNonLocal', 'Max Hold Time \u2014 Non-Local (min)', false, 'e.g. 120'),
     ];
-    // NLH-specific (2026-08-05) — currently just NLH Docks. Deliberately its own section, not
-    // folded into RLH-Specific, since it isn't an RLH parameter — kept separate so it has
-    // somewhere to grow into once NLH gets its own Design Creation/Review module.
-    const addScNlh = [
-      txt('nlhDocks', 'NLH Docks', true, ''),
-    ];
+    // 2026-08-26 fix — NLH Docks removed here entirely (see the two table/form JSX removals
+    // above); addScNlh kept as an empty array rather than deleted outright, since addScRlh's
+    // sibling structure (and the now-unused JSX map over it) stays harmless either way.
+    const addScNlh = [];
     const contacts = [['opsZh', 'SC Ops ZH'], ['lhOpsZh', 'SC-LH Ops ZH'], ['opsCh', 'SC Ops CH'], ['lhOpsCh', 'SC-LH Ops CH'], ['opsAm1', 'SC Ops AM-1'], ['lhOpsAm1', 'SC-LH Ops AM-1'], ['opsAm2', 'SC Ops AM-2'], ['lhOpsAm2', 'SC-LH Ops AM-2']];
     const addScContacts = contacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
     const editing = !!st.addScEditCode;
@@ -7437,7 +7417,7 @@ class NDCApp extends React.Component {
       this.showToast('Coordinates look outside India\u2019s rough bounding box \u2014 saved anyway, double-check them', '#C77B00');
     }
     const pocs = ['opsZh', 'opsCh', 'opsAm1', 'opsAm2'].map(k => (f[k] || '').trim()).filter(Boolean);
-    const rlhDocksN = opt(f.rlhDocks), nlhDocksN = opt(f.nlhDocks);
+    const rlhDocksN = opt(f.rlhDocks); // 2026-08-26 fix — nlhDocksN removed, form field no longer exists
     const name = (f.name || '').trim() || code;
     const zone = f.zone || 'South';
     const cycleMonth = this.state.activeCycleMonth.rlh;
@@ -7460,7 +7440,7 @@ class NDCApp extends React.Component {
 
     const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
     const dPatch = {
-      rlhDocks: rlhDocksN, nlhDocks: nlhDocksN, docks: (rlhDocksN || 0) + (nlhDocksN || 0),
+      rlhDocks: rlhDocksN, docks: rlhDocksN || 0,
       localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp), openTime: f.open || null, closeTime: f.close || null,
       localSpeed: opt(f.localSpeed), nonLocalSpeed: opt(f.nonLocalSpeed),
       holdTimeOn: f.holdTimeOn === 'Off' ? false : true, maxHoldLocal: opt(f.maxHoldLocal), maxHoldNonLocal: opt(f.maxHoldNonLocal),
@@ -8764,7 +8744,7 @@ class NDCApp extends React.Component {
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 40px' + (st.scNlhOpen ? ' 80px' : '') + ' 140px 80px',
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 140px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -8782,7 +8762,7 @@ class NDCApp extends React.Component {
       addVehBtnBg: addVehValid ? '#003F98' : '#E6EBF2', addVehBtnFg: addVehValid ? '#fff' : '#8E96A3', addVehBtnCursor: addVehValid ? 'pointer' : 'not-allowed',
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'NLH Docks' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Hold Time (On/Off)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Hold Time (On/Off)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
@@ -13948,9 +13928,14 @@ class NDCApp extends React.Component {
     // Planner rail: 5 stages (Design Inputs → Design Creation → Design Review → Ops Alignment → Finalise).
     // Ops Lead rail: 3 stages (To Review → In Progress → Submitted) reflecting their review state.
     // Shown on all planner views except Command Center and Map; on align view only for Ops Lead.
-    const railViewActive = planner
+    // 2026-08-26 fix — this entire rail (5-stage tracker + the Volume Inputs/Node Inputs/Node &
+    // Vehicle Master/Design Ingestion sub-tab strip it drives) is RLH-specific machinery living
+    // in the page header, completely separate from the isInputs/isCreation/etc content guards --
+    // missed when those were leg-gated, which is why RLH's own sub-tabs were showing (and
+    // functioning, independently of the actual NLH content underneath) while viewing NLH/FM.
+    const railViewActive = st.activeLeg === 'rlh' && (planner
       ? (st.view === 'inputs' || st.view === 'creation' || st.view === 'review' || st.view === 'align' || st.view === 'finalise')
-      : (st.view === 'align');
+      : (st.view === 'align'));
     // Map view order for planner: inputs=0, creation=1, review=2, align=3, finalise=4
     const PLANNER_STAGES = [
       { key: 'inputs',   label: 'Design Inputs',   goView: 'inputs' },

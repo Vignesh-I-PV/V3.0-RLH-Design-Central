@@ -2,22 +2,28 @@
 
 This file is the one place to read before changing anything — either
 yourself, or by pasting this whole file to an AI assistant along with your
-question. It covers: what this project is, how the 3 files fit together,
+question. It covers: what this project is, how the 4 files fit together,
 how to view it, and what to know before editing.
 
 ---
 
-## The 3 files
+## The 4 files
 
 | File | What it is | Do you edit it? |
 |---|---|---|
-| `v3.0-rlh-design-base.jsx` | All the app's code — UI + logic | **Yes** — this is the one you change |
-| `index.html` | Loads React and this jsx file into a browser page | Rarely — only if you need to change fonts/CDN/page title |
+| `v3.0-rlh-design-base.jsx` | Nearly all the app's code — UI + logic | **Yes** — this is the one you change most often |
+| `engine.js` | The multi-leg master-data engine (Class A/B/D/F field model) — split out of the jsx file (later session) since it's pure JS with no JSX in it | Yes, but rarer — only when the underlying data model changes |
+| `index.html` | Loads React, the Babel compiler, `engine.js`, and the jsx file into a browser page, in that order | Rarely — only if you need to change fonts/CDN/page title/script order |
 | `context.md` | This file | Update the changelog at the bottom when you make notable changes |
 
 That's it. No build step, no `npm install`, nothing to compile ahead of
-time. `index.html` reads `v3.0-rlh-design-base.jsx` fresh every time the
-page loads and turns it into a working app right there in the browser.
+time. `engine.js` is loaded as a plain script (needs no compiling — it's
+already plain JS); `index.html` then reads `v3.0-rlh-design-base.jsx` fresh
+every time the page loads, compiles it with Babel, and turns it into a
+working app right there in the browser. Classic (non-module) `<script>`
+tags on one page share a single global scope, so `engine.js`'s functions
+are available to the jsx file exactly as if they were still in the same
+file — no import, no `this.`, no namespace, same bare calls as before.
 
 ---
 
@@ -188,6 +194,22 @@ if you want it) rather than by hand, since the original was about 7,200
 lines. The conversion was verified by actually rendering every module in a
 real browser and comparing it against the original before being handed
 over — this is not a rough draft.
+
+### `engine.js` — the multi-leg master-data engine (separate file, later session)
+Was originally a self-contained block at the top of the jsx file, directly
+above `class NDCApp`; split into its own file since it's pure JS with zero
+JSX/React/`with(B)` coupling — nothing in it needs Babel's transform.
+`index.html` loads it as a plain `<script src="engine.js">` before the jsx
+file is fetched/compiled/eval'd, and classic `<script>` tags on one page
+share a single global scope, so every function/const it declares
+(`monthIsPast`, `setClassDField`, `resolveExistence`, `seedRLHMasterData`,
+etc.) is available to `class NDCApp`'s methods exactly as before the split —
+same bare-identifier calls, no `this.`, no import. See its own header
+comment for the verification that was run before splitting it out (zero
+name collisions with the rest of the app; every identifier it declares is
+referenced from somewhere, either in `class NDCApp`/`View()` or by another
+engine function). Edit it the same way you'd edit any part of the old
+inline block — just in its own file now.
 
 ### The file's 3 sections (see the banner comments inside it)
 1. **Helpers** — `css()` turns a CSS-text string into the object React's
@@ -2213,3 +2235,69 @@ RNG-based approximation. Read the method's own comment block first; the short ve
       phase15/LMDC-rewrite state) — this session's two fixes are not reflected in
       `01_Complete_Context.md` through `PROJECT_CONTEXT.md` yet. Flagged again, same as every
       session since 2026-08-19.
+
+- **2026-08-26 (third session)** — File-size optimization pass, split into two parts: a genuine
+  code split (multi-leg engine → its own file) and one confirmed-dead single-line deletion. No
+  behavior change anywhere; the point of this session was purely reorganizing/shrinking the file,
+  not building anything new.
+  1. **The multi-leg master-data engine moved to its own file, `engine.js`.** Previously a
+     ~730-line block sitting directly above `class NDCApp` inside `v3.0-rlh-design-base.jsx`.
+     It's pure JS — zero JSX, zero React, zero `with(B)` coupling — so it doesn't need Babel's
+     transform at all; it's now loaded via a plain `<script src="engine.js">` in `index.html`,
+     positioned after the React/Babel CDN tags and before the main file is fetched/compiled/
+     eval'd. Classic (non-module) `<script>` tags on one page share a single global lexical
+     scope, so `engine.js`'s functions/consts (`monthIsPast`, `setClassDField`,
+     `resolveExistence`, `seedRLHMasterData`, all 63 of them) remain available to `class
+     NDCApp`'s methods exactly as before — same bare-identifier calls, no imports, no `this.`,
+     nothing in `class NDCApp` itself changed.
+     - **Verified safe before touching anything, not just after**: checked programmatically (not
+       by inspection) that none of the 63 top-level names `engine.js` declares collide with
+       anything declared elsewhere in the app file, and that every one of those 63 is referenced
+       from somewhere (either `class NDCApp`/`View()`, or another function inside `engine.js`
+       itself) — so the split introduces zero orphaned exports and zero silent shadowing.
+     - **Then verified again after the split, by actually running it**, not just compiling it:
+       a Node `vm`-based simulation reproduces index.html's real load sequence — `engine.js`
+       runs first in a shared context (stubbing just enough of `React`/`document`/`window` for
+       the class definition and mount lines to execute), then the Babel-compiled main file runs
+       via indirect eval in that SAME context, exactly like the browser's `(0, eval)(compiled)`
+       call does. All 63 engine identifiers resolved correctly as bare globals, and the compiled
+       main file executed against them with zero `ReferenceError`. This is the strongest
+       confirmation available without an actual browser render — full end-to-end proof of the
+       shared-scope mechanism, not just "it typechecks."
+     - The standalone verification harness (`tooling/dataLayerHarness.js`) was re-run against a
+       fresh copy of the new `engine.js` (plus its `module.exports` line, Node-only, absent from
+       the browser file) — still 109 passed, 0 failed, confirming zero functional drift from the
+       extraction.
+     - **Side benefit**: the harness's own extraction step (previously: manually carve a
+       substring out of a 15,000+-line file by line-number markers) is now a straight file copy
+       of `engine.js` plus the exports line — simpler and less error-prone going forward.
+     - `index.html` updated: new `<script src="engine.js">` tag, plus updated inline comments
+       explaining the load order. `context.md`'s own "The 3 files" section became "The 4 files."
+  2. **Deleted one confirmed-dead line**: `'rlh.rlhDocks2': { class: 'D', leg: 'rlh' }` in
+     `FIELD_CLASS` — a single-line leftover whose own inline comment already said
+     `// (kept distinct key name unused; rlh.docks above already covers RLH Docks)`. Confirmed
+     zero references anywhere in the app (`FIELD_CLASS` is only ever looked up by exact key,
+     never enumerated, so nothing could have been reading this entry). This is the one item from
+     this session's "what's stale" review that was a genuine accidental leftover rather than a
+     deliberately-preserved decision — see item 3 below for what was explicitly left alone and
+     why.
+  3. **Explicitly NOT touched, on purpose** — several other things surfaced as "stale-looking"
+     during this same review turned out to be *deliberately* preserved dead code with their own
+     documented "don't remove without a product decision" reasoning already on record in this
+     file's own prior entries, which is a different category from an accidental leftover:
+     `pastNav`/`isPastCycle`/`cyclesummary` (the retired cosmetic past-cycle nav mode, ~13
+     references), `remindedPlans`/`onNudge` (the removed "Nudge reviewers" plumbing, 6
+     references), the whole Command Center module (hidden, not deleted, "retrieve it later"),
+     and the `feas: ['RLH']` Vehicle Master field (still read by Route Planner's own filtering).
+     None of these were removed this session — flagging here so a future pass doesn't assume
+     "stale code cleanup" already covered them.
+  - **No live render/browser test has been done on any of this** — same standing caveat as every
+    session before it. The `vm`-based shared-scope simulation above is a genuinely strong proxy
+    for "the split doesn't break the loading mechanism," but it stubs React/DOM rather than using
+    the real thing, so it cannot catch a rendering-level issue — only a scope/reference issue.
+    Deploy-testing the actual page load is still the real confirmation.
+  - **Files changed this session**: `v3.0-rlh-design-base.jsx` (engine block removed, replaced
+    with a pointer comment; `rlhDocks2` line was already gone since it lived inside that removed
+    block), `engine.js` (new file), `index.html` (new script tag + updated comments),
+    `context.md` (this entry + the "4 files" table update + a new section on `engine.js`'s
+    relationship to the rest of the app).

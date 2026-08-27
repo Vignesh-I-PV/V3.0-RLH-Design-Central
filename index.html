@@ -27,6 +27,14 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+<!-- Multi-leg master-data engine (Class A/B/D/F field model). Split out of
+     v3.0-rlh-design-base.jsx into its own file (later session) since it's
+     pure JS with no JSX in it -- loaded as a plain script (no Babel needed),
+     BEFORE the main app file, so its functions/consts land in the same
+     shared global scope the main file's eval'd code reads from. See
+     engine.js's own header comment for the full explanation. -->
+<script src="engine.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -64,7 +72,10 @@
 
 <script>
 /* Loads v3.0-rlh-design-base.jsx as plain text, compiles it in the browser
-   with Babel, and runs it. This needs the page to be served over http/https
+   with Babel, and runs it. engine.js (loaded above, as a plain script) has
+   already run by this point, so its functions/consts are already in the
+   shared global scope this eval'd code reads from -- see engine.js's own
+   header comment. This needs the page to be served over http/https
    (GitHub Pages, or any local server) -- browsers block this kind of file
    loading when you just double-click index.html. See context.md -> "Viewing
    this locally" if you want to preview before pushing to GitHub. */

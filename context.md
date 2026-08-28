@@ -2518,3 +2518,90 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - **Files changed**: `v3.0-rlh-design-base.jsx` (LMDC Master's Pincodes column; the full
     SC-DC Mapping state, class methods, and JSX), `engine.js` (`groupDcsBySharedPincode()`),
     `context.md` (this entry).
+
+- **2026-08-28 — Cosmetic cleanup, Phase A (sidebar badges + sub-tab counts).** Grounded in a
+  direct screenshot comparison against a reference design (same app, cleaner chrome) rather than
+  guessing at scope — the reference kept every count that's genuinely content-navigation-relevant
+  (Design Review's own "RLH Route Plan (18)" tab, its rail's "7 of 7" header) and removed only two
+  specific things: sidebar nav badges, and the count-in-parens on Design Inputs' 4 sub-tabs. Scope
+  narrowed to exactly that, not a blanket "remove every number in the app."
+  1. **Sidebar badges removed** — Design Inputs' `inputChecks` count (amber), Ops Alignment's
+     `needsDecision`/`awaitingFeedback` count (blue, both Planner and Ops Lead nav), and Network
+     Map's static `NEW` tag (green). All three were pure presentation (`badge`/`tone` keys on the
+     nav item objects); `hasBadge: !!it.badge` already degrades cleanly to "don't render" when the
+     key is absent, so no defensive changes needed elsewhere.
+     - Two now-orphaned local variables cleaned up as a direct consequence: `inputChecks` (was
+       computed solely to feed the removed badge, no other reader anywhere) and `inputsTabCount`
+       (same story, and existed as two separate near-duplicate declarations in two different
+       methods per an existing comment explaining why — both removed, not just one).
+  2. **Design Inputs' 4 sub-tab labels lost their `(N)` count** — `Volume Inputs (4)` →
+     `Volume Inputs`, etc. — but the existing (ⓘ) hover-tooltip next to each label was **left
+     completely untouched**, both the mechanism (`.ndc-tip`/`.ndc-tip-pop`, already built and
+     already used in three other places in the app — `mastersTabs`, `nodeSteps`, `ingTabs`) and
+     its content (`IT_TIP`, already reasonable, e.g. "AutoDML-sourced node list for this cycle.
+     Review any flagged nodes before proceeding."). This wasn't something to build — it already
+     existed and already matches the "quick one-line hover hint" half of the definition-box
+     design confirmed this session; only the numeric count needed to go.
+  3. **Investigated, found already correct, left alone**: the "Masters — shared across all design
+     cycles" banner, suspected from a screenshot comparison to be mis-styled as a warning. Checked
+     the actual rendered JSX directly — it's already neutral-styled (gray `#F2F5FA` background,
+     gray icon, not amber) — the only occurrence of this text in the whole file. Concluded the
+     apparent warning-vs-info difference between the two screenshots was most likely a rendering/
+     export artifact (design-mockup export vs. live browser screenshot), not a real code bug, and
+     did not change anything here rather than "fixing" something that wasn't actually broken.
+  - **Verification**: compiled clean; harness still 118/118 (untouched this pass); confirmed via
+    direct JSX inspection that the badge `<span>` conditionals (`{(item.hasBadge) ? (<>...</>) :
+    null}`) render nothing at all now rather than leaving an empty pill artifact.
+  - **Still to come, per this session's discussion**: a much larger pass — sweeping decorative/
+    explanatory text added across the app's history (not just this module) per an agreed rubric
+    (keep: validation messages, confirmation-dialog copy, column/status labels, mandatory build-
+    spec caveats, functional hints; remove: descriptive subtitles, tour-guide-style narration),
+    and replacing it with one consistent "definition box" component per page/tab (relevance +
+    action, styled like the Masters banner above) — confirmed this session to sit ALONGSIDE the
+    existing (ⓘ) tooltips, not replace them: tooltip = quick one-line hint, box = the fuller
+    context. Not yet started; scope is confirmed but the sweep itself hasn't begun.
+
+- **2026-08-28 (later same day) — Cosmetic cleanup, Phase A extended app-wide.** Requested
+  explicitly as "perform the same across this app, not just the tabs we discussed" — Phase A's
+  count/badge removal, done comprehensively rather than only on Design Inputs. Searched the whole
+  file systematically (every `_tab()`-shaped construction, every ` (' + n + ')'` label
+  concatenation, every `.count` render) rather than guessing which screens might have the same
+  pattern, and found **8 more instances** beyond the 3 already fixed earlier today:
+  - **Label-concatenation instances** (count baked directly into the tab's label string):
+    `mastersTabs` (Node & Vehicle Master's 4 sub-tabs — "Sort Center Master (80)" → "Sort Center
+    Master", etc.) and `nodeSteps` (Node Inputs' own internal step tabs).
+  - **Separate-`count`-property instances** (rendered as `{label} {count}` or `{label} · {count}`
+    next to the label): `alignFilterSeg` and `opsFilterSeg` (Ops Alignment's 2×2 status-filter
+    grid, both personas), `schedAlignFilterSeg` and `schedOpsFilterSeg` (Route Scheduler's own
+    equivalent), and 4 separate zone-chip constructions (`zoneChipsStep1` on Design Creation,
+    `reviewSchedZoneChips`/`schedAlignZoneChips`/`schedOpsZoneChips` on Route Scheduler's Design
+    Review and Ops Alignment). Fixed at the render layer (stopped displaying `{x.count}`), left
+    the underlying `count:` computation in each object untouched — same conservative "strip from
+    display, don't risk touching data" approach as the sidebar badges, and harmless to leave since
+    nothing else reads that specific property once it's not being rendered.
+  - **A genuinely useful discovery made along the way**: Ops Alignment's own zone chips
+    (`alignZoneChips`/`opsZoneChips`) were *already* rendering with no count at all
+    (`{z.label}`, nothing else) — meaning the "plain label, no count" style wasn't something being
+    invented here, it already existed as the more common pattern in this exact codebase. This
+    round brings the remaining 8 spots in line with that, rather than introducing a new style
+    from scratch.
+  - **Checked and explicitly did NOT touch**: the CTIER/RTIER tier-strip "SOON" tags (Node
+    Mapping, etc.) — those are status flags ("this isn't built yet"), not decorative counts, and
+    the reference screenshot that prompted this whole cleanup pass showed an equivalent tag kept,
+    not removed. Also checked NLH/FM Carting's own `legTabs` (mirrors RLH's 4-tab Design Inputs
+    shape) — already had no count to begin with, confirmed clean by inspection rather than assumed.
+  - **One assumption from the earlier same-day entry turned out to be wrong, corrected here**: that
+    entry expected Design Review's tab strip to have a kept `"RLH Route Plan (18)"`-style count
+    that needed preserving as an exception. Checked the actual `RTIER` construction directly — our
+    real code's Design Review tab label is plain `'RLH'`, no count baked in at all. The `(18)` in
+    the reference screenshot was from a different mockup than what's actually in this codebase, so
+    there was never an exception to carve out here — good that this got verified against the real
+    code rather than assumed correct from the earlier entry.
+  - **Verification**: compiled clean; harness still 118/118 (untouched, engine-layer work); a
+    final grep confirmed zero remaining `.count` renders and zero remaining label-concatenated
+    counts anywhere in the file; confirmed the sidebar's `hasBadge` mechanism itself is harmless to
+    leave in place structurally (evaluates to `false` for every nav item now, same "leave the
+    plumbing, remove the usage" approach as the rest of this pass).
+  - **Still not started**: the decorative-text sweep and the definition-box component itself (both
+    scoped and confirmed earlier today, per the discussion log above) — this entry is scope-limited
+    to finishing the count/badge removal comprehensively before that larger piece begins.

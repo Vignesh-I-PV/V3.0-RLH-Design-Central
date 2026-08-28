@@ -2397,7 +2397,7 @@ NLH cycle: {schedNlhMonthLabel}
 <aside style={css(`width:260px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#FAFBFD; padding:14px; overflow:auto;`)}>
 <input value={schedulerSearch} onChange={onSchedulerSearch} placeholder={"Search SC code or name"} style={css(`width:100%; height:34px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; margin-bottom:12px; box-sizing:border-box;`)} />
 <div style={css(`display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;`)}>
-{(zoneChipsStep1 || []).map((z, __i42) => (<React.Fragment key={__i42}><button onClick={z.onClick} style={css(`font-size:11.5px; padding:4px 10px; border-radius:999px; border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+{(zoneChipsStep1 || []).map((z, __i42) => (<React.Fragment key={__i42}><button onClick={z.onClick} style={css(`font-size:11.5px; padding:4px 10px; border-radius:999px; border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
 </div>
 <label style={css(`display:flex; align-items:center; gap:7px; font-size:12.5px; color:#5A5E66; cursor:pointer; margin-bottom:12px;`)}><input type={"checkbox"} checked={allVisibleSelected} onChange={onSelectAllVisible} style={css(`width:15px; height:15px; cursor:pointer;`)} />Select all visible</label>
 {(scsWithFinalEmpty) ? (<><div style={css(`padding:20px 6px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Finalised RLH plans yet.</div></>) : ((schedulerScGroups || []).map((g, __i43) => (<React.Fragment key={__i43}>
@@ -3231,7 +3231,7 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:11px; color:#5A5E66;`)}>{schedReviewList.length} SC{schedReviewList.length === 1 ? '' : 's'}</span>
 </div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(reviewSchedZoneChips || []).map((z, __i60) => (<React.Fragment key={__i60}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+{(reviewSchedZoneChips || []).map((z, __i60) => (<React.Fragment key={__i60}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
 {(schedReviewEmpty) ? (<>
@@ -3591,11 +3591,11 @@ NLH cycle: {schedNlhMonthLabel}
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
 <div style={css(`padding:12px 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(schedAlignFilterSeg || []).map((f, __iA1) => (<React.Fragment key={__iA1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+{(schedAlignFilterSeg || []).map((f, __iA1) => (<React.Fragment key={__iA1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label}</span></button></React.Fragment>))}
 </div>
 </div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(schedAlignZoneChips || []).map((z, __iA2) => (<React.Fragment key={__iA2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+{(schedAlignZoneChips || []).map((z, __iA2) => (<React.Fragment key={__iA2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
 </div>
 <div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedAlignPlanCountLabel}</div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
@@ -3734,7 +3734,7 @@ NLH cycle: {schedNlhMonthLabel}
     replaces the old 1-row-of-4 flex:1 strip, which truncated every label. */}
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label} {fs.count}</span></button></React.Fragment>))}
+{(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label}</span></button></React.Fragment>))}
 </div>
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
@@ -4625,11 +4625,11 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 <div style={css(`padding:0 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(schedOpsFilterSeg || []).map((f, __iC1) => (<React.Fragment key={__iC1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label} {f.count}</span></button></React.Fragment>))}
+{(schedOpsFilterSeg || []).map((f, __iC1) => (<React.Fragment key={__iC1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label}</span></button></React.Fragment>))}
 </div>
 </div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
-{(schedOpsZoneChips || []).map((z, __iC2) => (<React.Fragment key={__iC2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label} · {z.count}</button></React.Fragment>))}
+{(schedOpsZoneChips || []).map((z, __iC2) => (<React.Fragment key={__iC2}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#0D7377' : '#E6EBF2'}; background:${z.active ? '#E9F5F5' : '#fff'}; color:${z.active ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
 </div>
 <div style={css(`padding:0 16px 8px; font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{schedOpsPlanCountLabel}</div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 9px 12px;`)}>
@@ -4758,7 +4758,7 @@ NLH cycle: {schedNlhMonthLabel}
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
-{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label} {fs.count}</span></button></React.Fragment>))}
+{(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label}</span></button></React.Fragment>))}
 </div>
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
@@ -8687,7 +8687,6 @@ class NDCApp extends React.Component {
     const fmtL = (n) => (n / 100000).toFixed(1) + 'L';
     const itab = st.inputsTab;
     const remaining = d.autodml.filter(c => !st.resolved[c.key]);
-    const inputsTabCount = { volume: 4, nodes: (d.autodmlNodes || []).length, masters: d.scs.length, ingestion: 3 };
     const allResolved = d.autodml.every(c => st.resolved[c.key]);
     // D2 — gate is now consumed only by the in-context AutoDML banner (clean/dirty); the header pill was removed.
     const gate = allResolved
@@ -8809,7 +8808,7 @@ class NDCApp extends React.Component {
     const nstep = st.nodeStep || 'active';
     const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
     const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
-    const nodeSteps = nodeStepMeta.map(s => ({ label: s[1] + ' (' + s[2] + ')', tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
+    const nodeSteps = nodeStepMeta.map(s => ({ label: s[1], tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
     const anFiltered = d.scs.filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     // AutoDML flagged-link table (matches Vignesh AutoDML Node View). Each d.autodmlNodes row is one
     // flagged LMSC→LMDC link; enrich it with a synthesized LMDC name, capacity, link status, mapped SCs
@@ -9296,7 +9295,7 @@ class NDCApp extends React.Component {
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
       rlhCyclePast: this.isRlhCyclePast(), rlhCycleLabel: monthLabel(st.activeCycleMonth.rlh),
-      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.'], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Every LMDC across the network, one row per DC — location/capacity/status from AutoDML & Node Inputs; a few operating parameters editable here.']].map(t => ({ label: t[1] + ' (' + t[2] + ')', tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
+      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.'], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Every LMDC across the network, one row per DC — location/capacity/status from AutoDML & Node Inputs; a few operating parameters editable here.']].map(t => ({ label: t[1], tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
       scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
       addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
       addVehOpen: !!st.addVehOpen,
@@ -14454,7 +14453,6 @@ class NDCApp extends React.Component {
     const readyAck = d.plans.filter(p => eff(p) === 'In Alignment' && liveDecided(p)).length;
     const readyFinalise = d.plans.filter(p => eff(p) === 'Acknowledged').length;
     const finalised = d.plans.filter(p => eff(p) === 'Finalised').length;
-    const inputChecks = d.autodml.filter(c => !st.resolved[c.key]).length;
     // Plans where runs have completed but planner hasn't yet reviewed metrics or pushed to Ops.
     const readyReview = d.plans.filter(p => eff(p) === 'Created').length;
 
@@ -14480,11 +14478,11 @@ class NDCApp extends React.Component {
       // group and its nav item are intentionally commented out rather than deleted, so it's a
       // one-line restore: uncomment the line below and it's back in the sidebar.
       // { label: 'HOME', items: [{ key: 'command', label: 'Command Center', icon: ICON.dash }] },
-      { label: 'PLAN', items: [{ key: 'inputs', label: 'Design Inputs', icon: ICON.inputs, badge: inputChecks ? String(inputChecks) : '', tone: 'warn' }, { key: 'creation', label: 'Design Creation', icon: ICON.create }] },
-      { label: 'REVIEW & ALIGN', items: [{ key: 'review', label: 'Design Review', icon: ICON.review }, { key: 'align', label: 'Ops Alignment', icon: ICON.align, badge: needsDecision ? String(needsDecision) : '', tone: 'accent' }, { key: 'map', label: 'Network Map', icon: ICON.map, badge: 'NEW', tone: 'new' }] },
+      { label: 'PLAN', items: [{ key: 'inputs', label: 'Design Inputs', icon: ICON.inputs }, { key: 'creation', label: 'Design Creation', icon: ICON.create }] },
+      { label: 'REVIEW & ALIGN', items: [{ key: 'review', label: 'Design Review', icon: ICON.review }, { key: 'align', label: 'Ops Alignment', icon: ICON.align }, { key: 'map', label: 'Network Map', icon: ICON.map }] },
     ];
     const opsNav = [
-      { label: 'MY REVIEWS', items: [{ key: 'align', label: 'Ops Alignment', icon: ICON.align, badge: awaitingFeedback ? String(awaitingFeedback) : '', tone: 'accent' }, { key: 'map', label: 'Network Map', icon: ICON.map }] },
+      { label: 'MY REVIEWS', items: [{ key: 'align', label: 'Ops Alignment', icon: ICON.align }, { key: 'map', label: 'Network Map', icon: ICON.map }] },
     ];
     const pastNav = [
       { label: 'VIEW', items: [{ key: 'cyclesummary', label: 'Finalised Plans' }, { key: 'map', label: 'Network Map' }] },
@@ -14771,7 +14769,6 @@ class NDCApp extends React.Component {
         // Pull inputsTabs data — already computed inside inputsVals() above via spread.
         // Re-derive here using the same state to avoid a cross-method dependency.
         const itab = st.inputsTab || 'volume';
-        const inputsTabCount = { volume: 4, nodes: (d.autodmlNodes || []).length, masters: d.scs.length, ingestion: 3 };
         // Tooltip descriptions per tab
         const IT_TIP = {
           volume:    'Upload shipment volume CSV files for FM, FMSC, and LMDC flows. One active file per cycle.',
@@ -14786,7 +14783,7 @@ class NDCApp extends React.Component {
           const isActive = itab === t[0];
           // Red dot: Node Inputs has flags needing review; no dot on other inputs tabs
           const showDot = t[0] === 'nodes' && autodmlFlagCount > 0;
-          return _tab(t[1] + ' (' + inputsTabCount[t[0]] + ')', isActive, () => this.setState({ inputsTab: t[0] }),
+          return _tab(t[1], isActive, () => this.setState({ inputsTab: t[0] }),
             null, null, null, false, IT_TIP[t[0]], showDot);
         });
       } else if (v === 'creation' && planner) {

@@ -79,7 +79,33 @@ function retargetMonthStrings(obj, fromAbbr, toAbbr, fromFull, toFull) {
   return obj;
 }
 
-const RLH_TRANSACTIONAL_KEYS = ['runs', 'plans', 'schedulerPlans', 'autodml', 'autodmlDetails', 'autodmlNodes', 'volumeFiles', 'nodeAdditions', 'nodeClosures', 'migrations', 'nodeChangesUnified'];
+const RLH_TRANSACTIONAL_KEYS = ['runs', 'plans', 'schedulerPlans', 'autodml', 'autodmlDetails', 'autodmlNodes', 'volumeFiles', 'nodeAdditions', 'nodeClosures', 'migrations', 'nodeChangesUnified', 'mappingRuns'];
+// 'mappingRuns' (later session) — SC-DC Mapping / Node Mapping module. Nested inside RLH's own
+// tier strip (not a peer leg the way NLH/FM are), so it rides the exact same per-cycle sync
+// mechanism every other RLH transactional field already uses -- componentDidUpdate() captures it
+// into rlhCycleData[month] automatically, no new plumbing needed. See the module's own build spec
+// (08_Handover_SC-DC_Mapping.md) for the full picture; this file only needs the one array entry
+// plus the matching default below.
+//
+// mappingRun record shape (V1, scoped down from the original spec during a discussion pass --
+// see that discussion for what was deferred and why):
+//   {
+//     id: string, name: string,
+//     status: 'Draft' | 'Running' | 'Completed' | 'Committed',
+//       -- deliberately NOT 'Finalised': that word means "went through full Ops Alignment"
+//       elsewhere in this app, which this module has no equivalent of.
+//     scCodes: string[],   -- manually multi-selected in Step 1, minimum 2 (a 1-SC "cluster" isn't
+//                             allowed -- redirect to RLH v3 Route Planner instead)
+//     dcCodes: string[],   -- manually specified in Step 2 (eligibility COMPUTATION -- nearest-SC
+//                             logic, Tier-3 pincode-split fallback -- is deferred for V1; DCs are
+//                             a direct planner input here, not system-computed)
+//     params: { rho: number (0-1 slider, default 0.2), hw: 0|0.5|1, refRunId: string|null,
+//               spanCostOn: boolean, baselineSource: 'finalisedPlan'|'nearestSc', baselinePlanId: string|null },
+//     createdAt: string, committedAt: string|null,
+//     results: null | { solveTimeSeconds: number, totalCost: number, totalVolume: number,
+//               perSc: [...], lanes: [...], unservedDcs: [...] },
+//   }
+// Nothing above is wired into the UI yet -- this is the data-model scaffolding only (Phase 0).
 const RLH_MASTER_KEYS = ['scs', 'VEH', 'scVehAvail', 'lmdcs', 'totals'];
 
 function extractRlhTransactional(data) {
@@ -116,7 +142,7 @@ function suffixRlhIdsForMonth(bucket, month) {
 // generated until the user actually triggers Design Creation for it. Shapes checked against the
 // actual buildSeed() return (autodmlDetails is an object map, everything else is an array).
 function emptyRlhTransactional() {
-  return { runs: [], plans: [], schedulerPlans: [], autodml: [], autodmlDetails: {}, autodmlNodes: [], volumeFiles: [], nodeAdditions: [], nodeClosures: [], migrations: [], nodeChangesUnified: [] };
+  return { runs: [], plans: [], schedulerPlans: [], autodml: [], autodmlDetails: {}, autodmlNodes: [], volumeFiles: [], nodeAdditions: [], nodeClosures: [], migrations: [], nodeChangesUnified: [], mappingRuns: [] };
 }
 
 const MONTH_ABBR_FULL = { Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April', May: 'May', Jun: 'June', Jul: 'July', Aug: 'August', Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December' };
@@ -757,3 +783,40 @@ function findNlhIngestedPlanById(store, planId) {
   return null;
 }
 
+// ---------------------------------------------------------------------------
+// SC-DC Mapping — pincode Union-Find (later session)
+// ---------------------------------------------------------------------------
+// groupDcsBySharedPincode(dcs) — dcs: [{ code, pincodes: string[] }, ...]. Returns a Map from
+// DC code to a groupId (a chosen "root" DC code) such that any two DCs sharing AT LEAST ONE
+// pincode end up in the same group, transitively (DC-A ~ DC-B via pincode P1, DC-B ~ DC-C via a
+// DIFFERENT pincode P2 => A, B, and C all share the same group, even though A and C have no
+// pincode directly in common). This is the real mechanism behind "same-pincode DCs must land on
+// the same SC" -- per the product conversation, the relationship is genuinely many-to-many (one
+// DC can list several pincodes, one pincode can appear on several DCs), so a naive "group by
+// exact pincode string" would under-group whenever a DC bridges two pincode sets. A DC with no
+// pincodes at all (or an empty array) gets its own singleton group (itself as root) -- it isn't
+// constrained by anything.
+function groupDcsBySharedPincode(dcs) {
+  const parent = {};
+  const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; };
+
+  dcs.forEach(dc => { parent[dc.code] = dc.code; });
+
+  const byPincode = {};
+  dcs.forEach(dc => {
+    (dc.pincodes || []).forEach(pc => {
+      if (!pc) return;
+      byPincode[pc] = byPincode[pc] || [];
+      byPincode[pc].push(dc.code);
+    });
+  });
+  Object.keys(byPincode).forEach(pc => {
+    const codes = byPincode[pc];
+    for (let i = 1; i < codes.length; i++) union(codes[0], codes[i]);
+  });
+
+  const result = new Map();
+  dcs.forEach(dc => { result.set(dc.code, find(dc.code)); });
+  return result;
+}

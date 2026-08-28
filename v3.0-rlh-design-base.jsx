@@ -1279,7 +1279,7 @@ All modules
 </div>
 <div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size and Unloading Time can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
+<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size, Unloading Time and Pincodes can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
 </div>
 {(hasLmdcUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1295,8 +1295,8 @@ All modules
 </>) : null}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
-<div style={css(`min-width:1280px;`)}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`min-width:1420px;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMSC</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
@@ -1311,10 +1311,11 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>D0 CUTOFF</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap;`)}>MAX VEHICLE SIZE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>UNLOADING TIME (MIN)</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#1F6F5C; letter-spacing:0.04em; white-space:nowrap; border-left:3px solid #1F6F5C;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:${l.pending ? '#8E96A3' : '#5A5E66'}; font-style:${l.pending ? 'italic' : 'normal'}; white-space:nowrap;`)}>{l.lmscCode}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
@@ -1342,6 +1343,8 @@ All modules
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.unloadMin}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid #1F6F5C;`)} title={l.pincodes.join(', ') || 'No pincodes mapped'}>{l.pincodesLabel}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #1F6F5C;`)}><input type={"text"} value={l.draftPincodes} onInput={l.onDraftPincodes} placeholder={"e.g. 110001, 110002"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={l.onEdit} disabled={rlhCyclePast} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {/* 2026-08-26 fix (#11) — Deactivate/Reactivate, same pattern as SC Master, now that LMDC rows have real per-DC existence tracking. */}
@@ -2613,6 +2616,250 @@ NLH cycle: {schedNlhMonthLabel}
 </>) : null}
 </>) : null}
 </>) : (<>
+{(isCreationTierNodeMapping) ? (<>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; gap:6px;`)}>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${mapAccent}; background:${mapAccent}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+</div>
+</div>
+{(!mapSection) ? (<>
+{/* Entry landing — no run started yet this visit. */}
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:460px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
+<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAF3EF; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={mapAccent} strokeWidth={"1.8"}><path d={"M9 20l-5.5-2.2V6.4L9 4l6 2 5.5-2.2v11.4L15 17M9 20V6M15 19V5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>SC-DC Mapping</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; line-height:1.5;`)}>Joint multi-SC assignment planning \u2014 upstream of Route Planner, not a peer of it. Cluster 2+ SCs, review the suggested DC assignment, and commit the migrations you accept.</div>
+<button onClick={goMapping} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 20px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:6px;`)}>Start a mapping run<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+</div>
+</>) : null}
+{(mapSection === 'wizard') ? (<>
+<div style={css(`flex:1; overflow-y:auto; padding:28px 40px;`)}>
+{/* Stepper */}
+<div style={css(`display:flex; align-items:flex-start; max-width:760px; margin:0 auto 32px;`)}>
+{(mapStepper || []).map((s, __iMs) => (<React.Fragment key={__iMs}>
+<div style={css(`display:flex; flex-direction:column; align-items:center; ${s.flex ? 'flex:1;' : ''} cursor:pointer;`)} onClick={s.onClick}>
+<div style={css(`width:32px; height:32px; border-radius:999px; background:${s.numBg}; color:${s.numFg}; border:2px solid ${s.numBd}; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;`)}>{s.isDone ? '\u2713' : s.n}</div>
+<div style={css(`font-size:11.5px; font-weight:${s.labelWeight}; color:${s.labelColor}; margin-top:7px; text-align:center; white-space:nowrap;`)}>{s.label}</div>
+<div style={css(`font-size:10px; color:${s.subColor}; margin-top:1px;`)}>{s.subLabel}</div>
+</div>
+{(s.hasLine) ? (<><div style={css(`flex:1; height:2px; background:${s.lineBg}; margin-top:15px;`)} /></>) : null}
+</React.Fragment>))}
+</div>
+<div style={css(`max-width:640px; margin:0 auto;`)}>
+{/* ===== STEP 1 — Cluster Definition ===== */}
+{(mapStep === 1) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Cluster Definition</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Pick at least 2 SCs to include in this joint-solve run. No distance guidance is shown here \u2014 pick freely.</div>
+<input value={mapDraftName} onInput={onMapSetName} placeholder={"Cluster / run name (optional)"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13px; margin-bottom:16px; box-sizing:border-box;`)} />
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>{mapScCount} SC{mapScCount === 1 ? '' : 's'} selected</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px; max-height:360px; overflow-y:auto; border:1px solid #E6EBF2; border-radius:8px; padding:6px;`)}>
+{(mapScList || []).map((s, __iMsc) => (<React.Fragment key={__iMsc}>
+<div onClick={s.onClick} style={css(`display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:7px; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)} onMouseEnter={(e) => hoverOn(e, `background:${s.selected ? '#EAF3EF' : '#F7F9FC'};`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:7px; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)}>
+<div style={css(`width:18px; height:18px; border-radius:5px; border:2px solid ${s.selected ? mapAccent : '#C3C9D4'}; background:${s.selected ? mapAccent : '#fff'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(s.selected) ? (<><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"3"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}</div>
+<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{s.code} \u2014 {s.name}</div>
+<div style={css(`font-size:10.5px; color:#8E96A3;`)}>{s.zone}</div>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{/* ===== STEP 2 — DC Group ===== */}
+{(mapStep === 2) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>DC Group</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Manually add the DCs this run should cover \u2014 both already-mapped DCs and unmapped ones from Node Inputs.</div>
+<div style={css(`display:flex; gap:8px; margin-bottom:14px;`)}>
+<input value={mapDcPicker} onInput={onMapDcPicker} onKeyDown={(e) => { if (e.key === 'Enter') onMapAddDc(); }} placeholder={"DC code, e.g. GGN01-455"} style={css(`flex:1; height:38px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13px; box-sizing:border-box;`)} />
+<button onClick={onMapAddDc} style={css(`height:38px; padding:0 16px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)}>Add</button>
+</div>
+{(mapUnmappedCandidates.length > 0) ? (<>
+<div style={css(`margin-bottom:14px; padding:10px 12px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:7px;`)}>UNMAPPED \u2014 FROM NODE INPUTS</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:6px;`)}>
+{(mapUnmappedCandidates || []).map((a, __iMuc) => (<React.Fragment key={__iMuc}><button onClick={() => onMapAddDcCandidate(a.dc)} style={css(`height:26px; padding:0 10px; border:1px solid #EDD9AF; background:#fff; color:#C77B00; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ {a.dc}</button></React.Fragment>))}
+</div>
+</div>
+</>) : null}
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>{mapDcCount} DC{mapDcCount === 1 ? '' : 's'} in this run</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px; max-height:320px; overflow-y:auto;`)}>
+{(mapDcList || []).map((dc, __iMdc) => (<React.Fragment key={__iMdc}>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
+<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{dc.code}</div>
+<div style={css(`font-size:11px; color:${dc.pending ? '#C77B00' : '#8E96A3'};`)}>{dc.pending ? 'Unmapped' : ('Currently: ' + dc.currentSc)}</div>
+<button onClick={dc.onRemove} aria-label={"Remove " + dc.code} style={css(`width:22px; height:22px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{/* ===== STEP 3 — Baseline & Parameters ===== */}
+{(mapStep === 3) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Baseline &amp; Parameters</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Set the run's baseline mapping source and solver parameters.</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>BASELINE MAPPING SOURCE</div>
+<div style={css(`display:flex; gap:8px; margin-bottom:20px;`)}>
+<button onClick={() => onMapBaselineSource('finalisedPlan')} style={css(`flex:1; height:44px; padding:0 12px; border:1px solid ${mapBaselineSource === 'finalisedPlan' ? mapAccent : '#E6EBF2'}; background:${mapBaselineSource === 'finalisedPlan' ? '#EAF3EF' : '#fff'}; color:#14171F; font-family:inherit; font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; text-align:left;`)}>Existing Finalised RLH plan<br /><span style={css(`font-weight:400; color:#8E96A3; font-size:11px;`)}>{mapBaselinePlans.length} available for the selected SCs</span></button>
+<button onClick={() => onMapBaselineSource('nearestSc')} style={css(`flex:1; height:44px; padding:0 12px; border:1px solid ${mapBaselineSource === 'nearestSc' ? mapAccent : '#E6EBF2'}; background:${mapBaselineSource === 'nearestSc' ? '#EAF3EF' : '#fff'}; color:#14171F; font-family:inherit; font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; text-align:left;`)}>Auto-computed nearest-SC<br /><span style={css(`font-weight:400; color:#8E96A3; font-size:11px;`)}>Fallback, no prior plan needed</span></button>
+</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>CROSS-SC MIGRATION PENALTY (\u03c1) \u2014 {mapRho.toFixed(2)}</div>
+<input type={"range"} min={"0"} max={"1"} step={"0.01"} value={mapRho} onInput={onMapRho} style={css(`width:100%; margin-bottom:20px; accent-color:${mapAccent};`)} />
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>HISTORICAL WEIGHT (HW)</div>
+<div style={css(`display:flex; gap:8px; margin-bottom:6px;`)}>
+{(mapHwOptions || []).map((h, __iMhw) => (<React.Fragment key={__iMhw}><button onClick={h.onClick} style={css(`flex:1; height:36px; border:1px solid ${h.active ? mapAccent : '#E6EBF2'}; background:${h.active ? mapAccent : '#fff'}; color:${h.active ? '#fff' : '#14171F'}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:7px; cursor:pointer;`)}>{h.label}</button></React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-bottom:20px;`)}>Reference-plan pool: this module's own past Committed runs ({mapPastRuns.length} available) \u2014 separate from RLH's or Route Scheduler's own HW history.</div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>D0 penalty / span-cost</div><div style={css(`font-size:11px; color:#8E96A3;`)}>On by default</div></div>
+<button onClick={onMapSpanCostToggle} style={css(`width:42px; height:24px; border-radius:999px; border:none; background:${mapSpanCostOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:18px; height:18px; border-radius:999px; background:#fff; position:absolute; top:3px; left:${mapSpanCostOn ? '21px' : '3px'}; transition:left 120ms;`)} /></button>
+</div>
+</>) : null}
+{/* ===== STEP 4 — Preview & Trigger ===== */}
+{(mapStep === 4) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Preview &amp; Trigger</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{mapScCount} SCs \u00b7 {mapDcCount2} DCs in this run.</div>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12px; color:#14171F;`)}>Dock scheduling isn't yet integrated into this solver \u2014 arrival time, D0 flag, hold time and TAT in this run's results aren't reliable. Valid for SC/DC assignment and cost analysis only, not operational timing.</span>
+</div>
+{(mapAnyMissingCap) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBEAEA; border:1px solid #F3C9C9; border-radius:8px; margin-bottom:16px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12px; color:#14171F;`)}>One or more selected SCs is missing Sort Capacity / Volume Capacity / HTP in SC Master \u2014 populate these before triggering. An unconstrained capacity would produce a wrong-but-plausible result.</span>
+</div>
+</>) : null}
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 90px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>SC</div><div style={css(`text-align:right;`)}>SORT CAP</div><div style={css(`text-align:right;`)}>VOL CAP</div><div style={css(`text-align:center;`)}>STATUS</div>
+</div>
+{(mapPreviewScs || []).map((s, __iMps) => (<React.Fragment key={__iMps}>
+<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{s.code} \u2014 {s.name}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F;`)}>{s.sortCap || '\u2014'}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F;`)}>{s.volCap || '\u2014'}</div>
+<div style={css(`text-align:center;`)}><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${s.missingCap ? '#FBEAEA' : '#E7F4EC'}; color:${s.missingCap ? '#D14B4B' : '#128A3E'};`)}>{s.missingCap ? 'Missing data' : 'Ready'}</span></div>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{/* Wizard nav */}
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-top:28px; padding-top:20px; border-top:1px solid #E6EBF2;`)}>
+<button onClick={onMapBack} style={css(`height:38px; padding:0 18px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapStep > 1 ? 'pointer' : 'default'}; opacity:${mapStep > 1 ? '1' : '0.4'};`)} disabled={mapStep === 1}>Back</button>
+{(mapStep < 4) ? (<>
+<button onClick={onMapNext} disabled={(mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)} style={css(`height:38px; padding:0 22px; border:none; background:${((mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)) ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${((mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)) ? 'not-allowed' : 'pointer'};`)}>Next</button>
+</>) : (<>
+<button onClick={onMapTrigger} disabled={mapAnyMissingCap} style={css(`height:38px; padding:0 22px; border:none; background:${mapAnyMissingCap ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapAnyMissingCap ? 'not-allowed' : 'pointer'};`)}>Trigger run</button>
+</>)}
+</div>
+</div>
+</div>
+</>) : null}
+{(mapSection === 'queue') ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`width:420px; max-width:100%; background:#fff; border:1px solid #E6EBF2; border-radius:12px; padding:24px;`)}>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Running the joint solve\u2026</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Same queue mechanism RLH and Route Scheduler already use.</div>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Run</div>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Status</div>
+</div>
+{(mapQueueRows || []).map((r, __iMq) => (<React.Fragment key={__iMq}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.id}</div>
+<div><span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${r.statusBg}; color:${r.statusFg};`)}>{r.statusLabel}</span></div>
+</div>
+</React.Fragment>))}
+{(mapQueueAllDone) ? (<>
+<button onClick={onMapOpenResults} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>View results<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</>) : null}
+</div>
+</div>
+</>) : null}
+{(mapSection === 'results') ? (<>
+<div style={css(`flex:1; overflow-y:auto; padding:28px 40px;`)}>
+<div style={css(`max-width:900px; margin:0 auto;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{mapActiveRunName}</div>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${mapIsCommitted ? '#E7F4EC' : '#EAF3EF'}; color:${mapIsCommitted ? '#128A3E' : mapAccent};`)}>{mapActiveRunStatus}</span>
+</div>
+<div style={css(`display:flex; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:20px;`)}>
+{[['summary', 'Cluster Summary'], ['diff', 'Reassignment Diff'], ['unserved', 'Unserved DCs (' + (mapUnservedRows || []).length + ')']].map((t, __iMrt) => (<React.Fragment key={__iMrt}><button onClick={() => onMapResultsTab(t[0])} style={css(`height:38px; padding:0 14px; border:none; border-bottom:2px solid ${mapResultsTab === t[0] ? mapAccent : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${mapResultsTab === t[0] ? '700' : '500'}; color:${mapResultsTab === t[0] ? mapAccent : '#5A5E66'};`)}>{t[1]}</button></React.Fragment>))}
+</div>
+{/* ===== Cluster Summary ===== */}
+{(mapResultsTab === 'summary' && mapHasResults) ? (<>
+<div style={css(`display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;`)}>
+<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>SOLVE TIME</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapSolveTime}s</div></div>
+<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>TOTAL COST</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapTotalCost}</div></div>
+<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>TOTAL VOLUME</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapTotalVolume}</div></div>
+<div style={css(`padding:14px; background:${mapCpsImproved ? '#E7F4EC' : '#FBEAEA'}; border:1px solid ${mapCpsImproved ? '#B9E0C6' : '#F3C9C9'}; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>CPS vs BASELINE</div><div style={css(`font-size:18px; font-weight:700; color:${mapCpsImproved ? '#128A3E' : '#D14B4B'};`)}>{mapCpsDeltaPct > 0 ? '+' : ''}{mapCpsDeltaPct}%</div></div>
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-bottom:16px;`)}>CPS = Cost / Volume, same formula RLH's own Ops Feedback engine uses. Cluster: {mapCps} vs baseline {mapBaselineCps}.</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 100px 110px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>SC</div><div style={css(`text-align:right;`)}>DCs SERVED</div><div style={css(`text-align:right;`)}>VEHICLES</div><div style={css(`text-align:right;`)}>UTIL %</div><div style={css(`text-align:right;`)}>COST</div>
+</div>
+{(mapPerScRows || []).map((p, __iMpsc) => (<React.Fragment key={__iMpsc}>
+<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 100px 110px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{p.code}</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{p.dcsServed}</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{p.vehiclesUsed}</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{p.utilisationPct}%</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{p.cost}</div>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{/* ===== Reassignment Diff ===== */}
+{(mapResultsTab === 'diff' && mapHasResults) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;`)}>
+<div style={css(`font-size:11px; color:#5A5E66;`)}>{(mapLaneRows || []).length} lane{(mapLaneRows || []).length === 1 ? '' : 's'} \u00b7 {mapAcceptedCount} accepted</div>
+{(!mapIsCommitted) ? (<>
+<div style={css(`display:flex; gap:8px;`)}>
+<button onClick={onMapCommitSubset} disabled={!mapAnyDecided} style={css(`height:32px; padding:0 14px; border:1px solid ${mapAnyDecided ? mapAccent : '#E6EBF2'}; background:#fff; color:${mapAnyDecided ? mapAccent : '#C3C9D4'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${mapAnyDecided ? 'pointer' : 'not-allowed'};`)}>Commit accepted subset</button>
+<button onClick={onMapAcceptAll} style={css(`height:32px; padding:0 14px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Accept all, as solved</button>
+</div>
+</>) : null}
+</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 80px 90px 90px 150px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>FROM</div><div>TO</div><div style={css(`text-align:right;`)}>DCs</div><div style={css(`text-align:right;`)}>VOLUME</div><div style={css(`text-align:right;`)}>COST</div><div style={css(`text-align:center;`)}>DECISION</div>
+</div>
+{(mapLaneRows || []).map((l, __iMl) => (<React.Fragment key={__iMl}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 80px 90px 90px 150px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center; ${l.groupChained ? 'border-left:3px solid #C77B00;' : ''}`)}>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{l.fromSc}</div>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{l.toSc}</div>
+<div style={css(`font-size:12px; text-align:right;`)} title={l.groupChained ? 'DCs share a pincode \u2014 chained by the solver, same SC' : ''}>{l.dcCount}{l.groupChained ? ' \ud83d\udd17' : ''}</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{l.volume}</div>
+<div style={css(`font-size:12px; text-align:right;`)}>{l.cost}</div>
+<div style={css(`display:flex; gap:4px; justify-content:center;`)}>
+{(mapIsCommitted) ? (<><span style={css(`font-size:11px; color:#8E96A3;`)}>Committed</span></>) : (<>
+<button onClick={l.onAccept} title={"Accept"} style={css(`width:26px; height:26px; border:1px solid ${l.decision === 'Accept' ? '#128A3E' : '#E6EBF2'}; background:${l.decision === 'Accept' ? '#E7F4EC' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={l.onReject} title={"Reject"} style={css(`width:26px; height:26px; border:1px solid ${l.decision === 'Reject' ? '#D14B4B' : '#E6EBF2'}; background:${l.decision === 'Reject' ? '#FBEAEA' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</>)}
+</div>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+{/* ===== Unserved DCs — coverage flag only, no resolution actions in this UI (handled by the DS solver / a follow-up run) ===== */}
+{(mapResultsTab === 'unserved') ? (<>
+{(mapUnservedRows.length === 0) ? (<>
+<div style={css(`padding:24px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Full coverage \u2014 every DC in this run was placed.</div>
+</>) : (<>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 2fr; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>DC</div><div>REASON</div>
+</div>
+{(mapUnservedRows || []).map((u, __iMu) => (<React.Fragment key={__iMu}>
+<div style={css(`display:grid; grid-template-columns:1fr 2fr; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#D14B4B;`)}>{u.code}</div>
+<div style={css(`font-size:12px; color:#5A5E66;`)}>{u.reason}</div>
+</div>
+</React.Fragment>))}
+</div>
+</>)}
+</>) : null}
+</div>
+</div>
+</>) : null}
+</>) : (<>
 {/* Coming Soon landing (2026-07-30) — shown for any CTIER tier that isn't RLH yet. Node Mapping
     gets its own sub-fork row (SC-DC Mapping, its one real child) mirroring RLH's Route
     Planner/Scheduler row; NLH and FM Carting have no modules yet, so no sub-row for them. */}
@@ -2630,6 +2877,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
 </div>
 </div>
+</>)}
 </>)}
 </div>
 </>) : null}
@@ -5969,6 +6217,14 @@ class NDCApp extends React.Component {
       mastersTab: 'sc',
       lmdcEdits: {}, lmdcEditCode: null, lmdcEditDraft: {}, lmdcZones: [], lmdcModes: [], lmdcSearch: '', lmdcUploadErrors: [],
       scMasterUploadErrors: [], availUploadErrors: [],
+      // SC-DC Mapping (Node Mapping), skeletal build — later session. mapSection: null while the
+      // planner hasn't entered the module; 'wizard' | 'queue' | 'results' once they have.
+      mapSection: null, mapStep: 1, mapResultsTab: 'summary',
+      mapActiveRunId: null,
+      mapDraft: { name: '', scCodes: [], dcCodes: [], params: { rho: 0.2, hw: 0, refRunId: null, spanCostOn: true, baselineSource: 'nearestSc', baselinePlanId: null } },
+      mapDecisions: {}, // { [runId]: { [laneKey]: 'Accept'|'Reject' } } — lane-level only for this skeleton (Review DCs sub-decisions come later)
+      mapQueue: [],
+      mapDcPicker: '', // free-text DC-code entry for Step 2's manual DC group input
       // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
       // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
@@ -6687,7 +6943,7 @@ class NDCApp extends React.Component {
     // lane-row at generation time (05_Core_Flows.md). Cutoff is lane-level (validated identical
     // across every DC sharing a Lane Name); TAT is DC-level (LMSC→that DC transit time, varies row
     // to row within the same lane).
-    const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15 };
+    const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15, pincodes: [] };
     // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
     // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
     // and the actual routable pool can never disagree on which DCs are excluded.
@@ -6712,7 +6968,7 @@ class NDCApp extends React.Component {
     // after every mutation above has settled, so the frozen copy matches what's returned below.
     seedLmdcEntities(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
 
-    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
+    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, mappingRuns: [], totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   // componentDidMount → seedSchedDemoFeedback() (2026-08-18) — populates demo schedFeedback/
@@ -7730,7 +7986,8 @@ class NDCApp extends React.Component {
     // d.lmdcs is always freshly re-materialized from the engine after every edit.
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const rlhMode = f.rlhMode || 'Valmo RLH';
-    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null };
+    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
+      pincodes: (f.pincodes || '').split(/[;,]/).map(s => s.trim()).filter(Boolean) };
     let laneCorrected = false;
     if (rlhMode === 'MDC') {
       patch.mdcCode = f.mdcCode || null;
@@ -7804,7 +8061,7 @@ class NDCApp extends React.Component {
         const idx = (name) => headers.indexOf(name);
         const codeIdx = idx('lmdc code');
         if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
-        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)');
+        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)'), pincodesIdx = idx('pincodes');
         const validCodes = {}; (this.state.data.lmdcs || []).forEach(l => { validCodes[l.code] = true; });
         // 2026-08-07 — all 4 editable fields are fixed dropdown option sets in the UI now, not free
         // text/number. An uploaded value that doesn't match one of those options flags the WHOLE
@@ -7830,6 +8087,7 @@ class NDCApp extends React.Component {
           if (d0Idx >= 0 && cols[d0Idx]) { if (D0_SET[cols[d0Idx]]) patch.d0Cutoff = cols[d0Idx]; else rowErrs.push('D0 Cutoff "' + cols[d0Idx] + '" is not "Default" or 07:00\u201315:00 in 30-min steps'); }
           if (vehIdx >= 0 && cols[vehIdx]) { if (VEH_SET[cols[vehIdx]]) patch.maxVehicle = cols[vehIdx]; else rowErrs.push('Max Vehicle Size "' + cols[vehIdx] + '" is not an RLH-feasible vehicle type'); }
           if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not 15\u201360 in steps of 5'); }
+          if (pincodesIdx >= 0 && cols[pincodesIdx]) patch.pincodes = cols[pincodesIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(patch).length === 0) { skipped++; continue; }
           const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
@@ -8018,6 +8276,242 @@ class NDCApp extends React.Component {
     };
     reader.readAsText(file);
   }
+  // ===========================================================================================
+  // SC-DC Mapping (Node Mapping) — skeletal build, later session. Real data flow / state machine,
+  // simplified visual polish and a lighter simulated-solve formula than a fully-tuned version —
+  // see the build-spec doc and the discussion log in context.md for what was deferred and why.
+  // ===========================================================================================
+
+  // goMapping() — entry point (the "SC-DC Mapping" pill inside Design Creation's Node Mapping
+  // tier). Resets the wizard draft every time, matching Route Planner's own "starting fresh"
+  // convention (goCreateMore()) rather than resuming a stale in-progress draft.
+  goMapping() {
+    this.setState({
+      mapSection: 'wizard', mapStep: 1,
+      mapDraft: { name: '', scCodes: [], dcCodes: [], params: { rho: 0.2, hw: 0, refRunId: null, spanCostOn: true, baselineSource: 'nearestSc', baselinePlanId: null } },
+      mapDcPicker: '',
+    });
+  }
+
+  mapToggleSc(code) {
+    const cur = this.state.mapDraft.scCodes || [];
+    const next = cur.indexOf(code) >= 0 ? cur.filter(c => c !== code) : cur.concat([code]);
+    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { scCodes: next }) });
+  }
+
+  mapAddDc(code) {
+    const c = (code || '').trim().toUpperCase();
+    if (!c) return;
+    const cur = this.state.mapDraft.dcCodes || [];
+    if (cur.indexOf(c) >= 0) { this.setState({ mapDcPicker: '' }); return; }
+    const known = (this.state.data.lmdcs || []).find(l => l.code === c);
+    if (!known) { this.showToast('No DC with code "' + c + '" found in LMDC Master', '#D14B4B'); return; }
+    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { dcCodes: cur.concat([c]) }), mapDcPicker: '' });
+  }
+
+  mapRemoveDc(code) {
+    const cur = this.state.mapDraft.dcCodes || [];
+    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { dcCodes: cur.filter(c => c !== code) }) });
+  }
+
+  mapSetParam(field, value) {
+    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { params: Object.assign({}, this.state.mapDraft.params, { [field]: value }) }) });
+  }
+
+  mapSetName(name) { this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { name }) }); }
+
+  mapNext() {
+    const step = this.state.mapStep;
+    if (step === 1 && (this.state.mapDraft.scCodes || []).length < 2) { this.showToast('Pick at least 2 SCs — a single-SC "cluster" isn\u2019t supported here, use RLH Route Planner instead.', '#C77B00'); return; }
+    if (step === 2 && (this.state.mapDraft.dcCodes || []).length < 1) { this.showToast('Add at least one DC to the run', '#C77B00'); return; }
+    this.setState({ mapStep: Math.min(4, step + 1) });
+  }
+  mapBack() { this.setState({ mapStep: Math.max(1, this.state.mapStep - 1) }); }
+
+  // mapTriggerRun() — Step 4's real trigger. Blocking validation (not warning) on missing
+  // Sort/Volume Capacity or HTP for any selected SC, per the build-spec's explicit call-out that
+  // an unconstrained capacity would silently produce a wrong-but-plausible result — a deliberate
+  // exception to this app's usual warn-don't-block convention.
+  mapTriggerRun() {
+    const draft = this.state.mapDraft;
+    if ((draft.scCodes || []).length < 2 || (draft.dcCodes || []).length < 1) return;
+    const scs = this.state.data.scs || [];
+    const missingCap = draft.scCodes.filter(code => { const sc = scs.find(s => s.code === code); return !sc || !sc.sortCap || !sc.volCap || !sc.htp; });
+    if (missingCap.length) { this.showToast('Missing Sort Capacity / Volume Capacity / HTP for ' + missingCap.join(', ') + ' \u2014 populate these in SC Master before running a joint solve.', '#D14B4B'); return; }
+    const id = 'MAP-' + Date.now();
+    const run = {
+      id, name: draft.name || ('Cluster: ' + draft.scCodes.join(' + ')), status: 'Running',
+      scCodes: draft.scCodes.slice(), dcCodes: draft.dcCodes.slice(), params: Object.assign({}, draft.params),
+      createdAt: new Date().toLocaleString(), committedAt: null, results: null,
+    };
+    const mappingRuns = (this.state.data.mappingRuns || []).concat([run]);
+    this.setState({
+      data: Object.assign({}, this.state.data, { mappingRuns }),
+      mapQueue: (this.state.mapQueue || []).concat([{ mapRunId: id, status: 'In Progress', ticks: 0 }]),
+      mapSection: 'queue', mapActiveRunId: id,
+    });
+    clearInterval(this._mapQ);
+    this._mapQ = setInterval(() => {
+      this.setState(s => {
+        const q = (s.mapQueue || []).map(r => Object.assign({}, r));
+        q.forEach(r => { if (r.status === 'In Progress') { r.ticks = (r.ticks || 0) + 1; if (r.ticks >= 3 + (r.mapRunId.charCodeAt(4) % 3)) r.status = 'Completed'; } });
+        let mappingRuns2 = s.data.mappingRuns;
+        q.filter(r => r.status === 'Completed').forEach(r => {
+          const idx = mappingRuns2.findIndex(m => m.id === r.mapRunId);
+          if (idx >= 0 && mappingRuns2[idx].status === 'Running') {
+            const results = this.computeMappingResult(mappingRuns2[idx]);
+            mappingRuns2 = mappingRuns2.map((m, i) => i === idx ? Object.assign({}, m, { status: 'Completed', results }) : m);
+          }
+        });
+        const any = q.some(r => r.status !== 'Completed');
+        if (!any) clearInterval(this._mapQ);
+        return { mapQueue: q, data: Object.assign({}, s.data, { mappingRuns: mappingRuns2 }) };
+      });
+    }, 520);
+  }
+
+  // computeMappingResult(run) — the simulated solve. Deterministic (hash/haversine-based, same
+  // family of technique as every other simulated computation in this app), not a real MILP.
+  // Enforces the one real structural constraint decided on: DCs sharing a pincode (via
+  // groupDcsBySharedPincode's Union-Find, transitively) always land on the SAME suggested SC.
+  computeMappingResult(run) {
+    const scs = (this.state.data.scs || []).filter(s => run.scCodes.indexOf(s.code) >= 0);
+    const dcs = (this.state.data.lmdcs || []).filter(l => run.dcCodes.indexOf(l.code) >= 0);
+    const RATE = NDC_costPerKmFor('TATA 407 / 10ft'); // flat representative rate — see method comment; refine per-vehicle later if needed
+    const groups = groupDcsBySharedPincode(dcs.map(dc => ({ code: dc.code, pincodes: dc.pincodes || [] })));
+
+    // Per-group nearest-SC choice: minimizes the SUM of distances across every DC in the group,
+    // so a pincode-chained group of DCs gets one consistent, sensible SC rather than an arbitrary
+    // member's own nearest pick winning for everyone.
+    const byGroup = {};
+    dcs.forEach(dc => { const g = groups.get(dc.code); byGroup[g] = byGroup[g] || []; byGroup[g].push(dc); });
+    const groupSuggestedSc = {};
+    Object.keys(byGroup).forEach(g => {
+      let best = null, bestSum = Infinity;
+      scs.forEach(sc => {
+        const sum = byGroup[g].reduce((a, dc) => a + NDC_haversineKm(dc.lat, dc.lng, sc.lat, sc.lng), 0);
+        if (sum < bestSum) { bestSum = sum; best = sc.code; }
+      });
+      groupSuggestedSc[g] = best || scs[0].code;
+    });
+
+    const lanesMap = {};
+    let totalCost = 0, totalVolume = 0;
+    const unservedDcs = [];
+    const perScAgg = {}; scs.forEach(sc => { perScAgg[sc.code] = { code: sc.code, dcsServed: 0, cost: 0, volume: 0 }; });
+
+    dcs.forEach(dc => {
+      const fromSc = dc.lmscCode && dc.lmscCode !== 'Pending' ? dc.lmscCode : null;
+      const toSc = groupSuggestedSc[groups.get(dc.code)];
+      const targetScObj = scs.find(s => s.code === toSc);
+      const dist = targetScObj ? NDC_haversineKm(dc.lat, dc.lng, targetScObj.lat, targetScObj.lng) : 0;
+      const volume = dc.capacity > 0 ? dc.capacity : 0;
+      const cost = +(dist * RATE).toFixed(2);
+      if (dc.capacity === 0) { unservedDcs.push({ code: dc.code, reason: 'Zero capacity \u2014 solver could not place this DC' }); return; }
+      const laneKey = (fromSc || '\u2014') + '\u2192' + toSc;
+      lanesMap[laneKey] = lanesMap[laneKey] || { laneKey, fromSc: fromSc || '\u2014', toSc, dcCodes: [], dcCount: 0, volume: 0, cost: 0, groupId: groups.get(dc.code) };
+      lanesMap[laneKey].dcCodes.push(dc.code); lanesMap[laneKey].dcCount++; lanesMap[laneKey].volume += volume; lanesMap[laneKey].cost += cost;
+      totalCost += cost; totalVolume += volume;
+      if (perScAgg[toSc]) { perScAgg[toSc].dcsServed++; perScAgg[toSc].cost += cost; perScAgg[toSc].volume += volume; }
+    });
+
+    // Baseline (current, pre-run) cost — same DCs, their EXISTING owning SC, for the CPS delta.
+    let baselineCost = 0, baselineVolume = 0;
+    dcs.forEach(dc => {
+      if (dc.capacity === 0) return;
+      const curScObj = scs.find(s => s.code === dc.lmscCode) || (this.state.data.scs || []).find(s => s.code === dc.lmscCode);
+      if (!curScObj) return;
+      baselineCost += NDC_haversineKm(dc.lat, dc.lng, curScObj.lat, curScObj.lng) * RATE;
+      baselineVolume += dc.capacity;
+    });
+
+    const h = run.id.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+    const lanes = Object.values(lanesMap).sort((a, b) => b.dcCount - a.dcCount);
+    const cps = totalVolume > 0 ? +(totalCost / totalVolume).toFixed(3) : 0;
+    const baselineCps = baselineVolume > 0 ? +(baselineCost / baselineVolume).toFixed(3) : 0;
+
+    return {
+      solveTimeSeconds: 4 + (h % 40),
+      totalCost: +totalCost.toFixed(2), totalVolume, cps, baselineCps,
+      cpsDeltaPct: baselineCps > 0 ? +(((cps - baselineCps) / baselineCps) * 100).toFixed(1) : 0,
+      perSc: Object.values(perScAgg).map(p => Object.assign({}, p, {
+        cost: +p.cost.toFixed(2), utilisationPct: Math.min(100, Math.round((p.volume / Math.max(1, ((this.state.data.scs || []).find(s => s.code === p.code) || {}).volCap || 1)) * 100)),
+        vehiclesUsed: Math.max(1, Math.ceil(p.volume / 2000)), // representative vehicle capacity, same simplification as RATE above
+      })),
+      lanes, unservedDcs,
+    };
+  }
+
+  mapDecideLane(runId, laneKey, decision) {
+    const cur = this.state.mapDecisions[runId] || {};
+    this.setState({ mapDecisions: Object.assign({}, this.state.mapDecisions, { [runId]: Object.assign({}, cur, { [laneKey]: decision }) }) });
+  }
+
+  mapOpenResults(runId) { this.setState({ mapActiveRunId: runId, mapSection: 'results', mapResultsTab: 'summary' }); }
+
+  // mapAcceptAllAsSolved(runId) — fast commit path: every lane's suggested SC is accepted as-is,
+  // no re-solve. Writes real migrations (or resolves a pending Addition) for every affected DC,
+  // per the confirmed AutoDML-feedback-loop design, then updates LMDC Master's own scCode so the
+  // module's own next run (and Design Creation's pre-plan gate) see the update immediately.
+  mapAcceptAllAsSolved(runId) {
+    const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
+    if (!run || !run.results) return;
+    this.mapCommitLanes(run, run.results.lanes);
+  }
+
+  // mapCommitSubset(runId) — commits only the ACCEPTED lanes from mapDecisions; rejected lanes'
+  // DCs stay on their current SC. Per the build spec, accepting a subset is described as needing
+  // a re-solve in the full design — this skeleton commits the accepted subset directly rather
+  // than re-triggering the queue-ticker a second time; a real re-solve pass can be layered in
+  // once the rest of the flow is confirmed to be the right shape.
+  mapCommitSubset(runId) {
+    const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
+    if (!run || !run.results) return;
+    const dec = this.state.mapDecisions[runId] || {};
+    const accepted = (run.results.lanes || []).filter(l => dec[l.laneKey] === 'Accept');
+    if (!accepted.length) { this.showToast('No lanes accepted yet \u2014 nothing to commit', '#C77B00'); return; }
+    this.mapCommitLanes(run, accepted);
+  }
+
+  // mapCommitLanes(run, lanes) — the shared write-through both commit paths use. For each DC in
+  // an accepted lane: if it currently has an owning SC, appends a real `migrations` entry
+  // ({dc,name,from,to,zone}, the SAME shape already used elsewhere in this app's Node Inputs);
+  // if it came in as a previously-unmapped nodeAdditions row (mapped:false), resolves that
+  // Addition's own sc/mapped fields instead of fabricating a from:null migration. Both cases also
+  // update LMDC Master's scCode via the standard per-entity Class D write.
+  mapCommitLanes(run, lanes) {
+    if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 cannot commit a mapping run.', '#C77B00'); return; }
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const d = this.state.data;
+    let migrations = (d.migrations || []).slice();
+    let nodeAdditions = (d.nodeAdditions || []).slice();
+    let nodeChangesUnified = (d.nodeChangesUnified || []).slice();
+    let committedCount = 0;
+
+    lanes.forEach(lane => {
+      lane.dcCodes.forEach(dcCode => {
+        const dc = (d.lmdcs || []).find(l => l.code === dcCode);
+        if (!dc) return;
+        const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, dcCode) || {};
+        setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, dcCode, 'lmscCode', lane.toSc, existing);
+        const pendingAddition = nodeAdditions.find(a => a.dc === dcCode && !a.mapped);
+        if (pendingAddition) {
+          nodeAdditions = nodeAdditions.map(a => a.dc === dcCode ? Object.assign({}, a, { sc: lane.toSc, mapped: true }) : a);
+          nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: lane.toSc, lmdcCode: dcCode, flag: 'Addition', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
+        } else if (lane.fromSc && lane.fromSc !== '\u2014' && lane.fromSc !== lane.toSc) {
+          migrations = migrations.concat([{ dc: dcCode, name: dc.code, from: lane.fromSc, to: lane.toSc, zone: dc.zone || '' }]);
+          nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: lane.toSc, lmdcCode: dcCode, flag: 'Migration', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
+        }
+        committedCount++;
+      });
+    });
+
+    const mappingRuns = (d.mappingRuns || []).map(m => m.id === run.id ? Object.assign({}, m, { status: 'Committed', committedAt: new Date().toLocaleString() }) : m);
+    this.refreshLmdcs();
+    this.setState({ data: Object.assign({}, this.state.data, { migrations, nodeAdditions, nodeChangesUnified, mappingRuns }) });
+    this.showToast(committedCount + ' DC' + (committedCount === 1 ? '' : 's') + ' committed \u2014 reflected in LMDC Master and Design Creation\u2019s node-changes gate', '#128A3E');
+  }
+
   submitAddVeh() {
     if (this.isRlhCyclePast()) { this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const st = this.state; const f = st.addVehForm || {};
@@ -8510,15 +9004,21 @@ class NDCApp extends React.Component {
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
         rowIsActive, onDeactivate: () => this.deactivateLmdc(l.code), onReactivate: () => this.reactivateLmdc(l.code),
         open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: l.unloadMin,
+        // Pincodes (later session, SC-DC Mapping support) — many-to-many, so this is a real array,
+        // not a scalar; edited as a comma/semicolon-separated free-text field, same parsing
+        // convention as pocs elsewhere in this app. Table cell shows a joined/truncated summary.
+        pincodes: l.pincodes || [], pincodesLabel: (l.pincodes && l.pincodes.length) ? (l.pincodes.length > 3 ? l.pincodes.slice(0, 3).join(', ') + ' +' + (l.pincodes.length - 3) : l.pincodes.join(', ')) : '\u2014',
         rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (this.minToHrsLabel(l.tat) + ' hrs') : '\u2014',
         editing, notEditing: !editing,
         draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
         draftRlhMode: lmdcDraft.rlhMode, draftMdcCode: lmdcDraft.mdcCode, draftLaneName: lmdcDraft.laneName, draftCutoff: lmdcDraft.cutoff, draftTat: lmdcDraft.tat,
+        draftPincodes: lmdcDraft.pincodes,
         draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
         onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '' } }),
+        onDraftPincodes: ldSet('pincodes'),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '', pincodes: (l.pincodes || []).join(', ') } }),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
@@ -8527,7 +9027,7 @@ class NDCApp extends React.Component {
     // Mode/MDC Code/Lane Name/Cutoff/TAT were added to the table but never added here — this is
     // exactly the "CSVs must match the tables" gap flagged this round). TAT exports in HOURS
     // (matching the table's own display unit), not the internal minute storage.
-    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min)';
+    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),Pincodes';
     const downloadLmdcCsv = () => {
       const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
@@ -8535,7 +9035,7 @@ class NDCApp extends React.Component {
         return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive',
           mode, mode === 'MDC' ? (l.mdcCode || '') : '', mode === 'Co-Loading' ? (l.laneName || '') : '',
           mode === 'Co-Loading' ? (l.cutoff || '') : '', mode === 'Co-Loading' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
-          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin].map(esc).join(','); });
+          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, (l.pincodes || []).join(';')].map(esc).join(','); });
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
@@ -13394,6 +13894,123 @@ class NDCApp extends React.Component {
       arrowHeads, showNodeCard, nodeCard, clearHovDc };
   }
 
+  // ===========================================================================================
+  // SC-DC Mapping (Node Mapping) — render bindings. Named scDcMapVals(), NOT mapVals() — mapVals()
+  // already exists and is Network Map's own bindings method; reusing that name would have
+  // silently overwritten it (caught before it happened, see context.md for how).
+  // ===========================================================================================
+  scDcMapVals() {
+    const st = this.state, d = st.data;
+    const ACCENT = '#1F6F5C'; // forest green — this module's own accent, distinct from RLH navy / Scheduler teal
+    const step = st.mapStep || 1;
+    const draft = st.mapDraft || { scCodes: [], dcCodes: [], params: {} };
+    const fmtInt = (n) => (n || 0).toLocaleString('en-IN');
+
+    const MAP_STEPS = [[1, 'Cluster Definition'], [2, 'DC Group'], [3, 'Baseline & Parameters'], [4, 'Preview & Trigger']];
+    const mapStepper = MAP_STEPS.map((s, idx) => ({
+      n: s[0], label: s[1], active: s[0] === step, isDone: s[0] < step,
+      numBg: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#D0D5DD'),
+      subLabel: s[0] < step ? 'Done' : (s[0] === step ? 'In progress' : 'Up next'), subColor: s[0] < step ? '#128A3E' : (s[0] === step ? ACCENT : '#A5ABB5'),
+      labelColor: s[0] === step ? '#14171F' : '#8E96A3', labelWeight: s[0] === step ? '700' : '500',
+      hasLine: idx < MAP_STEPS.length - 1, lineBg: s[0] < step ? '#128A3E' : '#E6EBF2', flex: idx < MAP_STEPS.length - 1 ? '1' : '0 0 auto',
+      onClick: () => { if (s[0] <= step) this.setState({ mapStep: s[0] }); },
+    }));
+
+    // ===== Step 1 — Cluster Definition: plain SC multi-select, no distance hint (dropped per
+    // discussion — the source paper's own benchmark had only 2 data points, not a rule).
+    const mapScList = (d.scs || []).filter(s => s.isActive !== false).map(s => ({
+      code: s.code, name: s.name, zone: s.zone,
+      selected: (draft.scCodes || []).indexOf(s.code) >= 0,
+      onClick: () => this.mapToggleSc(s.code),
+    }));
+    const mapScCount = (draft.scCodes || []).length;
+    const mapCanNext1 = mapScCount >= 2;
+
+    // ===== Step 2 — DC Group: manual DC input (eligibility COMPUTATION deferred entirely, per
+    // discussion — no nearest-SC-within-50km logic, no Tier-3 pincode fallback detection here).
+    // Includes previously-unmapped nodeAdditions candidates (mapped:false), per the AutoDML flow.
+    const mapDcList = (draft.dcCodes || []).map(code => {
+      const dc = (d.lmdcs || []).find(l => l.code === code);
+      return { code, name: dc ? dc.code : code, currentSc: dc ? (dc.lmscCode || 'Unmapped') : '?', pending: dc ? !!dc.pending : false, onRemove: () => this.mapRemoveDc(code) };
+    });
+    const mapUnmappedCandidates = (d.nodeAdditions || []).filter(a => !a.mapped && (draft.dcCodes || []).indexOf(a.dc) < 0).slice(0, 8);
+    const mapCanNext2 = (draft.dcCodes || []).length >= 1;
+
+    // ===== Step 3 — Baseline & Parameters
+    const mapBaselinePlans = (d.plans || []).filter(p => (st.alignStatus[p.id] || p.status) === 'Finalised' && (draft.scCodes || []).indexOf(p.scCode) >= 0);
+    const mapPastRuns = (d.mappingRuns || []).filter(r => r.status === 'Committed');
+    const mapHwOptions = [0, 0.5, 1].map(v => ({ v, active: (draft.params || {}).hw === v, label: String(v), onClick: () => this.mapSetParam('hw', v) }));
+
+    // ===== Step 4 — Preview & Trigger
+    const mapPreviewScs = (draft.scCodes || []).map(code => {
+      const sc = (d.scs || []).find(s => s.code === code) || {};
+      const missingCap = !sc.sortCap || !sc.volCap || !sc.htp;
+      return { code, name: sc.name, sortCap: sc.sortCap || 0, volCap: sc.volCap || 0, missingCap };
+    });
+    const mapAnyMissingCap = mapPreviewScs.some(s => s.missingCap);
+    const mapDcCount = (draft.dcCodes || []).length;
+
+    // ===== Run queue
+    const mapQueueRows = (st.mapQueue || []).map(r => {
+      const run = (d.mappingRuns || []).find(m => m.id === r.mapRunId) || {};
+      return { id: run.name || r.mapRunId, statusLabel: r.status, statusBg: r.status === 'Completed' ? '#E7F4EC' : '#EAF1FB', statusFg: r.status === 'Completed' ? '#128A3E' : '#1E6FB8' };
+    });
+    const mapQueueAllDone = (st.mapQueue || []).length > 0 && (st.mapQueue || []).every(r => r.status === 'Completed');
+    const mapActiveRun = (d.mappingRuns || []).find(m => m.id === st.mapActiveRunId);
+
+    // ===== Results — Cluster Summary / Reassignment Diff / Unserved DCs
+    const results = mapActiveRun ? mapActiveRun.results : null;
+    const mapResultsTab = st.mapResultsTab || 'summary';
+    const mapDecisionsForRun = st.mapDecisions[st.mapActiveRunId] || {};
+    const mapLaneRows = results ? results.lanes.map(l => ({
+      laneKey: l.laneKey, fromSc: l.fromSc, toSc: l.toSc, dcCount: l.dcCount, volume: fmtInt(l.volume), cost: '\u20b9' + fmtInt(Math.round(l.cost)),
+      decision: mapDecisionsForRun[l.laneKey] || 'Pending',
+      groupChained: l.dcCount > 1 && l.groupId,
+      onAccept: () => this.mapDecideLane(st.mapActiveRunId, l.laneKey, 'Accept'),
+      onReject: () => this.mapDecideLane(st.mapActiveRunId, l.laneKey, 'Reject'),
+    })) : [];
+    const mapUnservedRows = results ? results.unservedDcs.map(u => ({ code: u.code, reason: u.reason })) : [];
+    const mapPerScRows = results ? results.perSc.map(p => ({ code: p.code, dcsServed: p.dcsServed, vehiclesUsed: p.vehiclesUsed, utilisationPct: p.utilisationPct, cost: '\u20b9' + fmtInt(Math.round(p.cost)) })) : [];
+    const mapAnyDecided = Object.keys(mapDecisionsForRun).length > 0;
+    const mapAcceptedCount = Object.values(mapDecisionsForRun).filter(v => v === 'Accept').length;
+    const mapIsCommitted = mapActiveRun && mapActiveRun.status === 'Committed';
+
+    return {
+      ACCENT: ACCENT, mapAccent: ACCENT,
+      mapStep: step, mapStepper, mapSection: st.mapSection,
+      mapDraftName: draft.name, onMapSetName: (e) => this.mapSetName(e.target.value),
+      mapScList, mapScCount, mapCanNext1,
+      mapDcList, mapDcCount, mapCanNext2, mapUnmappedCandidates,
+      mapDcPicker: st.mapDcPicker || '', onMapDcPicker: (e) => this.setState({ mapDcPicker: e.target.value }),
+      onMapAddDc: () => this.mapAddDc(st.mapDcPicker), onMapAddDcCandidate: (code) => this.mapAddDc(code),
+      mapRho: (draft.params || {}).rho != null ? draft.params.rho : 0.2, onMapRho: (e) => this.mapSetParam('rho', +e.target.value),
+      mapHwOptions,
+      mapSpanCostOn: (draft.params || {}).spanCostOn !== false, onMapSpanCostToggle: () => this.mapSetParam('spanCostOn', !((draft.params || {}).spanCostOn !== false)),
+      mapBaselineSource: (draft.params || {}).baselineSource || 'nearestSc',
+      onMapBaselineSource: (v) => this.mapSetParam('baselineSource', v),
+      mapBaselinePlans, mapPastRuns,
+      mapPreviewScs, mapAnyMissingCap, mapDcCount2: mapDcCount,
+      onMapBack: () => this.mapBack(), onMapNext: () => this.mapNext(),
+      onMapTrigger: () => this.mapTriggerRun(),
+      mapQueueRows, mapQueueAllDone,
+      onMapOpenResults: () => this.mapOpenResults(st.mapActiveRunId),
+      mapResultsTab, onMapResultsTab: (t) => this.setState({ mapResultsTab: t }),
+      mapActiveRunName: mapActiveRun ? mapActiveRun.name : '', mapActiveRunStatus: mapActiveRun ? mapActiveRun.status : '',
+      mapResults: results, mapHasResults: !!results,
+      mapSolveTime: results ? results.solveTimeSeconds : 0,
+      mapTotalCost: results ? '\u20b9' + fmtInt(Math.round(results.totalCost)) : '\u2014',
+      mapTotalVolume: results ? fmtInt(results.totalVolume) : '\u2014',
+      mapCps: results ? results.cps : 0, mapBaselineCps: results ? results.baselineCps : 0, mapCpsDeltaPct: results ? results.cpsDeltaPct : 0,
+      mapCpsImproved: results ? results.cpsDeltaPct < 0 : false,
+      mapPerScRows,
+      mapLaneRows, mapUnservedRows, mapAnyDecided, mapAcceptedCount, mapIsCommitted,
+      onMapAcceptAll: () => this.mapAcceptAllAsSolved(st.mapActiveRunId),
+      onMapCommitSubset: () => this.mapCommitSubset(st.mapActiveRunId),
+      goMapping: () => this.goMapping(),
+      onMapCloseToDesignCreation: () => this.setState({ mapSection: null }),
+    };
+  }
+
   // Finalise view — the terminal lifecycle stage. Finalised (and acknowledged/frozen) plans live HERE, not as a
   // tab inside Ops Alignment (which now holds only the active Pending/Feedback-Received work). Read-only, RFQ handoff.
   finaliseVals() {
@@ -14381,6 +14998,7 @@ class NDCApp extends React.Component {
       ...this.alignVals(),
       ...this.opsVals(),
       ...this.mapVals(),
+      ...this.scDcMapVals(),
       ...this.finaliseVals(),
       ...this.summaryVals(),
       // Run-map popup (opened from Design Review cards / "Open on map") — reuses mapVals' per-SC geometry, no navigation.

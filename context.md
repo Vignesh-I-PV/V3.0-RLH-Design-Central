@@ -2301,3 +2301,220 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     block), `engine.js` (new file), `index.html` (new script tag + updated comments),
     `context.md` (this entry + the "4 files" table update + a new section on `engine.js`'s
     relationship to the rest of the app).
+
+- **2026-08-27 — SC-DC Mapping (Node Mapping), Phase 0.** First build session against
+  `08_Handover_SC-DC_Mapping.md`'s spec — a build spec, not a record of prior work, so everything
+  below is genuinely new. Preceded by a discussion pass that meaningfully re-scoped several parts
+  of the original spec before any code was written; recording the outcomes here since the
+  original handover doc itself doesn't reflect them.
+
+  **Decisions made this session (supersede the equivalent open items in the handover doc):**
+  1. **Step 1 (Cluster Definition) — no distance hint at all.** Plain SC multi-select, hard
+     minimum of 2 SCs before advancing (matches the handover's own "redirect to RLH v3 Route
+     Planner instead" rule for a would-be 1-SC cluster). The handover's proposed 2–16km/42km
+     coloring heuristic was explicitly rejected as over-claiming precision the source paper's own
+     two data points don't support.
+  2. **Step 2 (Eligibility & Consolidation Preview) — the entire eligibility-COMPUTATION step is
+     deferred, not just its override UI.** No nearest-SC-within-50km logic, no Tier-3
+     pincode-split-fallback detection, no "read-only system-computed table" — V1 instead has the
+     planner directly, manually specify which DCs go into the run alongside the SCs picked in
+     Step 1. This is a bigger scope cut than the handover anticipated (it only asked "what should
+     the override UI look like," assuming the computation itself would exist) — flagging clearly
+     so a future session doesn't assume eligibility computation is quietly still in scope.
+  3. **ρ (cross-SC migration penalty) — a slider, hard-bounded 0–1, default 0.2.** The handover
+     flagged that the source paper gives a default but no stated bounds; 0–1 was chosen as a
+     product decision, not derived from the paper.
+  4. **The hilly-terrain / cross-SC distance-accuracy caveat (§4) is dropped entirely, not
+     deferred.** Confirmed the reason directly: **production runs on real Google distances, not
+     the paper's Haversine×1.3 approximation** — the underestimation problem the paper's own
+     Guwahati-cluster benchmark found (+9.3% regression) is specific to that approximation method
+     and doesn't apply to how this actually gets built. The *other* §4 caveat (dock scheduling not
+     yet integrated into the v4 DS pipeline — arrival time, D0 flag, hold time, TAT are unreliable
+     in this run's results) is unrelated to distance methodology and **stays in scope**.
+  5. **Pincode-chaining in the reassignment diff table (§7) — explicitly parked, not decided.**
+     Raised as a real open question (does the "chain pincode-grouped DCs so they can't be
+     independently accepted/rejected" constraint from the handover still make sense once
+     eligibility computation itself — decision #2 above — is deferred, since that's where
+     pincode groups would normally get identified in the first place?) and deliberately left
+     unresolved rather than guessed at. Revisit when Phase 4 (the diff screen) actually gets
+     built — don't assume either answer in the meantime.
+  6. **Module accent color: forest green** (distinct from Route Planner's navy `#003F98` and
+     Route Scheduler's teal `#0D7377`; exact hex not yet chosen — pending Phase 1's actual UI
+     work). Considered and rejected: amber/gold (too close to the app's existing `#C77B00`
+     warning color), deep purple/violet (already carries a *status* meaning elsewhere — "Pushed
+     Without Alignment" — reusing it for a module identity risked blurring that distinction).
+
+  **Phase 0 build — data-model scaffolding only, no UI yet:**
+  - New transactional key `mappingRuns`, added to `engine.js`'s `RLH_TRANSACTIONAL_KEYS` array.
+    Node Mapping is nested inside RLH's own tier strip (not a peer leg the way NLH/FM are), so
+    this rides the exact same per-cycle sync mechanism (`componentDidUpdate()` →
+    `extractRlhTransactional()`/`rlhCycleData[month]`) every other RLH transactional field
+    already uses — zero new plumbing, same mechanism proven since the 2026-08-26 cycle-scoping
+    work.
+  - `emptyRlhTransactional()` updated to default `mappingRuns: []` for a brand-new cycle.
+  - `buildSeed()` (in the main jsx file) updated to return `mappingRuns: []` in its output object
+    — necessary so the 5 historical seeded months (May–Sep, derived from the one July dataset via
+    `retargetMonthStrings()`/`suffixRlhIdsForMonth()`) capture a real empty array rather than
+    `undefined` when `extractRlhTransactional()` runs against them at construction time.
+  - Documented the intended `mappingRun` record shape as a comment in `engine.js` (id, name,
+    status, `scCodes`, `dcCodes`, `params` — `rho`/`hw`/`refRunId`/`spanCostOn`/
+    `baselineSource`/`baselinePlanId` — `createdAt`, `committedAt`, `results`) — not yet wired
+    into any UI or write path; this is the target shape Phase 1+ will build against.
+  - **Status lifecycle: `Draft → Running → Completed → Committed`.** Deliberately not reusing
+    "Finalised" as the terminal state name — that word means "went through RLH's full
+    Push→Alignment→Acknowledge→Finalise lifecycle" everywhere else in this app, which this module
+    has no equivalent of (per the handover's own framing: diff-review-and-commit, not
+    Ops-Alignment).
+  - **Commit target confirmed**: a committed mapping will write into LMDC Master's existing
+    per-DC `scCode` field (`materializeLmdcEntities()` already exposes this as `lmscCode:
+    dc.scCode`) via the same `setClassDField()` mechanism every other LMDC Master edit already
+    uses — not a new parallel structure. Not yet wired (Phase 5's own work); confirmed as the
+    target now so Phase 0's entity shape doesn't need to change later.
+  - **A real architecture limitation, checked directly rather than assumed**: traced
+    `triggerRuns()` (the mechanism behind Design Creation's "Trigger" button) and confirmed it's
+    a pure `setInterval` ticker — it does not regenerate route/DC composition from live pool
+    membership; RLH's actual routes come from data fixed at `buildSeed()` time (or cloned across
+    the 5 seeded months). This means a committed SC-DC Mapping reassignment will correctly update
+    LMDC Master and everywhere else that reads a DC's owning SC, but will **not** cause a
+    subsequent Route Planner trigger to visibly place that DC on a different SC's routes, since
+    Design Creation doesn't recompute from scratch today. Flagging this now, plainly, rather than
+    letting Phase 5's commit-confirmation copy silently overclaim — matches this app's own
+    established "state gaps plainly, don't invent" convention (same treatment as `round_trip_tat`
+    showing `—`).
+  - **Verification**: added 3 new assertions to the standalone harness (`RLH_TRANSACTIONAL_KEYS`
+    includes `mappingRuns`; `emptyRlhTransactional()` defaults it correctly; `extractRlhTransactional()`
+    captures it alongside every other field) — harness now **112 passed, 0 failed** (up from 109).
+    Re-ran the full `vm`-based shared-scope simulation (the one built during the `engine.js` split
+    session) against the updated files — still passes clean. Compiled the main file via Babel
+    after the edit. **One caveat, stated plainly**: the `buildSeed()` edit itself (adding
+    `mappingRuns: []` to its return object) was verified by direct inspection plus the harness's
+    coverage of the exact mechanism it feeds into (`extractRlhTransactional`/
+    `emptyRlhTransactional`), not by an end-to-end simulation of `buildSeed()` actually running —
+    that would require a full React render, which no session on this project has ever done. Same
+    standing limitation as everything else here.
+  - **Nothing user-visible changed this session** — no new screen, no new nav entry, no new
+    button. Phase 0 is purely the data-model foundation Phase 1 (the wizard's first two steps)
+    will build against next.
+  - **Next up**: Phase 1 — Step 1 (SC multi-select, min 2) and the re-scoped Step 2 (manual DC
+    group input) of the wizard, per the decisions above.
+
+- **2026-08-27 — SC-DC Mapping, skeletal build (all remaining phases).** Full data flow and
+  navigable UI, end to end: entry landing → 4-step wizard → run queue → results (Cluster Summary
+  / Reassignment Diff / Unserved DCs). Real state machine and real writes; visual polish and the
+  simulated-solve formula are deliberately simpler than a fully-tuned version, per the explicit
+  "skeleton first, then guide refinement" framing this session was built under. Preceded by a
+  fourth round of open-item resolution (below) before any code was written.
+
+  **New decisions this round (supersede/extend the prior session's list):**
+  1. **Real end-to-end flow, grounded in existing app machinery.** The actual design: (a) the
+     module starts from AutoDML's current state, (b) the planner selects SCs + a DC group
+     (including DCs AutoDML has never mapped), (c) the planner accepts/rejects suggested
+     mappings and the accepted ones become real migrations, (d) committing a migration updates
+     AutoDML's own record so the *next* SC-DC Mapping run — and Design Creation's existing
+     "Additions, closures & migrations — resolve before planning" pre-plan gate — see it. This
+     mapped cleanly onto data structures that already existed and were already wired into a real
+     screen (`migrations`/`nodeAdditions`/`nodeChangesUnified`, feeding `nodeStepMeta` in Node
+     Inputs) rather than needing anything invented.
+  2. **Unserved DCs (§8) simplified to coverage-only.** No retry/reassign/exclude actions in this
+     UI — the DS solver handles resolution; this screen just flags which DCs from the input group
+     didn't get mapped. Confirms and narrows the "manual reassignment only" option discussed
+     previously.
+  3. **Commit timing — cycle-versioned write, confirmed with a worked example** (DC `GGN01-455`
+     reassigned in August; July's view stays unaffected; September inherits the change once
+     touched) — the same mechanism every other engine field already uses, not a new concept.
+  4. **No explicit "Revert this commit" action in V1** — since commits are cycle-versioned like
+     everything else, correcting a bad mapping is just "run another mapping (or edit LMDC Master
+     directly) in the current or a later cycle," the same way there's no dedicated undo for a
+     mis-set Sort Capacity today.
+  5. **Real many-to-many Pincode field added to LMDC Master**, feeding a genuine constraint (same-
+     pincode DCs always land on the same suggested SC) rather than a UI-only "chaining" concept.
+     A DC can list several pincodes; a pincode can appear on several DCs. Implemented via
+     Union-Find (`groupDcsBySharedPincode()` in `engine.js`) so the relationship is correctly
+     transitive — DC-A and DC-C sharing no pincode directly, but both connecting through DC-B,
+     still end up grouped together. This is the one piece of "real DS logic" this skeleton
+     actually implements faithfully rather than stubbing, since the product conversation was
+     specific about the mechanism.
+
+  **What got built:**
+  - **LMDC Master gained a real Pincodes column** — many-to-many, comma/semicolon-separated free
+    text (matching the existing `pocs` CSV-parsing convention), inline-editable and CSV
+    upload/download-able, same pattern as every other LMDC field. Required extending the table's
+    `grid-template-columns` (both header and body rows, kept in exact sync — the specific class of
+    bug flagged in this project's own history) and the CSV template/upload/export logic.
+  - **`groupDcsBySharedPincode()`** — pure Union-Find helper in `engine.js`, harness-tested
+    including the explicit transitive-bridge case (6 new assertions; harness now **118 passed, 0
+    failed**, up from 112).
+  - **The full class-method layer**: `goMapping()`, wizard navigation (`mapToggleSc`/`mapAddDc`/
+    `mapRemoveDc`/`mapSetParam`/`mapNext`/`mapBack`), `mapTriggerRun()` (real blocking validation
+    on missing SC Sort/Volume Capacity/HTP — a deliberate exception to this app's usual warn-
+    don't-block convention, matching the build spec's own explicit call-out), `computeMappingResult()`
+    (the simulated solve — deterministic, haversine/hash-based like everything else in this app,
+    reuses `NDC_haversineKm`/`NDC_costPerKmFor` rather than inventing new distance/cost math),
+    `mapDecideLane()`, `mapOpenResults()`, and the two commit paths (`mapAcceptAllAsSolved()`,
+    `mapCommitSubset()`) both routing through `mapCommitLanes()` — the shared write-through that
+    appends real `migrations` entries (or resolves a pending `nodeAdditions` row) and updates LMDC
+    Master's `scCode`.
+  - **The render-bindings method is `scDcMapVals()`, not `mapVals()`.** A real collision was
+    caught and avoided before it happened: `mapVals()` already exists and is the bindings method
+    for RLH's own Network Map feature, already spread into `renderVals()`. Defining a second
+    method with that name would have silently overwritten Network Map's entire rendering logic —
+    the exact class of naming-collision bug this project has hit before (`uploadFile`, `stageSub`,
+    `hwGlobal`). Caught by checking every planned method name against the file *before* writing
+    any of them, not after — all 15 other new method names (`mapToggleSc`, `mapTriggerRun`,
+    `computeMappingResult`, etc.) were confirmed collision-free the same way.
+  - **The full JSX**: entry landing, 4-step wizard (Cluster Definition / DC Group / Baseline &
+    Parameters / Preview & Trigger, with a working stepper and Back/Next/Trigger nav), run queue
+    (reusing RLH's own ticker pattern), and the results screen's three tabs (Cluster Summary with
+    CPS delta — reusing RLH's own existing `Cost/Volume` CPS formula rather than inventing a new
+    one; Reassignment Diff with per-lane Accept/Reject and a pincode-chained-DC visual flag; a
+    coverage-only Unserved DCs list). Wired into Design Creation's Node Mapping tier; NLH/FM
+    Carting's own Node Mapping tiers are untouched and still show "Coming Soon."
+  - **A real bug introduced and caught mid-session, not shipped**: an early class-method insertion
+    accidentally consumed `submitAddVeh()`'s own method-signature line (the str_replace's anchor
+    text matched more broadly than intended). Caught immediately by the standing compile-check-
+    after-every-edit discipline — Babel's error pointed at a syntax break several hundred lines
+    away from the actual cause, requiring a short trace to find where the signature had gone
+    missing, not just where the parser first complained. Fixed, then explicitly re-verified
+    `submitAddVeh()`'s signature was back to exactly one occurrence before continuing.
+  - **A second, harder bug, same session, worth recording precisely**: wiring the module into
+    Design Creation's Node Mapping tier initially produced "Expected corresponding JSX closing tag
+    for `<>`" pointing at a `</div>` far from the real cause. Root cause: the original code had ONE
+    outer fragment wrapping two siblings (a subfork-row ternary + an unconditional coming-soon
+    div); the fix needed to turn that into "the real module OR the original coming-soon content,"
+    but the first attempt *replaced* the outer fragment's shape entirely instead of *nesting*
+    inside it — silently changing the closing-tag count needed at the end without any single line
+    looking wrong in isolation. Diagnosed with a purpose-built stack-based bracket-balance script
+    (tracks `<div>`/`</div>`/fragment-open/fragment-close as a LIFO stack, correctly ignoring
+    self-closing `<div .../>` tags) run from a known-good anchor far above the edit, which pinpointed
+    the exact line where the OUTER fragment was left open. This is now the standing tool for any
+    future JSX-nesting problem in this file — faster and more precise than eyeballing indentation
+    or trusting Babel's own error line, which (as here) can be many lines away from the actual
+    defect. **After the real fix, the same script was re-run from the true outer anchor
+    (`{(isCreation) ? (<>` at line 1634) all the way through this entire new module — zero
+    mismatches, stack ends empty** — the strongest confirmation available short of an actual
+    render that the nesting is genuinely correct, not just passing Babel by coincidence.
+  - **Full `with(B)` binding audit, done programmatically, not by inspection**: every one of the
+    56 new bare identifiers used across the new JSX (`mapStep`, `onMapTrigger`, `mapLaneRows`,
+    etc.) was extracted via script and individually checked against `scDcMapVals()`'s actual
+    returned object — all 56 confirmed present, zero missing. This is the specific discipline that
+    catches the `with(B)` scope-bug class that has bitten this project multiple times on unrelated
+    work (most recently the `nlhPicked`/`stageSub`/`hwGlobal` incidents) — none introduced here.
+  - **Verification, final state**: full-file Babel compile clean; harness 118/118; LMDC's two
+    `grid-template-columns` strings confirmed still in sync (16 tokens each); `submitAddVeh()` and
+    `mapVals()` (Network Map) confirmed present exactly once each, untouched in substance.
+  - **No live render/browser test has been done on any of this** — same standing caveat as every
+    session before it, and more load-bearing than usual here given how much new surface area this
+    session added. The stack-based balance check and the binding audit are both strong proxies for
+    "this won't throw a JSX or ReferenceError on load," but neither substitutes for actually seeing
+    the wizard render, clicking through a run, and checking the diff table's numbers look sane.
+    Deploy-testing this module specifically is the natural next step before trusting it further.
+  - **Explicitly deferred / not built this session, unchanged from the discussion**: Step 2's
+    eligibility computation (nearest-SC-within-50km, Tier-3 pincode-split detection) — DCs are a
+    pure manual input; the "Review DCs" per-DC drill-down inside a lane (only lane-level
+    Accept/Reject exists so far); a real re-solve on "Commit accepted subset" (this skeleton
+    commits the accepted subset directly rather than re-triggering the queue a second time — see
+    `mapCommitSubset()`'s own comment); any visual/UX polish pass (hover states, loading
+    transitions, empty states beyond the basics).
+  - **Files changed**: `v3.0-rlh-design-base.jsx` (LMDC Master's Pincodes column; the full
+    SC-DC Mapping state, class methods, and JSX), `engine.js` (`groupDcsBySharedPincode()`),
+    `context.md` (this entry).

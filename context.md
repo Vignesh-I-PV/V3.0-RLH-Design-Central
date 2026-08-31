@@ -2710,3 +2710,190 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     — a minimal per-SC push acknowledgment is the natural next piece, table/feedback format still
     deferred); the Migrations tab's "pending pipeline" view of rejected changes (the decision data
     already exists in `mapDcDecisions`, just not yet surfaced there).
+
+- **2026-08-31 — Real `with(B)` scope bug, found by the user's own deploy-testing, fixed
+  immediately.** Clicking the new "Additions & Closures" tab (from the previous session's Node
+  Inputs split) threw `ReferenceError: nodeChangesAC is not defined`, crashing the whole render —
+  the exact bug class this project has hit repeatedly (`nlhPicked`, `stageSub`, `hwGlobal`, and
+  now this): a local variable computed inside a `*Vals()` method and used directly in JSX, but
+  never added to that method's own returned object, so `with(B)` has nothing to resolve it
+  against. **Root cause, precisely**: when `nodeChanges` was split into `nodeChangesAC` and
+  `nodeChangesMig` last session, only `nodeChangesMig` got added to `inputsVals()`'s return
+  object — `nodeChangesAC` was computed and used in the "Additions & Closures" table's own JSX
+  but silently dropped from the export, a straightforward oversight during a two-variable
+  addition where only one half was carried through. Fixed with one line
+  (`nodeChanges, nodeChangesAC, nodeChangesMig` in the return object).
+  - **This is exactly the bug class no compile check can catch** — Babel doesn't know
+    `nodeChangesAC` is supposed to be a render binding vs. a typo; it only throws at the moment
+    `with(B)` actually tries to resolve the bare identifier during a real render. The prior
+    session's binding audits (checking `reviewMap*` and `scDcMap*` identifiers against their own
+    methods' returns) were real and thorough, but this specific miss was in `inputsVals()` — a
+    pre-existing method touched only incidentally as part of the Node Inputs split — which never
+    got the same explicit audit pass the newer methods did.
+  - **Did a full audit of `inputsVals()`'s return object against every `node`/`nstep`/`autodml`-
+    prefixed identifier used in the Node Inputs JSX region after fixing the immediate bug**, not
+    just patching the one reported symptom — confirmed no second miss lurking nearby
+    (`nodeChangeUploadedBy`/`nodeChangeUploadedDate` and all three `nstep*` flags were already
+    correctly exported; one apparent gap, `'nodes'`, turned out to be a false positive from plain
+    JSX text content, not a binding reference).
+  - **Verification**: full-file compile clean, harness 118/118 (untouched — this was a pure JSX/
+    render-binding fix, no engine-layer change).
+  - **Standing lesson, worth restating plainly**: any time an existing `*Vals()` method is
+    extended with a new local variable that JSX will reference — even a "small" two-line addition
+    like this split — the new variable needs the same explicit "is it in the return object?"
+    check as a brand-new method gets. This session's miss happened specifically because the check
+    was applied rigorously to new methods (`reviewMapVals`, `scDcMapVals`) but not re-applied to
+    an old one being lightly touched. The audit discipline needs to trigger on *any* new binding
+    introduced, regardless of whether the method itself is old or new.
+
+- **2026-09-01 — Route Scheduler fixes + Ops Alignment restructure, three phases.** Large,
+  multi-part session; discussed thoroughly before building (distance-model scope narrowed
+  significantly mid-discussion — no haversine/node-to-node reconstruction needed, since Route
+  Scheduler operates on an already-static plan and distance/speed on the existing values is
+  sufficient — this simplified several downstream items).
+
+  **Phase 1 — data foundations:**
+  - LMDC Master gained a real `pocs` field (same shape/editing pattern as `pincodes`: column,
+    inline edit, CSV template/upload/export), seeded 5-6 deterministic names per SC shared across
+    that SC's whole DC pool (matches the real-world fact that ~100-150 DCs under one SC only have
+    5-6 LM points of contact).
+  - `deriveLmPocs(sp)` — unions POCs across every DC a plan touches, resolving the plan via
+    `sp.parentPlanId` (not a wrong field initially guessed). `schedPersonaName()`'s LM branch now
+    resolves to a real name instead of the old generic "LM Ops Lead" placeholder.
+  - NLH plans reshaped as real per-SC records (`{id, scCode, status:'Finalised', trailers, ...}`)
+    instead of generic uploaded-file records — `genNlhTrailers()` generates 10-15 deterministic
+    trailers (landing time + volume) per SC. Seeded for all 5 months RLH already has data.
+  - Route Scheduler's Step 1 manual "pick an NLH plan" UI removed entirely — each RLH SC now
+    automatically pairs with its own same-code NLH plan for the current month. Traced through
+    every consumer (Step 4 validation, the trigger-time defensive check, `buildSchedCard()`'s
+    display, `step4NlhLabel`) rather than just the picker UI itself.
+
+  **Phase 2 — Route Scheduler computation fixes:**
+  - Dock-capacity search made genuinely hard-capped: converted per-route processing from
+    independent (`routes.map`) to sequential (`routes.forEach`, tracking `realRouteSlotCounts` as
+    it goes), so each route's dock-avoidance search checks both static Co-Loading lanes *and*
+    every real route already assigned in the same pass — previously only lanes were checked, a
+    gap the code's own comments had already documented. Proved out mathematically (if every slot
+    ≤ capacity, total routes ≤ slots × capacity, so `dockUtilPct` can never exceed 100%) and this
+    also fixes Dock Schedule's round-robin as a side effect.
+  - Hold time restructured: avg (across routes with hold only, per direct confirmation) + max +
+    lane count, merged into one boxed section.
+  - Rollover % and LMSC-in→LMDC-out days — both built on one shared `connectionTimeFor()`
+    resolver (next route dispatch at/after a trailer's ready-to-ship time, wrapping to tomorrow's
+    earliest dispatch if missed). Caught and fixed a real bug in the first draft (a broken JS
+    comma-expression that would have silently returned the wrong value) before it shipped, then
+    verified the corrected version by hand-tracing the user's own worked example in Node:
+    landing 31 Aug 20:00 → connects exactly 1 Sept 06:00, bit for bit.
+  - Round-trip TAT — the actual fix for the long-standing `—` placeholder (`round_trip_tat` had no
+    formula, per Vignesh). Confirmed no haversine needed; reuses the already-correct per-DC
+    `breakdownTatHrs`, doubled for the return leg.
+  - **A scoping correction caught by the user, not by me**: the initial pass removed Slot-Wise
+    Dispatch from both the compact plan cards AND the detail pages. Only the detail-page removal
+    was actually requested ("Dock Schedule tab already covers this" — true only where Dock
+    Schedule exists as an alternative tab, which is the detail view, not the card). Restored
+    `slotBreakdown` computation and the dropdown on all 3 cards; the 2 detail pages correctly
+    keep it removed. Found and fixed a 5th block during this pass (`schedAlignDetail`, the shared
+    Ops Alignment overlay) that the original 4-block survey had missed — caught by a `grep` sweep
+    for leftover references rather than assuming the first pass was complete.
+  - All of this replicates onto Ops Alignment's cards "for free" — `buildSchedCard()` is
+    genuinely the single shared builder for Design Review and both Ops Alignment personas
+    (confirmed by checking call sites directly, not assumed), so fixing the metrics there once
+    covers all three screens.
+
+  **Phase 3 — Ops Alignment restructure:**
+  - Split into two genuinely separate, hard-scoped tabs (Stage 1 · SC/LH, Stage 2 · LM) on both
+    the Planner's and Ops Lead's rails — a plan can never appear under the wrong stage's tab.
+    Along the way, found and fixed `schedOpsStatusOf()`'s actual bug: it used to keep a stage2
+    plan visible to SC/LH (pinned to "Acknowledged") instead of excluding it once pushed — this
+    was corrected to return `null` for SC/LH once `schedStage === 'stage2'`, matching "cards move
+    from Stage 1 to Stage 2," not "stay visible in both."
+  - **This directly resolves the reported seed-data bug** ("stage 2 plans show pending feedback
+    from SC & LH") — traced to its root: `schedStage`/`status` are set atomically in one place in
+    the whole file (the push-to-LM action itself), so they were never actually out of sync at the
+    source; the bug was purely that the Planner's OLD rail bucketed by `sp.status` alone with zero
+    stage awareness, so a freshly-pushed stage2 plan (status: 'Pushed') showed under "Pending
+    Feedback" with nothing indicating whose turn it actually was. Proved the fix with a real
+    Node simulation reproducing the exact scenario before declaring it done, not just by reasoning
+    about the code — the old logic really did show "Acknowledged"/no stage distinction; the new
+    logic really does exclude it from Stage 1 and correctly surfaces it under Stage 2 · LM.
+  - Removed the manual SC/LH/LM toggle entirely (both copies — the rail's own and a second one
+    found inside the detail overlay's header that would have been missed by only checking the
+    rail). Role is now derived via three new methods: `schedRoleForPersona(sp, name)` (POC
+    membership lookup), `schedActiveRoleFor(sp)` (resolves the current top-right "Acting as" name
+    to a role for one specific plan, with a sensible fallback if that name isn't a POC on this
+    SC), and `schedGlobalRoleForStage(stage)` (a stated approximation for rail-level bucketing
+    across many plans at once, since different SCs have different POC pools — checks the acting
+    persona against every plan in the stage, first match wins). Converted all 8 functional call
+    sites individually, checking in each case whether `sp` was already in scope rather than
+    applying one blind find-replace. Cleaned up the now-orphaned `schedOpsRole` initial state and
+    stale comments once nothing read it anymore.
+  - SC can now propose TAT (previously Cutoff-only), with its own reason list distinct from LH's
+    traffic/geography framing. Added live speed validation (distance ÷ proposed TAT < 20km/h) for
+    both SC and LH's TAT proposals — recomputes as the value changes, before submission.
+  - Accept All / Reject All added, plan-wide (iterates every route's pending items), with confirm
+    modals matching RLH's own Accept-All styling exactly. Worth recording plainly: RLH itself only
+    has an Accept-All (confirmed by search — no Reject-All exists there), so "replicate the RLH
+    pattern" was itself asymmetric; both were built for Route Scheduler regardless, since both
+    were explicitly requested.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only — no `engine.js` changes this session.
+  - **Verification, applied at every phase boundary, not just at the end**: compiled clean after
+    every individual piece across all three phases; ran the stack-based bracket-balance script
+    across the full Design Creation, Design Review, and Ops Alignment regions multiple times as
+    edits landed — zero mismatches, stack empty, every time; harness held at 118/118 throughout
+    (no engine-layer changes this session); did a real `with(B)` binding audit on every new
+    identifier introduced, not just a compile-check, given this project's own history with that
+    exact bug class; proved the point-7 fix with an actual before/after Node simulation of the
+    reported scenario rather than resting on code-reading alone.
+  - **Two more instances of the same self-inflicted mistake this session** (a `str_replace`
+    dropping a boundary line it should have preserved in both old_str and new_str) — one while
+    restructuring a card block, one caught immediately by the very next compile check both times.
+    Continuing to be a real, recurring failure mode of large edits near shared boundaries, not a
+    one-off — worth treating as a standing risk on any future edit of this shape, not something
+    that gets "fixed" by having happened before.
+  - **No live render/browser test has been done on any of this** — same standing caveat as every
+    session before it. The verification performed (compile, stack-balance, binding audit, and this
+    session's Node-simulation trace of the actual bug scenario) are strong, specific proxies, not
+    a substitute for deploy-testing the real flow: trigger a scheduler run, propose SC/LH feedback
+    including a TAT with a low implied speed, accept/reject in bulk, push to LM, and confirm the
+    stage-2 tab and role labels look right end to end.
+
+- **2026-09-01 (later same day) — Pre-deploy recheck, two real issues found and fixed.**
+  1. **Seeded `schedulerPlans` had a stale `nlhPlanId`.** Every seeded scheduler plan carried a
+     hardcoded placeholder (`'NLH-ING-DEMO'`) left over from before NLH plans became real per-SC/
+     per-month records earlier the same day. `retargetMonthStrings()` can't fix this on its own —
+     it only rewrites month-NAME strings ("Jul"→"Aug"), not cycle-key IDs like "2026-08" — so every
+     seeded demo plan's rollover%/LMSC-in-out days/NLH-plan display would have silently shown
+     zero/empty despite real NLH data existing. Fixed with a direct post-pass, patching each
+     month's own `rlhCycleData[month].schedulerPlans[].nlhPlanId` to `'NLH-PLAN-' + scCode +
+     '-' + month` right after both the RLH retargeting loop and the NLH seeding loop finish.
+     Verified the exact string match in Node before trusting it, not just by reading the code.
+     Also checked for other stale references: a second `'NLH-ING-DEMO'` in `this.state.
+     ingestedNlhPlans` (the old pre-multi-leg RLH-internal tab) and a `'NLH-ING-' + n` generator —
+     both confirmed dead/legacy, write to a completely different storage location
+     (`this.state.ingestedNlhPlans`, not the engine's `nlhIngestedPlans`) that nothing in the
+     current flow reads, already documented elsewhere as superseded. Left alone, not a live risk.
+  2. **The actual root cause of the user's last two deployment failures, found and fixed**:
+     `index.html` loaded `@babel/standalone` from unpkg with **no version pin**
+     (`unpkg.com/@babel/standalone/babel.min.js`), unlike React/ReactDOM which are pinned to
+     `@18`. Queried the npm registry directly rather than guessing: `dist-tags.latest` for
+     `@babel/standalone` is now `8.0.4` — a new major version (Babel 8), with `next` still showing
+     `8.0.0-rc.6`, meaning it only recently graduated from release-candidate to "latest." An
+     unpinned CDN reference to a library that just had a breaking major-version release, hit
+     independently of any code change, is exactly the kind of thing that produces "it worked
+     before, now it doesn't" with nothing in the diff to explain it. Pinned to
+     `@babel/standalone@7.29.8` (the newest stable 7.x release, confirmed via the registry) —
+     matching the version line this app has actually always been built and tested against.
+     **Caveat, stated plainly**: `unpkg.com` is not on this sandbox's allowed domain list (only
+     `registry.npmjs.org` is), so the exact pinned URL couldn't be fetch-tested from here — the
+     URL follows the same well-established `unpkg.com/@scope/pkg@version/path` pattern already
+     used for React, and the registry confirms `7.29.8` is a real published version, but a quick
+     manual check after deploying is worth doing.
+     Also checked the app's own code for syntax that Babel 7 vs. 8 might disagree on (optional
+     chaining, nullish coalescing, numeric separators, async/await) — none found; the only
+     `**` (exponentiation) usage is the pre-existing haversine formula, present long before this
+     session and would have failed immediately on first use if unsupported, so it isn't a
+     contributor to the recent failures either.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` (the `nlhPlanId` patch) and `index.html` (the
+    version pin) — no `engine.js` changes.
+  - **Verification**: compiled clean, harness 118/118, exact-string-match confirmed in Node for
+    the `nlhPlanId` fix.

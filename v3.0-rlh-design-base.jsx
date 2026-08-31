@@ -598,8 +598,12 @@ All modules
 </>) : (<>
 <div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
 <div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built SC↔SC plan here. Once ingested, it’s available to RLH’s Route Scheduler picker for this same cycle month.</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built plan here, one per SC. Once ingested, RLH's Route Scheduler automatically pairs each SC with its own NLH plan for this same cycle month.</div>
 <div style={css(`display:flex; gap:10px;`)}>
+<select value={legIngestScCode || ''} onChange={onLegIngestScCode} disabled={legCycleIsPast} style={css(`width:160px; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 10px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)}>
+<option value={""}>Pick an SC</option>
+{(legIngestScOptions || []).map((sc, __iLis) => (<React.Fragment key={__iLis}><option value={sc.code}>{sc.code} \u2014 {sc.name}</option></React.Fragment>))}
+</select>
 <input value={legIngestFileName} onInput={onLegIngestFileName} disabled={legCycleIsPast} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} />
 <button onClick={submitLegIngest} disabled={legCycleIsPast} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>Ingest</button>
 </div>
@@ -610,7 +614,7 @@ All modules
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
 {(legIngestedPlans || []).map((p, __iLegPlan) => (<React.Fragment key={__iLegPlan}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:11px 14px; border-bottom:1px solid #F2F5FA; font-size:12.5px;`)}>
-<span style={css(`font-weight:600; color:#14171F;`)}>{p.fileName}</span>
+<span style={css(`font-weight:600; color:#14171F;`)}>{p.fileName} <span style={css(`font-weight:400; color:#5A5E66;`)}>&middot; {p.scCode} &middot; {p.trailerCount} trailers</span></span>
 <span style={css(`color:#8E96A3;`)}>ingested {p.ingestedAt}</span>
 </div>
 </React.Fragment>))}
@@ -1295,8 +1299,8 @@ All modules
 </>) : null}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
-<div style={css(`min-width:1420px;`)}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`min-width:1560px;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMSC</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
@@ -1312,10 +1316,11 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap;`)}>MAX VEHICLE SIZE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>UNLOADING TIME (MIN)</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#1F6F5C; letter-spacing:0.04em; white-space:nowrap; border-left:3px solid #1F6F5C;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap; border-left:3px solid #0D7377;`)} title={"LM points of contact \u2014 feeds Route Scheduler's LM reviewer assignment"}>LM POCS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:${l.pending ? '#8E96A3' : '#5A5E66'}; font-style:${l.pending ? 'italic' : 'normal'}; white-space:nowrap;`)}>{l.lmscCode}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
@@ -1345,6 +1350,8 @@ All modules
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid #1F6F5C;`)} title={l.pincodes.join(', ') || 'No pincodes mapped'}>{l.pincodesLabel}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #1F6F5C;`)}><input type={"text"} value={l.draftPincodes} onInput={l.onDraftPincodes} placeholder={"e.g. 110001, 110002"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid #0D7377;`)} title={l.pocs.join(', ') || 'No LM POCs set'}>{l.pocsLabel}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #0D7377;`)}><input type={"text"} value={l.draftPocs} onInput={l.onDraftPocs} placeholder={"e.g. Rahul Sharma, Megha Bose"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={l.onEdit} disabled={rlhCyclePast} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {/* 2026-08-26 fix (#11) — Deactivate/Reactivate, same pattern as SC Master, now that LMDC rows have real per-DC existence tracking. */}
@@ -2384,22 +2391,18 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(schedulerNlhEmpty) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:40px 20px; text-align:center; border:1px dashed #E6EBF2; border-radius:10px; margin-bottom:20px;`)}>
-<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH Landing Plans ingested for {schedNlhMonthLabel}</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Ingest one on the SC-SC and NLH Design card's Design Ingestion tab for this cycle month, or pick a different month above.</div>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>Pick SCs above to see their NLH pairing</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Each RLH SC automatically pairs with its own Finalised NLH plan for {schedNlhMonthLabel} — nothing to pick manually here.</div>
 </div>
 </>) : (<>
-<input value={schedulerNlhSearch} onChange={onSchedulerNlhSearch} placeholder={"Search by plan name"} style={css(`width:100%; max-width:520px; height:34px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; margin-bottom:10px; box-sizing:border-box;`)} />
-<div style={css(`display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; margin-bottom:20px;`)}>
-{(schedulerNlhNoResults) ? (<><div style={css(`padding:16px; text-align:center; font-size:13px; color:#8E96A3;`)}>No plans match "{schedulerNlhSearch}".</div></>) : ((schedulerNlhCards || []).map((p, __i45) => (<React.Fragment key={__i45}>
-<button onClick={p.onClick} style={css(`display:flex; align-items:center; gap:10px; text-align:left; padding:10px 13px; border:1px solid ${p.active ? '#003F98' : '#E6EBF2'}; background:${p.active ? '#EAEEFB' : '#fff'}; border-radius:9px; cursor:pointer; font-family:inherit; flex-shrink:0; min-width:230px;`)}>
-<div style={css(`width:30px; height:30px; border-radius:7px; background:${p.active ? '#003F98' : '#F2F5FA'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={p.active ? '#fff' : '#8E96A3'} strokeWidth={"1.8"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`min-width:0;`)}>
-<div style={css(`font-size:12.5px; font-weight:600; color:#14171F; white-space:nowrap;`)}>{p.name}</div>
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:1px; white-space:nowrap;`)}>{p.scCount} SCs · {p.rows} rows · {p.date}</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>NLH PAIRING \u2014 {schedNlhMonthLabel}</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px; margin-bottom:20px;`)}>
+{(nlhPairingRows || []).map((r, __i45) => (<React.Fragment key={__i45}>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid ${r.hasNlhPlan ? '#E6EBF2' : '#F3C9C9'}; background:${r.hasNlhPlan ? '#fff' : '#FBEAEA'}; border-radius:8px;`)}>
+<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.scCode} \u2014 {r.scName}</div>
+{(r.hasNlhPlan) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>{r.trailerCount} trailers \u00b7 {r.nlhVolume.toLocaleString('en-IN')} vol</span></>) : (<><span style={css(`font-size:11px; font-weight:600; color:#D14B4B;`)}>No Finalised NLH plan for this month</span></>)}
 </div>
-{(p.active) ? (<><svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"2.2"} style={css(`flex-shrink:0;`)}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
-</button>
-</React.Fragment>)))}
+</React.Fragment>))}
 </div>
 </>)}
 {/* SC / Plan selection — rail + cards (2026-08-10), mirroring Design Review's own rail+cards
@@ -3247,22 +3250,29 @@ NLH cycle: {schedNlhMonthLabel}
 <span><span style={css(`color:#8E96A3;`)}>D0 Cutoff</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.d0Label}</strong></span>
 <span><span style={css(`color:#8E96A3;`)}>Local / Non-Local Speed</span> <strong style={css(`color:#14171F; font-weight:600;`)}>{c.localSpeed} / {c.nonLocalSpeed} km/h</strong></span>
 </div>
-{/* colored 3-tile output metrics grid (Connection Start/Slots/Dock Util moved into the
-    slot-wise list below, 2026-07-31 — see computeSchedulerMetricsFor's slotBreakdown note) */}
+{/* colored 3-tile output metrics grid — later session: Holding Time/Lanes w/ Hold moved out
+    into their own merged box below (avg/max/lanes together); Rollover% and LMSC-in→LMDC-out
+    Days take their place here, both new metrics reading the SC's real NLH trailer schedule. */}
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
 </div>
-{/* slot-wise dispatch breakdown (2026-07-31) — carries Connection Start/Slots and per-slot dock
-    utilisation implicitly (first chip's time = Connection Start, chip count = Connection Slots).
-    Per-slot % is what lets a reviewer tell honest tail-end slack apart from an actually-idle
-    earlier slot — a single network-wide average couldn't make that distinction. */}
+{/* Merged hold-metrics box (later session) — Holding Time + Lanes w/ Hold used to be separate
+    tiles above; avg/max hold are new. All three now live together, one box, three rows —
+    replaces the Slot-Wise Dispatch dropdown entirely (Dock Schedule already covers this, and its
+    own dispatch-time source now genuinely never exceeds dock capacity — see the dispatch-search
+    fix). */}
+<div style={css(`margin-top:10px; background:#F7F9FC; border-radius:8px; padding:2px 12px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.avgHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Max hold</span><span style={css(`font-size:12px; font-weight:600; color:${c.warnHoldHigh ? '#D14B4B' : '#14171F'};`)}>{c.maxHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Hold lanes</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.lanesWithHold} / {c.totalLanes}</span></div>
+</div>
 {(c.hasSlotBreakdown) ? (<>
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -3348,26 +3358,14 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${reviewSchedDetail.d0Color}; line-height:1;`)}>{reviewSchedDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${reviewSchedDetail.holdColor}; line-height:1;`)}>{reviewSchedDetail.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lanesWithHold} / {reviewSchedDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.rolloverPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Rollover</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
 </div>
-{(reviewSchedDetail.hasSlotBreakdown) ? (<>
-<details style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px; background:#fff;`)}>
-<summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#FAFBFD; font-size:11.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH · {reviewSchedDetail.slotBreakdown.length} slot{reviewSchedDetail.slotBreakdown.length === 1 ? '' : 's'}</span>
-<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</summary>
-<div>
-{(reviewSchedDetail.slotBreakdown || []).map((s, __iSlot2) => (<React.Fragment key={__iSlot2}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-top:1px solid #EEF1F6; background:${s.full ? '#E9F5F5' : '#fff'};`)}>
-<span style={css(`font-size:13px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.time}</span>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>{s.used}/{s.docks} docks in this slot</span>
-<span style={css(`font-size:13px; font-weight:700; color:${s.full ? '#0D7377' : '#5A5E66'};`)}>{s.pct}%</span>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:6px 18px; margin-bottom:18px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.avgHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Max hold</span><span style={css(`font-size:15px; font-weight:600; color:${reviewSchedDetail.warnHoldHigh ? '#D14B4B' : '#14171F'};`)}>{reviewSchedDetail.maxHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Hold lanes</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.lanesWithHold} / {reviewSchedDetail.totalLanes}</span></div>
 </div>
-</React.Fragment>))}
-</div>
-</details>
-</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(reviewSchedDetail.hasFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 18px; margin-bottom:18px;`)}>
@@ -3413,11 +3411,11 @@ NLH cycle: {schedNlhMonthLabel}
 {(reviewSchedDetail.secRoute) ? (<>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:980px;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; background:#E6EBF2;`)}>
-{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME'].map((h, __iRSDh2) => (<React.Fragment key={__iRSDh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr 0.7fr; background:#E6EBF2;`)}>
+{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME', 'ROUND TRIP TAT'].map((h, __iRSDh2) => (<React.Fragment key={__iRSDh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(reviewSchedDetail.routeRows || []).map((r, __iRSD3) => (<React.Fragment key={__iRSD3}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr 0.7fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`padding:11px 12px; font-size:12px; font-weight:600; color:#0D7377;`)}>{r.segment}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; text-align:center;`)}>{r.tps}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.vol}</div>
@@ -3427,6 +3425,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.cap}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.roundTripTat}</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -3660,6 +3659,9 @@ NLH cycle: {schedNlhMonthLabel}
 {(isAlignTierRLH && isAlignRouteScheduler) ? (<>
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
+<div style={css(`display:flex; gap:1px; background:#EEF1F6; border-bottom:1px solid #E6EBF2;`)}>
+{(schedAlignStageTabs || []).map((t, __iAst) => (<React.Fragment key={__iAst}><button onClick={t.onClick} style={css(`flex:1; height:36px; border:none; background:${t.active ? '#fff' : '#F7F9FC'}; color:${t.active ? '#0D7377' : '#8E96A3'}; font-family:inherit; font-size:11px; font-weight:${t.active ? '700' : '600'}; cursor:pointer; border-bottom:2px solid ${t.active ? '#0D7377' : 'transparent'};`)}>{t.label} ({t.count})</button></React.Fragment>))}
+</div>
 <div style={css(`padding:12px 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
 {(schedAlignFilterSeg || []).map((f, __iA1) => (<React.Fragment key={__iA1}><button onClick={f.onClick} title={f.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${f.active ? '#0D7377' : 'transparent'}; color:${f.active ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${f.active ? '700' : '600'}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={f.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{f.label}</span></button></React.Fragment>))}
@@ -3742,14 +3744,19 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+</div>
+<div style={css(`margin-top:10px; background:#F7F9FC; border-radius:8px; padding:2px 12px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.avgHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Max hold</span><span style={css(`font-size:12px; font-weight:600; color:${c.warnHoldHigh ? '#D14B4B' : '#14171F'};`)}>{c.maxHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Hold lanes</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.lanesWithHold} / {c.totalLanes}</span></div>
 </div>
 {(c.hasSlotBreakdown) ? (<>
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -4362,6 +4369,35 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </>) : null}
+{/* ROUTE SCHEDULER — ACCEPT ALL / REJECT ALL confirm modals (later session) */}
+{(schedAcceptAllPlanOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:460px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#E7F4EC; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg aria-hidden={"true"} width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#128A3E"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Accept all {schedAcceptAllPendingCount} proposed changes?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This accepts every still-pending flagged field across every route on this plan.</div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedAcceptAllPlan} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmSchedAcceptAllPlan} style={css(`height:38px; padding:0 18px; border:none; background:#128A3E; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Accept all changes</button>
+</div>
+</div>
+</div>
+</>) : null}
+{(schedRejectAllPlanOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:460px; max-width:100%; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)}>
+<div style={css(`padding:24px 24px 0; display:flex; gap:14px;`)}>
+<div style={css(`width:44px; height:44px; border-radius:8px; background:#FBEAEA; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg aria-hidden={"true"} width={"22"} height={"22"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Reject all {schedAcceptAllPendingCount} proposed changes?</div><div style={css(`font-size:13px; color:#5A5E66; margin-top:8px; line-height:1.55;`)}>This rejects every still-pending flagged field across every route on this plan — the plan's own numbers stay unchanged.</div></div>
+</div>
+<div style={css(`display:flex; gap:10px; justify-content:flex-end; padding:22px 24px;`)}>
+<button onClick={closeSchedRejectAllPlan} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={confirmSchedRejectAllPlan} style={css(`height:38px; padding:0 18px; border:none; background:#D14B4B; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Reject all changes</button>
+</div>
+</div>
+</div>
+</>) : null}
 {/* ACK MODAL */}
 {(ackOpen) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
@@ -4685,14 +4721,14 @@ NLH cycle: {schedNlhMonthLabel}
 {(isAlignTierRLH && isAlignRouteScheduler) ? (<>
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column;`)}>
-{/* Role selector (2026-08-18) — SC/LH/LM. This governs BOTH which rail entries show up
-    (the schedOps rail below is scoped to whichever role is active) and, inside the detail
-    overlay, which fields that role is allowed to flag. */}
-<div style={css(`padding:12px 12px 0;`)}>
-<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em; margin-bottom:6px;`)}>ACTING AS</div>
-<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:3px; background:#F2F5FA; border-radius:8px; padding:3px; margin-bottom:10px;`)}>
-{['SC', 'LH', 'LM'].map((r, __iC0) => (<React.Fragment key={__iC0}><button onClick={() => onSetSchedOpsRole(r)} title={"Act as this Route Scheduler ops rep type"} style={css(`height:28px; border:none; border-radius:6px; background:${schedOpsRole === r ? '#0D7377' : 'transparent'}; color:${schedOpsRole === r ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:11.5px; font-weight:${schedOpsRole === r ? '700' : '600'}; cursor:pointer;`)}>{r}</button></React.Fragment>))}
+{/* Role selector removed (later session) — a real POC only ever looks at one role type in
+    production, so a manual SC/LH/LM toggle here wasn't the right flow. Role is now derived from
+    whichever named person is picked via the existing top-right "Acting as" control, cross-
+    referenced against SC/LMDC Master's own POC lists. Stage tabs replace it here. */}
+<div style={css(`display:flex; gap:1px; background:#EEF1F6; border-bottom:1px solid #E6EBF2;`)}>
+{(schedOpsStageTabs || []).map((t, __iOst) => (<React.Fragment key={__iOst}><button onClick={t.onClick} style={css(`flex:1; height:36px; border:none; background:${t.active ? '#fff' : '#F7F9FC'}; color:${t.active ? '#0D7377' : '#8E96A3'}; font-family:inherit; font-size:11px; font-weight:${t.active ? '700' : '600'}; cursor:pointer; border-bottom:2px solid ${t.active ? '#0D7377' : 'transparent'};`)}>{t.label}</button></React.Fragment>))}
 </div>
+<div style={css(`padding:12px 12px 0;`)}>
 </div>
 <div style={css(`padding:0 12px 8px;`)}>
 <div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
@@ -4773,14 +4809,19 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.holdColor}; line-height:1;`)}>{c.holdingTotalHours} hrs</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Holding Time</div>{(c.warnHoldHigh) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Above 12hr threshold</div></>) : null}</div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lanesWithHold} / {c.totalLanes}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Lanes w/ Hold</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+</div>
+<div style={css(`margin-top:10px; background:#F7F9FC; border-radius:8px; padding:2px 12px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.avgHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Max hold</span><span style={css(`font-size:12px; font-weight:600; color:${c.warnHoldHigh ? '#D14B4B' : '#14171F'};`)}>{c.maxHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Hold lanes</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.lanesWithHold} / {c.totalLanes}</span></div>
 </div>
 {(c.hasSlotBreakdown) ? (<>
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -5482,6 +5523,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
 </select>
 </div>
+{(f.hasSpeedWarning) ? (<><div style={css(`display:flex; align-items:center; gap:6px; margin-top:7px; padding:6px 9px; background:#FBEAEA; border-radius:6px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M12 2L2 20h20L12 2z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:10.5px; font-weight:600; color:#D14B4B;`)}>{f.speedWarning}</span></div></>) : null}
 </>) : null}
 </div>
 </React.Fragment>))}
@@ -5655,13 +5697,13 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 <div style={css(`flex:1;`)} />
 {(!isAlignPlanner) ? (<>
-<div style={css(`display:flex; gap:3px; background:#F2F5FA; border-radius:8px; padding:3px;`)} title={"Simulate a different Ops rep type reviewing this plan"}>
-{['SC', 'LH', 'LM'].map((rl, __iRoleHdr) => (<React.Fragment key={__iRoleHdr}>
-<button onClick={() => onSetSchedOpsRole(rl)} style={css(`padding:5px 11px; border:none; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:700; cursor:pointer; background:${schedOpsRole === rl ? '#0D7377' : 'transparent'}; color:${schedOpsRole === rl ? '#fff' : '#5A5E66'};`)}>{rl} User</button>
-</React.Fragment>))}
-</div>
+<span style={css(`padding:5px 11px; border-radius:6px; background:#F2F5FA; font-family:inherit; font-size:11.5px; font-weight:700; color:#5A5E66;`)} title={"Derived from your Acting-as name and this SC's own POC list"}>{schedAlignDetail.activeRoleLabel}</span>
 {(schedAlignDetail.canSubmitFeedback) ? (<><button onClick={schedAlignDetail.onSubmitFeedback} style={css(`height:34px; padding:0 13px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Submit Feedback</button></>) : null}
 </>) : (<>
+{(schedAlignDetail.pendingCount > 0) ? (<>
+<button onClick={schedAlignDetail.onAcceptAllPlan} style={css(`height:34px; padding:0 13px; border:1px solid #128A3E; background:#fff; color:#128A3E; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Accept All ({schedAlignDetail.pendingCount})</button>
+<button onClick={schedAlignDetail.onRejectAllPlan} style={css(`height:34px; padding:0 13px; border:1px solid #D14B4B; background:#fff; color:#D14B4B; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Reject All ({schedAlignDetail.pendingCount})</button>
+</>) : null}
 {(schedAlignDetail.canAckFreeze) ? (<><button onClick={schedAlignDetail.onOpenAck} style={css(`height:34px; padding:0 13px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Acknowledge & Freeze</button></>) : null}
 {(schedAlignDetail.canUnfreeze) ? (<><button onClick={schedAlignDetail.onOpenUnfreeze} style={css(`height:34px; padding:0 13px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Unfreeze</button></>) : null}
 {(schedAlignDetail.canPushToLM) ? (<><button onClick={schedAlignDetail.onOpenPushLM} style={css(`height:34px; padding:0 13px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Push to LM Alignment</button></>) : null}
@@ -5681,8 +5723,13 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Cutoff Plan Outputs</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.d0Color}; line-height:1;`)}>{schedAlignDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.holdColor}; line-height:1;`)}>{schedAlignDetail.holdingTotalHours} hrs</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Holding Time (Total hrs)</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lanesWithHold} / {schedAlignDetail.totalLanes}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Lanes with Hold Time</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.rolloverPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Rollover</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+</div>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:6px 18px; margin-bottom:18px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.avgHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Max hold</span><span style={css(`font-size:15px; font-weight:600; color:${schedAlignDetail.warnHoldHigh ? '#D14B4B' : '#14171F'};`)}>{schedAlignDetail.maxHoldHours} hrs</span></div>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Hold lanes</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.lanesWithHold} / {schedAlignDetail.totalLanes}</span></div>
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; gap:9px;`)}><div style={css(`width:4px; height:18px; background:#0D7377; border-radius:2px;`)} /><span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Validation Flags</span></div>
 {(schedAlignDetail.hasFlags) ? (<>
@@ -5751,11 +5798,11 @@ NLH cycle: {schedNlhMonthLabel}
 {(schedAlignDetail.secRoute) ? (<>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:980px;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; background:#E6EBF2;`)}>
-{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME'].map((h, __iSADh2) => (<React.Fragment key={__iSADh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr 0.7fr; background:#E6EBF2;`)}>
+{['ROUTE CODE', 'NODES', 'VOLUME', 'DISTANCE (KM)', 'VEHICLE TYPE', 'UTIL.', 'CAPACITY', 'CUTOFF TIME', 'HOLD TIME', 'ROUND TRIP TAT'].map((h, __iSADh2) => (<React.Fragment key={__iSADh2}><div style={css(`padding:10px 12px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(schedAlignDetail.routeRows || []).map((r, __iSAD5) => (<React.Fragment key={__iSAD5}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.6fr 0.7fr 0.7fr 0.8fr 0.6fr 0.6fr 0.7fr 0.6fr 0.7fr; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`padding:11px 12px; font-size:12px; font-weight:600; color:#0D7377;`)}>{r.segment}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; text-align:center;`)}>{r.tps}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.vol}</div>
@@ -5765,6 +5812,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.cap}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.cutoffTime}</div>
 <div style={css(`padding:11px 12px; font-size:12px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.holdTime}</div>
+<div style={css(`padding:11px 12px; font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.roundTripTat}</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -6259,6 +6307,29 @@ class NDCApp extends React.Component {
       this.engineStore.rlhCycleData[month] = suffixRlhIdsForMonth(retargeted, month);
       createCycle(this.engineStore, 'rlh', month, { tables: [{ table: 'scMaster', defaults: {} }] });
     });
+    // Seed a real per-SC NLH plan for each of the same 5 months, so Route Scheduler's Step 1 has
+    // something to actually pair against without requiring manual ingestion first (later
+    // session). Every real RLH SC (not MDC nodes — MDC never dispatches via NLH) gets its own
+    // Finalised NLH plan per month, deterministic trailers via genNlhTrailers().
+    ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
+      (_seedForNlh.scs || []).filter(s => s.nodeKind !== 'MDC').forEach(sc => {
+        const id = 'NLH-PLAN-' + sc.code + '-' + month;
+        const trailers = this.genNlhTrailers(sc.code, month);
+        ingestNlhPlan(this.engineStore, month, { planId: id, scCode: sc.code, status: 'Finalised', trailers, fileMeta: { name: 'Seed-NLH-' + sc.code + '-' + month + '.csv' }, ingestedAt: monthLabel(month) + ' seed' });
+      });
+    });
+    // Fix the seeded schedulerPlans' own nlhPlanId (later session) — every one was seeded with a
+    // single hardcoded placeholder ('NLH-ING-DEMO') from before NLH plans were real per-SC/per-
+    // month records. retargetMonthStrings() can't fix this on its own: it only rewrites month-NAME
+    // strings ("Jul" → "Aug"), not cycle-key IDs like "2026-08", so each month's own bucket needs
+    // a direct patch here, after both the RLH retargeting loop and the NLH seeding loop above have
+    // already run. Without this, every seeded demo plan's rollover%/LMSC-in-out/NLH-plan display
+    // would silently show zero/empty — the pairing existed as a stored id, but pointed nowhere.
+    ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
+      const bucket = this.engineStore.rlhCycleData[month];
+      if (!bucket || !bucket.schedulerPlans) return;
+      bucket.schedulerPlans = bucket.schedulerPlans.map(sp => Object.assign({}, sp, { nlhPlanId: 'NLH-PLAN-' + sp.scCode + '-' + month }));
+    });
     // October: created (selectable, masters carried forward) but genuinely empty — nothing
     // generated for it yet, ready for the user to trigger Design Creation into. Every other month
     // (Feb-Apr, Nov onward) is deliberately left un-created — reachable only via "start new cycle".
@@ -6281,7 +6352,7 @@ class NDCApp extends React.Component {
       // null until a card is picked; activeCycleMonth mirrors the constructor-time snapshot
       // (this.activeCycleMonth) into real state so switching cycles actually re-renders.
       activeLeg: null, activeCycleMonth: Object.assign({}, this.activeCycleMonth), legCycleOpen: false,
-      legInputsTab: 'masters', legIngestFileName: '', engineTick: 0,
+      legInputsTab: 'masters', legIngestFileName: '', legIngestScCode: null, engineTick: 0,
       showCoach: props.showFtux !== false,
       toast: null,
       inputsTab: 'volume',
@@ -6296,15 +6367,17 @@ class NDCApp extends React.Component {
       mapDcDecisions: {}, // { [runId]: { [dcCode]: { decision: 'Accept'|'Reject'|'KeepOldSc', remark } } } — per-DC, later session
       mapQueue: [],
       reviewMapRunId: null,
-      // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
-      // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
-      // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
-      // a second dimension on top of the existing Planner/Ops-Lead toggle and the existing
-      // opsActingCurrent (which individual). Stage 1 (SC+LH, simultaneous) proposes Dispatch
-      // Cutoff (+TAT for LH); Stage 2 is the Planner deciding Stage 1; Stage 3 (LM, gated on Stage
-      // 2 being fully decided for that route) proposes Landing Time, back-solved to an implied
+      // ===== Route Scheduler Ops Alignment — 2-stage feedback loop (2026-08-14, rebuilt
+      // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly;
+      // role selection replaced with derived role — later session) =====
+      // Role (SC/LH/LM) is no longer a toggle here — it's derived per-plan from whichever name is
+      // picked via the existing top-right "Acting as" control (opsActingPersona), cross-referenced
+      // against SC/LMDC Master's own POC lists (schedActiveRoleFor/schedRoleForPersona). Stage 1
+      // (SC+LH, simultaneous) proposes Dispatch Cutoff (+TAT for LH, now also SC); Stage 2 (LM,
+      // gated on Stage 1 being fully decided) proposes Landing Time, back-solved to an implied
       // Dispatch Cutoff since TAT is locked by then.
-      schedOpsRole: 'SC',
+      schedAlignStage: 'stage1',
+      schedOpsStage: 'stage1',
       // schedFeedback[planId][routeCode] = { status: 'Aligned'|'Needs Change', items: [item] }
       // item = { id, persona, field:'cutoff'|'tat'|'landing', dcCode(if tat/landing), reason,
       // remark, status: Pending/Accepted/Rejected, proposedValue, submittedAt }. One shared status
@@ -6395,6 +6468,8 @@ class NDCApp extends React.Component {
       alignExpandedRow: {}, opsExpandedRow: {},
       alignAllOpen: false, alignAllPlanId: null, opsPartialOpen: false, opsPartialPlanId: null, delConfirm: null,
       acceptAllPlanOpen: false, acceptAllPlanId: null,
+      schedAcceptAllPlanOpen: false, schedAcceptAllPlanId: null,
+      schedRejectAllPlanOpen: false, schedRejectAllPlanId: null,
       addScOpen: false, addScForm: {}, addScEditCode: null, addedScs: [], scEdits: {}, availEdits: {}, scRemoved: {}, availRemoved: {}, editingAvail: null, designCycle: 'July 2026', cycleOpen: false, cyclePickerOpen: false,
       addVehOpen: false, addVehForm: {}, addedVehTypes: [], editVehName: null, editVehDraft: null,
       editAvailKey: null, editAvailDraft: null,
@@ -7015,6 +7090,18 @@ class NDCApp extends React.Component {
     // across every DC sharing a Lane Name); TAT is DC-level (LMSC→that DC transit time, varies row
     // to row within the same lane).
     const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15, pincodes: [] };
+    // scLmPocs (later session) — LMDC Master's own POC pool, per SC (shared across that SC's
+    // whole DC pool, matching the real-world fact that ~100-150 DCs under one SC only have 5-6
+    // LM points of contact, not one each). Feeds Route Scheduler's LM reviewer assignment
+    // (schedPersonaName) once a plan's DCs are aggregated — see that method's own comment.
+    const scLmPocs = {};
+    scs.forEach(sc => {
+      const h = sc.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const n = 5 + (h % 2); // 5 or 6
+      const names = [];
+      for (let i = 0; i < n; i++) names.push(NAMES[(h + i * 7) % NAMES.length]);
+      scLmPocs[sc.code] = names;
+    });
     // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
     // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
     // and the actual routable pool can never disagree on which DCs are excluded.
@@ -7023,12 +7110,13 @@ class NDCApp extends React.Component {
       capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
       rlhMode: dc.rlhMode || 'Valmo RLH', mdcCode: dc.mdcCode || null, laneName: dc.laneName || null, cutoff: dc.cutoff || null, tat: dc.tat || null,
       isLocal: dc.isLocal !== undefined ? dc.isLocal : true, distFromSc: dc.distFromSc != null ? dc.distFromSc : 0,
+      pocs: scLmPocs[dc.scCode] || [],
     }, lmdcDefaults));
     nodeAdditions.filter(a => a.mapped && a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0 }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: scLmPocs[a.sc] || [] }, lmdcDefaults));
     });
     nodeAdditions.filter(a => !a.mapped || !a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0 }, lmdcDefaults));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: [] }, lmdcDefaults));
     });
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
@@ -7463,15 +7551,35 @@ class NDCApp extends React.Component {
     this.bumpEngineTick();
     this.showToast(file.name + ' uploaded', '#128A3E');
   }
+  // genNlhTrailers(scCode, seedKey) — 10-15 trailers landing at this SC at different times with
+  // different volumes, per the product description of what an NLH plan actually represents.
+  // Deterministic (hash-based, same convention as every other simulated figure in this app), not
+  // randomly regenerated on every call, so the same SC+month always shows the same schedule.
+  genNlhTrailers(scCode, seedKey) {
+    const h = (scCode + seedKey).split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+    const n = 10 + (h % 6); // 10-15 trailers
+    const trailers = [];
+    for (let i = 0; i < n; i++) {
+      const th = (h + i * 17) >>> 0;
+      const landingMin = th % 1440; // any time of day, minutes from midnight
+      const volume = 800 + (th % 1600); // 800-2399 per trailer
+      trailers.push({ landingMin, volume });
+    }
+    return trailers.sort((a, b) => a.landingMin - b.landingMin);
+  }
   submitLegIngest() {
     const name = (this.state.legIngestFileName || '').trim();
+    const scCode = this.state.legIngestScCode;
     if (!name) { this.showToast('Enter a file name to ingest', '#C77B00'); return; }
+    if (!scCode) { this.showToast('Pick the SC this NLH plan is for', '#C77B00'); return; }
     if (this.isLegCyclePast('nlh')) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
-    ingestNlhPlan(this.engineStore, cycleMonth, { planId: 'NLH-ING-' + Date.now(), fileMeta: { name }, ingestedAt: new Date().toLocaleString() });
-    this.setState({ legIngestFileName: '' });
+    const id = 'NLH-PLAN-' + scCode + '-' + Date.now();
+    const trailers = this.genNlhTrailers(scCode, cycleMonth);
+    ingestNlhPlan(this.engineStore, cycleMonth, { planId: id, scCode, status: 'Finalised', trailers, fileMeta: { name }, ingestedAt: new Date().toLocaleString() });
+    this.setState({ legIngestFileName: '', legIngestScCode: null });
     this.bumpEngineTick();
-    this.showToast(name + ' ingested — available to RLH\u2019s Route Scheduler picker', '#128A3E');
+    this.showToast(name + ' ingested for ' + scCode + ' — available to RLH\u2019s Route Scheduler', '#128A3E');
   }
   // C10 — open the SC editor pre-filled from an existing SC (real inline-equivalent edit, not a dead control).
   openScEdit(code) {
@@ -7586,6 +7694,7 @@ class NDCApp extends React.Component {
   schedFeedbackReasons(persona, field) {
     const T = {
       SC_cutoff: ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time'],
+      SC_tat: ['Processing Time - Additional Time Needed', 'Handling Delay at Dock', 'Under-estimated Load/Unload Time'],
       LH_cutoff: ['Vendor not aligned - Due to Traffic', 'DC Not open to receive load'],
       LH_tat: ['Due to Traffic', 'Geographical constraints'],
       LM_landing: ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early'],
@@ -7660,7 +7769,7 @@ class NDCApp extends React.Component {
         resolved[k] = fields[k].value;
       }
     }
-    const persona = st.schedOpsRole;
+    const persona = this.schedActiveRoleFor(sp);
     const store = Object.assign({}, st.schedFeedback || {});
     store[route.planId] = Object.assign({}, store[route.planId]);
     const bucket = Object.assign({ items: [] }, store[route.planId][route.routeCode]);
@@ -7693,7 +7802,8 @@ class NDCApp extends React.Component {
   // pending item(s) on this route: withdraws them (their part is fine after all), rather than
   // requiring the propose modal just to cancel.
   withdrawSchedOwnOpen(planId, routeCode) {
-    const persona = this.state.schedOpsRole;
+    const sp = (this.state.data.schedulerPlans || []).find(x => x.id === planId);
+    const persona = this.schedActiveRoleFor(sp || {});
     const store = Object.assign({}, this.state.schedFeedback || {});
     const bucket = Object.assign({ items: [] }, (store[planId] || {})[routeCode]);
     const before = (bucket.items || []).length;
@@ -7714,6 +7824,39 @@ class NDCApp extends React.Component {
   schedRejectAllRemaining(planId, sp, routeCode) {
     const items = (this.schedRouteBucket(planId, routeCode).items || []).filter(x => x.status === 'Pending');
     items.forEach(it => this.decideSchedFeedback(planId, sp, routeCode, it.field, it.dcCode, it.id, 'Reject'));
+  }
+  // schedAcceptAllPlan/schedRejectAllPlan (later session) — the PLAN-wide equivalent, iterating
+  // every route's own pending items. RLH's own Design Review only has an Accept-All (no Reject-
+  // All exists there — confirmed by search, not assumed), but both were explicitly requested
+  // for Route Scheduler, so both are built here even though the RLH pattern being "replicated"
+  // is itself asymmetric.
+  schedAcceptAllPlan(planId) {
+    const sp = (this.state.data.schedulerPlans || []).find(x => x.id === planId);
+    const info = sp ? this.schedulerRouteDcInfo(sp) : null;
+    if (!info) return;
+    info.routeInfo.forEach(ri => this.schedAcceptAllRemaining(planId, sp, ri.route.routeCode));
+  }
+  schedRejectAllPlan(planId) {
+    const sp = (this.state.data.schedulerPlans || []).find(x => x.id === planId);
+    const info = sp ? this.schedulerRouteDcInfo(sp) : null;
+    if (!info) return;
+    info.routeInfo.forEach(ri => this.schedRejectAllRemaining(planId, sp, ri.route.routeCode));
+  }
+  schedCountPendingForPlan(planId) {
+    const sp = (this.state.data.schedulerPlans || []).find(x => x.id === planId);
+    const info = sp ? this.schedulerRouteDcInfo(sp) : null;
+    if (!info) return 0;
+    return info.routeInfo.reduce((a, ri) => a + (this.schedRouteBucket(planId, ri.route.routeCode).items || []).filter(x => x.status === 'Pending').length, 0);
+  }
+  confirmSchedAcceptAllPlan() {
+    const id = this.state.schedAcceptAllPlanId;
+    if (id) { this.schedAcceptAllPlan(id); this.showToast('All proposed changes accepted', '#128A3E'); }
+    this.setState({ schedAcceptAllPlanOpen: false, schedAcceptAllPlanId: null });
+  }
+  confirmSchedRejectAllPlan() {
+    const id = this.state.schedRejectAllPlanId;
+    if (id) { this.schedRejectAllPlan(id); this.showToast('All proposed changes rejected', '#5A5E66'); }
+    this.setState({ schedRejectAllPlanOpen: false, schedRejectAllPlanId: null });
   }
   // checkSchedDockCapacity(sp, routeCode, candidateDispatchMin) (2026-08-14, rule 7) — a HARD
   // block, not a warning: recomputes the candidate's 30-min slot against every OTHER route's
@@ -7813,11 +7956,73 @@ class NDCApp extends React.Component {
     return { ok: true, impliedDispatchMin, impliedLabel: info.fmtTime(impliedDispatchMin) };
   }
   // ===== Route Scheduler Ops Alignment — lifecycle gates (2026-08-18) =========================
+  // deriveLmPocs(sp) (later session) — LM's reviewer pool for a scheduler plan: the UNION of
+  // every POC across every DC the plan touches (deduped), not just the first DC's own list.
+  // A real SC typically has only 5-6 distinct LM POCs shared across its whole ~100-150 DC pool
+  // (seeded that way — see buildSeed()'s scLmPocs), so this union is small in practice even
+  // though it's scanning every DC on the plan.
+  deriveLmPocs(sp) {
+    const parent = (this.state.data.plans || []).find(p => p.id === sp.parentPlanId);
+    const dcCodes = ((parent && parent.rows) || []).reduce((a, r) => a.concat((r.dcs || [])), []);
+    const lmdcByCode = {}; (this.state.data.lmdcs || []).forEach(l => { lmdcByCode[l.code] = l; });
+    const seen = {}; const names = [];
+    dcCodes.forEach(code => {
+      const l = lmdcByCode[code];
+      (l && l.pocs || []).forEach(n => { if (!seen[n]) { seen[n] = true; names.push(n); } });
+    });
+    return names;
+  }
+  // schedRoleForPersona(sp, personaName) (later session) — replaces the manual SC/LH/LM toggle.
+  // A real POC only ever looks at one role (per direct confirmation — "the same POC acting in two
+  // roles" is two separate POC configurations in production, same email, not one person
+  // switching). Role is looked up from SC/LMDC Master's own POC lists for THIS plan's SC, not
+  // chosen live.
+  schedRoleForPersona(sp, personaName) {
+    if (!personaName) return null;
+    if (sp.schedStage === 'stage2') return this.deriveLmPocs(sp).indexOf(personaName) >= 0 ? 'LM' : null;
+    const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
+    const pocs = this.deriveScPocRoles(sc.pocs);
+    if (pocs.scNames.indexOf(personaName) >= 0) return 'SC';
+    if (pocs.lhNames.indexOf(personaName) >= 0) return 'LH';
+    return null;
+  }
+  // schedActiveRoleFor(sp) — the currently-picked "Acting as" name (the SAME top-right control
+  // RLH's own Ops Alignment already uses, st.opsActingPersona), resolved to a role for THIS
+  // specific plan. Falls back to the first valid name for this plan/stage if the currently-picked
+  // persona isn't a POC on this particular SC (a name valid for one SC won't be valid for every
+  // other SC's own POC list).
+  schedActiveRoleFor(sp) {
+    const current = this.state.opsActingPersona;
+    const direct = this.schedRoleForPersona(sp, current);
+    if (direct) return direct;
+    if (sp.schedStage === 'stage2') return this.deriveLmPocs(sp).length ? 'LM' : null;
+    const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
+    const pocs = this.deriveScPocRoles(sc.pocs);
+    return pocs.scNames.length ? 'SC' : (pocs.lhNames.length ? 'LH' : null);
+  }
+  // schedGlobalRoleForStage(stage) — rail-level bucketing needs ONE role to scope the WHOLE list
+  // by (many plans/SCs at once), unlike schedActiveRoleFor which resolves per-plan. Stated
+  // simplification: checks the acting persona against every plan in this stage and returns the
+  // first role it resolves to (SC checked before LH, matching the old toggle's default order) —
+  // different SCs can have different POC pools, so this is an approximation for the rail's own
+  // grouping, not a claim that one global role is exactly correct for every plan in the list.
+  schedGlobalRoleForStage(stage) {
+    const current = this.state.opsActingPersona;
+    const plansInStage = (this.state.data.schedulerPlans || []).filter(sp => sp.schedStage === stage);
+    if (stage === 'stage2') return 'LM';
+    for (let i = 0; i < plansInStage.length; i++) {
+      const role = this.schedRoleForPersona(plansInStage[i], current);
+      if (role) return role;
+    }
+    return 'SC'; // safe default — an SC-role reviewer always exists once SC Master has POCs
+  }
   // schedPersonaName(sp, role) — a display name for whoever is "submitting" as this role. SC/LH
-  // draw from SC Master's own POC split (deriveScPocRoles); LM has no POC source yet (LMDC Master
-  // integration is future scope, per product direction) so it's a generic placeholder for now.
+  // draw from SC Master's own POC split (deriveScPocRoles); LM draws from LMDC Master's own POCs
+  // (deriveLmPocs), unioned across the plan's DCs — this was a generic placeholder until this
+  // session ("LM has no POC source yet... future scope"); LMDC Master's own pocs field now
+  // exists, so LM gets a real name the same way SC/LH always did.
   schedPersonaName(sp, role) {
-    if (role === 'LM') return 'LM Ops Lead';
+    if (role === 'LM') { const names = this.deriveLmPocs(sp); return names[0] || 'LM Ops Lead'; }
     const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
     const pocs = this.deriveScPocRoles(sc.pocs);
     return role === 'LH' ? (pocs.lhNames[0] || 'LH Ops Lead') : (pocs.scNames[0] || 'SC Ops Lead');
@@ -7837,7 +8042,7 @@ class NDCApp extends React.Component {
     const idx = (d.schedulerPlans || []).findIndex(x => x.id === planId);
     if (idx < 0) return;
     const sp = d.schedulerPlans[idx];
-    const role = st.schedOpsRole;
+    const role = this.schedActiveRoleFor(sp);
     if (this.schedStageRoles(sp.schedStage).indexOf(role) < 0) { this.showToast('This role has nothing to submit at the current stage', '#C77B00'); return; }
     if (sp.status === 'Acknowledged' || sp.status === 'Finalised') { this.showToast('This stage is already frozen — nothing left to submit', '#C77B00'); return; }
     const now = new Date(); const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -7992,8 +8197,11 @@ class NDCApp extends React.Component {
       const sub = ((st.schedSubmitted || {})[sp.id] || {}).stage2 || {};
       return sub.LM ? 'Submitted' : 'To Review';
     }
-    // SC or LH
-    if (sp.schedStage === 'stage2') return sp.status === 'Finalised' ? 'Finalised' : 'Acknowledged';
+    // SC or LH — hard stage separation (later session): once a plan moves to stage2, SC/LH no
+    // longer see it in their own rail at all, matching Stage 1/Stage 2 now being genuinely
+    // separate tabs, not a shared rail with a stage-aware label patch. Previously this pinned to
+    // 'Acknowledged' and stayed visible — that's what the stage-tab split explicitly replaces.
+    if (sp.schedStage === 'stage2') return null;
     if (sp.status === 'Finalised') return 'Finalised';
     if (sp.status === 'Acknowledged') return 'Acknowledged';
     const sub = ((st.schedSubmitted || {})[sp.id] || {}).stage1 || {};
@@ -8058,7 +8266,8 @@ class NDCApp extends React.Component {
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const rlhMode = f.rlhMode || 'Valmo RLH';
     const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
-      pincodes: (f.pincodes || '').split(/[;,]/).map(s => s.trim()).filter(Boolean) };
+      pincodes: (f.pincodes || '').split(/[;,]/).map(s => s.trim()).filter(Boolean),
+      pocs: (f.pocs || '').split(/[;,]/).map(s => s.trim()).filter(Boolean) };
     let laneCorrected = false;
     if (rlhMode === 'MDC') {
       patch.mdcCode = f.mdcCode || null;
@@ -8132,7 +8341,7 @@ class NDCApp extends React.Component {
         const idx = (name) => headers.indexOf(name);
         const codeIdx = idx('lmdc code');
         if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
-        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)'), pincodesIdx = idx('pincodes');
+        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)'), pincodesIdx = idx('pincodes'), pocsIdx = idx('pocs');
         const validCodes = {}; (this.state.data.lmdcs || []).forEach(l => { validCodes[l.code] = true; });
         // 2026-08-07 — all 4 editable fields are fixed dropdown option sets in the UI now, not free
         // text/number. An uploaded value that doesn't match one of those options flags the WHOLE
@@ -8159,6 +8368,7 @@ class NDCApp extends React.Component {
           if (vehIdx >= 0 && cols[vehIdx]) { if (VEH_SET[cols[vehIdx]]) patch.maxVehicle = cols[vehIdx]; else rowErrs.push('Max Vehicle Size "' + cols[vehIdx] + '" is not an RLH-feasible vehicle type'); }
           if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not 15\u201360 in steps of 5'); }
           if (pincodesIdx >= 0 && cols[pincodesIdx]) patch.pincodes = cols[pincodesIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          if (pocsIdx >= 0 && cols[pocsIdx]) patch.pocs = cols[pocsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(patch).length === 0) { skipped++; continue; }
           const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
@@ -9115,17 +9325,20 @@ class NDCApp extends React.Component {
         // not a scalar; edited as a comma/semicolon-separated free-text field, same parsing
         // convention as pocs elsewhere in this app. Table cell shows a joined/truncated summary.
         pincodes: l.pincodes || [], pincodesLabel: (l.pincodes && l.pincodes.length) ? (l.pincodes.length > 3 ? l.pincodes.slice(0, 3).join(', ') + ' +' + (l.pincodes.length - 3) : l.pincodes.join(', ')) : '\u2014',
+        pocs: l.pocs || [], pocsLabel: (l.pocs && l.pocs.length) ? (l.pocs.length > 2 ? l.pocs.slice(0, 2).join(', ') + ' +' + (l.pocs.length - 2) : l.pocs.join(', ')) : '\u2014',
         rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (this.minToHrsLabel(l.tat) + ' hrs') : '\u2014',
         editing, notEditing: !editing,
         draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
         draftRlhMode: lmdcDraft.rlhMode, draftMdcCode: lmdcDraft.mdcCode, draftLaneName: lmdcDraft.laneName, draftCutoff: lmdcDraft.cutoff, draftTat: lmdcDraft.tat,
         draftPincodes: lmdcDraft.pincodes,
+        draftPocs: lmdcDraft.pocs,
         draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
         onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
         onDraftPincodes: ldSet('pincodes'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '', pincodes: (l.pincodes || []).join(', ') } }),
+        onDraftPocs: ldSet('pocs'),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '', pincodes: (l.pincodes || []).join(', '), pocs: (l.pocs || []).join(', ') } }),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
@@ -9134,7 +9347,7 @@ class NDCApp extends React.Component {
     // Mode/MDC Code/Lane Name/Cutoff/TAT were added to the table but never added here — this is
     // exactly the "CSVs must match the tables" gap flagged this round). TAT exports in HOURS
     // (matching the table's own display unit), not the internal minute storage.
-    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),Pincodes';
+    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),Pincodes,POCs';
     const downloadLmdcCsv = () => {
       const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
@@ -9142,7 +9355,7 @@ class NDCApp extends React.Component {
         return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive',
           mode, mode === 'MDC' ? (l.mdcCode || '') : '', mode === 'Co-Loading' ? (l.laneName || '') : '',
           mode === 'Co-Loading' ? (l.cutoff || '') : '', mode === 'Co-Loading' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
-          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, (l.pincodes || []).join(';')].map(esc).join(','); });
+          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, (l.pincodes || []).join(';'), (l.pocs || []).join(';')].map(esc).join(','); });
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
@@ -10264,7 +10477,7 @@ class NDCApp extends React.Component {
     const canUnfreeze = sp.status === 'Acknowledged';
     const canPushToLM = sp.status === 'Acknowledged' && schedStage === 'stage1' && stagePendingCount === 0;
     const canFinaliseSched = sp.status === 'Acknowledged' && schedStage === 'stage2' && stagePendingCount === 0;
-    const activeRole = st.schedOpsRole || 'SC';
+    const activeRole = this.schedActiveRoleFor(sp);
     const activeStageSub = schedStage === 'stage2' ? stage2Sub : stage1Sub;
     const canSubmitFeedback = (sp.status === 'Pushed' || sp.status === 'In Alignment') && this.schedStageRoles(schedStage).indexOf(activeRole) >= 0 && !activeStageSub[activeRole];
     const card = {
@@ -10274,6 +10487,7 @@ class NDCApp extends React.Component {
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
       isFinalDirect, reviewerNames, opsLeads, hasReviewers: opsLeads.length > 0,
       schedStage, stageLabel, stageBg, stageFg, feedbackLeadChips, hasFeedbackLeads: feedbackLeadChips.length > 0,
+      activeRole, activeRoleLabel: activeRole ? (activeRole + ' User') : 'No role',
       stageTracker, cardBorderColor,
       stagePendingCount,
       canAckFreeze, canUnfreeze, canPushToLM, canFinaliseSched, canSubmitFeedback,
@@ -10286,6 +10500,8 @@ class NDCApp extends React.Component {
       connectionStartTime: m.connectionStartTime, connectionSlots: m.connectionSlots,
       d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours, lanesWithHold: m.lanesWithHold, totalLanes: m.totalLanes,
       dockUtilPct: m.dockUtilPct, slotBreakdown: m.slotBreakdown || [], hasSlotBreakdown: (m.slotBreakdown || []).length > 0,
+      avgHoldHours: m.avgHoldHours, maxHoldHours: m.maxHoldHours,
+      rolloverPct: m.rolloverPct, lmscInOutDays: m.lmscInOutDays,
       d0Color: m.warnD0Low ? '#D14B4B' : '#14171F', holdColor: m.warnHoldHigh ? '#D14B4B' : '#14171F',
       warnD0Low: m.warnD0Low, warnHoldHigh: m.warnHoldHigh, dockBreach, hasAnyWarning: m.warnD0Low || m.warnHoldHigh || dockBreach,
       flags, hasFlags: flags.length > 0, noFlags: flags.length === 0,
@@ -10300,7 +10516,7 @@ class NDCApp extends React.Component {
     };
     card.onDownloadCsv = () => {
       const head = 'Field,Value\n';
-      const rows = [['SC', sp.scCode + ' - ' + sp.scName], ['Status', sp.status], ['RLH Route Planner Run', card.parentRunId], ['NLH Plan Used', card.nlhPlanName], ['SC Docks', sp.rlhDocks], ['HW', sp.hw], ['Hold Time', sp.holdOn ? 'On' : 'Off'], ['Max Hold Time - Local (min)', sp.holdOn ? sp.maxHoldLocal : '\u2014'], ['Max Hold Time - Non-Local (min)', sp.holdOn ? sp.maxHoldNonLocal : '\u2014'], ['D0 Cutoff', sp.d0Cutoff], ['Local Speed', sp.localSpeed + ' km/h'], ['Non-Local Speed', sp.nonLocalSpeed + ' km/h'], ['SC Connection Start Time', m.connectionStartTime], ['Connection Slots', m.connectionSlots], ['Dock Utilisation', m.dockUtilPct + '%'], ['D0 Landing (Vol%)', m.d0LandingPct + '%'], ['Holding Time (Total hrs)', m.holdingTotalHours], ['Lanes with Hold Time', m.lanesWithHold + ' / ' + m.totalLanes]].concat((m.slotBreakdown || []).map(s => ['Slot ' + s.time, s.used + ' / ' + s.docks + ' (' + s.pct + '%)']));
+      const rows = [['SC', sp.scCode + ' - ' + sp.scName], ['Status', sp.status], ['RLH Route Planner Run', card.parentRunId], ['NLH Plan Used', card.nlhPlanName], ['SC Docks', sp.rlhDocks], ['HW', sp.hw], ['Hold Time', sp.holdOn ? 'On' : 'Off'], ['Max Hold Time - Local (min)', sp.holdOn ? sp.maxHoldLocal : '\u2014'], ['Max Hold Time - Non-Local (min)', sp.holdOn ? sp.maxHoldNonLocal : '\u2014'], ['D0 Cutoff', sp.d0Cutoff], ['Local Speed', sp.localSpeed + ' km/h'], ['Non-Local Speed', sp.nonLocalSpeed + ' km/h'], ['SC Connection Start Time', m.connectionStartTime], ['Connection Slots', m.connectionSlots], ['Dock Utilisation', m.dockUtilPct + '%'], ['D0 Landing (Vol%)', m.d0LandingPct + '%'], ['Rollover %', m.rolloverPct + '%'], ['LMSC-in \u2192 LMDC-out (days)', m.lmscInOutDays], ['Avg Hold (hrs)', m.avgHoldHours], ['Max Hold (hrs)', m.maxHoldHours], ['Lanes with Hold Time', m.lanesWithHold + ' / ' + m.totalLanes]];
       const body = rows.map(r => r.join(',')).join('\n');
       this.downloadText(sp.id + '-cutoff-plan.csv', head + body);
       this.showToast('Cutoff Plan downloaded · ' + sp.id, '#128A3E');
@@ -10687,18 +10903,14 @@ class NDCApp extends React.Component {
     if (!parents.length) return;
     // Defensive re-check of validation rule #1 (blocking) — the button above isn't a real HTML
     // `disabled`, just styled to look inert, so this guard is what actually stops the trigger.
-    // 2026-08-25 rewrite — chosenNlh now resolves through the engine (see Route Scheduler Step 2
-    // rewrite), not st.ingestedNlhPlans. scCodes/volumeBySC carry the same known simplification
-    // noted at the Step 2 rewrite (stubbed as "covers every current RLH SC at its own volume" --
-    // no real per-DC NLH landing data exists yet).
-    const chosenNlhRaw = findNlhIngestedPlanById(this.engineStore, st.schedulerNlhPlanId);
-    const chosenNlh = chosenNlhRaw ? {
-      runId: chosenNlhRaw.planId, name: chosenNlhRaw.fileMeta.name,
-      scCodes: d.scs.map(s => s.code), volumeBySC: d.scs.reduce((acc, s) => { acc[s.code] = s.volume; return acc; }, {}),
-    } : null;
-    const uncovered = parents.filter(p => !(chosenNlh && chosenNlh.scCodes && chosenNlh.scCodes.indexOf(p.scCode) >= 0));
-    if (!chosenNlh || uncovered.length > 0) {
-      this.showToast('Blocked \u2014 ' + (uncovered.length || parents.length) + ' SC' + ((uncovered.length || parents.length) === 1 ? '' : 's') + ' missing NLH landing data', '#D14B4B');
+    // NLH pairing is per-SC now (later session) — each parent SC needs its OWN Finalised NLH
+    // plan for the chosen month, not one shared file covering everyone.
+    const month = st.schedulerNlhSourceMonth || currentMonthKey();
+    const nlhByScForTrigger = {};
+    listNlhIngestedPlans(this.engineStore, month).filter(p => p.status === 'Finalised').forEach(p => { nlhByScForTrigger[p.scCode] = p; });
+    const uncovered = parents.filter(p => !nlhByScForTrigger[p.scCode]);
+    if (uncovered.length > 0) {
+      this.showToast('Blocked \u2014 ' + uncovered.length + ' SC' + (uncovered.length === 1 ? '' : 's') + ' missing NLH landing data', '#D14B4B');
       return;
     }
     let n = this.state.schedulerPlanCounter || 0;
@@ -10709,7 +10921,7 @@ class NDCApp extends React.Component {
         id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
         scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
         status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
-        nlhPlanId: st.schedulerNlhPlanId || null,
+        nlhPlanId: (nlhByScForTrigger[parent.scCode] || {}).planId || null,
         hw: params.hw, d0Increments: params.d0, d0Cutoff: this.fmtD0Cutoff(params.d0),
         rlhDocks: params.docks, refPlanId: params.ref || null,
         localSpeed: params.localSpeed, nonLocalSpeed: params.nonLocalSpeed,
@@ -10818,36 +11030,32 @@ class NDCApp extends React.Component {
     // 2026-08-25 rewrite — RLH no longer owns its own NLH-file upload here. NLH Design Ingestion
     // now lives exclusively on the NLH card (see Phase 4); this picker reads whatever NLH has
     // ingested for a chosen NLH cycle-month via listNlhIngestedPlans(), then adapts each record
-    // into the SAME shape this Step 2 (and Step 4's validation rules #1/#2) already expects --
-    // so nothing downstream of `allNlhPlans` needs to change. Known simplification, stated
-    // plainly rather than silently: the engine's ingestion record carries no real per-DC
-    // volume/coverage data (NLH's own Design Creation solver doesn't exist yet), so scCodes/
-    // volumeBySC are stubbed as "covers every currently-selected RLH SC, at that SC's own RLH
-    // volume" -- validation rules #1/#2 will not meaningfully fire against an NLH-sourced plan
-    // until NLH's own solver (and real per-DC landing data) exists.
+    // NLH plan pairing (later session) — replaces the old "pick one file that blankets every
+    // selected SC" model. NLH plans are now real per-SC records (see genNlhTrailers()/
+    // submitLegIngest()), so pairing is automatic: each selected RLH SC reads its OWN
+    // same-code Finalised NLH plan for the chosen month, informationally shown, never manually
+    // picked. nlhVol is now a REAL sum of that SC's own trailer volumes, not the old stub
+    // ("same as RLH's own volume") — a genuine improvement, not just a rename.
     const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || currentMonthKey();
-    const q2 = (st.schedulerNlhSearch || '').toLowerCase();
-    const allNlhPlans = listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth).map(p => ({
-      runId: p.planId, name: p.fileMeta.name, rows: 0, by: 'NLH Design Ingestion', date: p.ingestedAt, status: 'Validated', errors: 0,
-      scCount: d.scs.length, scCodes: d.scs.map(s => s.code),
-      volumeBySC: d.scs.reduce((acc, s) => { acc[s.code] = s.volume; return acc; }, {}),
-    }));
-    const nlhPlansFiltered = allNlhPlans.filter(p => !q2 || p.name.toLowerCase().indexOf(q2) >= 0);
-    const chosenNlhRunId = st.schedulerNlhPlanId;
-    const schedulerNlhCards = nlhPlansFiltered.map(p => ({ runId: p.runId, name: p.name, rows: fmtIntSch(p.rows), scCount: p.scCount, date: p.date, by: p.by,
-      active: chosenNlhRunId === p.runId, onClick: () => this.setState({ schedulerNlhPlanId: p.runId }) }));
-    const chosenNlhPlan = allNlhPlans.find(p => p.runId === chosenNlhRunId);
-    const nlhPicked = !!chosenNlhRunId;
+    const selectedScCodesForNlh = Array.from(new Set(selectedPlanIds.map(pid => { const p = (d.plans || []).find(pp => pp.id === pid); return p ? p.scCode : null; }).filter(Boolean)));
+    const nlhPlansByScThisMonth = {};
+    listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth).filter(p => p.status === 'Finalised').forEach(p => { nlhPlansByScThisMonth[p.scCode] = p; });
+    const nlhPairingRows = selectedScCodesForNlh.map(code => {
+      const p = nlhPlansByScThisMonth[code];
+      const sc = d.scs.find(s => s.code === code);
+      return {
+        scCode: code, scName: sc ? sc.name : code, hasNlhPlan: !!p,
+        planId: p ? p.planId : null, trailerCount: p ? p.trailers.length : 0,
+        nlhVolume: p ? p.trailers.reduce((a, t) => a + t.volume, 0) : 0,
+      };
+    });
+    const nlhMissingScs = nlhPairingRows.filter(r => !r.hasNlhPlan);
+    const nlhPicked = selectedScCodesForNlh.length > 0 && nlhMissingScs.length === 0;
     const canNextScheduler1 = selectedPlanIds.length > 0 && nlhPicked;
-    const schedulerNlhNoResults = allNlhPlans.length > 0 && nlhPlansFiltered.length === 0;
-    const schedulerNlhEmpty = allNlhPlans.length === 0;
-    // NLH source-month picker -- independent of RLH's own active cycle, since NLH runs its own
-    // cycle clock (per the independent-cycles-per-leg decision). Switching it re-queries
-    // listNlhIngestedPlans() for that month; the currently-chosen plan (if any) is cleared since
-    // it may not exist in the newly-picked month.
+    const schedulerNlhEmpty = selectedScCodesForNlh.length === 0;
     const schedNlhMonthOptions = cycleWindow(schedulerNlhSourceMonth).map(m => ({
       month: m, label: monthLabel(m), active: m === schedulerNlhSourceMonth,
-      onSelect: () => this.setState({ schedulerNlhSourceMonth: m, schedulerNlhPlanId: null, schedNlhMonthOpen: false }),
+      onSelect: () => this.setState({ schedulerNlhSourceMonth: m, schedNlhMonthOpen: false }),
     }));
     const schedNlhMonthLabel = monthLabel(schedulerNlhSourceMonth);
     const schedNlhMonthOpen = !!st.schedNlhMonthOpen;
@@ -10907,14 +11115,11 @@ class NDCApp extends React.Component {
       const r = opModeRows.find(x => x.code === plan.scCode) || { code: plan.scCode, name: plan.scName, zone: plan.zone };
       const sc = d.scs.find(s => s.code === plan.scCode);
       const rlhVol = sc ? sc.volume : 0;
-      const hasNlhCoverage = !!(chosenNlhPlan && chosenNlhPlan.scCodes && chosenNlhPlan.scCodes.indexOf(plan.scCode) >= 0);
-      const nlhVol = hasNlhCoverage ? (chosenNlhPlan.volumeBySC || {})[plan.scCode] : null;
+      const hasNlhCoverage = nlhPlansByScThisMonth.hasOwnProperty(plan.scCode);
+      const nlhVol = hasNlhCoverage ? nlhPlansByScThisMonth[plan.scCode].trailers.reduce((a, t) => a + t.volume, 0) : null;
       const flags = [];
-      if (!chosenNlhPlan) {
-        // Shouldn't normally happen (Step 2 requires a pick to advance), but stay honest if reached directly.
-        flags.push({ sev: 'error', text: 'No NLH Landing Plan selected.' });
-      } else if (!hasNlhCoverage) {
-        flags.push({ sev: 'error', text: 'No NLH landing data for this SC in the selected file.' });
+      if (!hasNlhCoverage) {
+        flags.push({ sev: 'error', text: 'No NLH landing data for this SC \u2014 no Finalised NLH plan found for ' + plan.scCode + ' this month.' });
       } else {
         const pctDiff = rlhVol > 0 ? Math.abs(nlhVol - rlhVol) / rlhVol * 100 : 0;
         if (pctDiff > 5) {
@@ -10999,7 +11204,7 @@ class NDCApp extends React.Component {
         onResetStartTime: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[plan.id] = recMinForPlan; this.setState({ schedChosenStartTime: m }); },
       });
     });
-    const step4NlhLabel = chosenNlhPlan ? chosenNlhPlan.name : '—';
+    const step4NlhLabel = nlhPicked ? (selectedScCodesForNlh.length + ' SC' + (selectedScCodesForNlh.length === 1 ? '' : 's') + ' paired with their own NLH plan') : '\u2014';
     const step4ErrorCount = previewRows.filter(r => r.hasError).length;
     const step4WarningCount = previewRows.filter(r => r.hasWarning).length;
     const step4Blocked = step4ErrorCount > 0;
@@ -11012,12 +11217,12 @@ class NDCApp extends React.Component {
     if (st.schedNcOpen && st.schedNcRoute) {
       const ncSp = (d.schedulerPlans || []).find(x => x.id === st.schedNcRoute.planId);
       if (ncSp) {
-        const role = st.schedOpsRole || 'SC';
+        const role = this.schedActiveRoleFor(ncSp);
         const ncFields = this.buildSchedNcFields(ncSp, st.schedNcRoute.routeCode, role);
         const anyFlagged = ncFields.some(f => f.flagged);
         schedNcModal = {
           open: true, routeCode: st.schedNcRoute.routeCode, role, roleLabel: role + ' User',
-          title: 'Flag changes', intro: role === 'SC' ? 'Propose a new Dispatch Cutoff for this route.' : role === 'LH' ? 'Propose a new Dispatch Cutoff and/or TAT for this route\u2019s DCs.' : 'Propose a new Landing Time for this route\u2019s DCs \u2014 this implies a new Dispatch Cutoff once TAT is locked.',
+          title: 'Flag changes', intro: (role === 'SC' || role === 'LH') ? 'Propose a new Dispatch Cutoff and/or TAT for this route\u2019s DCs.' : 'Propose a new Landing Time for this route\u2019s DCs \u2014 this implies a new Dispatch Cutoff once TAT is locked.',
           fields: ncFields, hasFlagged: anyFlagged,
           remark: st.schedNcRemark || '', onRemark: (e) => this.setState({ schedNcRemark: e.target.value }),
           close: () => this.closeSchedNc(), onSubmit: () => this.submitSchedNc(),
@@ -11095,9 +11300,8 @@ class NDCApp extends React.Component {
       schedulerSearch: st.schedulerSearch || '', onSchedulerSearch: (e) => this.setState({ schedulerSearch: e.target.value }),
       allVisibleSelected, onSelectAllVisible,
       // Step 2
-      schedulerNlhCards, canNextScheduler2, schedulerNlhNoResults, schedulerNlhEmpty,
+      nlhPairingRows, canNextScheduler2, schedulerNlhEmpty,
       schedNlhMonthOptions, schedNlhMonthLabel, schedNlhMonthOpen, toggleSchedNlhMonth,
-      schedulerNlhSearch: st.schedulerNlhSearch || '', onSchedulerNlhSearch: (e) => this.setState({ schedulerNlhSearch: e.target.value }),
       // Step 3
       schedHwGlobal: hwGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler2,
       onHwGlobal: (v) => this.setState({ schedulerHwGlobal: v }),
@@ -11316,8 +11520,18 @@ class NDCApp extends React.Component {
       const slot = slotOf(parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10));
       laneSlotCounts[slot] = (laneSlotCounts[slot] || 0) + 1;
     });
+    // realRouteSlotCounts (later session) — fixes a real, previously-documented gap: the search
+    // below used to only avoid slots filled by KNOWN Co-Loading lanes, explicitly leaving "other
+    // real routes landing in the same slot as each other" unguarded (see the comment this
+    // replaces). Real DS output can never actually schedule more departures into a slot than
+    // there are physical docks, so this must be a hard constraint, not just a lane-only one.
+    // Processed sequentially below (routes.forEach, not .map) so each route's own chosen slot
+    // gets counted before the NEXT route's search runs — order is the array's own order,
+    // deterministic and stable like everything else in this simulation.
+    const realRouteSlotCounts = {};
     const docksCap = sp.rlhDocks || 0;
-    const routeInfo = routes.map(r => {
+    const routeInfo = [];
+    routes.forEach(r => {
       // Co-Loading lane (2026-08-19) — never enters the dispatch-time search at all: its Cutoff is
       // fixed master data, and its TAT is entered per-DC directly (not distance/speed-derived).
       // Hold still applies on top, same formula as a real route's own DC, per product direction.
@@ -11334,7 +11548,8 @@ class NDCApp extends React.Component {
           routeHoldMin += holdMin;
           return { dc, isLocal: true, breakdownDistKm: 0, breakdownTatHrs: +(travelMin / 60).toFixed(2), arrivalMin, landingMin, holdMin, effectiveCutoffMin, isCoLoadDc: true };
         });
-        return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, isCoLoadLane: true };
+        routeInfo.push({ route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, isCoLoadLane: true });
+        return;
       }
       const dcRows = this.genDcRows(r);
       // Accepted Dispatch Cutoff feedback (Stage 1/3, from SC/LH/back-solved-LM) overrides the
@@ -11353,7 +11568,8 @@ class NDCApp extends React.Component {
       // already filled to capacity by KNOWN Co-Loading lanes alone.
       const computeAt = (dispatchCandidate) => {
         let maxViolation = 0;
-        const dockViol = (laneSlotCounts[slotOf(dispatchCandidate)] || 0) >= docksCap && docksCap > 0 ? 1 : 0;
+        const slotHere = slotOf(dispatchCandidate);
+        const dockViol = ((laneSlotCounts[slotHere] || 0) + (realRouteSlotCounts[slotHere] || 0)) >= docksCap && docksCap > 0 ? 1 : 0;
         const perDc = dcRows.map((dc) => {
           const isLocal = dc.isLocal !== undefined ? dc.isLocal : true; // real per-DC attribute (2026-08-19), not a hash guess
           const speed = isLocal ? localSpeed : nonLocalSpeed;
@@ -11399,7 +11615,12 @@ class NDCApp extends React.Component {
         routeHoldMin += holdMin;
         return { dc, isLocal, breakdownDistKm, breakdownTatHrs: +(travelMin / 60).toFixed(2), arrivalMin, landingMin, holdMin, effectiveCutoffMin };
       });
-      return { route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, dockStillViolated: chosen.dockViol === 1 };
+      // Claim this route's own chosen slot NOW, before the next route's search runs — this is
+      // the actual mechanism that makes the dock-capacity constraint real across routes, not just
+      // within one route's own candidate evaluation.
+      const finalSlot = slotOf(dispatchMin);
+      realRouteSlotCounts[finalSlot] = (realRouteSlotCounts[finalSlot] || 0) + 1;
+      routeInfo.push({ route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, dockStillViolated: chosen.dockViol === 1 });
     });
     return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp, laneSlotCounts, slotOf };
   }
@@ -11413,6 +11634,12 @@ class NDCApp extends React.Component {
     const holdingTotalMin = routeInfo.reduce((a, x) => a + x.holdMin, 0);
     const holdingTotalHours = holdingTotalMin / 60;
     const lanesWithHold = routeInfo.filter(x => x.holdMin > 0).length;
+    // avgHoldHours/maxHoldHours (later session) — averaged/maxed across routes WITH hold only
+    // (holdMin > 0), not every route — a route with zero hold shouldn't drag the average down,
+    // per direct confirmation. Merges into one section with lanesWithHold on the card (see JSX).
+    const routesWithHold = routeInfo.filter(x => x.holdMin > 0);
+    const avgHoldHours = routesWithHold.length > 0 ? (routesWithHold.reduce((a, x) => a + x.holdMin, 0) / routesWithHold.length) / 60 : 0;
+    const maxHoldHours = routesWithHold.length > 0 ? Math.max.apply(null, routesWithHold.map(x => x.holdMin)) / 60 : 0;
     let onTimeVol = 0, totalVol = 0;
     routeInfo.forEach(({ dcInfo }) => {
       dcInfo.forEach(({ dc, landingMin, effectiveCutoffMin }) => {
@@ -11421,25 +11648,72 @@ class NDCApp extends React.Component {
       });
     });
     const d0LandingPct = totalVol > 0 ? (onTimeVol / totalVol * 100) : 0;
-    // 2026-07-31 — Slot Breakdown + Dock Utilisation. Groups every route into its 30-min dispatch
-    // slot (same rounding used for connectionSlots) and counts how many routes/vehicles departed in
-    // each slot against the SC's dock capacity. Dock Utilisation = total routes / (slots used × docks)
-    // — a simple network-wide average, NOT a "gap detection" metric: a plan that's 100% full in early
-    // slots and thin in the last one (real, honest tail-end slack from finite volume) reads identically
-    // to one with genuine idle docks mid-sequence. The per-slot list is what lets a reviewer actually
-    // see which shape they're looking at — the aggregate number alone can't distinguish the two.
+
+    // Rollover % + LMSC-in \u2192 LMDC-out days (later session) — both read the SC's own NLH
+    // trailer schedule (landing time + volume per trailer, real per-SC data since the earlier
+    // session's NLH-plans-as-records rework) and this plan's own route dispatch times, treated
+    // as a recurring DAILY schedule. connectionTime(trailer) = the next route dispatch at or
+    // after that trailer's ready-to-ship time (landing + 4 hrs), wrapping to tomorrow's earliest
+    // dispatch if it misses every dispatch today — this is the one shared computation both
+    // metrics build on, confirmed directly rather than assumed.
+    const nlhPlan = sp.nlhPlanId ? findNlhIngestedPlanById(this.engineStore, sp.nlhPlanId) : null;
+    const trailers = (nlhPlan && nlhPlan.trailers) || [];
+    const sortedDispatchMins = routeInfo.map(x => ((x.dispatchMin % 1440) + 1440) % 1440).sort((a, b) => a - b);
+    const connectionTimeFor = (landingMin) => {
+      if (!sortedDispatchMins.length) return landingMin; // no routes at all — degenerate, treat as instant
+      const readyMin = landingMin + 240; // ready to ship = landing + 4 hrs, same basis the Ready-to-Ship curve uses
+      const readyTod = ((readyMin % 1440) + 1440) % 1440;
+      const readyDayStart = readyMin - readyTod; // absolute minute of midnight on the day readyMin falls in
+      const sameDay = sortedDispatchMins.find(m => m >= readyTod);
+      if (sameDay != null) return readyDayStart + sameDay;
+      return readyDayStart + 1440 + sortedDispatchMins[0]; // every dispatch today already missed — wraps to tomorrow's earliest
+    };
+    let rolloverVol = 0, totalTrailerVol = 0, weightedDwellDays = 0;
+    trailers.forEach(t => {
+      const connectionMin = connectionTimeFor(t.landingMin);
+      const dwellHours = (connectionMin - t.landingMin) / 60;
+      totalTrailerVol += t.volume;
+      if (dwellHours > 24) rolloverVol += t.volume;
+      weightedDwellDays += t.volume * (dwellHours / 24);
+    });
+    const rolloverPct = totalTrailerVol > 0 ? (rolloverVol / totalTrailerVol * 100) : 0;
+    // avgSchedulingDelayDays — the SC-side half of LMSC-in→LMDC-out, volume-weighted across
+    // trailers (same weighting D0% already uses). Trailers aren't tied to a specific destination
+    // DC in this stubbed NLH model (no real per-DC NLH data exists — same known limitation noted
+    // elsewhere), so this is the one shared "time spent at the SC" baseline applied to every DC
+    // below, on top of that DC's own real travel+hold time — a stated approximation, not hidden.
+    const avgSchedulingDelayDays = totalTrailerVol > 0 ? (weightedDwellDays / totalTrailerVol) : 0;
+    let lmscInOutWeighted = 0, lmscInOutVolTotal = 0;
+    routeInfo.forEach(({ dcInfo }) => {
+      dcInfo.forEach(({ dc, breakdownTatHrs, holdMin, landingMin, effectiveCutoffMin }) => {
+        const cutoff = effectiveCutoffMin != null ? effectiveCutoffMin : cutoffMin;
+        const outForDeliveryExtraDay = landingMin > cutoff ? 1 : 0;
+        const days = avgSchedulingDelayDays + (breakdownTatHrs + holdMin / 60) / 24 + outForDeliveryExtraDay;
+        lmscInOutWeighted += dc.vol * days;
+        lmscInOutVolTotal += dc.vol;
+      });
+    });
+    const lmscInOutDays = lmscInOutVolTotal > 0 ? (lmscInOutWeighted / lmscInOutVolTotal) : 0;
     const docks = sp.rlhDocks || 0;
+    const dockUtilPct = (connectionSlots > 0 && docks > 0) ? (routes.length / (connectionSlots * docks) * 100) : 0;
+    // slotBreakdown — restored for the compact PLAN CARD (later session correction: this was
+    // over-removed along with the detail page's own copy; only the detail page's was actually
+    // asked for, since Dock Schedule only exists as an alternative tab THERE, not on the card).
+    // Now correctly reflects the dock-capacity fix above — every slot's `used` count is already
+    // ≤ docksCap by construction, so `full`/`pct` here can never show over 100%.
     const slotCounts = {};
     routeInfo.forEach(x => { const slot = Math.round(x.dispatchMin / 30) * 30; slotCounts[slot] = (slotCounts[slot] || 0) + 1; });
     const slotBreakdown = Object.keys(slotCounts).map(Number).sort((a, b) => a - b).map(slot => ({
       time: fmtTime(slot), used: slotCounts[slot], docks, full: slotCounts[slot] >= docks,
       pct: docks > 0 ? Math.round(slotCounts[slot] / docks * 100) : 0,
     }));
-    const dockUtilPct = (connectionSlots > 0 && docks > 0) ? (routes.length / (connectionSlots * docks) * 100) : 0;
     return {
       connectionStartTime: fmtTime(connectionStartMin), connectionSlots,
       d0LandingPct: Math.round(d0LandingPct * 10) / 10,
+      rolloverPct: Math.round(rolloverPct * 10) / 10,
+      lmscInOutDays: Math.round(lmscInOutDays * 10) / 10,
       holdingTotalHours: Math.round(holdingTotalHours * 10) / 10,
+      avgHoldHours: Math.round(avgHoldHours * 10) / 10, maxHoldHours: Math.round(maxHoldHours * 10) / 10,
       lanesWithHold, totalLanes: routes.length,
       docksForUtil: docks, slotBreakdown, dockUtilPct: Math.round(dockUtilPct * 10) / 10,
       warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
@@ -11480,11 +11754,19 @@ class NDCApp extends React.Component {
     });
     const routeRows = routeInfo.map(({ route, dispatchMin, dcInfo, holdMin }) => {
       const vehRecord = (d.VEH || []).find(v => v.name === route.veh) || {};
+      // roundTripTatHrs (later session) — was shown as "—", no formula defined. Confirmed formula:
+      // distance/speed only, no haversine/node-to-node reconstruction needed since the plan's own
+      // distances are already static. Reuses the per-DC breakdownTatHrs values already computed
+      // (which already apply each DC's own local/non-local speed correctly) — sum = time to visit
+      // every DC once, doubled for the return leg, matching "time to cover all DCs and back."
+      const oneWayTatHrs = dcInfo.reduce((a, x) => a + x.breakdownTatHrs, 0);
+      const roundTripTatHrs = +(oneWayTatHrs * 2).toFixed(2);
       return {
         routeCode: route.routeCode, tps: dcInfo.length, vol: route.volume, dist: route.rtDist,
         veh: route.veh, util: Math.round((route.util || 0) * 100) + '%',
         cap: vehRecord.cap ? Math.round(vehRecord.cap) : '\u2014',
         cutoffTime: fmtTime(dispatchMin), holdTimeHrs: +(holdMin / 60).toFixed(1),
+        roundTripTatHrs,
       };
     });
     // Dock Schedule — sequential Dock-1, Dock-2… assignment, round-robin WITHIN each dispatch slot
@@ -11531,7 +11813,7 @@ class NDCApp extends React.Component {
     const st = this.state;
     const info = this.schedulerRouteDcInfo(sp);
     if (!info) return {};
-    const role = st.schedOpsRole || 'SC';
+    const role = this.schedActiveRoleFor(sp);
     const stage = sp.schedStage || 'stage1';
     const stageFields = stage === 'stage2' ? ['landing'] : ['cutoff', 'tat'];
     const frozen = sp.status === 'Acknowledged' || sp.status === 'Finalised';
@@ -11612,30 +11894,44 @@ class NDCApp extends React.Component {
     // a free numeric hours input now, not a fixed dropdown — see hrsToMinRoundUp()/minToHrsLabel().
     const TIME_OPTS_30 = []; for (let m = 0; m < 1440; m += 30) TIME_OPTS_30.push({ value: String(m), label: info.fmtTime(m) });
     const TIME_OPTS_15 = []; for (let m = 0; m < 1440; m += 15) TIME_OPTS_15.push({ value: String(m), label: info.fmtTime(m) });
-    const mkField = (key, label, currentLabel, defaultVal, options, reasons, isNumeric) => {
+    const mkField = (key, label, currentLabel, defaultVal, options, reasons, isNumeric, distKm) => {
       const flagged = !!draft[key];
+      const currentVal = flagged ? draft[key].value : defaultVal;
+      // Speed validation (later session) — for TAT fields only (distKm passed): flags if the
+      // CURRENTLY entered/proposed TAT implies a speed under 20kmph, given this DC's known
+      // distance. Live — recomputes against whatever value is in the field right now, not just at
+      // submit time, so the person proposing sees the warning before they even submit.
+      let speedWarning = null;
+      if (distKm != null && distKm > 0) {
+        const hrs = parseFloat(currentVal);
+        if (hrs > 0) {
+          const impliedSpeed = distKm / hrs;
+          if (impliedSpeed < 20) speedWarning = 'Implied speed ' + impliedSpeed.toFixed(1) + ' km/h \u2014 below 20 km/h';
+        }
+      }
       return {
         key, label, currentLabel, flagged,
         toggleLabel: flagged ? 'Unflag' : 'Flag',
         toggleBg: flagged ? '#FFF4E0' : '#fff', toggleFg: flagged ? '#C77B00' : '#5A5E66', toggleBd: flagged ? '#C77B00' : '#E6EBF2',
         onToggleFlag: () => this.toggleSchedNcFlag(key, defaultVal),
-        value: flagged ? draft[key].value : defaultVal,
+        value: currentVal,
         onInput: (e) => this.onSchedNcFieldValue(key, e.target.value),
         options, isNumeric: !!isNumeric,
         reasonVal: flagged ? draft[key].reason : '',
         onReason: (e) => this.onSchedNcFieldReason(key, e.target.value),
         reasons,
+        speedWarning, hasSpeedWarning: !!speedWarning,
       };
     };
     const fields = [];
     if (role === 'SC' || role === 'LH') {
       fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), String(ri.dispatchMin), TIME_OPTS_30, this.schedFeedbackReasons(role, 'cutoff')));
     }
-    if (role === 'LH') {
+    if (role === 'SC' || role === 'LH') {
       ri.dcInfo.forEach(dc => {
         const tatMin = Math.round(dc.breakdownTatHrs * 60);
         const tatHrsLabel = this.minToHrsLabel(tatMin);
-        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatHrsLabel + ' hrs', tatHrsLabel, null, this.schedFeedbackReasons('LH', 'tat'), true));
+        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatHrsLabel + ' hrs', tatHrsLabel, null, this.schedFeedbackReasons(role, 'tat'), true, dc.breakdownDistKm));
       });
     }
     if (role === 'LM') {
@@ -11713,7 +12009,7 @@ class NDCApp extends React.Component {
     }));
     const routeRows = tables.routeRows.map(r => ({
       segment: r.routeCode, tps: r.tps, vol: r.vol, dist: r.dist + ' km', veh: r.veh, util: r.util, cap: r.cap,
-      cutoffTime: r.cutoffTime, holdTime: r.holdTimeHrs + ' h',
+      cutoffTime: r.cutoffTime, holdTime: r.holdTimeHrs + ' h', roundTripTat: r.roundTripTatHrs + ' h',
     }));
     // Dock Schedule — always the native 30-min slot grid now (2026-08-18: the hour/30-min
     // granularity toggle removed per product direction — one consistent grid, matching the rest
@@ -12865,20 +13161,32 @@ class NDCApp extends React.Component {
     //     Finalised), role-scoped: SC/LH always see the run (their bucket just pins to
     //     "Acknowledged" for the whole of stage2, per product direction — their part is done but
     //     the run isn't); LM doesn't see the run in their queue AT ALL until stage2 begins.
+    const allSchedPlansA = d.schedulerPlans || [];
+    // Stage tabs (later session) — genuinely separate rails, not a shared one with a stage-aware
+    // label patch. Stage 1's rail can never show a stage-2-pushed plan and vice versa; this is
+    // also what actually fixes the "stage-2 plan shows Pending Feedback from SC & LH" bug — that
+    // ambiguity only existed because one shared rail's status label didn't disambiguate which
+    // stage a plan was in. Two separate, hard-scoped rails can't produce that ambiguity at all.
+    const schedAlignStage = st.schedAlignStage || 'stage1';
+    const schedAlignStageTabs = [['stage1', 'Stage 1 \u00b7 SC/LH'], ['stage2', 'Stage 2 \u00b7 LM']].map(([key, label]) => ({
+      key, label, active: schedAlignStage === key,
+      count: allSchedPlansA.filter(sp => sp.schedStage === key).length,
+      onClick: () => this.setState({ schedAlignStage: key, schedAlignSC: null, schedAlignFilter: null }),
+    }));
+    const schedAlignPlansThisStage = allSchedPlansA.filter(sp => sp.schedStage === schedAlignStage);
     const schedAlignFilter = st.schedAlignFilter || 'Pending Feedback';
     const SCHED_FILTER_MAP = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
     const SCHED_SEG_ICON = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
     const OPS_SEG_ICON = { 'To Review': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Submitted': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
-    const allSchedPlansA = d.schedulerPlans || [];
     const schedAlignFilterSeg = Object.keys(SCHED_FILTER_MAP).map(label => ({ label, active: schedAlignFilter === label, icon: SCHED_SEG_ICON[label],
-      count: allSchedPlansA.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
+      count: schedAlignPlansThisStage.filter(sp => sp.status === SCHED_FILTER_MAP[label]).length,
       onClick: () => this.setState({ schedAlignFilter: label, schedAlignSC: null }) }));
     // Rail groups BY SC (mirrors Route Planner's own rail, which lists one row per SC/plan) rather
     // than one flat row per schedulerPlans record — an SC with 2+ runs in the same status now
     // collapses into one rail entry with N cards below it, not N disconnected rows.
     const ALIGN_SCHED_ZONES = ['North', 'South', 'East', 'West'];
     const schedAlignZone = st.schedAlignZone || 'All';
-    const schedRunsForScA = (code) => allSchedPlansA.filter(sp => sp.scCode === code && sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
+    const schedRunsForScA = (code) => schedAlignPlansThisStage.filter(sp => sp.scCode === code && sp.status === SCHED_FILTER_MAP[schedAlignFilter]);
     const schedAlignSCsWithRuns = d.scs.filter(s => schedRunsForScA(s.code).length >= 1);
     const schedAlignZoneChips = ['All'].concat(ALIGN_SCHED_ZONES).map(z => ({ label: z, active: schedAlignZone === z,
       count: z === 'All' ? schedAlignSCsWithRuns.length : schedAlignSCsWithRuns.filter(s => s.zone === z).length,
@@ -12904,7 +13212,17 @@ class NDCApp extends React.Component {
     // schedOpsZoneChips/schedOpsList/schedOpsRunCards, scoped to the CURRENTLY ACTING role
     // (st.schedOpsRole). This is what fixes "Ops User sees the same tabs as Planner" — a
     // genuinely separate bucketing, not a relabeled copy of the Planner's own filter. -----
-    const schedOpsRoleActive = st.schedOpsRole || 'SC';
+    // schedOpsStage (later session) — same hard stage separation as the Planner's own tabs, and
+    // for the same reason: schedOpsStatusOf() now returns null for SC/LH once a plan is in
+    // stage2, so without a stage-aware rail an LM-role viewer would see NOTHING (their own plans
+    // only exist in stage2) while an SC/LH-role viewer would see stage1 only anyway — this tab
+    // makes that split visible and navigable rather than implicit.
+    const schedOpsStage = st.schedOpsStage || 'stage1';
+    const schedOpsStageTabs = [['stage1', 'Stage 1 \u00b7 SC/LH'], ['stage2', 'Stage 2 \u00b7 LM']].map(([key, label]) => ({
+      key, label, active: schedOpsStage === key,
+      onClick: () => this.setState({ schedOpsStage: key, schedOpsSC: null, schedOpsFilter: null }),
+    }));
+    const schedOpsRoleActive = this.schedGlobalRoleForStage(schedOpsStage);
     const schedOpsFilter = st.schedOpsFilter || 'To Review';
     const schedOpsVisiblePlans = allSchedPlansA.filter(sp => this.schedOpsStatusOf(sp, schedOpsRoleActive) != null);
     const schedOpsFilterSeg = ['To Review', 'Submitted', 'Acknowledged', 'Finalised'].map(label => ({ label, active: schedOpsFilter === label, icon: OPS_SEG_ICON[label],
@@ -12944,6 +13262,9 @@ class NDCApp extends React.Component {
         schedAlignDetail = Object.assign({ open: true, close: () => this.setState({ schedAlignDetailId: null }),
           validateClean: v.clean, validateErrors: v.errors, validateErrorCount: v.errors.length,
           onValidate: () => { this.setState({ schedValidateOpen: true }); },
+          pendingCount: this.schedCountPendingForPlan(dsp.id),
+          onAcceptAllPlan: () => this.setState({ schedAcceptAllPlanOpen: true, schedAcceptAllPlanId: dsp.id }),
+          onRejectAllPlan: () => this.setState({ schedRejectAllPlanOpen: true, schedRejectAllPlanId: dsp.id }),
         }, this.buildSchedCard(dsp, false), this.buildSchedDetailView(dsp, 'schedAlignDetailTab'));
       }
     }
@@ -12959,7 +13280,8 @@ class NDCApp extends React.Component {
     const schedValidateResult = schedValidatePlan ? this.computeSchedValidation(schedValidatePlan) : { errors: [], warnings: [], clean: true };
 
     return { isAlign, isAlignPlanner: isAlign && planner, isAlignOps: isAlign && !planner,
-      schedOpsRole: st.schedOpsRole || 'SC', onSetSchedOpsRole: (r) => this.setState({ schedOpsRole: r }),
+      schedOpsRole: schedOpsRoleActive,
+      schedAlignStageTabs, schedOpsStageTabs,
       alignIsL1, alignIsL2,
       alignPage: alignPageSafe, alignTotalPages, alignShowPager,
       alignShowingLabel, alignHasPrev, alignHasNext,
@@ -13020,6 +13342,11 @@ class NDCApp extends React.Component {
       acceptAllPlanName: (() => { const p = st.acceptAllPlanId ? plans.find(x => x.id === st.acceptAllPlanId) : null; return p ? (p.scCode + ' \u00b7 ' + p.scName) : ''; })(),
       acceptAllFlaggedCount: (() => { const p = st.acceptAllPlanId ? plans.find(x => x.id === st.acceptAllPlanId) : null; if (!p) return 0; return p.rows.filter((r, i) => r.ops === 'Needs Change' && !((st.alignDecisions[p.id] && st.alignDecisions[p.id][i]) || r.planner)).length; })(),
       confirmAcceptAllPlan: () => this.confirmAcceptAllPlan(), closeAcceptAllPlan: () => this.setState({ acceptAllPlanOpen: false, acceptAllPlanId: null }),
+      // Route Scheduler's own Accept-All/Reject-All modal bindings (later session)
+      schedAcceptAllPlanOpen: st.schedAcceptAllPlanOpen, schedRejectAllPlanOpen: st.schedRejectAllPlanOpen,
+      schedAcceptAllPendingCount: (st.schedAcceptAllPlanId || st.schedRejectAllPlanId) ? this.schedCountPendingForPlan(st.schedAcceptAllPlanId || st.schedRejectAllPlanId) : 0,
+      confirmSchedAcceptAllPlan: () => this.confirmSchedAcceptAllPlan(), closeSchedAcceptAllPlan: () => this.setState({ schedAcceptAllPlanOpen: false, schedAcceptAllPlanId: null }),
+      confirmSchedRejectAllPlan: () => this.confirmSchedRejectAllPlan(), closeSchedRejectAllPlan: () => this.setState({ schedRejectAllPlanOpen: false, schedRejectAllPlanId: null }),
       stopPropSim: (e) => e.stopPropagation() };
   }
 
@@ -15173,11 +15500,14 @@ class NDCApp extends React.Component {
       legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? listUploadHistory(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length === 0 : true,
       legVolumeSearch: st.legVolumeSearch || '', onLegVolumeSearch: (e) => this.setState({ legVolumeSearch: e.target.value }),
       legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
-        planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt,
+        planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt, scCode: p.scCode || '\u2014', trailerCount: (p.trailers || []).length,
       })) : [],
       legIngestedEmpty: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).length === 0 : true,
       legIngestFileName: st.legIngestFileName || '',
       onLegIngestFileName: (e) => this.setState({ legIngestFileName: e.target.value }),
+      legIngestScCode: st.legIngestScCode || null,
+      legIngestScOptions: (this.state.data.scs || []).map(s => ({ code: s.code, name: s.name })),
+      onLegIngestScCode: (e) => this.setState({ legIngestScCode: e.target.value || null }),
       submitLegIngest: () => this.submitLegIngest(),
       ...this.creationVals(),
       ...this.reviewVals(),

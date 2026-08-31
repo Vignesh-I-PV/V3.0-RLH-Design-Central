@@ -2605,3 +2605,108 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - **Still not started**: the decorative-text sweep and the definition-box component itself (both
     scoped and confirmed earlier today, per the discussion log above) — this entry is scope-limited
     to finishing the count/badge removal comprehensively before that larger piece begins.
+
+- **2026-08-29 — SC-DC Mapping re-architected: Node Inputs restructuring + real Design Review
+  Stage 1/Stage 2.** A significant product-direction revision, discussed thoroughly before any
+  code was touched — this explicitly **reverses** the original build spec's framing that SC-DC
+  Mapping should avoid RLH's own Ops-Alignment-style lifecycle. It now gets a real Design Review
+  → Ops Alignment flow, much closer to RLH's own shape than originally scoped. Recording that
+  reversal here plainly, per this project's own standing convention, rather than silently
+  overwriting the earlier framing.
+
+  **Decisions confirmed before building (condensed):**
+  - Node Inputs renamed "SC-DC Connections"; "AutoDML node view" renamed "AutoDML Actions"; the
+    combined Additions/Closures/Migrations tab splits into two: Additions & Closures, and a
+    separate Migrations tab.
+  - SC-DC Mapping's Step 2 (DC Group) is no longer a manual picker — it's auto-computed: active
+    AutoDML links (LMDC Master's own `lmscCode`) for the selected SCs, plus unmapped
+    `nodeAdditions`, minus anything in `nodeClosures`.
+  - Results move out of SC-DC Mapping's own screen entirely and into Design Review, organized at
+    **plan level** (not per-SC), as a flat DC-level list showing old SC → new SC per row.
+  - Accept/Reject granularity is **per-DC**, with optional remarks. Unserved DCs get a third
+    outcome: one that had a prior SC shows old-SC/blank-new-SC with a single "Keep on Old SC"
+    action (no Accept option, since there's no proposed SC to accept); a genuinely new unserved DC
+    shows both blank with no action at all — just flagged.
+  - Once every flagged DC is decided, the view reorganizes to **SC level** — Total/Unchanged/
+    Removed/Added per SC, live-updating as decisions are made (not just after commit).
+  - Full flow confirmed as **two stages**: **Stage 1** (per run, pre-commit) = DC-Level Changes →
+    SC Pivot Summary → Finalise preview (SC-level view + a new SC×SC movement matrix) → Commit.
+    **Stage 2** (per SC, post-commit) = one plan **card** per SC (mirrors RLH's own Design Review
+    card convention), each independently pushable to Ops Alignment — matching RLH/Scheduler's own
+    per-SC push convention, not a whole-run push.
+  - Rejected changes flowing back into the Migrations tab as a "pending pipeline," and the exact
+    Ops Alignment table/feedback-field format, are both **explicitly deferred** — "we will frame
+    this in the next step." Nothing built here should be read as a design decision on either.
+
+  **What got built:**
+  1. **Node Inputs restructuring** — `nodeStepMeta`'s three steps relabeled/split
+     ("AutoDML Actions", "Additions & Closures", "Migrations"); the previously-unified
+     `nodeChangesUnified`-derived table now filters into `nodeChangesAC` (flag ≠ Migration) and
+     `nodeChangesMig` (flag = Migration), each with its own tab — no data-model change needed,
+     `nodeChangesUnified` already carried a per-row `flag` field. NLH/FM's own "Node Inputs" tab
+     deliberately left as-is (still a blank stub, no AutoDML concept behind it).
+  2. **`mapComputeEligibleDcs(scCodes)`** — new shared method, used by both Step 2's preview and
+     `mapTriggerRun()`'s actual stored DC list, so the two can't drift apart. Replaces the entire
+     manual add/remove picker UI and its backing state (`mapDcPicker`, `mapAddDc`/`mapRemoveDc`,
+     the unmapped-candidate chip row) — all removed cleanly, confirmed zero orphaned references.
+  3. **`computeMappingResult()` rebuilt around a `dcRows` array** (one row per DC: `oldSc`,
+     `newSc`, `isUnserved`, `isUnchanged`, `needsDecision`) instead of lane-first grouping — lanes,
+     unserved lists, and per-SC aggregates are now *derived* from `dcRows`, not computed
+     separately, so they can't disagree with each other. `needsDecision` correctly excludes
+     unchanged rows and new-unserved rows (nothing to decide) while including moved rows and
+     unserved-with-prior-SC rows (the "Keep on Old SC" case).
+  4. **The old lane-based decide/commit mechanism replaced wholesale**: `mapDecideLane`/
+     `mapAcceptAllAsSolved`/`mapCommitSubset`/`mapCommitLanes` are gone; replaced by
+     `mapDecideDc()` (per-DC, with remark), `mapAllDecided()` (the gate), `mapGoFinalise()`/
+     `mapBackToDecide()` (Stage 1 sub-navigation), `mapCommitRun()` (the real write-through —
+     same migrations/nodeAdditions/LMDC-update logic as before, now iterating decided DC rows
+     instead of accepted lanes), and `mapPushScToAlignment()` (Stage 2's per-SC push). State
+     renamed `mapDecisions` → `mapDcDecisions`, now `{ [runId]: { [dcCode]: {decision, remark} } }`
+     instead of a bare per-lane string.
+  5. **SC-DC Mapping's own "results" screen (Design Creation) trimmed to a redirect** — the old
+     Cluster Summary/Reassignment Diff/Unserved DCs tabs are gone from there; it now just confirms
+     the run completed and links to Design Review, where all of that content actually lives now.
+  6. **New `reviewMapVals()` render-bindings method** for Design Review's Node Mapping tier —
+     every single key deliberately prefixed `reviewMap`, not `map`, specifically to avoid
+     colliding with the *pre-existing* `mapVals()` (Network Map's own bindings, already spread
+     into `renderVals()`, already using short names like `mapHasResults`). Checked this
+     explicitly before writing a single key, same discipline as the `scDcMapVals()`-vs-`mapVals()`
+     near-miss a few sessions back — this is now the third time this exact collision class has
+     been checked for proactively in this module alone.
+     - `effectiveSc(r)` — a small shared resolver folding current decisions into each DC row's
+       real outcome (accepted → new SC; rejected/undecided/kept → stays put). Both the live SC
+       Pivot Summary and the Finalise-stage SC×SC matrix read through this one function, so they
+       can never show inconsistent numbers for the same decisions.
+  7. **Full Design Review JSX**: run picker → Stage 1 (tab strip: DC-Level Changes / SC Pivot
+     Summary, each fully wired; "Keep on Old SC" rendered as a single button in place of the
+     Accept/Reject pair specifically for unserved-with-prior-SC rows) → gated "Proceed to
+     Finalise" (disabled with an explanatory label until every flagged DC is decided) → Finalise
+     preview (SC-level table reused from the pivot, plus the new SC×SC matrix, rendered as a real
+     grid) → Commit → Stage 2 (one card per SC, Total/Unchanged/Removed/Added, independent Push to
+     Alignment button per card, already-pushed cards show a status pill instead).
+  - **Two of the same self-inflicted mistake caught this session, both immediately, both fixed**:
+     a `str_replace` anchored on a bare method name (`finaliseVals() {`) consumed the signature
+     line twice across two separate edits in this session — once while removing the old lane-based
+     commit block, once while inserting `reviewMapVals()`. Both caught by the very next
+     compile-check (a missing method definition throws immediately), both fixed by restoring the
+     line. Same class of mistake as the `submitAddVeh()` incident two sessions ago — worth stating
+     plainly that this is now a recurring failure mode of large `str_replace` edits specifically
+     around adjacent method boundaries, not a one-off.
+  - **Verification, full discipline applied throughout, not just at the end**: compiled clean
+    after every individual piece (Node Inputs split, `mapComputeEligibleDcs`, the results-screen
+    trim, `reviewMapVals()`, the full JSX insert); ran the purpose-built stack-based bracket-
+    balance script (built two sessions ago for exactly this) across the *entire* `isCreation` block
+    and the *entire* `isReview` block after the respective edits — zero mismatches, stack empty,
+    both times; extracted and cross-checked all 20 new `reviewMap`-prefixed identifiers used in
+    the new JSX against `reviewMapVals()`'s actual returned keys — all present, nothing missing.
+    Harness held at 118/118 throughout (no engine-layer changes this session).
+  - **No live render/browser test has been done on any of this** — same standing caveat as every
+    session before it, more load-bearing than usual given the size of what changed. The stack
+    check and binding audit are strong proxies for "won't throw on load," not "renders and behaves
+    correctly" — deploy-testing this flow specifically (trigger a run, decide some DCs, finalise,
+    commit, check the LMDC Master/Node Inputs write-through) is the real next confirmation.
+  - **Explicitly not built this session, by design — see "explicitly deferred" above**: Ops
+    Alignment's own real content for the Node Mapping tier (still the original "Coming Soon" stub
+    — a minimal per-SC push acknowledgment is the natural next piece, table/feedback format still
+    deferred); the Migrations tab's "pending pipeline" view of rejected changes (the decision data
+    already exists in `mapDcDecisions`, just not yet surfaced there).

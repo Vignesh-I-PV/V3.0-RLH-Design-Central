@@ -9393,7 +9393,7 @@ class NDCApp extends React.Component {
       // LMDCs = links minus the multi-SC-mapped overlap (an LMDC mapped to >1 SC is one node, many links).
       nodeStats: nodeStats, autodmlFilterCards: autodmlFilterCards, nodeRows: autodmlPager.pageRows, autodmlPager: autodmlPager, nodeShown: nodeShown, nodeEmpty: nodeEmpty, nodeCountLabel: nodeCountLabel,
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
-      autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges, nodeChangesMig,
+      autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges, nodeChangesAC, nodeChangesMig,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),

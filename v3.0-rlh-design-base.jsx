@@ -1487,7 +1487,7 @@ All modules
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LATITUDE</div>
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LONGITUDE</div>
 </div>
-{(nodeChanges || []).map((nc, __i33) => (<React.Fragment key={__i33}>
+{(nodeChangesAC || []).map((nc, __i33) => (<React.Fragment key={__i33}>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
 <div style={css(`padding:10px 13px; font-size:12.5px; font-weight:700; color:#003F98;`)}>{nc.lmscCode}</div>
 <div style={css(`padding:10px 13px; font-size:12.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{nc.lmdcCode}</div>
@@ -1496,6 +1496,28 @@ All modules
 <div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lng}</div>
 </div>
 </React.Fragment>))}
+</div>
+</>) : null}
+{(nstepMigrations) ? (<>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>Migrations upload through the same combined CSV as Additions &amp; Closures — use that tab to upload. This view is Migrations only.</div>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMSC CODE</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMDC CODE</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>NODE FLAG</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LATITUDE</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LONGITUDE</div>
+</div>
+{(nodeChangesMig || []).map((nc, __i33m) => (<React.Fragment key={__i33m}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
+<div style={css(`padding:10px 13px; font-size:12.5px; font-weight:700; color:#003F98;`)}>{nc.lmscCode}</div>
+<div style={css(`padding:10px 13px; font-size:12.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{nc.lmdcCode}</div>
+<div style={css(`padding:10px 13px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; background:${nc.flagBg}; color:${nc.flagFg};`)}>{nc.flag}</span></div>
+<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lat}</div>
+<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lng}</div>
+</div>
+</React.Fragment>))}
+{(nodeChangesMig.length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No migrations recorded yet.</div></>) : null}
 </div>
 </>) : null}
 </>) : null}
@@ -2666,28 +2688,20 @@ NLH cycle: {schedNlhMonthLabel}
 {/* ===== STEP 2 — DC Group ===== */}
 {(mapStep === 2) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>DC Group</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Manually add the DCs this run should cover \u2014 both already-mapped DCs and unmapped ones from Node Inputs.</div>
-<div style={css(`display:flex; gap:8px; margin-bottom:14px;`)}>
-<input value={mapDcPicker} onInput={onMapDcPicker} onKeyDown={(e) => { if (e.key === 'Enter') onMapAddDc(); }} placeholder={"DC code, e.g. GGN01-455"} style={css(`flex:1; height:38px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13px; box-sizing:border-box;`)} />
-<button onClick={onMapAddDc} style={css(`height:38px; padding:0 16px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)}>Add</button>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Auto-computed from the SCs you picked \u2014 every DC with an active AutoDML link to one of them, plus any unmapped new additions, minus anything flagged for closure. Nothing here is manually edited; fix the source data in SC-DC Connections if something looks wrong.</div>
+<div style={css(`display:flex; gap:10px; margin-bottom:16px;`)}>
+<div style={css(`flex:1; padding:12px 14px; background:#EAF3EF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:${mapAccent};`)}>{mapDcLinkCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>active AutoDML links</div></div>
+<div style={css(`flex:1; padding:12px 14px; background:#FBF1DF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:#C77B00;`)}>{mapDcAdditionCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>unmapped additions</div></div>
 </div>
-{(mapUnmappedCandidates.length > 0) ? (<>
-<div style={css(`margin-bottom:14px; padding:10px 12px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:7px;`)}>UNMAPPED \u2014 FROM NODE INPUTS</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px;`)}>
-{(mapUnmappedCandidates || []).map((a, __iMuc) => (<React.Fragment key={__iMuc}><button onClick={() => onMapAddDcCandidate(a.dc)} style={css(`height:26px; padding:0 10px; border:1px solid #EDD9AF; background:#fff; color:#C77B00; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ {a.dc}</button></React.Fragment>))}
-</div>
-</div>
-</>) : null}
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>{mapDcCount} DC{mapDcCount === 1 ? '' : 's'} in this run</div>
-<div style={css(`display:flex; flex-direction:column; gap:6px; max-height:320px; overflow-y:auto;`)}>
+<div style={css(`display:flex; flex-direction:column; gap:6px; max-height:360px; overflow-y:auto;`)}>
 {(mapDcList || []).map((dc, __iMdc) => (<React.Fragment key={__iMdc}>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
 <div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{dc.code}</div>
-<div style={css(`font-size:11px; color:${dc.pending ? '#C77B00' : '#8E96A3'};`)}>{dc.pending ? 'Unmapped' : ('Currently: ' + dc.currentSc)}</div>
-<button onClick={dc.onRemove} aria-label={"Remove " + dc.code} style={css(`width:22px; height:22px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+<div style={css(`font-size:11px; color:${dc.pending ? '#C77B00' : '#8E96A3'};`)}>{dc.pending ? 'New addition, unmapped' : ('Active link: ' + dc.currentSc)}</div>
 </div>
 </React.Fragment>))}
+{(mapDcCount === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No active links or unmapped additions found for the selected SCs.</div></>) : null}
 </div>
 </>) : null}
 {/* ===== STEP 3 — Baseline & Parameters ===== */}
@@ -2773,89 +2787,12 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : null}
 {(mapSection === 'results') ? (<>
-<div style={css(`flex:1; overflow-y:auto; padding:28px 40px;`)}>
-<div style={css(`max-width:900px; margin:0 auto;`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;`)}>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{mapActiveRunName}</div>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${mapIsCommitted ? '#E7F4EC' : '#EAF3EF'}; color:${mapIsCommitted ? '#128A3E' : mapAccent};`)}>{mapActiveRunStatus}</span>
-</div>
-<div style={css(`display:flex; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:20px;`)}>
-{[['summary', 'Cluster Summary'], ['diff', 'Reassignment Diff'], ['unserved', 'Unserved DCs (' + (mapUnservedRows || []).length + ')']].map((t, __iMrt) => (<React.Fragment key={__iMrt}><button onClick={() => onMapResultsTab(t[0])} style={css(`height:38px; padding:0 14px; border:none; border-bottom:2px solid ${mapResultsTab === t[0] ? mapAccent : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${mapResultsTab === t[0] ? '700' : '500'}; color:${mapResultsTab === t[0] ? mapAccent : '#5A5E66'};`)}>{t[1]}</button></React.Fragment>))}
-</div>
-{/* ===== Cluster Summary ===== */}
-{(mapResultsTab === 'summary' && mapHasResults) ? (<>
-<div style={css(`display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;`)}>
-<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>SOLVE TIME</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapSolveTime}s</div></div>
-<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>TOTAL COST</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapTotalCost}</div></div>
-<div style={css(`padding:14px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>TOTAL VOLUME</div><div style={css(`font-size:18px; font-weight:700; color:#14171F;`)}>{mapTotalVolume}</div></div>
-<div style={css(`padding:14px; background:${mapCpsImproved ? '#E7F4EC' : '#FBEAEA'}; border:1px solid ${mapCpsImproved ? '#B9E0C6' : '#F3C9C9'}; border-radius:10px;`)}><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em; margin-bottom:4px;`)}>CPS vs BASELINE</div><div style={css(`font-size:18px; font-weight:700; color:${mapCpsImproved ? '#128A3E' : '#D14B4B'};`)}>{mapCpsDeltaPct > 0 ? '+' : ''}{mapCpsDeltaPct}%</div></div>
-</div>
-<div style={css(`font-size:11px; color:#8E96A3; margin-bottom:16px;`)}>CPS = Cost / Volume, same formula RLH's own Ops Feedback engine uses. Cluster: {mapCps} vs baseline {mapBaselineCps}.</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 100px 110px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
-<div>SC</div><div style={css(`text-align:right;`)}>DCs SERVED</div><div style={css(`text-align:right;`)}>VEHICLES</div><div style={css(`text-align:right;`)}>UTIL %</div><div style={css(`text-align:right;`)}>COST</div>
-</div>
-{(mapPerScRows || []).map((p, __iMpsc) => (<React.Fragment key={__iMpsc}>
-<div style={css(`display:grid; grid-template-columns:1fr 100px 100px 100px 110px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{p.code}</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{p.dcsServed}</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{p.vehiclesUsed}</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{p.utilisationPct}%</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{p.cost}</div>
-</div>
-</React.Fragment>))}
-</div>
-</>) : null}
-{/* ===== Reassignment Diff ===== */}
-{(mapResultsTab === 'diff' && mapHasResults) ? (<>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;`)}>
-<div style={css(`font-size:11px; color:#5A5E66;`)}>{(mapLaneRows || []).length} lane{(mapLaneRows || []).length === 1 ? '' : 's'} \u00b7 {mapAcceptedCount} accepted</div>
-{(!mapIsCommitted) ? (<>
-<div style={css(`display:flex; gap:8px;`)}>
-<button onClick={onMapCommitSubset} disabled={!mapAnyDecided} style={css(`height:32px; padding:0 14px; border:1px solid ${mapAnyDecided ? mapAccent : '#E6EBF2'}; background:#fff; color:${mapAnyDecided ? mapAccent : '#C3C9D4'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${mapAnyDecided ? 'pointer' : 'not-allowed'};`)}>Commit accepted subset</button>
-<button onClick={onMapAcceptAll} style={css(`height:32px; padding:0 14px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Accept all, as solved</button>
-</div>
-</>) : null}
-</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 80px 90px 90px 150px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
-<div>FROM</div><div>TO</div><div style={css(`text-align:right;`)}>DCs</div><div style={css(`text-align:right;`)}>VOLUME</div><div style={css(`text-align:right;`)}>COST</div><div style={css(`text-align:center;`)}>DECISION</div>
-</div>
-{(mapLaneRows || []).map((l, __iMl) => (<React.Fragment key={__iMl}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 80px 90px 90px 150px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center; ${l.groupChained ? 'border-left:3px solid #C77B00;' : ''}`)}>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{l.fromSc}</div>
-<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{l.toSc}</div>
-<div style={css(`font-size:12px; text-align:right;`)} title={l.groupChained ? 'DCs share a pincode \u2014 chained by the solver, same SC' : ''}>{l.dcCount}{l.groupChained ? ' \ud83d\udd17' : ''}</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{l.volume}</div>
-<div style={css(`font-size:12px; text-align:right;`)}>{l.cost}</div>
-<div style={css(`display:flex; gap:4px; justify-content:center;`)}>
-{(mapIsCommitted) ? (<><span style={css(`font-size:11px; color:#8E96A3;`)}>Committed</span></>) : (<>
-<button onClick={l.onAccept} title={"Accept"} style={css(`width:26px; height:26px; border:1px solid ${l.decision === 'Accept' ? '#128A3E' : '#E6EBF2'}; background:${l.decision === 'Accept' ? '#E7F4EC' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={l.onReject} title={"Reject"} style={css(`width:26px; height:26px; border:1px solid ${l.decision === 'Reject' ? '#D14B4B' : '#E6EBF2'}; background:${l.decision === 'Reject' ? '#FBEAEA' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</>)}
-</div>
-</div>
-</React.Fragment>))}
-</div>
-</>) : null}
-{/* ===== Unserved DCs — coverage flag only, no resolution actions in this UI (handled by the DS solver / a follow-up run) ===== */}
-{(mapResultsTab === 'unserved') ? (<>
-{(mapUnservedRows.length === 0) ? (<>
-<div style={css(`padding:24px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Full coverage \u2014 every DC in this run was placed.</div>
-</>) : (<>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 2fr; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
-<div>DC</div><div>REASON</div>
-</div>
-{(mapUnservedRows || []).map((u, __iMu) => (<React.Fragment key={__iMu}>
-<div style={css(`display:grid; grid-template-columns:1fr 2fr; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
-<div style={css(`font-size:12.5px; font-weight:600; color:#D14B4B;`)}>{u.code}</div>
-<div style={css(`font-size:12px; color:#5A5E66;`)}>{u.reason}</div>
-</div>
-</React.Fragment>))}
-</div>
-</>)}
-</>) : null}
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:440px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
+<div style={css(`width:52px; height:52px; border-radius:14px; background:#EAF3EF; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={mapAccent} strokeWidth={"1.8"}><path d={"M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Run complete — {mapActiveRunName}</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; line-height:1.5;`)}>Reviewing and deciding DC-level changes now happens in Design Review, not here — head to Design Review's Node Mapping tier to accept/reject each proposed move and commit.</div>
+<button onClick={() => this.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 20px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:6px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 </>) : null}
@@ -3527,14 +3464,148 @@ NLH cycle: {schedNlhMonthLabel}
 </>) : null}
 </>) : null}
 </>) : (<>
-{/* Coming Soon landing (2026-07-30) — Node Mapping gets its own sub-fork row (SC-DC Mapping)
-    mirroring RLH's Route Planner/Scheduler row; NLH/FM Carting have no modules yet. */}
+{/* SC-DC Mapping, Design Review — Stage 1 (per run, pre-commit) + Stage 2 (per SC, post-commit).
+    Later session; replaces the earlier Coming Soon stub. */}
 {(isReviewTierNodeMapping) ? (<>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:9px 28px; background:#FAFBFD; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
 <div style={css(`display:flex; gap:6px;`)}>
-<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
+<button style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 14px; border:1px solid ${reviewMapAccent}; background:${reviewMapAccent}; color:#fff; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:7px; cursor:default;`)}>SC-DC Mapping</button>
 </div>
 </div>
+{(!reviewMapHasRuns) ? (<>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
+<div style={css(`max-width:420px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>No completed mapping runs yet \u2014 trigger one from Design Creation's SC-DC Mapping module.</div>
+</div>
+</>) : (<>
+<div style={css(`flex:1; overflow-y:auto; padding:24px 32px;`)}>
+<div style={css(`max-width:980px; margin:0 auto;`)}>
+{/* Run picker */}
+<div style={css(`display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;`)}>
+{(reviewMapRunList || []).map((r, __iRmr) => (<React.Fragment key={__iRmr}><button onClick={r.onClick} style={css(`height:32px; padding:0 14px; border:1px solid ${r.active ? reviewMapAccent : '#E6EBF2'}; background:${r.active ? '#EAF3EF' : '#fff'}; color:${r.active ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{r.name} \u00b7 {r.statusLabel}</button></React.Fragment>))}
+</div>
+{/* ===== STAGE 1 \u2014 decide ===== */}
+{(reviewMapStage === 'decide') ? (<>
+<div style={css(`display:flex; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:18px;`)}>
+<button onClick={() => onReviewMapTab('changes')} style={css(`height:36px; padding:0 14px; border:none; border-bottom:2px solid ${reviewMapTab === 'changes' ? reviewMapAccent : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:${reviewMapTab === 'changes' ? '700' : '500'}; color:${reviewMapTab === 'changes' ? reviewMapAccent : '#5A5E66'};`)}>DC-Level Changes ({(reviewMapDcRows || []).length})</button>
+<button onClick={() => onReviewMapTab('pivot')} style={css(`height:36px; padding:0 14px; border:none; border-bottom:2px solid ${reviewMapTab === 'pivot' ? reviewMapAccent : 'transparent'}; background:transparent; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:${reviewMapTab === 'pivot' ? '700' : '500'}; color:${reviewMapTab === 'pivot' ? reviewMapAccent : '#5A5E66'};`)}>SC Pivot Summary</button>
+</div>
+{/* View 1 — DC-Level Changes */}
+{(reviewMapTab === 'changes') ? (<>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>{reviewMapUnchangedCount} unchanged (no decision needed) \u00b7 {reviewMapNewUnservedCount} new-DC unserved (flagged only, no action available)</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>DC</div><div>OLD SC</div><div>NEW SC</div><div>REMARK</div><div style={css(`text-align:center;`)}>DECISION</div>
+</div>
+{(reviewMapDcRows || []).map((r, __iRmd) => (<React.Fragment key={__iRmd}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.code}</div>
+<div style={css(`font-size:12px; color:#14171F;`)}>{r.oldSc}</div>
+<div style={css(`font-size:12px; color:${r.newSc === '\u2014' ? '#D14B4B' : '#14171F'};`)}>{r.newSc}</div>
+<input value={r.remark} onInput={r.onRemark} placeholder={"Optional remark"} style={css(`height:28px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
+<div style={css(`display:flex; gap:4px; justify-content:center;`)}>
+{(r.isUnservedWithPrior) ? (<>
+<button onClick={r.onKeepOldSc} style={css(`height:26px; padding:0 10px; border:1px solid ${r.decision === 'KeepOldSc' ? reviewMapAccent : '#E6EBF2'}; background:${r.decision === 'KeepOldSc' ? '#EAF3EF' : '#fff'}; color:${r.decision === 'KeepOldSc' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Keep on Old SC</button>
+</>) : (<>
+<button onClick={r.onAccept} title={"Accept"} style={css(`width:26px; height:26px; border:1px solid ${r.decision === 'Accept' ? '#128A3E' : '#E6EBF2'}; background:${r.decision === 'Accept' ? '#E7F4EC' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onReject} title={"Reject"} style={css(`width:26px; height:26px; border:1px solid ${r.decision === 'Reject' ? '#D14B4B' : '#E6EBF2'}; background:${r.decision === 'Reject' ? '#FBEAEA' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#D14B4B;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</>)}
+</div>
+</div>
+</React.Fragment>))}
+{((reviewMapDcRows || []).length === 0) ? (<><div style={css(`padding:24px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Nothing needs a decision \u2014 every DC is either unchanged or a new unserved addition.</div></>) : null}
+</div>
+</>) : null}
+{/* View 2 — SC Pivot Summary */}
+{(reviewMapTab === 'pivot') ? (<>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:14px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 90px 90px 90px 90px 90px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>SC</div><div style={css(`text-align:right;`)}>TOTAL</div><div style={css(`text-align:right;`)}>UNCHANGED</div><div style={css(`text-align:right;`)}>REMOVED</div><div style={css(`text-align:right;`)}>ADDED</div><div style={css(`text-align:right;`)}>UNSERVED</div>
+</div>
+{(reviewMapPivotRows || []).map((p, __iRmp) => (<React.Fragment key={__iRmp}>
+<div style={css(`display:grid; grid-template-columns:1fr 90px 90px 90px 90px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{p.code}</div>
+<div style={css(`font-size:12px; text-align:right; font-weight:700; color:#14171F;`)}>{p.total}</div>
+<div style={css(`font-size:12px; text-align:right; color:#5A5E66;`)}>{p.unchanged}</div>
+<div style={css(`font-size:12px; text-align:right; color:#D14B4B;`)}>{p.removed}</div>
+<div style={css(`font-size:12px; text-align:right; color:#128A3E;`)}>{p.added}</div>
+<div style={css(`font-size:12px; text-align:right; color:${p.unserved > 0 ? '#C77B00' : '#C3C9D4'};`)}>{p.unserved}</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`display:flex; align-items:center; gap:18px; padding:12px 14px; background:#F7F9FC; border-radius:8px; font-size:12px;`)}>
+<span style={css(`font-weight:700; color:#14171F;`)}>Plan overall</span>
+<span>Total <strong>{reviewMapOverallTotals.total}</strong></span>
+<span>Unchanged <strong>{reviewMapOverallTotals.unchanged}</strong></span>
+<span>Removed <strong>{reviewMapOverallTotals.removed}</strong></span>
+<span>Added <strong>{reviewMapOverallTotals.added}</strong></span>
+<span style={css(`color:${reviewMapOverallUnserved > 0 ? '#C77B00' : '#8E96A3'};`)}>Unserved <strong>{reviewMapOverallUnserved}</strong></span>
+</div>
+</>) : null}
+<div style={css(`display:flex; justify-content:flex-end; margin-top:20px;`)}>
+<button onClick={onReviewMapGoFinalise} disabled={!reviewMapAllDecided} style={css(`height:38px; padding:0 20px; border:none; background:${reviewMapAllDecided ? reviewMapAccent : '#C3C9D4'}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${reviewMapAllDecided ? 'pointer' : 'not-allowed'};`)}>{reviewMapAllDecided ? 'Proceed to Finalise' : 'Decide every flagged DC to continue'}</button>
+</div>
+</>) : null}
+{/* ===== STAGE 1 \u2014 finalise preview ===== */}
+{(reviewMapStage === 'finalise') ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Finalise?</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Preview of the SC-level outcome and cross-SC movement, based on your decisions. Nothing is written until you commit.</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SC-LEVEL VIEW</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:20px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 90px 90px 90px 90px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>SC</div><div style={css(`text-align:right;`)}>TOTAL</div><div style={css(`text-align:right;`)}>UNCHANGED</div><div style={css(`text-align:right;`)}>REMOVED</div><div style={css(`text-align:right;`)}>ADDED</div>
+</div>
+{(reviewMapPivotRows || []).map((p, __iRmf) => (<React.Fragment key={__iRmf}>
+<div style={css(`display:grid; grid-template-columns:1fr 90px 90px 90px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{p.code}</div>
+<div style={css(`font-size:12px; text-align:right; font-weight:700; color:#14171F;`)}>{p.total}</div>
+<div style={css(`font-size:12px; text-align:right; color:#5A5E66;`)}>{p.unchanged}</div>
+<div style={css(`font-size:12px; text-align:right; color:#D14B4B;`)}>{p.removed}</div>
+<div style={css(`font-size:12px; text-align:right; color:#128A3E;`)}>{p.added}</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SC \u00d7 SC MOVEMENT</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow-x:auto; margin-bottom:20px;`)}>
+<div style={css(`display:grid; grid-template-columns:110px repeat(${(reviewMapMatrixScs || []).length}, 90px); background:#F7F9FC;`)}>
+<div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66;`)}>FROM \\ TO</div>
+{(reviewMapMatrixScs || []).map((c, __iRmc) => (<React.Fragment key={__iRmc}><div style={css(`padding:8px 8px; font-size:10px; font-weight:700; color:#5A5E66; text-align:center;`)}>{c}</div></React.Fragment>))}
+</div>
+{(reviewMapMatrixRows || []).map((row, __iRmrow) => (<React.Fragment key={__iRmrow}>
+<div style={css(`display:grid; grid-template-columns:110px repeat(${(reviewMapMatrixScs || []).length}, 90px); border-top:1px solid #EEF1F6;`)}>
+<div style={css(`padding:8px 12px; font-size:11.5px; font-weight:600; color:#14171F;`)}>{row.fromCode}</div>
+{(row.cells || []).map((cell, __iRmcell) => (<React.Fragment key={__iRmcell}><div style={css(`padding:8px 8px; font-size:11.5px; text-align:center; color:${cell.isDiagonal ? '#D0D5DD' : (cell.count > 0 ? '#14171F' : '#C3C9D4')}; background:${cell.isDiagonal ? '#FAFBFD' : 'transparent'};`)}>{cell.isDiagonal ? '\u2014' : cell.count}</div></React.Fragment>))}
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`display:flex; justify-content:space-between;`)}>
+<button onClick={onReviewMapBackToDecide} style={css(`height:38px; padding:0 18px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Back</button>
+<button onClick={onReviewMapCommit} style={css(`height:38px; padding:0 22px; border:none; background:${reviewMapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Commit</button>
+</div>
+</>) : null}
+{/* ===== STAGE 2 \u2014 per-SC plan cards, post-commit ===== */}
+{(reviewMapStage === 'cards') ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Committed \u2014 {reviewMapRunName}</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Each SC below can be pushed to Ops Alignment independently.</div>
+<div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
+{(reviewMapCards || []).map((c, __iRmcd) => (<React.Fragment key={__iRmcd}>
+<div style={css(`display:flex; align-items:center; gap:18px; padding:14px 16px; background:#fff; border:1px solid #E6EBF2; border-radius:10px;`)}>
+<div style={css(`font-size:14px; font-weight:700; color:#14171F; width:90px;`)}>{c.code}</div>
+<div style={css(`display:flex; gap:16px; flex:1; font-size:12px;`)}>
+<span>Total <strong>{c.total}</strong></span>
+<span style={css(`color:#5A5E66;`)}>Unchanged <strong>{c.unchanged}</strong></span>
+<span style={css(`color:#D14B4B;`)}>Removed <strong>{c.removed}</strong></span>
+<span style={css(`color:#128A3E;`)}>Added <strong>{c.added}</strong></span>
+</div>
+{(c.isPushed) ? (<><span style={css(`padding:4px 12px; border-radius:999px; font-size:11px; font-weight:600; background:#E7F4EC; color:#128A3E;`)}>Pushed \u00b7 {c.pushedAt}</span></>) : (<>
+<button onClick={c.onPush} style={css(`height:32px; padding:0 16px; border:none; background:${reviewMapAccent}; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}>Push to Alignment</button>
+</>)}
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+</div>
+</div>
+</>)}
 </>) : null}
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
@@ -6219,12 +6290,12 @@ class NDCApp extends React.Component {
       scMasterUploadErrors: [], availUploadErrors: [],
       // SC-DC Mapping (Node Mapping), skeletal build — later session. mapSection: null while the
       // planner hasn't entered the module; 'wizard' | 'queue' | 'results' once they have.
-      mapSection: null, mapStep: 1, mapResultsTab: 'summary',
+      mapSection: null, mapStep: 1, mapResultsTab: 'changes', mapReviewStage: 'decide',
       mapActiveRunId: null,
       mapDraft: { name: '', scCodes: [], dcCodes: [], params: { rho: 0.2, hw: 0, refRunId: null, spanCostOn: true, baselineSource: 'nearestSc', baselinePlanId: null } },
-      mapDecisions: {}, // { [runId]: { [laneKey]: 'Accept'|'Reject' } } — lane-level only for this skeleton (Review DCs sub-decisions come later)
+      mapDcDecisions: {}, // { [runId]: { [dcCode]: { decision: 'Accept'|'Reject'|'KeepOldSc', remark } } } — per-DC, later session
       mapQueue: [],
-      mapDcPicker: '', // free-text DC-code entry for Step 2's manual DC group input
+      reviewMapRunId: null,
       // ===== Route Scheduler Ops Alignment — 3-persona feedback loop (2026-08-14, rebuilt
       // 2026-08-17 to match Route Planner's own Needs-Change/Review-Changes pattern exactly) =====
       // schedOpsRole: which Ops rep type the current "Ops Lead" session is acting as — SC/LH/LM —
@@ -8288,30 +8359,32 @@ class NDCApp extends React.Component {
   goMapping() {
     this.setState({
       mapSection: 'wizard', mapStep: 1,
-      mapDraft: { name: '', scCodes: [], dcCodes: [], params: { rho: 0.2, hw: 0, refRunId: null, spanCostOn: true, baselineSource: 'nearestSc', baselinePlanId: null } },
-      mapDcPicker: '',
+      mapDraft: { name: '', scCodes: [], params: { rho: 0.2, hw: 0, refRunId: null, spanCostOn: true, baselineSource: 'nearestSc', baselinePlanId: null } },
     });
+  }
+
+  // mapComputeEligibleDcs(scCodes) — later session, supersedes the earlier manual DC-picker
+  // design. Input selection is no longer a free-text/manual entry — it's auto-derived: every DC
+  // whose active AutoDML link (LMDC Master's own lmscCode) points at one of the selected SCs,
+  // plus every still-unmapped node addition (a candidate for ANY SC in the cluster, since it has
+  // no existing link yet), minus anything already flagged for closure. Shared by scDcMapVals()
+  // (Step 2's preview) and mapTriggerRun() (what actually gets stored on the run), so the two can
+  // never drift apart on what "the input DC set" actually is.
+  mapComputeEligibleDcs(scCodes) {
+    const d = this.state.data;
+    const closedCodes = {}; (d.nodeClosures || []).forEach(c => { closedCodes[c.dc] = true; });
+    const fromLinks = (d.lmdcs || []).filter(l => scCodes.indexOf(l.lmscCode) >= 0 && !closedCodes[l.code])
+      .map(l => ({ code: l.code, currentSc: l.lmscCode, pending: false }));
+    const seen = {}; fromLinks.forEach(l => { seen[l.code] = true; });
+    const fromAdditions = (d.nodeAdditions || []).filter(a => !a.mapped && !closedCodes[a.dc] && !seen[a.dc])
+      .map(a => ({ code: a.dc, currentSc: null, pending: true }));
+    return fromLinks.concat(fromAdditions);
   }
 
   mapToggleSc(code) {
     const cur = this.state.mapDraft.scCodes || [];
     const next = cur.indexOf(code) >= 0 ? cur.filter(c => c !== code) : cur.concat([code]);
     this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { scCodes: next }) });
-  }
-
-  mapAddDc(code) {
-    const c = (code || '').trim().toUpperCase();
-    if (!c) return;
-    const cur = this.state.mapDraft.dcCodes || [];
-    if (cur.indexOf(c) >= 0) { this.setState({ mapDcPicker: '' }); return; }
-    const known = (this.state.data.lmdcs || []).find(l => l.code === c);
-    if (!known) { this.showToast('No DC with code "' + c + '" found in LMDC Master', '#D14B4B'); return; }
-    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { dcCodes: cur.concat([c]) }), mapDcPicker: '' });
-  }
-
-  mapRemoveDc(code) {
-    const cur = this.state.mapDraft.dcCodes || [];
-    this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { dcCodes: cur.filter(c => c !== code) }) });
   }
 
   mapSetParam(field, value) {
@@ -8334,15 +8407,17 @@ class NDCApp extends React.Component {
   // exception to this app's usual warn-don't-block convention.
   mapTriggerRun() {
     const draft = this.state.mapDraft;
-    if ((draft.scCodes || []).length < 2 || (draft.dcCodes || []).length < 1) return;
+    if ((draft.scCodes || []).length < 2) return;
+    const eligibleDcs = this.mapComputeEligibleDcs(draft.scCodes);
+    if (eligibleDcs.length < 1) { this.showToast('No eligible DCs found for the selected SCs (no active links, no unmapped additions).', '#C77B00'); return; }
     const scs = this.state.data.scs || [];
     const missingCap = draft.scCodes.filter(code => { const sc = scs.find(s => s.code === code); return !sc || !sc.sortCap || !sc.volCap || !sc.htp; });
     if (missingCap.length) { this.showToast('Missing Sort Capacity / Volume Capacity / HTP for ' + missingCap.join(', ') + ' \u2014 populate these in SC Master before running a joint solve.', '#D14B4B'); return; }
     const id = 'MAP-' + Date.now();
     const run = {
       id, name: draft.name || ('Cluster: ' + draft.scCodes.join(' + ')), status: 'Running',
-      scCodes: draft.scCodes.slice(), dcCodes: draft.dcCodes.slice(), params: Object.assign({}, draft.params),
-      createdAt: new Date().toLocaleString(), committedAt: null, results: null,
+      scCodes: draft.scCodes.slice(), dcCodes: eligibleDcs.map(dc => dc.code), params: Object.assign({}, draft.params),
+      createdAt: new Date().toLocaleString(), committedAt: null, results: null, pushedScs: {},
     };
     const mappingRuns = (this.state.data.mappingRuns || []).concat([run]);
     this.setState({
@@ -8395,34 +8470,52 @@ class NDCApp extends React.Component {
       groupSuggestedSc[g] = best || scs[0].code;
     });
 
+    // dcRows — one row per DC, the real foundation for Design Review's DC-Level Changes and SC
+    // Pivot Summary views (later session — supersedes the earlier lane-first design). oldSc is
+    // null for a brand-new addition that never had a link; isUnserved uses the same zero-capacity
+    // heuristic the earlier build used (this is still a simulated solve, not a real one).
+    const dcRows = dcs.map(dc => {
+      const oldSc = dc.lmscCode && dc.lmscCode !== 'Pending' ? dc.lmscCode : null;
+      const isUnserved = dc.capacity === 0;
+      const newSc = isUnserved ? null : groupSuggestedSc[groups.get(dc.code)];
+      const isUnchanged = !isUnserved && oldSc === newSc;
+      // needsDecision: a real proposed move always needs one; an unserved DC needs one ONLY if it
+      // had a prior SC to fall back to ("Keep on Old SC") — a genuinely new unserved DC has
+      // nothing to decide, it's just flagged.
+      const needsDecision = !isUnchanged && !(isUnserved && oldSc === null);
+      return { code: dc.code, oldSc, newSc, volume: dc.capacity > 0 ? dc.capacity : 0, isUnserved, isUnchanged, needsDecision };
+    });
+
     const lanesMap = {};
     let totalCost = 0, totalVolume = 0;
-    const unservedDcs = [];
     const perScAgg = {}; scs.forEach(sc => { perScAgg[sc.code] = { code: sc.code, dcsServed: 0, cost: 0, volume: 0 }; });
 
-    dcs.forEach(dc => {
-      const fromSc = dc.lmscCode && dc.lmscCode !== 'Pending' ? dc.lmscCode : null;
-      const toSc = groupSuggestedSc[groups.get(dc.code)];
-      const targetScObj = scs.find(s => s.code === toSc);
+    dcRows.filter(r => !r.isUnserved).forEach(r => {
+      const dc = dcs.find(x => x.code === r.code);
+      const targetScObj = scs.find(s => s.code === r.newSc);
       const dist = targetScObj ? NDC_haversineKm(dc.lat, dc.lng, targetScObj.lat, targetScObj.lng) : 0;
-      const volume = dc.capacity > 0 ? dc.capacity : 0;
       const cost = +(dist * RATE).toFixed(2);
-      if (dc.capacity === 0) { unservedDcs.push({ code: dc.code, reason: 'Zero capacity \u2014 solver could not place this DC' }); return; }
-      const laneKey = (fromSc || '\u2014') + '\u2192' + toSc;
-      lanesMap[laneKey] = lanesMap[laneKey] || { laneKey, fromSc: fromSc || '\u2014', toSc, dcCodes: [], dcCount: 0, volume: 0, cost: 0, groupId: groups.get(dc.code) };
-      lanesMap[laneKey].dcCodes.push(dc.code); lanesMap[laneKey].dcCount++; lanesMap[laneKey].volume += volume; lanesMap[laneKey].cost += cost;
-      totalCost += cost; totalVolume += volume;
-      if (perScAgg[toSc]) { perScAgg[toSc].dcsServed++; perScAgg[toSc].cost += cost; perScAgg[toSc].volume += volume; }
+      totalCost += cost; totalVolume += r.volume;
+      if (perScAgg[r.newSc]) { perScAgg[r.newSc].dcsServed++; perScAgg[r.newSc].cost += cost; perScAgg[r.newSc].volume += r.volume; }
+      if (r.isUnchanged) return; // unchanged DCs don't form a lane — nothing is actually moving
+      const laneKey = (r.oldSc || '\u2014') + '\u2192' + r.newSc;
+      lanesMap[laneKey] = lanesMap[laneKey] || { laneKey, fromSc: r.oldSc || '\u2014', toSc: r.newSc, dcCodes: [], dcCount: 0, volume: 0, cost: 0, groupId: groups.get(r.code) };
+      lanesMap[laneKey].dcCodes.push(r.code); lanesMap[laneKey].dcCount++; lanesMap[laneKey].volume += r.volume; lanesMap[laneKey].cost += cost;
     });
+
+    const unservedDcs = dcRows.filter(r => r.isUnserved).map(r => ({
+      code: r.code, priorSc: r.oldSc,
+      reason: r.oldSc ? 'Zero capacity \u2014 solver could not re-place this DC' : 'Zero capacity \u2014 solver could not place this new DC',
+    }));
 
     // Baseline (current, pre-run) cost — same DCs, their EXISTING owning SC, for the CPS delta.
     let baselineCost = 0, baselineVolume = 0;
-    dcs.forEach(dc => {
-      if (dc.capacity === 0) return;
-      const curScObj = scs.find(s => s.code === dc.lmscCode) || (this.state.data.scs || []).find(s => s.code === dc.lmscCode);
+    dcRows.filter(r => !r.isUnserved && r.oldSc).forEach(r => {
+      const dc = dcs.find(x => x.code === r.code);
+      const curScObj = (this.state.data.scs || []).find(s => s.code === r.oldSc);
       if (!curScObj) return;
       baselineCost += NDC_haversineKm(dc.lat, dc.lng, curScObj.lat, curScObj.lng) * RATE;
-      baselineVolume += dc.capacity;
+      baselineVolume += r.volume;
     });
 
     const h = run.id.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
@@ -8438,78 +8531,86 @@ class NDCApp extends React.Component {
         cost: +p.cost.toFixed(2), utilisationPct: Math.min(100, Math.round((p.volume / Math.max(1, ((this.state.data.scs || []).find(s => s.code === p.code) || {}).volCap || 1)) * 100)),
         vehiclesUsed: Math.max(1, Math.ceil(p.volume / 2000)), // representative vehicle capacity, same simplification as RATE above
       })),
-      lanes, unservedDcs,
+      lanes, unservedDcs, dcRows,
     };
   }
 
-  mapDecideLane(runId, laneKey, decision) {
-    const cur = this.state.mapDecisions[runId] || {};
-    this.setState({ mapDecisions: Object.assign({}, this.state.mapDecisions, { [runId]: Object.assign({}, cur, { [laneKey]: decision }) }) });
+  mapDecideDc(runId, dcCode, decision, remark) {
+    const cur = this.state.mapDcDecisions[runId] || {};
+    const existing = cur[dcCode] || {};
+    this.setState({ mapDcDecisions: Object.assign({}, this.state.mapDcDecisions, { [runId]: Object.assign({}, cur, { [dcCode]: { decision, remark: remark != null ? remark : (existing.remark || '') } }) }) });
   }
 
-  mapOpenResults(runId) { this.setState({ mapActiveRunId: runId, mapSection: 'results', mapResultsTab: 'summary' }); }
+  mapOpenResults(runId) { this.setState({ mapActiveRunId: runId, mapSection: 'results', mapResultsTab: 'changes', mapReviewStage: 'decide' }); }
 
-  // mapAcceptAllAsSolved(runId) — fast commit path: every lane's suggested SC is accepted as-is,
-  // no re-solve. Writes real migrations (or resolves a pending Addition) for every affected DC,
-  // per the confirmed AutoDML-feedback-loop design, then updates LMDC Master's own scCode so the
-  // module's own next run (and Design Creation's pre-plan gate) see the update immediately.
-  mapAcceptAllAsSolved(runId) {
+  // mapAllDecided(run) — Stage 1's gate: every dcRow that needsDecision must have one before the
+  // planner can proceed to the Finalise preview. Unchanged rows and no-prior-SC unserved rows
+  // don't need a decision at all (see computeMappingResult's needsDecision logic).
+  mapAllDecided(run) {
+    if (!run || !run.results) return false;
+    const dec = this.state.mapDcDecisions[run.id] || {};
+    return run.results.dcRows.filter(r => r.needsDecision).every(r => dec[r.code] && dec[r.code].decision);
+  }
+
+  mapGoFinalise(runId) {
+    const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
+    if (!this.mapAllDecided(run)) { this.showToast('Every flagged DC needs a decision before finalising.', '#C77B00'); return; }
+    this.setState({ mapReviewStage: 'finalise' });
+  }
+  mapBackToDecide() { this.setState({ mapReviewStage: 'decide' }); }
+
+  // mapCommitRun(runId) — the real commit, reachable only from the Finalise stage. For each
+  // decided DC: 'Accept' applies the proposed new SC (real migrations entry, or resolves a
+  // pending nodeAdditions row — same distinction as before); 'Reject'/'KeepOldSc' writes nothing,
+  // the DC simply stays on its current SC. Rejected decisions remain recorded in
+  // mapDcDecisions — that's the data the Migrations tab's pending-pipeline view will read from
+  // once that's designed (explicitly deferred — see context.md).
+  mapCommitRun(runId) {
     const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
     if (!run || !run.results) return;
-    this.mapCommitLanes(run, run.results.lanes);
-  }
-
-  // mapCommitSubset(runId) — commits only the ACCEPTED lanes from mapDecisions; rejected lanes'
-  // DCs stay on their current SC. Per the build spec, accepting a subset is described as needing
-  // a re-solve in the full design — this skeleton commits the accepted subset directly rather
-  // than re-triggering the queue-ticker a second time; a real re-solve pass can be layered in
-  // once the rest of the flow is confirmed to be the right shape.
-  mapCommitSubset(runId) {
-    const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
-    if (!run || !run.results) return;
-    const dec = this.state.mapDecisions[runId] || {};
-    const accepted = (run.results.lanes || []).filter(l => dec[l.laneKey] === 'Accept');
-    if (!accepted.length) { this.showToast('No lanes accepted yet \u2014 nothing to commit', '#C77B00'); return; }
-    this.mapCommitLanes(run, accepted);
-  }
-
-  // mapCommitLanes(run, lanes) — the shared write-through both commit paths use. For each DC in
-  // an accepted lane: if it currently has an owning SC, appends a real `migrations` entry
-  // ({dc,name,from,to,zone}, the SAME shape already used elsewhere in this app's Node Inputs);
-  // if it came in as a previously-unmapped nodeAdditions row (mapped:false), resolves that
-  // Addition's own sc/mapped fields instead of fabricating a from:null migration. Both cases also
-  // update LMDC Master's scCode via the standard per-entity Class D write.
-  mapCommitLanes(run, lanes) {
+    if (!this.mapAllDecided(run)) { this.showToast('Every flagged DC needs a decision before committing.', '#C77B00'); return; }
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 cannot commit a mapping run.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const d = this.state.data;
+    const dec = this.state.mapDcDecisions[run.id] || {};
     let migrations = (d.migrations || []).slice();
     let nodeAdditions = (d.nodeAdditions || []).slice();
     let nodeChangesUnified = (d.nodeChangesUnified || []).slice();
     let committedCount = 0;
 
-    lanes.forEach(lane => {
-      lane.dcCodes.forEach(dcCode => {
-        const dc = (d.lmdcs || []).find(l => l.code === dcCode);
-        if (!dc) return;
-        const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, dcCode) || {};
-        setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, dcCode, 'lmscCode', lane.toSc, existing);
-        const pendingAddition = nodeAdditions.find(a => a.dc === dcCode && !a.mapped);
-        if (pendingAddition) {
-          nodeAdditions = nodeAdditions.map(a => a.dc === dcCode ? Object.assign({}, a, { sc: lane.toSc, mapped: true }) : a);
-          nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: lane.toSc, lmdcCode: dcCode, flag: 'Addition', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
-        } else if (lane.fromSc && lane.fromSc !== '\u2014' && lane.fromSc !== lane.toSc) {
-          migrations = migrations.concat([{ dc: dcCode, name: dc.code, from: lane.fromSc, to: lane.toSc, zone: dc.zone || '' }]);
-          nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: lane.toSc, lmdcCode: dcCode, flag: 'Migration', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
-        }
-        committedCount++;
-      });
+    run.results.dcRows.filter(r => r.needsDecision && dec[r.code] && dec[r.code].decision === 'Accept').forEach(r => {
+      const dc = (d.lmdcs || []).find(l => l.code === r.code);
+      if (!dc) return;
+      const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, r.code) || {};
+      setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, r.code, 'lmscCode', r.newSc, existing);
+      const pendingAddition = nodeAdditions.find(a => a.dc === r.code && !a.mapped);
+      if (pendingAddition) {
+        nodeAdditions = nodeAdditions.map(a => a.dc === r.code ? Object.assign({}, a, { sc: r.newSc, mapped: true }) : a);
+        nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: r.newSc, lmdcCode: r.code, flag: 'Addition', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
+      } else if (r.oldSc && r.oldSc !== r.newSc) {
+        migrations = migrations.concat([{ dc: r.code, name: dc.code, from: r.oldSc, to: r.newSc, zone: dc.zone || '' }]);
+        nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: r.newSc, lmdcCode: r.code, flag: 'Migration', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
+      }
+      committedCount++;
     });
 
     const mappingRuns = (d.mappingRuns || []).map(m => m.id === run.id ? Object.assign({}, m, { status: 'Committed', committedAt: new Date().toLocaleString() }) : m);
     this.refreshLmdcs();
-    this.setState({ data: Object.assign({}, this.state.data, { migrations, nodeAdditions, nodeChangesUnified, mappingRuns }) });
-    this.showToast(committedCount + ' DC' + (committedCount === 1 ? '' : 's') + ' committed \u2014 reflected in LMDC Master and Design Creation\u2019s node-changes gate', '#128A3E');
+    this.setState({ data: Object.assign({}, this.state.data, { migrations, nodeAdditions, nodeChangesUnified, mappingRuns }), mapReviewStage: 'cards' });
+    this.showToast(committedCount + ' DC' + (committedCount === 1 ? '' : 's') + ' committed \u2014 reflected in LMDC Master and the node-changes gate', '#128A3E');
+  }
+
+  // mapPushScToAlignment(runId, scCode) — Stage 2's per-SC push, independent per SC (mirrors
+  // RLH's own convention). Table/feedback format explicitly deferred to a later design pass —
+  // this just flips a per-SC status flag on the run record.
+  mapPushScToAlignment(runId, scCode) {
+    const mappingRuns = (this.state.data.mappingRuns || []).map(m => {
+      if (m.id !== runId) return m;
+      const pushedScs = Object.assign({}, m.pushedScs, { [scCode]: { status: 'Pushed', pushedAt: new Date().toLocaleString() } });
+      return Object.assign({}, m, { pushedScs });
+    });
+    this.setState({ data: Object.assign({}, this.state.data, { mappingRuns }) });
+    this.showToast(scCode + ' pushed to Ops Alignment', '#128A3E');
   }
 
   submitAddVeh() {
@@ -8806,8 +8907,13 @@ class NDCApp extends React.Component {
     const scTypeSel = this.buildMultiSelect(st.inputsScTypes, SC_TYPE_VALUES, 'inputsScTypes', { pgScMaster: 1 }, 'All Types');
     const tf = scTypeSel.matches;
     const nstep = st.nodeStep || 'active';
-    const nodeChangeCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length + (d.migrations || []).length;
-    const nodeStepMeta = [['active', 'AutoDML node view', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'], ['changes', 'Additions, closures & migrations', nodeChangeCount, nodeChangeCount > 0, 'Node changes this cycle vs the last finalised network.']];
+    const nodeAdditionClosureCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length;
+    const nodeMigrationCount = (d.migrations || []).length;
+    const nodeStepMeta = [
+      ['active', 'AutoDML Actions', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'],
+      ['changes', 'Additions & Closures', nodeAdditionClosureCount, nodeAdditionClosureCount > 0, 'New DCs and closures this cycle vs. the last finalised network.'],
+      ['migrations', 'Migrations', nodeMigrationCount, nodeMigrationCount > 0, 'DCs reassigned from one SC to another — historical, plus any pending from SC-DC Mapping.'],
+    ];
     const nodeSteps = nodeStepMeta.map(s => ({ label: s[1], tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
     const anFiltered = d.scs.filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     // AutoDML flagged-link table (matches Vignesh AutoDML Node View). Each d.autodmlNodes row is one
@@ -8902,6 +9008,8 @@ class NDCApp extends React.Component {
       const fc = NODE_FLAG_COLORS[n.flag] || { bg: '#F2F5FA', fg: '#5A5E66' };
       return { lmscCode: n.lmscCode, lmdcCode: n.lmdcCode, flag: n.flag, flagBg: fc.bg, flagFg: fc.fg, lat: n.lat, lng: n.lng };
     });
+    const nodeChangesAC = nodeChanges.filter(n => n.flag !== 'Migration');
+    const nodeChangesMig = nodeChanges.filter(n => n.flag === 'Migration');
     const volErrModalOpen = !!(st.volErrModal);
     const volErrModal = st.volErrModal || { name: '', rows: [] };
     const closeVolErrModal = () => this.setState({ volErrModal: null });
@@ -9278,14 +9386,14 @@ class NDCApp extends React.Component {
       gate,
       isVolumeTab: itab === 'volume', isNodesTab: itab === 'nodes', isMastersTab: itab === 'masters', isIngestionTab: itab === 'ingestion',
       volumeFiles, volActiveStrip, volTypeChips, volFilesShown, volFilesTotal, volFilesEmpty: volFilesShown === 0, volEmptyMsg: (allVol.length === 0 ? 'No volume files uploaded yet — use Upload above to add one for any type.' : 'No volume files match this type or search.'), volSearch: st.volSearch || '', onVolSearch: (e) => this.setState({ volSearch: e.target.value }),
-      nodeSteps, nstepActive: nstep === 'active', nstepChanges: nstep === 'changes', nstepMigrations: nstep === 'changes',
+      nodeSteps, nstepActive: nstep === 'active', nstepChanges: nstep === 'changes', nstepMigrations: nstep === 'migrations',
       // D1 — one accurate stat per fact. dcTotal = Σ per-SC dcCount = total active LMSC→LMDC links (NOT unique LMDCs),
       // so it is labelled as links exactly once; LMSC count is its own distinct, accurate stat.
       // PARITY §5 — 3rd stat: Active LMDCs (DISTINCT delivery centres). dcTotal counts LINKS, so distinct
       // LMDCs = links minus the multi-SC-mapped overlap (an LMDC mapped to >1 SC is one node, many links).
       nodeStats: nodeStats, autodmlFilterCards: autodmlFilterCards, nodeRows: autodmlPager.pageRows, autodmlPager: autodmlPager, nodeShown: nodeShown, nodeEmpty: nodeEmpty, nodeCountLabel: nodeCountLabel,
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
-      autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges,
+      autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges, nodeChangesMig,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
@@ -13925,15 +14033,16 @@ class NDCApp extends React.Component {
     const mapScCount = (draft.scCodes || []).length;
     const mapCanNext1 = mapScCount >= 2;
 
-    // ===== Step 2 — DC Group: manual DC input (eligibility COMPUTATION deferred entirely, per
-    // discussion — no nearest-SC-within-50km logic, no Tier-3 pincode fallback detection here).
-    // Includes previously-unmapped nodeAdditions candidates (mapped:false), per the AutoDML flow.
-    const mapDcList = (draft.dcCodes || []).map(code => {
-      const dc = (d.lmdcs || []).find(l => l.code === code);
-      return { code, name: dc ? dc.code : code, currentSc: dc ? (dc.lmscCode || 'Unmapped') : '?', pending: dc ? !!dc.pending : false, onRemove: () => this.mapRemoveDc(code) };
-    });
-    const mapUnmappedCandidates = (d.nodeAdditions || []).filter(a => !a.mapped && (draft.dcCodes || []).indexOf(a.dc) < 0).slice(0, 8);
-    const mapCanNext2 = (draft.dcCodes || []).length >= 1;
+    // ===== Step 2 — DC Group: auto-computed (later session — supersedes manual DC input).
+    // Input selection = active AutoDML links for the selected SCs + new unmapped additions,
+    // minus closures. Read-only preview; nothing here is user-editable — see
+    // mapComputeEligibleDcs() for the shared computation scDcMapVals() and mapTriggerRun() both use.
+    const mapEligibleDcs = (draft.scCodes || []).length >= 2 ? this.mapComputeEligibleDcs(draft.scCodes) : [];
+    const mapDcList = mapEligibleDcs.map(dc => ({ code: dc.code, currentSc: dc.currentSc || 'Unmapped', pending: dc.pending }));
+    const mapDcLinkCount = mapDcList.filter(dc => !dc.pending).length;
+    const mapDcAdditionCount = mapDcList.filter(dc => dc.pending).length;
+    const mapDcCount = mapDcList.length;
+    const mapCanNext2 = mapDcCount >= 1;
 
     // ===== Step 3 — Baseline & Parameters
     const mapBaselinePlans = (d.plans || []).filter(p => (st.alignStatus[p.id] || p.status) === 'Finalised' && (draft.scCodes || []).indexOf(p.scCode) >= 0);
@@ -13947,7 +14056,6 @@ class NDCApp extends React.Component {
       return { code, name: sc.name, sortCap: sc.sortCap || 0, volCap: sc.volCap || 0, missingCap };
     });
     const mapAnyMissingCap = mapPreviewScs.some(s => s.missingCap);
-    const mapDcCount = (draft.dcCodes || []).length;
 
     // ===== Run queue
     const mapQueueRows = (st.mapQueue || []).map(r => {
@@ -13957,31 +14065,12 @@ class NDCApp extends React.Component {
     const mapQueueAllDone = (st.mapQueue || []).length > 0 && (st.mapQueue || []).every(r => r.status === 'Completed');
     const mapActiveRun = (d.mappingRuns || []).find(m => m.id === st.mapActiveRunId);
 
-    // ===== Results — Cluster Summary / Reassignment Diff / Unserved DCs
-    const results = mapActiveRun ? mapActiveRun.results : null;
-    const mapResultsTab = st.mapResultsTab || 'summary';
-    const mapDecisionsForRun = st.mapDecisions[st.mapActiveRunId] || {};
-    const mapLaneRows = results ? results.lanes.map(l => ({
-      laneKey: l.laneKey, fromSc: l.fromSc, toSc: l.toSc, dcCount: l.dcCount, volume: fmtInt(l.volume), cost: '\u20b9' + fmtInt(Math.round(l.cost)),
-      decision: mapDecisionsForRun[l.laneKey] || 'Pending',
-      groupChained: l.dcCount > 1 && l.groupId,
-      onAccept: () => this.mapDecideLane(st.mapActiveRunId, l.laneKey, 'Accept'),
-      onReject: () => this.mapDecideLane(st.mapActiveRunId, l.laneKey, 'Reject'),
-    })) : [];
-    const mapUnservedRows = results ? results.unservedDcs.map(u => ({ code: u.code, reason: u.reason })) : [];
-    const mapPerScRows = results ? results.perSc.map(p => ({ code: p.code, dcsServed: p.dcsServed, vehiclesUsed: p.vehiclesUsed, utilisationPct: p.utilisationPct, cost: '\u20b9' + fmtInt(Math.round(p.cost)) })) : [];
-    const mapAnyDecided = Object.keys(mapDecisionsForRun).length > 0;
-    const mapAcceptedCount = Object.values(mapDecisionsForRun).filter(v => v === 'Accept').length;
-    const mapIsCommitted = mapActiveRun && mapActiveRun.status === 'Committed';
-
     return {
       ACCENT: ACCENT, mapAccent: ACCENT,
       mapStep: step, mapStepper, mapSection: st.mapSection,
       mapDraftName: draft.name, onMapSetName: (e) => this.mapSetName(e.target.value),
       mapScList, mapScCount, mapCanNext1,
-      mapDcList, mapDcCount, mapCanNext2, mapUnmappedCandidates,
-      mapDcPicker: st.mapDcPicker || '', onMapDcPicker: (e) => this.setState({ mapDcPicker: e.target.value }),
-      onMapAddDc: () => this.mapAddDc(st.mapDcPicker), onMapAddDcCandidate: (code) => this.mapAddDc(code),
+      mapDcList, mapDcCount, mapDcLinkCount, mapDcAdditionCount, mapCanNext2,
       mapRho: (draft.params || {}).rho != null ? draft.params.rho : 0.2, onMapRho: (e) => this.mapSetParam('rho', +e.target.value),
       mapHwOptions,
       mapSpanCostOn: (draft.params || {}).spanCostOn !== false, onMapSpanCostToggle: () => this.mapSetParam('spanCostOn', !((draft.params || {}).spanCostOn !== false)),
@@ -13993,18 +14082,7 @@ class NDCApp extends React.Component {
       onMapTrigger: () => this.mapTriggerRun(),
       mapQueueRows, mapQueueAllDone,
       onMapOpenResults: () => this.mapOpenResults(st.mapActiveRunId),
-      mapResultsTab, onMapResultsTab: (t) => this.setState({ mapResultsTab: t }),
-      mapActiveRunName: mapActiveRun ? mapActiveRun.name : '', mapActiveRunStatus: mapActiveRun ? mapActiveRun.status : '',
-      mapResults: results, mapHasResults: !!results,
-      mapSolveTime: results ? results.solveTimeSeconds : 0,
-      mapTotalCost: results ? '\u20b9' + fmtInt(Math.round(results.totalCost)) : '\u2014',
-      mapTotalVolume: results ? fmtInt(results.totalVolume) : '\u2014',
-      mapCps: results ? results.cps : 0, mapBaselineCps: results ? results.baselineCps : 0, mapCpsDeltaPct: results ? results.cpsDeltaPct : 0,
-      mapCpsImproved: results ? results.cpsDeltaPct < 0 : false,
-      mapPerScRows,
-      mapLaneRows, mapUnservedRows, mapAnyDecided, mapAcceptedCount, mapIsCommitted,
-      onMapAcceptAll: () => this.mapAcceptAllAsSolved(st.mapActiveRunId),
-      onMapCommitSubset: () => this.mapCommitSubset(st.mapActiveRunId),
+      mapActiveRunName: mapActiveRun ? mapActiveRun.name : '',
       goMapping: () => this.goMapping(),
       onMapCloseToDesignCreation: () => this.setState({ mapSection: null }),
     };
@@ -14012,6 +14090,117 @@ class NDCApp extends React.Component {
 
   // Finalise view — the terminal lifecycle stage. Finalised (and acknowledged/frozen) plans live HERE, not as a
   // tab inside Ops Alignment (which now holds only the active Pending/Feedback-Received work). Read-only, RFQ handoff.
+  // ===========================================================================================
+  // Design Review — SC-DC Mapping (Node Mapping tier). Stage 1 (per run, pre-commit): DC-Level
+  // Changes, SC Pivot Summary, Finalise preview. Stage 2 (per SC, post-commit): plan cards with
+  // independent Push to Alignment. Every binding here is prefixed reviewMap, NOT map — mapVals()
+  // already exists (Network Map's own bindings, already spread into renderVals()) and reuses
+  // several short names (mapHasResults, mapW, etc.) that a generic "map"-prefixed key here would
+  // silently collide with. Same lesson as scDcMapVals() vs mapVals() a few sessions back.
+  // ===========================================================================================
+  reviewMapVals() {
+    const st = this.state, d = st.data;
+    const ACCENT = '#1F6F5C';
+    const fmtInt = (n) => (n || 0).toLocaleString('en-IN');
+
+    const runs = (d.mappingRuns || []).filter(r => r.status === 'Completed' || r.status === 'Committed');
+    const selectedRunId = st.reviewMapRunId || (runs[0] && runs[0].id) || null;
+    const run = runs.find(r => r.id === selectedRunId) || null;
+    const results = run ? run.results : null;
+    const dec = run ? (st.mapDcDecisions[run.id] || {}) : {};
+    const isCommitted = !!(run && run.status === 'Committed');
+    const stage = isCommitted ? 'cards' : (st.mapReviewStage || 'decide');
+
+    const reviewMapRunList = runs.map(r => ({
+      id: r.id, name: r.name, statusLabel: r.status, active: r.id === selectedRunId,
+      onClick: () => this.setState({ reviewMapRunId: r.id, mapReviewStage: r.status === 'Committed' ? 'cards' : 'decide' }),
+    }));
+
+    // effectiveSc(r) — folds the CURRENT decision into a DC row's real outcome. Shared by the SC
+    // Pivot Summary (live, updates as decisions are made) and the Finalise matrix (same logic,
+    // computed at the moment of finalising).
+    const effectiveSc = (r) => {
+      if (r.isUnchanged) return r.oldSc;
+      if (r.isUnserved) return r.oldSc; // no move happens either way — kept if it had a prior SC, else nowhere
+      const d0 = dec[r.code];
+      if (d0 && d0.decision === 'Accept') return r.newSc;
+      return r.oldSc; // Reject, KeepOldSc, or undecided — stays put
+    };
+
+    // ===== View 1 — DC-Level Changes =====
+    const reviewMapDcRows = results ? results.dcRows.filter(r => r.needsDecision).map(r => {
+      const d0 = dec[r.code] || {};
+      return {
+        code: r.code, oldSc: r.oldSc || '\u2014', newSc: r.newSc || '\u2014',
+        isUnservedWithPrior: r.isUnserved && !!r.oldSc,
+        decision: d0.decision || 'Pending', remark: d0.remark || '',
+        onAccept: () => this.mapDecideDc(run.id, r.code, 'Accept', d0.remark),
+        onReject: () => this.mapDecideDc(run.id, r.code, 'Reject', d0.remark),
+        onKeepOldSc: () => this.mapDecideDc(run.id, r.code, 'KeepOldSc', d0.remark),
+        onRemark: (e) => this.mapDecideDc(run.id, r.code, d0.decision || null, e.target.value),
+      };
+    }) : [];
+    const reviewMapUnchangedCount = results ? results.dcRows.filter(r => r.isUnchanged).length : 0;
+    const reviewMapNewUnservedCount = results ? results.dcRows.filter(r => r.isUnserved && !r.oldSc).length : 0;
+    const reviewMapAllDecided = run ? this.mapAllDecided(run) : false;
+
+    // ===== View 2 — SC Pivot Summary (live — reflects decisions as they're made) =====
+    const reviewMapPivotRows = (results && run) ? (run.scCodes || []).map(code => {
+      const relevant = results.dcRows.filter(r => r.oldSc === code || r.newSc === code);
+      let added = 0, removed = 0, unchanged = 0;
+      relevant.forEach(r => {
+        const eff = effectiveSc(r);
+        if (r.oldSc === code && eff === code) unchanged++;
+        else if (r.oldSc === code && eff !== code) removed++;
+        else if (r.oldSc !== code && eff === code) added++;
+      });
+      const unservedHere = results.unservedDcs.filter(u => u.priorSc === code).length;
+      return { code, total: unchanged + added, unchanged, removed, added, unserved: unservedHere };
+    }) : [];
+    const reviewMapOverallUnserved = results ? results.unservedDcs.length : 0;
+    const reviewMapOverallTotals = reviewMapPivotRows.reduce((a, r) => ({
+      total: a.total + r.total, unchanged: a.unchanged + r.unchanged, removed: a.removed + r.removed, added: a.added + r.added,
+    }), { total: 0, unchanged: 0, removed: 0, added: 0 });
+
+    // ===== Finalise preview — SC-level (reuses the pivot) + SC x SC movement matrix =====
+    const reviewMapMatrixScs = run ? run.scCodes.slice() : [];
+    const reviewMapMatrixRows = results ? reviewMapMatrixScs.map(fromCode => ({
+      fromCode,
+      cells: reviewMapMatrixScs.map(toCode => {
+        if (fromCode === toCode) return { toCode, count: null, isDiagonal: true };
+        const count = results.dcRows.filter(r => r.oldSc === fromCode && effectiveSc(r) === toCode).length;
+        return { toCode, count, isDiagonal: false };
+      }),
+    })) : [];
+
+    // ===== Stage 2 — per-SC plan cards (post-commit) =====
+    const reviewMapCards = (isCommitted && results) ? (run.scCodes || []).map(code => {
+      const pivot = reviewMapPivotRows.find(p => p.code === code) || { total: 0, unchanged: 0, removed: 0, added: 0 };
+      const pushInfo = (run.pushedScs || {})[code];
+      return {
+        code, total: pivot.total, unchanged: pivot.unchanged, removed: pivot.removed, added: pivot.added,
+        isPushed: !!pushInfo, pushedAt: pushInfo ? pushInfo.pushedAt : '',
+        onPush: () => this.mapPushScToAlignment(run.id, code),
+      };
+    }) : [];
+
+    return {
+      reviewMapAccent: ACCENT,
+      reviewMapRunList, reviewMapHasRuns: runs.length > 0,
+      reviewMapRunName: run ? run.name : '', reviewMapRunStatusLabel: run ? run.status : '',
+      reviewMapStage: stage,
+      reviewMapTab: st.mapResultsTab === 'pivot' ? 'pivot' : 'changes',
+      onReviewMapTab: (t) => this.setState({ mapResultsTab: t }),
+      reviewMapDcRows, reviewMapUnchangedCount, reviewMapNewUnservedCount, reviewMapAllDecided,
+      reviewMapPivotRows, reviewMapOverallUnserved, reviewMapOverallTotals,
+      reviewMapMatrixScs, reviewMapMatrixRows,
+      reviewMapCards,
+      onReviewMapGoFinalise: () => this.mapGoFinalise(run ? run.id : null),
+      onReviewMapBackToDecide: () => this.mapBackToDecide(),
+      onReviewMapCommit: () => this.mapCommitRun(run ? run.id : null),
+    };
+  }
+
   finaliseVals() {
     const st = this.state, d = st.data;
     const eff = (p) => st.alignStatus[p.id] || p.status;
@@ -14776,7 +14965,7 @@ class NDCApp extends React.Component {
           masters:   'Manage SC Master (sort-centre config) and Vehicle Master (type + capacity definitions).',
           ingestion: 'Import an existing route plan CSV to seed the design — skips the solver for that SC.',
         };
-        const IT = [['volume', 'Volume Inputs'], ['nodes', 'Node Inputs'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']];
+        const IT = [['volume', 'Volume Inputs'], ['nodes', 'SC-DC Connections'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']];
         // Node Inputs: red dot when any AutoDML flags are present (attention needed)
         const autodmlFlagCount = (d.autodmlNodes || []).filter(n => n && n.hasFlag).length;
         subTabsArr = IT.map(t => {
@@ -14996,6 +15185,7 @@ class NDCApp extends React.Component {
       ...this.opsVals(),
       ...this.mapVals(),
       ...this.scDcMapVals(),
+      ...this.reviewMapVals(),
       ...this.finaliseVals(),
       ...this.summaryVals(),
       // Run-map popup (opened from Design Review cards / "Open on map") — reuses mapVals' per-SC geometry, no navigation.

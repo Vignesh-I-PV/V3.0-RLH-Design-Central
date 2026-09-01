@@ -2956,3 +2956,60 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     the next real test is deploying this build and re-running the same Design Creation → NLH
     pairing flow, checking Route Scheduler's own SC count against Route Planner's, and confirming
     the DEL-R05 breakdown TAT/distance now shows real variation end to end.
+
+- **2026-09-01 (later same day) — NLH plans rebuilt as real scenarios, replacing the per-SC
+  auto-pairing design from earlier the same day.** The user caught a genuine product gap: an NLH
+  team can produce multiple volume scenarios for the same month (e.g. "30L Base" vs "45L Peak"),
+  and the RLH/Scheduler planner needs to explicitly choose which one to reference — matching how
+  Route Planner's own Volume Inputs already works (multiple files, planner picks one), not an
+  automatic per-SC pairing with nothing to choose. This is the second reshape of NLH's own data
+  model in one day; recorded here plainly rather than treated as a footnote.
+
+  **Data model**: an NLH record is now `{name, origin: 'finalised'|'ingested', status, scData:
+  {SC_CODE: {trailers}}, ingestedAt, fileMeta}` — one named scenario covering many SCs internally,
+  not one record per SC. `genNlhTrailers()` gained a volume multiplier so scenarios are genuinely
+  different, not just differently labeled.
+
+  **Point 1 (origin flag)**: `origin: 'finalised' | 'ingested'` on every scenario, a small badge
+  shown both in the ingestion library and Step 1's picker. The ingestion form (still the only real
+  authoring path, since NLH's own Design Creation solver doesn't exist) got an explicit
+  Finalised/Ingested selector — a stand-in for the missing solver, per the same "imagine..."
+  framing used earlier for the whole NLH-plans-as-plans concept.
+
+  **Point 2 (5 validations, all built, per direct confirmation)**:
+  1. Coverage (blocking, restored from Layer 5) — every SC selected in Step 1 must have real
+     `scData` inside the *chosen* scenario specifically, checked at both Step 4's preview and the
+     trigger-time defensive re-check.
+  2. Volume variance (warning, restored from Layer 5) — chosen scenario's own trailer-summed
+     volume for an SC vs. RLH's own plan volume, >5% flagged.
+  3. Duplicate scenario name (new) — blocked at ingestion with a toast, checked against every
+     existing scenario name for that same month, since the picker identifies scenarios by name.
+  4. Trailer data sanity (new) — `validateNlhScenario()`, a real reusable validator (not a token
+     check): landing times must be valid times-of-day, volumes must be positive. Currently
+     unreachable via the deterministic generator (which always produces sane values) — the guard
+     exists for whenever scenario data stops being purely programmatic.
+  5. Empty scenario (new) — same `validateNlhScenario()`, blocks a scenario with zero SC coverage.
+
+  **Every consumer of the old per-SC shape found and fixed** (grepped for every remaining
+  `.trailers` access to confirm none were stale before considering this done): Step 1's picker
+  and pairing-status list (rebuilt as an actual radio-style scenario picker, not an auto-resolved
+  panel), Step 4's coverage/volume-variance flags (now named after the chosen scenario, e.g. `"45L
+  Peak" doesn't cover DEL2`), the trigger-time defensive check and `nlhPlanId` assignment (now the
+  single globally-chosen scenario id, not a per-SC resolution), and `computeSchedulerMetricsFor()`'s
+  rollover%/LMSC-in-out (now reads `scenario.scData[scCode].trailers`, not `scenario.trailers`
+  directly). Seed data rebuilt to match: 2 real scenarios per month ("30L Base" ×1.0 volume,
+  finalised; "45L Peak" ×1.5 volume, ingested), each covering every real SC; seeded scheduler
+  plans alternate between the two (by SC-code hash) for demo variety.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: compiled clean after each piece, full-file compile clean at the end, harness
+    118/118, full stack-balance check across the entire Design Creation JSX block (zero
+    mismatches), every new identifier used in the rebuilt Step 1 JSX individually cross-checked
+    against its actual export (`chosenNlhScenarioName`, `schedulerNlhScenarioCards`,
+    `nlhPairingRows`, etc.) rather than assumed correct from writing it, confirmed zero duplicate
+    method definitions (`genDcRows`, `submitLegIngest`, `validateNlhScenario` each exactly once).
+  - **Not yet verified live**: same standing caveat — this is the third significant NLH-related
+    change today (auto-pairing → scenario picker), and none of it has been exercised in an actual
+    browser. The real test is adding a second scenario via the ingestion form, confirming the
+    duplicate-name/empty-scenario guards actually fire, and picking between "30L Base" and "45L
+    Peak" in Design Creation to confirm the coverage/volume-variance flags read correctly end to
+    end.

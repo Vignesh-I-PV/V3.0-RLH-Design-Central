@@ -6791,11 +6791,18 @@ class NDCApp extends React.Component {
       else if (inProg > 0) { runs[i].status = 'In-Progress'; runs[i].progress = ri(15, 85); inProg--; }
     }
 
+    // statusPlan distribution (later session — rebalanced) — was 18/12/4/7, meaning only 7 of 41
+    // seeded SCs were ever Finalised, and only Finalised plans get a corresponding Route
+    // Scheduler run (the correct business rule — you can't schedule dispatch times for a plan
+    // that hasn't been finalized — so this wasn't a filtering bug, but the ratio left Route
+    // Scheduler with barely any SCs to test against relative to Route Planner's own 41. Rebalanced
+    // to roughly half Finalised, keeping some spread across the other statuses so Design
+    // Review/Ops Alignment still have real in-progress variety to show too.
     const statusPlan = [];
-    for (let i = 0; i < 18; i++) statusPlan.push('Pushed');
-    for (let i = 0; i < 12; i++) statusPlan.push('In Alignment');
+    for (let i = 0; i < 10; i++) statusPlan.push('Pushed');
+    for (let i = 0; i < 7; i++) statusPlan.push('In Alignment');
     for (let i = 0; i < 4; i++) statusPlan.push('Acknowledged');
-    for (let i = 0; i < 7; i++) statusPlan.push('Finalised');
+    for (let i = 0; i < 20; i++) statusPlan.push('Finalised');
 
     // 2026-07-14 — was a separate abbreviated pool ('Rahul S.', 'Megha B.', ...) that could never
     // string-match the full-name acting Ops-Lead persona ('Rahul Sharma') used elsewhere in the app —
@@ -10905,7 +10912,7 @@ class NDCApp extends React.Component {
     // `disabled`, just styled to look inert, so this guard is what actually stops the trigger.
     // NLH pairing is per-SC now (later session) — each parent SC needs its OWN Finalised NLH
     // plan for the chosen month, not one shared file covering everyone.
-    const month = st.schedulerNlhSourceMonth || currentMonthKey();
+    const month = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
     const nlhByScForTrigger = {};
     listNlhIngestedPlans(this.engineStore, month).filter(p => p.status === 'Finalised').forEach(p => { nlhByScForTrigger[p.scCode] = p; });
     const uncovered = parents.filter(p => !nlhByScForTrigger[p.scCode]);
@@ -11036,7 +11043,14 @@ class NDCApp extends React.Component {
     // same-code Finalised NLH plan for the chosen month, informationally shown, never manually
     // picked. nlhVol is now a REAL sum of that SC's own trailer volumes, not the old stub
     // ("same as RLH's own volume") — a genuine improvement, not just a rename.
-    const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || currentMonthKey();
+    // schedulerNlhSourceMonth (fixed, later session) — was defaulting to currentMonthKey()
+    // (today's real-world clock), completely independent of which months actually have seeded
+    // NLH data (May-Sep 2026 only) or which cycle RLH itself is on. If the real deployed clock
+    // falls outside that seeded window, EVERY SC would show zero NLH pairing by default,
+    // regardless of which one is picked — not a one-month mismatch, a total miss. Defaulting to
+    // RLH's own active cycle guarantees landing on a month that's actually seeded, since RLH's
+    // own cycles only ever exist within that same window.
+    const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
     const selectedScCodesForNlh = Array.from(new Set(selectedPlanIds.map(pid => { const p = (d.plans || []).find(pp => pp.id === pid); return p ? p.scCode : null; }).filter(Boolean)));
     const nlhPlansByScThisMonth = {};
     listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth).filter(p => p.status === 'Finalised').forEach(p => { nlhPlansByScThisMonth[p.scCode] = p; });
@@ -11409,7 +11423,13 @@ class NDCApp extends React.Component {
     const dcArr = r.dcs; // array of dc-code strings e.g. ["BDQ234","BDQ567"]
     const n = dcArr.length || 1;
     const baseVol = Math.floor(r.volume / n);
-    const baseDist = Math.floor(r.rtDist / n);
+    // Real node-to-node distance (later session — replaces the old evenly-split-plus-jitter
+    // placeholder, which made every DC on a route show nearly the same distance regardless of
+    // real geography). Each DC's distance is now genuinely the leg INTO it: haversine from the
+    // SC itself for the first stop, then from whichever DC precedes it in tour order for every
+    // subsequent one — walked sequentially since each leg depends on the previous stop's real
+    // coordinates, not independently computed per DC the way the old jitter formula was.
+    let prevLat = r.oLat, prevLng = r.oLng;
     return dcArr.map((code, i) => {
       const rec = lmdcByCode[code];
       // deterministic jitter from char codes of the dc code string — kept as a fallback only for
@@ -11422,7 +11442,9 @@ class NDCApp extends React.Component {
       const lat  = rec ? rec.lat : +(r.oLat + latSign * jitterLat).toFixed(4);
       const lng  = rec ? rec.lng : +(r.oLng + lngSign * jitterLng).toFixed(4);
       const vol  = baseVol + ((charSum + i) % 3 === 0 ? 1 : 0);
-      const dist = baseDist + ((charSum + i * 7) % 5);
+      const legDistKm = NDC_haversineKm(prevLat, prevLng, lat, lng);
+      const dist = Math.max(1, Math.round(legDistKm));
+      prevLat = lat; prevLng = lng; // this stop becomes the origin for the NEXT leg
       const nameIdx = (charSum + i * 13) % DC_NAMES.length;
       const isLocal = rec ? rec.isLocal : true;
       return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km', isLocal };

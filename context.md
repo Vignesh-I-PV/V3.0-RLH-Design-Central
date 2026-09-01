@@ -2897,3 +2897,62 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     version pin) — no `engine.js` changes.
   - **Verification**: compiled clean, harness 118/118, exact-string-match confirmed in Node for
     the `nlhPlanId` fix.
+
+- **2026-09-01 (later same day) — Real deploy-testing feedback, 4 issues, all root-caused with
+  actual evidence rather than assumed.** The user provided screenshots plus a screen recording;
+  extracted frames with `ffmpeg` and viewed them directly rather than reasoning from the text
+  description alone — this is what actually distinguished "seed data is broken" from "seed data
+  is fine, one specific lookup path is broken," which mattered a lot for where to spend effort.
+  1. **NLH pairing showed nothing in Design Creation.** Extracted video frames and viewed the
+     screenshots directly: Design Review and Ops Alignment both display CORRECT, real NLH
+     pairings for multiple SCs (`Seed-NLH-DEL2-2026-09.csv`, `Seed-NLH-DDN2-2026-09.csv`, with
+     real non-zero LMSC-in→LMDC-out values like 1.7 and 1.2 days) — so the seed data and the
+     `sp.nlhPlanId`-based lookup (fixed earlier the same day) are genuinely correct. The bug was
+     isolated to Design Creation's *fresh* Step 1 lookup, which defaulted
+     `schedulerNlhSourceMonth` to `currentMonthKey()` — today's real-world clock — completely
+     independent of which months actually have seeded data (May-Sep 2026 only) or which cycle RLH
+     itself is on. If the real deployed clock falls outside that window at all, every SC would
+     show zero pairing regardless of which one is picked — not a one-month mismatch, a total miss,
+     matching "all cycles show no NLH plans" exactly. Fixed both places this default appeared
+     (Step 1's own computation and the trigger-time defensive re-check) to default to RLH's own
+     active cycle instead, which is guaranteed to fall within the seeded window since RLH's cycles
+     only ever exist there.
+  2. **Route Scheduler had far fewer SCs than Route Planner.** Traced to exact numbers: RLH's own
+     seed data only covers 41 of 80 SCs to begin with, and of those 41, the status split
+     (`statusPlan`) was 18 Pushed / 12 In Alignment / 4 Acknowledged / only **7** Finalised.
+     Route Scheduler can only ever be seeded from Finalised RLH plans — a correct business rule
+     (you can't schedule dispatch times for a plan that hasn't been finalized), not a bug in the
+     filter itself — but the 7-of-41 ratio left almost nothing to test against. Rebalanced to
+     10/7/4/**20**, roughly doubling Finalised representation while keeping some spread in the
+     other statuses for Design Review/Ops Alignment's own variety.
+  3. **Node-to-node breakdown TAT looked uniform across a route.** Confirmed by tracing the exact
+     DEL-R05 coordinates from the user's own screenshot (30.4945/77.954, 30.4965/77.954,
+     30.527/77.954, etc.) through the OLD formula — 29/29/31/31/31/31 km, nearly identical because
+     `genDcRows()` was still computing `totalRouteDistance ÷ numberOfDCs` (the gap identified
+     earlier the same day, when the fix was deliberately scoped OUT to avoid touching Route
+     Planner's own numbers). Given explicit confirmation this time that touching Route Planner's
+     own distance display is acceptable, rebuilt `genDcRows()`'s distance computation for real:
+     haversine from the SC itself for the first stop, then from whichever DC precedes it in tour
+     order for every subsequent one, walked sequentially (each leg genuinely depends on the
+     previous stop's real coordinates, not independently computed). Verified by running the exact
+     same DEL-R05 coordinates through the NEW formula in Node before considering it done: real,
+     differentiated distances (40/12/187/196/1/196 km) — including a very small "1 km" leg where
+     two DCs in the seed data happen to share nearly identical coordinates, which is geographically
+     correct rather than a new bug. This is a genuinely shared function (~15 call sites across
+     Route Planner's Detail View, the Ops Feedback modals, and Route Scheduler), so this
+     deliberately changes Route Planner's own displayed distances too, per direct confirmation —
+     not a Route-Scheduler-only patch.
+  - **Diagnostic approach worth recording**: for point 1, ran the real seeding+lookup code
+    (loaded actual `engine.js`, not a reimplementation) against mock data in Node and confirmed
+    the mechanism works correctly in isolation — then went further and extracted real video
+    frames to check actual observed behavior against that isolated-correct mechanism, which is
+    what actually narrowed the bug to one specific code path instead of concluding "the whole
+    seeding system is broken" from the symptom alone.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: compiled clean after each fix individually, harness 118/118, confirmed no
+    duplicate function/method definitions were accidentally introduced, traced the exact reported
+    DEL-R05 example through both the old and new distance formulas in Node before and after.
+  - **Still not verified**: none of this has been confirmed in an actual live browser render —
+    the next real test is deploying this build and re-running the same Design Creation → NLH
+    pairing flow, checking Route Scheduler's own SC count against Route Planner's, and confirming
+    the DEL-R05 breakdown TAT/distance now shows real variation end to end.

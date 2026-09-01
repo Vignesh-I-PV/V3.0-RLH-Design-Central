@@ -597,25 +597,26 @@ All modules
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Design Ingestion \u2014 not built for FM Carting yet.</div>
 </>) : (<>
 <div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
-<div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Ingest an externally-built NLH plan</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — bring in an already-built plan here, one per SC. Once ingested, RLH's Route Scheduler automatically pairs each SC with its own NLH plan for this same cycle month.</div>
-<div style={css(`display:flex; gap:10px;`)}>
-<select value={legIngestScCode || ''} onChange={onLegIngestScCode} disabled={legCycleIsPast} style={css(`width:160px; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 10px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)}>
-<option value={""}>Pick an SC</option>
-{(legIngestScOptions || []).map((sc, __iLis) => (<React.Fragment key={__iLis}><option value={sc.code}>{sc.code} \u2014 {sc.name}</option></React.Fragment>))}
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Add an NLH scenario</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>No Design Creation solver for NLH yet — name a scenario (e.g. "30L Base", "45L Peak") covering every SC. RLH's Route Scheduler picks one scenario per trigger, same as choosing a volume file.</div>
+<div style={css(`display:flex; gap:10px; margin-bottom:10px;`)}>
+<input value={legIngestScenarioName} onInput={onLegIngestScenarioName} disabled={legCycleIsPast} placeholder={"Scenario name, e.g. 30L Base"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} />
+<input value={legIngestVolumeMultiplier} onInput={onLegIngestVolumeMultiplier} disabled={legCycleIsPast} placeholder={"Volume \u00d7"} title={"Volume multiplier relative to baseline \u2014 e.g. 1.5 for a Peak scenario"} style={css(`width:100px; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} />
+<select value={legIngestOrigin} onChange={onLegIngestOrigin} disabled={legCycleIsPast} title={"Was this scenario produced by a (simulated) NLH Design Creation solver, or ingested as a raw file?"} style={css(`width:150px; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 10px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)}>
+<option value={"ingested"}>Ingested file</option>
+<option value={"finalised"}>System finalised</option>
 </select>
-<input value={legIngestFileName} onInput={onLegIngestFileName} disabled={legCycleIsPast} placeholder={"e.g. NLH-Plan-Aug2026.csv"} style={css(`flex:1; height:36px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:12.5px; opacity:${legCycleIsPast ? '0.5' : '1'};`)} />
-<button onClick={submitLegIngest} disabled={legCycleIsPast} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>Ingest</button>
+<button onClick={submitLegIngest} disabled={legCycleIsPast} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>Add</button>
 </div>
 </div>
 {(legIngestedEmpty) ? (<>
-<div style={css(`padding:22px; border:1px dashed #D7DCE5; border-radius:10px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No plans ingested yet for this cycle.</div>
+<div style={css(`padding:22px; border:1px dashed #D7DCE5; border-radius:10px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No scenarios added yet for this cycle.</div>
 </>) : (<>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; background:#fff;`)}>
 {(legIngestedPlans || []).map((p, __iLegPlan) => (<React.Fragment key={__iLegPlan}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:11px 14px; border-bottom:1px solid #F2F5FA; font-size:12.5px;`)}>
-<span style={css(`font-weight:600; color:#14171F;`)}>{p.fileName} <span style={css(`font-weight:400; color:#5A5E66;`)}>&middot; {p.scCode} &middot; {p.trailerCount} trailers</span></span>
-<span style={css(`color:#8E96A3;`)}>ingested {p.ingestedAt}</span>
+<span style={css(`font-weight:600; color:#14171F;`)}>{p.name} <span style={css(`display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10.5px; font-weight:700; margin-left:6px; background:${p.origin === 'finalised' ? '#EAF3EF' : '#F2F5FA'}; color:${p.origin === 'finalised' ? '#128A3E' : '#5A5E66'};`)}>{p.origin === 'finalised' ? 'System Finalised' : 'Ingested'}</span> <span style={css(`font-weight:400; color:#5A5E66;`)}>&middot; {p.scCount} SCs covered</span></span>
+<span style={css(`color:#8E96A3;`)}>{p.origin === 'finalised' ? 'finalised' : 'ingested'} {p.ingestedAt}</span>
 </div>
 </React.Fragment>))}
 </div>
@@ -2375,7 +2376,7 @@ All modules
     2026-08-25 — NLH Design Ingestion now lives exclusively on the NLH card; this picker just
     references whichever cycle-month's plans NLH has ingested. */}
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>NLH Plan Selection</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; margin-bottom:10px; line-height:1.5;`)}>One NLH Landing Plan covers every SC (LMSC-wise) — the same file applies to every SC you select below. Ingested on the SC-SC and NLH Design card, referenced here by cycle month.</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; margin-bottom:10px; line-height:1.5;`)}>NLH may produce multiple scenarios per month (e.g. different volume levels) — pick one below to apply to every SC you select. Added on the SC-SC and NLH Design card's Design Ingestion tab.</div>
 <div style={css(`position:relative; display:inline-block; margin-bottom:14px;`)}>
 <button onClick={toggleSchedNlhMonth} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
 NLH cycle: {schedNlhMonthLabel}
@@ -2391,19 +2392,32 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(schedulerNlhEmpty) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:40px 20px; text-align:center; border:1px dashed #E6EBF2; border-radius:10px; margin-bottom:20px;`)}>
-<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>Pick SCs above to see their NLH pairing</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Each RLH SC automatically pairs with its own Finalised NLH plan for {schedNlhMonthLabel} — nothing to pick manually here.</div>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH scenarios for {schedNlhMonthLabel}</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Add one on the SC-SC and NLH Design card's Design Ingestion tab, or pick a different month above.</div>
 </div>
 </>) : (<>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>NLH PAIRING \u2014 {schedNlhMonthLabel}</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO \u2014 {schedNlhMonthLabel}</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px; margin-bottom:16px;`)}>
+{(schedulerNlhScenarioCards || []).map((sc, __iNsc) => (<React.Fragment key={__iNsc}>
+<button onClick={sc.onClick} style={css(`display:flex; align-items:center; gap:10px; text-align:left; padding:10px 12px; border:1px solid ${sc.active ? '#003F98' : '#E6EBF2'}; background:${sc.active ? '#EAEEFB' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
+<div style={css(`width:16px; height:16px; border-radius:50%; border:2px solid ${sc.active ? '#003F98' : '#C3C9D4'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(sc.active) ? (<><div style={css(`width:8px; height:8px; border-radius:50%; background:#003F98;`)} /></>) : null}</div>
+<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{sc.name}</span>
+<span style={css(`display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:${sc.origin === 'finalised' ? '#EAF3EF' : '#F2F5FA'}; color:${sc.origin === 'finalised' ? '#128A3E' : '#5A5E66'};`)}>{sc.origin === 'finalised' ? 'System Finalised' : 'Ingested'}</span>
+<span style={css(`font-size:11px; color:#8E96A3; margin-left:auto;`)}>{sc.scCount} SCs covered</span>
+</button>
+</React.Fragment>))}
+</div>
+{(chosenNlhScenarioName) ? (<>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PAIRING \u2014 {chosenNlhScenarioName}</div>
 <div style={css(`display:flex; flex-direction:column; gap:6px; margin-bottom:20px;`)}>
 {(nlhPairingRows || []).map((r, __i45) => (<React.Fragment key={__i45}>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid ${r.hasNlhPlan ? '#E6EBF2' : '#F3C9C9'}; background:${r.hasNlhPlan ? '#fff' : '#FBEAEA'}; border-radius:8px;`)}>
 <div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.scCode} \u2014 {r.scName}</div>
-{(r.hasNlhPlan) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>{r.trailerCount} trailers \u00b7 {r.nlhVolume.toLocaleString('en-IN')} vol</span></>) : (<><span style={css(`font-size:11px; font-weight:600; color:#D14B4B;`)}>No Finalised NLH plan for this month</span></>)}
+{(r.hasNlhPlan) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>{r.trailerCount} trailers \u00b7 {r.nlhVolume.toLocaleString('en-IN')} vol</span></>) : (<><span style={css(`font-size:11px; font-weight:600; color:#D14B4B;`)}>Not covered by this scenario</span></>)}
 </div>
 </React.Fragment>))}
 </div>
+</>) : null}
 </>)}
 {/* SC / Plan selection — rail + cards (2026-08-10), mirroring Design Review's own rail+cards
     shape. Empty "Pick a SC" default; rail navigation never affects which plans are checked.
@@ -6307,28 +6321,39 @@ class NDCApp extends React.Component {
       this.engineStore.rlhCycleData[month] = suffixRlhIdsForMonth(retargeted, month);
       createCycle(this.engineStore, 'rlh', month, { tables: [{ table: 'scMaster', defaults: {} }] });
     });
-    // Seed a real per-SC NLH plan for each of the same 5 months, so Route Scheduler's Step 1 has
-    // something to actually pair against without requiring manual ingestion first (later
-    // session). Every real RLH SC (not MDC nodes — MDC never dispatches via NLH) gets its own
-    // Finalised NLH plan per month, deterministic trailers via genNlhTrailers().
+    // Seed two real NLH scenarios per month (later session — supersedes the earlier one-record-
+    // per-SC design, which couldn't represent "the NLH team produced two volume scenarios for
+    // this month and RLH picks one," a real gap the user caught). Each scenario covers every real
+    // SC (not MDC nodes — MDC never dispatches via NLH) with its own deterministic trailer
+    // schedule; "45L Peak" uses a 1.5x volume multiplier so the two scenarios are genuinely
+    // different, not just differently named. One tagged 'finalised' (as if NLH's own Design
+    // Creation produced it), one 'ingested' (a raw uploaded file) — real variety for the origin
+    // flag, not just a hardcoded default.
     ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
-      (_seedForNlh.scs || []).filter(s => s.nodeKind !== 'MDC').forEach(sc => {
-        const id = 'NLH-PLAN-' + sc.code + '-' + month;
-        const trailers = this.genNlhTrailers(sc.code, month);
-        ingestNlhPlan(this.engineStore, month, { planId: id, scCode: sc.code, status: 'Finalised', trailers, fileMeta: { name: 'Seed-NLH-' + sc.code + '-' + month + '.csv' }, ingestedAt: monthLabel(month) + ' seed' });
+      const realScs = (_seedForNlh.scs || []).filter(s => s.nodeKind !== 'MDC');
+      [['30L Base', 'finalised', 1], ['45L Peak', 'ingested', 1.5]].forEach(([name, origin, mult]) => {
+        const scData = {};
+        realScs.forEach(sc => { scData[sc.code] = { trailers: this.genNlhTrailers(sc.code, month + name, mult) }; });
+        const id = 'NLH-SCENARIO-' + name.replace(/[^A-Za-z0-9]/g, '') + '-' + month;
+        ingestNlhPlan(this.engineStore, month, { planId: id, name, origin, status: 'Finalised', scData, fileMeta: { name }, ingestedAt: monthLabel(month) + ' seed' });
       });
     });
-    // Fix the seeded schedulerPlans' own nlhPlanId (later session) — every one was seeded with a
-    // single hardcoded placeholder ('NLH-ING-DEMO') from before NLH plans were real per-SC/per-
-    // month records. retargetMonthStrings() can't fix this on its own: it only rewrites month-NAME
-    // strings ("Jul" → "Aug"), not cycle-key IDs like "2026-08", so each month's own bucket needs
-    // a direct patch here, after both the RLH retargeting loop and the NLH seeding loop above have
-    // already run. Without this, every seeded demo plan's rollover%/LMSC-in-out/NLH-plan display
-    // would silently show zero/empty — the pairing existed as a stored id, but pointed nowhere.
+    // Fix the seeded schedulerPlans' own nlhPlanId (later session, twice-revised) — every one was
+    // originally seeded with a hardcoded placeholder ('NLH-ING-DEMO'), then briefly pointed at a
+    // per-SC record before the scenario model existed. retargetMonthStrings() can't fix this on
+    // its own: it only rewrites month-NAME strings ("Jul" → "Aug"), not cycle-key IDs like
+    // "2026-08", so each month's own bucket needs a direct patch here, after both the RLH
+    // retargeting loop and the NLH seeding loop above have already run. Alternates each plan
+    // between the two seeded scenarios (by SC-code hash) purely for demo variety — a real trigger
+    // always has the planner explicitly pick one scenario for the whole run.
     ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
       const bucket = this.engineStore.rlhCycleData[month];
       if (!bucket || !bucket.schedulerPlans) return;
-      bucket.schedulerPlans = bucket.schedulerPlans.map(sp => Object.assign({}, sp, { nlhPlanId: 'NLH-PLAN-' + sp.scCode + '-' + month }));
+      bucket.schedulerPlans = bucket.schedulerPlans.map(sp => {
+        const h = sp.scCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+        const scenarioName = (h % 2 === 0) ? '30L Base' : '45L Peak';
+        return Object.assign({}, sp, { nlhPlanId: 'NLH-SCENARIO-' + scenarioName.replace(/[^A-Za-z0-9]/g, '') + '-' + month });
+      });
     });
     // October: created (selectable, masters carried forward) but genuinely empty — nothing
     // generated for it yet, ready for the user to trigger Design Creation into. Every other month
@@ -6352,7 +6377,7 @@ class NDCApp extends React.Component {
       // null until a card is picked; activeCycleMonth mirrors the constructor-time snapshot
       // (this.activeCycleMonth) into real state so switching cycles actually re-renders.
       activeLeg: null, activeCycleMonth: Object.assign({}, this.activeCycleMonth), legCycleOpen: false,
-      legInputsTab: 'masters', legIngestFileName: '', legIngestScCode: null, engineTick: 0,
+      legInputsTab: 'masters', legIngestScenarioName: '', legIngestOrigin: 'ingested', legIngestVolumeMultiplier: '1.0', engineTick: 0,
       showCoach: props.showFtux !== false,
       toast: null,
       inputsTab: 'volume',
@@ -6376,6 +6401,7 @@ class NDCApp extends React.Component {
       // (SC+LH, simultaneous) proposes Dispatch Cutoff (+TAT for LH, now also SC); Stage 2 (LM,
       // gated on Stage 1 being fully decided) proposes Landing Time, back-solved to an implied
       // Dispatch Cutoff since TAT is locked by then.
+      schedulerNlhScenarioId: null,
       schedAlignStage: 'stage1',
       schedOpsStage: 'stage1',
       // schedFeedback[planId][routeCode] = { status: 'Aligned'|'Needs Change', items: [item] }
@@ -7562,31 +7588,65 @@ class NDCApp extends React.Component {
   // different volumes, per the product description of what an NLH plan actually represents.
   // Deterministic (hash-based, same convention as every other simulated figure in this app), not
   // randomly regenerated on every call, so the same SC+month always shows the same schedule.
-  genNlhTrailers(scCode, seedKey) {
+  genNlhTrailers(scCode, seedKey, volumeMultiplier) {
     const h = (scCode + seedKey).split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
     const n = 10 + (h % 6); // 10-15 trailers
+    const mult = volumeMultiplier || 1;
     const trailers = [];
     for (let i = 0; i < n; i++) {
       const th = (h + i * 17) >>> 0;
       const landingMin = th % 1440; // any time of day, minutes from midnight
-      const volume = 800 + (th % 1600); // 800-2399 per trailer
+      const volume = Math.round((800 + (th % 1600)) * mult); // 800-2399 per trailer, scaled by scenario
       trailers.push({ landingMin, volume });
     }
     return trailers.sort((a, b) => a.landingMin - b.landingMin);
   }
+  // validateNlhScenario(scenario) — sanity-checks a scenario's own trailer data before it's
+  // accepted anywhere (ingestion time here; reusable wherever else a scenario gets constructed).
+  // Landing times must be valid times-of-day, volumes must be positive — this is currently
+  // unreachable via the deterministic genNlhTrailers() generator (which always produces sane
+  // values), but the check exists as a real guard, not a token one, for whenever scenario data
+  // stops being purely programmatic (e.g. a future manual trailer-entry UI).
+  validateNlhScenario(scenario) {
+    const scCodes = Object.keys(scenario.scData || {});
+    if (scCodes.length === 0) return { ok: false, message: 'This scenario covers zero SCs — nothing to ingest.' };
+    for (let i = 0; i < scCodes.length; i++) {
+      const trailers = (scenario.scData[scCodes[i]] || {}).trailers || [];
+      for (let j = 0; j < trailers.length; j++) {
+        const t = trailers[j];
+        if (t.landingMin == null || t.landingMin < 0 || t.landingMin >= 1440) return { ok: false, message: scCodes[i] + ' has a trailer with an invalid landing time.' };
+        if (!(t.volume > 0)) return { ok: false, message: scCodes[i] + ' has a trailer with zero or negative volume.' };
+      }
+    }
+    return { ok: true, message: '' };
+  }
   submitLegIngest() {
-    const name = (this.state.legIngestFileName || '').trim();
-    const scCode = this.state.legIngestScCode;
-    if (!name) { this.showToast('Enter a file name to ingest', '#C77B00'); return; }
-    if (!scCode) { this.showToast('Pick the SC this NLH plan is for', '#C77B00'); return; }
+    const name = (this.state.legIngestScenarioName || '').trim();
+    const origin = this.state.legIngestOrigin || 'ingested';
+    const volMult = parseFloat(this.state.legIngestVolumeMultiplier) || 1;
+    if (!name) { this.showToast('Name this NLH scenario (e.g. "30L Base")', '#C77B00'); return; }
     if (this.isLegCyclePast('nlh')) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.nlh;
-    const id = 'NLH-PLAN-' + scCode + '-' + Date.now();
-    const trailers = this.genNlhTrailers(scCode, cycleMonth);
-    ingestNlhPlan(this.engineStore, cycleMonth, { planId: id, scCode, status: 'Finalised', trailers, fileMeta: { name }, ingestedAt: new Date().toLocaleString() });
-    this.setState({ legIngestFileName: '', legIngestScCode: null });
+    // Duplicate-scenario-name validation (later session) — a soft warning, not a hard block:
+    // the picker identifies scenarios by name, so two "30L Base" entries for the same month would
+    // be genuinely confusing to choose between, even though nothing downstream technically breaks.
+    const existingNames = listNlhIngestedPlans(this.engineStore, cycleMonth).map(p => p.name.toLowerCase());
+    if (existingNames.indexOf(name.toLowerCase()) >= 0) {
+      this.showToast('A scenario named "' + name + '" already exists for ' + monthLabel(cycleMonth) + ' — pick a different name to avoid confusion in the picker.', '#C77B00');
+      return;
+    }
+    const scData = {};
+    (this.state.data.scs || []).filter(s => s.nodeKind !== 'MDC').forEach(sc => {
+      scData[sc.code] = { trailers: this.genNlhTrailers(sc.code, cycleMonth + name, volMult) };
+    });
+    const id = 'NLH-SCENARIO-' + name.replace(/[^A-Za-z0-9]/g, '') + '-' + Date.now();
+    const scenario = { planId: id, name, origin, status: 'Finalised', scData, ingestedAt: new Date().toLocaleString(), fileMeta: { name } };
+    const check = this.validateNlhScenario(scenario);
+    if (!check.ok) { this.showToast(check.message, '#D14B4B'); return; }
+    ingestNlhPlan(this.engineStore, cycleMonth, scenario);
+    this.setState({ legIngestScenarioName: '', legIngestVolumeMultiplier: '1.0' });
     this.bumpEngineTick();
-    this.showToast(name + ' ingested for ' + scCode + ' — available to RLH\u2019s Route Scheduler', '#128A3E');
+    this.showToast('"' + name + '" ' + (origin === 'finalised' ? 'finalised' : 'ingested') + ' — available to RLH\u2019s Route Scheduler', '#128A3E');
   }
   // C10 — open the SC editor pre-filled from an existing SC (real inline-equivalent edit, not a dead control).
   openScEdit(code) {
@@ -10910,14 +10970,14 @@ class NDCApp extends React.Component {
     if (!parents.length) return;
     // Defensive re-check of validation rule #1 (blocking) — the button above isn't a real HTML
     // `disabled`, just styled to look inert, so this guard is what actually stops the trigger.
-    // NLH pairing is per-SC now (later session) — each parent SC needs its OWN Finalised NLH
-    // plan for the chosen month, not one shared file covering everyone.
+    // NLH pairing is scenario-based now (later session) — one scenario chosen for the whole
+    // trigger, every parent SC needs coverage inside THAT scenario specifically.
     const month = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
-    const nlhByScForTrigger = {};
-    listNlhIngestedPlans(this.engineStore, month).filter(p => p.status === 'Finalised').forEach(p => { nlhByScForTrigger[p.scCode] = p; });
-    const uncovered = parents.filter(p => !nlhByScForTrigger[p.scCode]);
+    const chosenScenario = listNlhIngestedPlans(this.engineStore, month).find(p => p.planId === st.schedulerNlhScenarioId) || null;
+    if (!chosenScenario) { this.showToast('Blocked \u2014 pick an NLH scenario first', '#D14B4B'); return; }
+    const uncovered = parents.filter(p => !(chosenScenario.scData && chosenScenario.scData[p.scCode]));
     if (uncovered.length > 0) {
-      this.showToast('Blocked \u2014 ' + uncovered.length + ' SC' + (uncovered.length === 1 ? '' : 's') + ' missing NLH landing data', '#D14B4B');
+      this.showToast('Blocked \u2014 "' + chosenScenario.name + '" is missing ' + uncovered.length + ' SC' + (uncovered.length === 1 ? '' : 's') + '\u2019 NLH landing data', '#D14B4B');
       return;
     }
     let n = this.state.schedulerPlanCounter || 0;
@@ -10928,7 +10988,7 @@ class NDCApp extends React.Component {
         id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
         scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
         status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
-        nlhPlanId: (nlhByScForTrigger[parent.scCode] || {}).planId || null,
+        nlhPlanId: chosenScenario.planId,
         hw: params.hw, d0Increments: params.d0, d0Cutoff: this.fmtD0Cutoff(params.d0),
         rlhDocks: params.docks, refPlanId: params.ref || null,
         localSpeed: params.localSpeed, nonLocalSpeed: params.nonLocalSpeed,
@@ -11036,40 +11096,37 @@ class NDCApp extends React.Component {
     // ===== STEP 2 — NLH Plan Selection: one GLOBAL file for the whole batch (LMSC-wise, like the volume file). =====
     // 2026-08-25 rewrite — RLH no longer owns its own NLH-file upload here. NLH Design Ingestion
     // now lives exclusively on the NLH card (see Phase 4); this picker reads whatever NLH has
-    // ingested for a chosen NLH cycle-month via listNlhIngestedPlans(), then adapts each record
-    // NLH plan pairing (later session) — replaces the old "pick one file that blankets every
-    // selected SC" model. NLH plans are now real per-SC records (see genNlhTrailers()/
-    // submitLegIngest()), so pairing is automatic: each selected RLH SC reads its OWN
-    // same-code Finalised NLH plan for the chosen month, informationally shown, never manually
-    // picked. nlhVol is now a REAL sum of that SC's own trailer volumes, not the old stub
-    // ("same as RLH's own volume") — a genuine improvement, not just a rename.
-    // schedulerNlhSourceMonth (fixed, later session) — was defaulting to currentMonthKey()
-    // (today's real-world clock), completely independent of which months actually have seeded
-    // NLH data (May-Sep 2026 only) or which cycle RLH itself is on. If the real deployed clock
-    // falls outside that seeded window, EVERY SC would show zero NLH pairing by default,
-    // regardless of which one is picked — not a one-month mismatch, a total miss. Defaulting to
-    // RLH's own active cycle guarantees landing on a month that's actually seeded, since RLH's
-    // own cycles only ever exist within that same window.
+    // NLH scenario picker (later session — supersedes the automatic-pairing design, which
+    // couldn't represent multiple NLH volume scenarios existing for the same month). One scenario
+    // is picked globally for the whole trigger (matching how a Volume Inputs file is picked, not
+    // per-SC), since every SC in one Scheduler run should reference the same real-world NLH
+    // landing scenario together.
     const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
     const selectedScCodesForNlh = Array.from(new Set(selectedPlanIds.map(pid => { const p = (d.plans || []).find(pp => pp.id === pid); return p ? p.scCode : null; }).filter(Boolean)));
-    const nlhPlansByScThisMonth = {};
-    listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth).filter(p => p.status === 'Finalised').forEach(p => { nlhPlansByScThisMonth[p.scCode] = p; });
+    const nlhScenariosThisMonth = listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth);
+    const chosenNlhScenarioId = st.schedulerNlhScenarioId;
+    const chosenNlhScenario = nlhScenariosThisMonth.find(p => p.planId === chosenNlhScenarioId) || null;
+    const schedulerNlhScenarioCards = nlhScenariosThisMonth.map(p => ({
+      planId: p.planId, name: p.name, origin: p.origin || 'ingested', ingestedAt: p.ingestedAt,
+      scCount: Object.keys(p.scData || {}).length, active: p.planId === chosenNlhScenarioId,
+      onClick: () => this.setState({ schedulerNlhScenarioId: p.planId }),
+    }));
     const nlhPairingRows = selectedScCodesForNlh.map(code => {
-      const p = nlhPlansByScThisMonth[code];
+      const scData = chosenNlhScenario ? chosenNlhScenario.scData[code] : null;
       const sc = d.scs.find(s => s.code === code);
       return {
-        scCode: code, scName: sc ? sc.name : code, hasNlhPlan: !!p,
-        planId: p ? p.planId : null, trailerCount: p ? p.trailers.length : 0,
-        nlhVolume: p ? p.trailers.reduce((a, t) => a + t.volume, 0) : 0,
+        scCode: code, scName: sc ? sc.name : code, hasNlhPlan: !!scData,
+        trailerCount: scData ? scData.trailers.length : 0,
+        nlhVolume: scData ? scData.trailers.reduce((a, t) => a + t.volume, 0) : 0,
       };
     });
     const nlhMissingScs = nlhPairingRows.filter(r => !r.hasNlhPlan);
-    const nlhPicked = selectedScCodesForNlh.length > 0 && nlhMissingScs.length === 0;
+    const nlhPicked = !!chosenNlhScenario && selectedScCodesForNlh.length > 0 && nlhMissingScs.length === 0;
     const canNextScheduler1 = selectedPlanIds.length > 0 && nlhPicked;
-    const schedulerNlhEmpty = selectedScCodesForNlh.length === 0;
+    const schedulerNlhEmpty = nlhScenariosThisMonth.length === 0;
     const schedNlhMonthOptions = cycleWindow(schedulerNlhSourceMonth).map(m => ({
       month: m, label: monthLabel(m), active: m === schedulerNlhSourceMonth,
-      onSelect: () => this.setState({ schedulerNlhSourceMonth: m, schedNlhMonthOpen: false }),
+      onSelect: () => this.setState({ schedulerNlhSourceMonth: m, schedulerNlhScenarioId: null, schedNlhMonthOpen: false }),
     }));
     const schedNlhMonthLabel = monthLabel(schedulerNlhSourceMonth);
     const schedNlhMonthOpen = !!st.schedNlhMonthOpen;
@@ -11129,11 +11186,13 @@ class NDCApp extends React.Component {
       const r = opModeRows.find(x => x.code === plan.scCode) || { code: plan.scCode, name: plan.scName, zone: plan.zone };
       const sc = d.scs.find(s => s.code === plan.scCode);
       const rlhVol = sc ? sc.volume : 0;
-      const hasNlhCoverage = nlhPlansByScThisMonth.hasOwnProperty(plan.scCode);
-      const nlhVol = hasNlhCoverage ? nlhPlansByScThisMonth[plan.scCode].trailers.reduce((a, t) => a + t.volume, 0) : null;
+      const hasNlhCoverage = !!(chosenNlhScenario && chosenNlhScenario.scData && chosenNlhScenario.scData[plan.scCode]);
+      const nlhVol = hasNlhCoverage ? chosenNlhScenario.scData[plan.scCode].trailers.reduce((a, t) => a + t.volume, 0) : null;
       const flags = [];
-      if (!hasNlhCoverage) {
-        flags.push({ sev: 'error', text: 'No NLH landing data for this SC \u2014 no Finalised NLH plan found for ' + plan.scCode + ' this month.' });
+      if (!chosenNlhScenario) {
+        flags.push({ sev: 'error', text: 'No NLH scenario selected \u2014 pick one before triggering.' });
+      } else if (!hasNlhCoverage) {
+        flags.push({ sev: 'error', text: 'No NLH landing data for this SC \u2014 "' + chosenNlhScenario.name + '" doesn\u2019t cover ' + plan.scCode + '.' });
       } else {
         const pctDiff = rlhVol > 0 ? Math.abs(nlhVol - rlhVol) / rlhVol * 100 : 0;
         if (pctDiff > 5) {
@@ -11315,6 +11374,7 @@ class NDCApp extends React.Component {
       allVisibleSelected, onSelectAllVisible,
       // Step 2
       nlhPairingRows, canNextScheduler2, schedulerNlhEmpty,
+      schedulerNlhScenarioCards, chosenNlhScenarioName: chosenNlhScenario ? chosenNlhScenario.name : null,
       schedNlhMonthOptions, schedNlhMonthLabel, schedNlhMonthOpen, toggleSchedNlhMonth,
       // Step 3
       schedHwGlobal: hwGlobal, d0Global, d0GlobalLabel: this.fmtD0Cutoff(d0Global), refGlobal, hwGlobalNeedsRef, globalRefOptions, globalRefAmbiguous, opModeRows, anyRefMissing, overriddenCount, canNextScheduler2,
@@ -11678,8 +11738,8 @@ class NDCApp extends React.Component {
     // after that trailer's ready-to-ship time (landing + 4 hrs), wrapping to tomorrow's earliest
     // dispatch if it misses every dispatch today — this is the one shared computation both
     // metrics build on, confirmed directly rather than assumed.
-    const nlhPlan = sp.nlhPlanId ? findNlhIngestedPlanById(this.engineStore, sp.nlhPlanId) : null;
-    const trailers = (nlhPlan && nlhPlan.trailers) || [];
+    const nlhScenario = sp.nlhPlanId ? findNlhIngestedPlanById(this.engineStore, sp.nlhPlanId) : null;
+    const trailers = (nlhScenario && nlhScenario.scData && nlhScenario.scData[sp.scCode] && nlhScenario.scData[sp.scCode].trailers) || [];
     const sortedDispatchMins = routeInfo.map(x => ((x.dispatchMin % 1440) + 1440) % 1440).sort((a, b) => a - b);
     const connectionTimeFor = (landingMin) => {
       if (!sortedDispatchMins.length) return landingMin; // no routes at all — degenerate, treat as instant
@@ -15522,14 +15582,15 @@ class NDCApp extends React.Component {
       legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? listUploadHistory(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length === 0 : true,
       legVolumeSearch: st.legVolumeSearch || '', onLegVolumeSearch: (e) => this.setState({ legVolumeSearch: e.target.value }),
       legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
-        planId: p.planId, fileName: p.fileMeta.name, ingestedAt: p.ingestedAt, scCode: p.scCode || '\u2014', trailerCount: (p.trailers || []).length,
+        planId: p.planId, name: p.name, origin: p.origin || 'ingested', ingestedAt: p.ingestedAt, scCount: Object.keys(p.scData || {}).length,
       })) : [],
       legIngestedEmpty: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).length === 0 : true,
-      legIngestFileName: st.legIngestFileName || '',
-      onLegIngestFileName: (e) => this.setState({ legIngestFileName: e.target.value }),
-      legIngestScCode: st.legIngestScCode || null,
-      legIngestScOptions: (this.state.data.scs || []).map(s => ({ code: s.code, name: s.name })),
-      onLegIngestScCode: (e) => this.setState({ legIngestScCode: e.target.value || null }),
+      legIngestScenarioName: st.legIngestScenarioName || '',
+      onLegIngestScenarioName: (e) => this.setState({ legIngestScenarioName: e.target.value }),
+      legIngestOrigin: st.legIngestOrigin || 'ingested',
+      onLegIngestOrigin: (e) => this.setState({ legIngestOrigin: e.target.value }),
+      legIngestVolumeMultiplier: st.legIngestVolumeMultiplier || '1.0',
+      onLegIngestVolumeMultiplier: (e) => this.setState({ legIngestVolumeMultiplier: e.target.value }),
       submitLegIngest: () => this.submitLegIngest(),
       ...this.creationVals(),
       ...this.reviewVals(),

@@ -1076,6 +1076,7 @@ All modules
 </div>
 </div>
 <div style={css(`flex:1;`)} />
+<button onClick={g.openSpeedProfile} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid ${g.hasSpeedProfile ? '#0D7377' : '#E6EBF2'}; background:${g.hasSpeedProfile ? '#E9F5F5' : '#fff'}; color:${g.hasSpeedProfile ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; margin-right:8px;`)} title={g.hasSpeedProfile ? 'Speed Profile configured — view or edit' : 'No Speed Profile yet — falls back to SC Master defaults'}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Speed Profile{(g.hasSpeedProfile) ? (<><span style={css(`width:6px; height:6px; border-radius:50%; background:#0D7377;`)} /></>) : null}</button>
 {(g.notAdding) ? (<><button onClick={g.addAvail} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#EAEEFB;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Add Vehicle</button></>) : null}
 {(g.isAdding) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>Adding a vehicle…</span></>) : null}
 </div>
@@ -1160,6 +1161,83 @@ All modules
 </div>
 </div>
 </>) : null}
+</>) : null}
+{/* ===== SPEED PROFILE POPUP (2026-09-03, item 1) — SC x Vehicle Type x Time, opened from a
+     SC Vehicle Availability card. Form tab (per-vehicle band table + fill helpers) and Upload
+     tab (long-format CSV: sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed).
+     "No gaps allowed" — Save is blocked with a precise missing-cell list until every vehicle
+     type on this SC has a value in every band, both zones. ===== */}
+{(speedProfileModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={speedProfileModal.close}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
+<div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{speedProfileModal.scCode} · {speedProfileModal.scName}</div>
+</div>
+<button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Speed by vehicle type and time of day, Local vs Non-Local. This feeds Route Scheduler's dispatch-time search directly — an SC with no profile here falls back to the flat SC Master default. Every vehicle type needs a value in every band before this can be saved.</div>
+<div style={css(`display:flex; gap:6px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
+<button onClick={speedProfileModal.onTabForm} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'form' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'form' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Form</button>
+<button onClick={speedProfileModal.onTabUpload} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'upload' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'upload' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Upload</button>
+</div>
+{(speedProfileModal.tab === 'form') ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>GRID</span>
+<button onClick={speedProfileModal.onPreset3h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>3-hour bands</button>
+<button onClick={speedProfileModal.onPreset1h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>1-hour bands</button>
+<span style={css(`font-size:10.5px; color:#C77B00;`)}>Switching the grid clears all entered values for this SC.</span>
+</div>
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;`)}>
+{(speedProfileModal.vehicleTabs || []).map((vt, __iSpv) => (<React.Fragment key={__iSpv}>
+<button onClick={vt.onClick} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; border:1px solid ${vt.active ? '#003F98' : '#E6EBF2'}; background:${vt.active ? '#EAEEFB' : '#fff'}; color:${vt.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{vt.name}<span style={css(`width:7px; height:7px; border-radius:50%; background:${vt.complete ? '#128A3E' : '#D0D5DD'};`)} /></button>
+</React.Fragment>))}
+</div>
+{(speedProfileModal.canCopy) ? (<><button onClick={speedProfileModal.onCopyToAllVehicles} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px solid #0D7377; background:#fff; color:#0D7377; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; margin-bottom:10px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M8 8V5a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1h-3M4 8h10a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Same for all vehicles \u2014 copy {speedProfileModal.activeVeh}\u2019s speeds</button></>) : null}
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:8px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>TIME BAND</div>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>LOCAL (KM/H) <button onClick={speedProfileModal.onFillLocalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>NON-LOCAL (KM/H) <button onClick={speedProfileModal.onFillZonalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
+</div>
+<div style={css(`max-height:280px; overflow-y:auto;`)}>
+{(speedProfileModal.bandRows || []).map((br, __iSpb) => (<React.Fragment key={__iSpb}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:7px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12px; color:#14171F; font-weight:600; font-variant-numeric:tabular-nums;`)}>{br.label}</div>
+<input value={br.local} onChange={(e) => br.onLocalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.local === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<input value={br.zonal} onChange={(e) => br.onZonalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.zonal === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</>) : (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;`)}>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>One row per SC \u00d7 Vehicle Type \u00d7 Time band \u2014 rows for other SCs are ignored, not an error.</span>
+<button onClick={speedProfileModal.uploadTemplate} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Download template</button>
+</div>
+<input type={"file"} accept={".csv"} onChange={speedProfileModal.onUploadFile} style={css(`margin-bottom:10px; font-size:12px;`)} />
+<textarea value={speedProfileModal.uploadText} onChange={speedProfileModal.onUploadTextChange} placeholder={"sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed\n" + speedProfileModal.scCode + ",Truck,00:00,28,38"} style={css(`width:100%; height:140px; padding:10px; border:1px solid #E6EBF2; border-radius:8px; font-family:monospace; font-size:11.5px; box-sizing:border-box; margin-bottom:10px; resize:vertical;`)} />
+{(speedProfileModal.uploadErrors && speedProfileModal.uploadErrors.length > 0) ? (<>
+<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-bottom:10px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t parse this file:</div>
+{(speedProfileModal.uploadErrors || []).map((e, __iSpe) => (<React.Fragment key={__iSpe}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
+</div>
+</>) : null}
+<button onClick={speedProfileModal.onParseUpload} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Parse &amp; load into Form</button>
+</>)}
+{(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
+<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t save \u2014 missing:</div>
+{(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
+</div>
+</>) : null}
+<div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
+<button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Save Speed Profile</button>
+</div>
+</div>
+</div>
 </>) : null}
 {(isVehMaster) ? (<>
 {/* roadmap banner + "N vehicle types" count banner removed per request */}
@@ -2407,17 +2485,13 @@ NLH cycle: {schedNlhMonthLabel}
 </button>
 </React.Fragment>))}
 </div>
-{(chosenNlhScenarioName) ? (<>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PAIRING \u2014 {chosenNlhScenarioName}</div>
-<div style={css(`display:flex; flex-direction:column; gap:6px; margin-bottom:20px;`)}>
-{(nlhPairingRows || []).map((r, __i45) => (<React.Fragment key={__i45}>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid ${r.hasNlhPlan ? '#E6EBF2' : '#F3C9C9'}; background:${r.hasNlhPlan ? '#fff' : '#FBEAEA'}; border-radius:8px;`)}>
-<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.scCode} \u2014 {r.scName}</div>
-{(r.hasNlhPlan) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>{r.trailerCount} trailers \u00b7 {r.nlhVolume.toLocaleString('en-IN')} vol</span></>) : (<><span style={css(`font-size:11px; font-weight:600; color:#D14B4B;`)}>Not covered by this scenario</span></>)}
-</div>
-</React.Fragment>))}
-</div>
-</>) : null}
+{/* 2026-09-03 — NLH/RLH SC pairing table removed from the UI per product decision: the
+    coverage check itself (nlhPairingRows/nlhMissingScs, computed just above in the state
+    builder) is unchanged and still gates canNextScheduler1 — a scenario missing coverage for
+    a selected SC still blocks Next, the user just no longer sees the row-by-row breakdown
+    here. The "Pick an NLH Landing Plan above before continuing" banner below still fires off
+    the same !nlhPicked check, so an uncovered selection is still surfaced, just without the
+    per-SC table. */}
 </>)}
 {/* SC / Plan selection — rail + cards (2026-08-10), mirroring Design Review's own rail+cards
     shape. Empty "Pick a SC" default; rail navigation never affects which plans are checked.
@@ -2510,11 +2584,11 @@ NLH cycle: {schedNlhMonthLabel}
 {(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.7fr 0.7fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['SC', 'HW', 'D0 Cutoff', 'RLH Docks', 'Local Spd', 'Non-Local Spd', 'Hold Time', 'Max Hold Local', 'Max Hold Non-Local', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['SC', 'HW', 'D0 Cutoff', 'RLH Docks', 'Local Spd', 'Non-Local Spd', 'Hold Time', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(opModeRows || []).map((r, __i50) => (<React.Fragment key={__i50}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.7fr 0.7fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
 <div style={css(`display:flex; gap:3px;`)}>
 {[0, 0.5, 1].map((v, __i51) => (<React.Fragment key={__i51}><button onClick={() => r.onHw(v)} style={css(`flex:1; height:24px; border:1px solid ${r.hw === v ? '#003F98' : '#E6EBF2'}; background:${r.hw === v ? '#003F98' : '#fff'}; color:${r.hw === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:5px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
@@ -2527,9 +2601,11 @@ NLH cycle: {schedNlhMonthLabel}
 <input value={r.docks} onChange={(e) => r.onDocksChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 <input value={r.localSpeed} onChange={(e) => r.onLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 <input value={r.nonLocalSpeed} onChange={(e) => r.onNonLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
-<button onClick={r.onToggleHold} style={css(`height:24px; border:1px solid ${r.holdOn ? '#128A3E' : '#E6EBF2'}; background:${r.holdOn ? '#E7F4EC' : '#fff'}; color:${r.holdOn ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{r.holdOn ? 'On' : 'Off'}</button>
-<input value={r.maxHoldLocal} onChange={(e) => r.onMaxHoldLocalChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} disabled={!r.holdOn} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box; opacity:${r.holdOn ? '1' : '0.45'};`)} />
-<input value={r.maxHoldNonLocal} onChange={(e) => r.onMaxHoldNonLocalChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} disabled={!r.holdOn} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box; opacity:${r.holdOn ? '1' : '0.45'};`)} />
+{/* 2026-09-03 — Max Hold Local/Non-Local inputs removed: Hold Time is now On/Off only. When
+    On, the ceilings used by schedulerRouteDcInfo()'s dispatch-time search come straight from
+    this SC's own SC Master record (r.maxHoldLocal/r.maxHoldNonLocal below are now read-only,
+    non-overridable display values) — edit them on SC Master, not here. */}
+<button onClick={r.onToggleHold} title={r.holdOn ? ('Uses SC Master: ' + r.maxHoldLocal + 'm local / ' + r.maxHoldNonLocal + 'm non-local') : 'Hold time constraint disabled for this run'} style={css(`height:24px; border:1px solid ${r.holdOn ? '#128A3E' : '#E6EBF2'}; background:${r.holdOn ? '#E7F4EC' : '#fff'}; color:${r.holdOn ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{r.holdOn ? 'On' : 'Off'}</button>
 {(r.needsRef) ? (<>
 <select value={r.ref} onChange={(e) => r.onRefPick(e.target.value)} style={css(`width:100%; height:26px; border:1px solid ${r.refMissing ? '#D14B4B' : '#E6EBF2'}; border-radius:5px; font-family:inherit; font-size:11px;`)}>
 <option value={""}>{r.refOptions.length === 0 ? 'None available' : 'Pick…'}</option>
@@ -2542,14 +2618,12 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : null}
 {(isSchedStep3) ? (<>
-{(schedGenerating) ? (<>
-<div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:80px 20px; text-align:center;`)}>
-<div style={css(`width:40px; height:40px; border-radius:50%; border:3px solid #E6EBF2; border-top-color:#0D7377; animation:ndcspin 0.9s linear infinite;`)} />
-<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>Computing NLH landing matches &amp; Start-Time / D0% curves…</div>
-<div style={css(`font-size:12.5px; color:#8E96A3; max-width:360px;`)}>The DS algorithm is generating a dispatch-time curve for each selected plan — this normally takes a few minutes.</div>
-<div style={css(`width:220px; height:6px; background:#F2F5FA; border-radius:99px; overflow:hidden;`)}><div style={css(`height:100%; width:${Math.min(100, (schedGenTicks / 6) * 100)}%; background:#0D7377; border-radius:99px; transition:width 400ms;`)} /></div>
-</div>
-</>) : (<>
+{/* 2026-09-03 — Step 3 (Preview & Trigger) no longer computes or waits on a curve at all: it
+    just loads the current selection plus validations, same pattern RLH's own Route Planner
+    Preview already uses. The Start-Time / D0% curve moves to Run Queue (computeConnStartCurveFor,
+    the Connection Start Time curve), computed per run AFTER it actually completes, against the
+    real triggered dispatch schedule — not this old pre-trigger simulated sweep, which has been
+    removed outright rather than left dead. */}
 <div style={css(`display:flex; align-items:center; gap:10px; padding:10px 14px; background:${step4Blocked ? '#FBEAEA' : '#EAF0FB'}; border:1px solid ${step4Blocked ? '#F0C6C6' : '#C5D4F0'}; border-radius:8px; margin-bottom:16px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={step4Blocked ? '#D14B4B' : '#1E6FB8'} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12.5px; color:#14171F;`)}>NLH Landing Plan: <strong>{step4NlhLabel}</strong></span>
@@ -2560,27 +2634,19 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:1080px;`)}>
-<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 1fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'Start Time', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
-<div style={css(`display:grid; grid-template-columns:56px 1.1fr 0.5fr 0.6fr 0.7fr 1fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
-<div style={css(`display:flex; gap:4px;`)}>
+<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
+{/* 2026-09-03 — graph icon removed: no curve is computed pre-trigger anymore (see Run Queue
+    for the real, post-completion Connection Start Time curve). Only the DC-list expand toggle
+    remains here. */}
 <button onClick={r.onToggleExpand} aria-label={r.expanded ? 'Collapse DC list' : 'Expand DC list'} title={r.expanded ? 'Collapse DC list' : 'Expand DC list'} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={r.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={r.onOpenGraph} aria-label={"Open Start-Time vs D0% graph"} title={"Start-Time vs D0% simulation"} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-</div>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone} · {r.planId}</div></div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
 <div style={css(`font-size:11.5px; font-weight:600; color:${r.holdOn ? '#128A3E' : '#8E96A3'};`)}>{r.holdOn ? ('On (' + r.maxHoldLocal + '/' + r.maxHoldNonLocal + 'm)') : 'Off'}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
-<div style={css(`display:flex; flex-direction:column; gap:2px;`)}>
-<div style={css(`display:flex; align-items:center; gap:4px;`)}>
-<button onClick={r.onStartTimeDec} aria-label={"Earlier by 30 min"} style={css(`width:19px; height:19px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; flex-shrink:0; display:flex; align-items:center; justify-content:center;`)}>−</button>
-<span style={css(`font-size:11.5px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.startTimeLabel}</span>
-<button onClick={r.onStartTimeInc} aria-label={"Later by 30 min"} style={css(`width:19px; height:19px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; flex-shrink:0; display:flex; align-items:center; justify-content:center;`)}>+</button>
-</div>
-<div style={css(`font-size:10px; color:#8E96A3;`)}>D0 {r.startD0Pct}% {(r.isStartTimeDefault) ? (<span style={css(`color:#1E6FB8; font-weight:600;`)}>· DS default</span>) : (<button onClick={r.onResetStartTime} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:10px; font-weight:600; cursor:pointer; padding:0; text-decoration:underline;`)}>reset</button>)}</div>
-</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
 <div style={css(`display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dcTotal}</span>
@@ -2620,7 +2686,6 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 <div style={css(`font-size:11.5px; color:#8E96A3; margin-top:10px;`)}>Triggering creates {previewRows.length} separate Route Scheduler run{previewRows.length === 1 ? '' : 's'} (one per selected plan), landing in Run Queue.</div>
-</>)}
 </>) : null}
 </div>
 {/* ===== NAV FOOTER ===== */}
@@ -2639,13 +2704,26 @@ NLH cycle: {schedNlhMonthLabel}
 </>) : (<>
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['Run', 'Status'].map((h, __i56) => (<React.Fragment key={__i56}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.8fr 1.5fr 0.9fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['Run', 'Status', 'Connection Start Time', 'D0 Landing %'].map((h, __i56) => (<React.Fragment key={__i56}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(schedulerQueueRows || []).map((r, __i57) => (<React.Fragment key={__i57}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1.1fr 0.8fr 1.5fr 0.9fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.id}</div>
 <div><span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${r.statusBg}; color:${r.statusFg};`)}>{r.statusLabel}</span></div>
+{(r.isCompleted) ? (<>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}>
+<button onClick={r.onShiftDec} aria-label={"Earlier by 30 min"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>−</button>
+<span style={css(`font-size:12px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums; min-width:44px; text-align:center;`)}>{r.connectionStartTime}</span>
+<button onClick={r.onShiftInc} aria-label={"Later by 30 min"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
+{(r.isDsDefault) ? (<span style={css(`font-size:10px; color:#1E6FB8; font-weight:600; white-space:nowrap;`)}>· DS Default</span>) : (<button onClick={r.onResetShift} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:10px; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; white-space:nowrap;`)}>reset</button>)}
+<button onClick={r.onOpenCurve} aria-label={"Open Connection Start Time curve"} title={"Connection Start Time vs D0 Landing % curve"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; flex-shrink:0; margin-left:2px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+<div style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0LandingPct}{r.d0LandingPct !== '\u2014' ? '%' : ''}</div>
+</>) : (<>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>\u2014</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>\u2014</div>
+</>)}
 </div>
 </React.Fragment>))}
 </div>
@@ -5621,42 +5699,40 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </>) : null}
-{/* START-TIME vs D0%/READY-TO-SHIP GRAPH POPUP (2026-08-13, redesigned) */}
-{(schedGraph.open) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedGraph.close}>
+{/* CONNECTION START TIME vs D0 LANDING % CURVE POPUP (2026-09-03) — opened from a completed Run Queue row */}
+{(schedConnCurve.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedConnCurve.close}>
 <div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:740px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
 <div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Time of Day vs Volume %</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{schedGraph.scCode} · {schedGraph.scName}</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Connection Start Time vs D0 Landing %</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{schedConnCurve.scCode} · {schedConnCurve.scName}</div>
 </div>
-<button onClick={schedGraph.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+<button onClick={schedConnCurve.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Ready to Ship % rises through the day as more volume finishes sorting; D0 Landing % falls as a later dispatch leaves less transit time before the D0 Cutoff. The DS suggests dispatching where the two cross — the latest point that doesn't give up material D0 performance. Click anywhere on the chart to preview an alternate start time.</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Each point is a genuinely different triggered schedule — moving Connection Start Time earlier or later re-runs the real dispatch-time search (hold-time constraints, dock capacity, Speed Profile bands included) rather than an illustrative estimate. D0 Cutoff itself is unchanged across every point. Click anywhere on the curve to select that schedule, or use DS Default.</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; padding:14px 10px; background:#FAFBFD;`)}>
-<svg width={"100%"} viewBox={"0 0 " + schedGraph.W + " " + schedGraph.H} style={css(`display:block;`)}>
-{(schedGraph.yTicks || []).map((t, __iSG1) => (<React.Fragment key={__iSG1}>
-<line x1={"40"} y1={t.y} x2={schedGraph.W - 16} y2={t.y} stroke={"#E6EBF2"} strokeWidth={"1"} />
+<svg width={"100%"} viewBox={"0 0 " + schedConnCurve.W + " " + schedConnCurve.H} style={css(`display:block;`)}>
+{(schedConnCurve.yTicks || []).map((t, __iSG1) => (<React.Fragment key={__iSG1}>
+<line x1={"40"} y1={t.y} x2={schedConnCurve.W - 16} y2={t.y} stroke={"#E6EBF2"} strokeWidth={"1"} />
 <text x={"4"} y={t.y + 4} fontSize={"10"} fill={"#8E96A3"}>{t.label}</text>
 </React.Fragment>))}
-{(schedGraph.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedGraph.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={"middle"}>{t.label}</text></React.Fragment>))}
-<path d={schedGraph.readyPathD} fill={"none"} stroke={"#5B4FA0"} strokeWidth={"2.2"} />
-<path d={schedGraph.d0PathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
-{(schedGraph.points || []).map((pt, __iSG3) => (<React.Fragment key={__iSG3}><rect x={pt.x - 6} y={"0"} width={"12"} height={schedGraph.H} fill={"transparent"} onClick={pt.onClick} style={css(`cursor:pointer;`)}><title>{pt.label}</title></rect></React.Fragment>))}
-<line x1={schedGraph.recX} y1={"16"} x2={schedGraph.recX} y2={schedGraph.H - 30} stroke={"#1E6FB8"} strokeWidth={"1.3"} strokeDasharray={"3,3"} />
-<circle cx={schedGraph.recX} cy={schedGraph.recY} r={"5"} fill={"#fff"} stroke={"#1E6FB8"} strokeWidth={"2.5"} />
-<circle cx={schedGraph.chosenX} cy={schedGraph.chosenD0Y} r={"5"} fill={schedGraph.chosenIsRecommended ? "#1E6FB8" : "#0D7377"} stroke={"#fff"} strokeWidth={"2"} />
+{(schedConnCurve.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedConnCurve.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={"middle"}>{t.label}</text></React.Fragment>))}
+<path d={schedConnCurve.d0PathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
+{(schedConnCurve.points || []).map((pt, __iSG3) => (<React.Fragment key={__iSG3}><rect x={pt.x - 6} y={"0"} width={"12"} height={schedConnCurve.H} fill={"transparent"} onClick={pt.onClick} style={css(`cursor:pointer;`)}><title>{pt.label}</title></rect></React.Fragment>))}
+<line x1={schedConnCurve.defX} y1={"16"} x2={schedConnCurve.defX} y2={schedConnCurve.H - 30} stroke={"#1E6FB8"} strokeWidth={"1.3"} strokeDasharray={"3,3"} />
+<circle cx={schedConnCurve.defX} cy={schedConnCurve.defY} r={"5"} fill={"#fff"} stroke={"#1E6FB8"} strokeWidth={"2.5"} />
+<circle cx={schedConnCurve.chosenX} cy={schedConnCurve.chosenY} r={"5"} fill={schedConnCurve.chosenIsDefault ? "#1E6FB8" : "#0D7377"} stroke={"#fff"} strokeWidth={"2"} />
 </svg>
 </div>
 <div style={css(`display:flex; align-items:center; gap:16px; margin-top:12px; flex-wrap:wrap;`)}>
-<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#5B4FA0; display:inline-block; border-radius:2px;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>Ready to Ship %</span></div>
 <div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#0D7377; display:inline-block; border-radius:2px;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>D0 Landing %</span></div>
-<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #1E6FB8; display:inline-block;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>DS suggested (crossing point) — {schedGraph.recLabel}</span></div>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #1E6FB8; display:inline-block;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>DS Default — {schedConnCurve.defLabel}</span></div>
 </div>
-<div style={css(`display:flex; align-items:center; gap:7px; margin-top:8px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:${schedGraph.chosenIsRecommended ? '#1E6FB8' : '#0D7377'}; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>Currently selected — {schedGraph.chosenLabel}{schedGraph.chosenIsRecommended ? ' (same as DS suggestion)' : ''}</span></div>
+<div style={css(`display:flex; align-items:center; gap:7px; margin-top:8px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:${schedConnCurve.chosenIsDefault ? '#1E6FB8' : '#0D7377'}; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>Currently selected — {schedConnCurve.chosenLabel}</span></div>
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
-{(!schedGraph.chosenIsRecommended) ? (<><button onClick={schedGraph.onUseRecommended} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Use DS suggestion</button></>) : null}
-<button onClick={schedGraph.close} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Done</button>
+{(!schedConnCurve.chosenIsDefault) ? (<><button onClick={schedConnCurve.onUseDefault} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Use DS Default</button></>) : null}
+<button onClick={schedConnCurve.close} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Done</button>
 </div>
 </div>
 </div>
@@ -7675,6 +7751,171 @@ class NDCApp extends React.Component {
     const n = parseInt(String(raw == null ? '' : raw).replace(/[^0-9]/g, ''), 10);
     this.setAvailField(scCode, vehType, 'cnt', (isNaN(n) || n < 0) ? 0 : n);
   }
+  // ===========================================================================================
+  // Speed Profile modal (2026-09-03, item 1) — SC x Vehicle Type x Time popup opened from SC
+  // Vehicle Availability's card. Draft shape while editing (st.speedProfileDraft):
+  //   { bandStarts: ['00:00','03:00',...] shared across every vehicle type in this SC's popup,
+  //     vehicles: { [vehicleType]: { local: [n,...], zonal: [n,...] } } }
+  // Only written to the engine (setSpeedProfile) on explicit Save, and only once
+  // isSpeedProfileComplete() passes — the modal never partially persists a draft.
+  // ===========================================================================================
+  defaultSpeedBandStarts(preset) {
+    if (preset === '1h') return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00');
+    return ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'];
+  }
+  openSpeedProfileModal(scCode, vehicleTypeNames) {
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const existing = getSpeedProfile(this.engineStore, cycleMonth, scCode);
+    let bandStarts, vehicles;
+    if (existing && Object.keys(existing).length) {
+      // Existing profile may have been saved with per-vehicle bandStarts (engine.js allows it);
+      // the popup itself always shows ONE shared band grid, so take the first vehicle's
+      // bandStarts as the shared grid and re-key every vehicle onto it, dropping any value at a
+      // band that vehicle didn't originally have (rare — only possible from a hand-edited/older
+      // upload) rather than guessing a value for it.
+      const firstVeh = Object.keys(existing)[0];
+      bandStarts = (existing[firstVeh] && existing[firstVeh].bandStarts) ? existing[firstVeh].bandStarts.slice() : this.defaultSpeedBandStarts();
+      vehicles = {};
+      vehicleTypeNames.forEach(vt => {
+        const e = existing[vt];
+        if (e && e.bandStarts && e.bandStarts.length === bandStarts.length && e.bandStarts.every((b, i) => b === bandStarts[i])) {
+          vehicles[vt] = { local: e.local.slice(), zonal: e.zonal.slice() };
+        } else {
+          vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
+        }
+      });
+    } else {
+      bandStarts = this.defaultSpeedBandStarts();
+      vehicles = {};
+      vehicleTypeNames.forEach(vt => { vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') }; });
+    }
+    this.setState({
+      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames,
+      speedProfileDraft: { bandStarts, vehicles },
+      speedProfileActiveVeh: vehicleTypeNames[0] || null,
+      speedProfileTab: 'form', speedProfileErrors: [], speedProfileUploadText: '', speedProfileUploadErrors: [],
+    });
+  }
+  closeSpeedProfileModal() {
+    this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileActiveVeh: null, speedProfileErrors: [] });
+  }
+  setSpeedBandPreset(preset) {
+    const bandStarts = this.defaultSpeedBandStarts(preset);
+    const vehicles = {};
+    (this.state.speedProfileVehicleTypes || []).forEach(vt => { vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') }; });
+    this.setState({ speedProfileDraft: { bandStarts, vehicles }, speedProfileErrors: [] });
+  }
+  setSpeedCell(vehicleType, zone, bandIdx, value) {
+    const draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const vehicles = Object.assign({}, draft.vehicles);
+    const entry = Object.assign({}, vehicles[vehicleType] || { local: [], zonal: [] });
+    const arr = (zone === 'local' ? entry.local : entry.zonal).slice();
+    arr[bandIdx] = value;
+    entry[zone] = arr;
+    vehicles[vehicleType] = entry;
+    this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
+  }
+  speedFillSameAllDay(vehicleType, zone) {
+    const draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const entry = draft.vehicles[vehicleType] || {};
+    const arr = zone === 'local' ? entry.local : entry.zonal;
+    const seed = arr && arr[0];
+    if (seed === '' || seed == null) { this.showToast('Enter the first band\u2019s value, then use this to copy it across the day', '#C77B00'); return; }
+    const vehicles = Object.assign({}, draft.vehicles);
+    vehicles[vehicleType] = Object.assign({}, entry, { [zone]: draft.bandStarts.map(() => seed) });
+    this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
+  }
+  speedCopyToAllVehicles(fromVehicleType) {
+    const draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const src = draft.vehicles[fromVehicleType];
+    if (!src) return;
+    const vehicles = Object.assign({}, draft.vehicles);
+    (this.state.speedProfileVehicleTypes || []).forEach(vt => { vehicles[vt] = { local: src.local.slice(), zonal: src.zonal.slice() }; });
+    this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
+    this.showToast('Copied ' + fromVehicleType + '\u2019s speeds to every vehicle type on this SC', '#128A3E');
+  }
+  saveSpeedProfileModal() {
+    const scCode = this.state.speedProfileSC;
+    const draft = this.state.speedProfileDraft;
+    if (!scCode || !draft) return;
+    const vehicleTypeNames = this.state.speedProfileVehicleTypes || [];
+    // Write bandStarts onto every vehicle's own entry before validating/saving — the engine's
+    // shape keys bandStarts per vehicle type (see engine.js header comment); the popup's shared
+    // grid is a UI simplification on top of that, applied here at save time.
+    const vehiclesOut = {};
+    Object.keys(draft.vehicles).forEach(vt => {
+      const e = draft.vehicles[vt];
+      vehiclesOut[vt] = { bandStarts: draft.bandStarts.slice(), local: e.local.slice(), zonal: e.zonal.slice() };
+    });
+    const check = isSpeedProfileComplete(vehiclesOut, vehicleTypeNames);
+    if (!check.complete) {
+      this.setState({ speedProfileErrors: check.missing.map(m => m.vehicleType + ' \u2014 ' + m.reason) });
+      return;
+    }
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
+    this.showToast('Speed Profile saved for ' + scCode, '#128A3E');
+    this.closeSpeedProfileModal();
+  }
+  // parseSpeedProfileUpload() — long format: sort_centre_id,vehicle_type,band_start,local_speed,
+  // zonal_speed. Only rows matching the currently-open SC are applied; rows for other SCs are
+  // counted and reported, not silently dropped. All vehicle types actually assigned to this SC
+  // (speedProfileVehicleTypes) must appear with a value at every distinct band_start found for
+  // this SC, in both columns — same "no gaps allowed" rule the Form enforces, checked before the
+  // parsed data ever reaches the draft.
+  parseSpeedProfileUpload() {
+    const scCode = this.state.speedProfileSC;
+    const vehicleTypeNames = this.state.speedProfileVehicleTypes || [];
+    const text = this.state.speedProfileUploadText || '';
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
+    if (lines.length < 2) { this.setState({ speedProfileUploadErrors: ['Paste or upload a CSV with a header row plus at least one data row.'] }); return; }
+    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const idx = (name) => header.indexOf(name);
+    const iSc = idx('sort_centre_id'), iVeh = idx('vehicle_type'), iBand = idx('band_start'), iLocal = idx('local_speed'), iZonal = idx('zonal_speed');
+    if (iSc < 0 || iVeh < 0 || iBand < 0 || iLocal < 0 || iZonal < 0) {
+      this.setState({ speedProfileUploadErrors: ['Header must include: sort_centre_id, vehicle_type, band_start, local_speed, zonal_speed'] });
+      return;
+    }
+    let otherScCount = 0;
+    const byVeh = {}; // vehicleType -> { [band_start]: {local, zonal} }
+    const rowErrors = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(c => c.trim());
+      if (cols[iSc] !== scCode) { otherScCount++; continue; }
+      const vt = cols[iVeh], band = cols[iBand];
+      const localN = parseFloat(cols[iLocal]), zonalN = parseFloat(cols[iZonal]);
+      if (!vt || !band) { rowErrors.push('Row ' + (i + 1) + ': missing vehicle_type or band_start'); continue; }
+      if (isNaN(localN) || isNaN(zonalN)) { rowErrors.push('Row ' + (i + 1) + ' (' + vt + ' \u00b7 ' + band + '): local_speed/zonal_speed must be numbers'); continue; }
+      byVeh[vt] = byVeh[vt] || {};
+      byVeh[vt][band] = { local: localN, zonal: zonalN };
+    }
+    if (rowErrors.length) { this.setState({ speedProfileUploadErrors: rowErrors }); return; }
+    // All vehicle types present in the file (for this SC) must share the exact same band_start
+    // set — the popup's shared-grid model (see openSpeedProfileModal) can't represent per-vehicle
+    // grids, so a mismatch here is reported rather than silently reconciled.
+    const vehKeys = Object.keys(byVeh);
+    if (!vehKeys.length) { this.setState({ speedProfileUploadErrors: ['No rows matched SC ' + scCode + (otherScCount ? ' (' + otherScCount + ' row' + (otherScCount === 1 ? '' : 's') + ' belonged to other SCs)' : '') + '.'] }); return; }
+    const bandSetOf = (vt) => Object.keys(byVeh[vt]).sort();
+    const refBands = bandSetOf(vehKeys[0]);
+    const mismatch = vehKeys.find(vt => { const b = bandSetOf(vt); return b.length !== refBands.length || b.some((x, i) => x !== refBands[i]); });
+    if (mismatch) { this.setState({ speedProfileUploadErrors: ['"' + mismatch + '" has a different set of time bands than "' + vehKeys[0] + '" \u2014 every vehicle type in one upload must share the same bands.'] }); return; }
+    const missingVeh = vehicleTypeNames.filter(vt => vehKeys.indexOf(vt) < 0);
+    if (missingVeh.length) { this.setState({ speedProfileUploadErrors: missingVeh.map(vt => vt + ' \u2014 not present in this file at all') }); return; }
+    const bandStarts = refBands;
+    const vehicles = {};
+    vehKeys.forEach(vt => {
+      vehicles[vt] = { local: bandStarts.map(b => byVeh[vt][b].local), zonal: bandStarts.map(b => byVeh[vt][b].zonal) };
+    });
+    this.setState({
+      speedProfileDraft: { bandStarts, vehicles },
+      speedProfileActiveVeh: vehicleTypeNames[0] || vehKeys[0],
+      speedProfileTab: 'form', speedProfileUploadErrors: [], speedProfileErrors: [],
+    });
+    this.showToast('Parsed ' + vehKeys.length + ' vehicle type' + (vehKeys.length === 1 ? '' : 's') + ' \u00d7 ' + bandStarts.length + ' bands' + (otherScCount ? ' (' + otherScCount + ' row' + (otherScCount === 1 ? '' : 's') + ' for other SCs ignored)' : '') + ' \u2014 review below, then Save.', '#128A3E');
+  }
   submitAddSc() {
     if (this.isRlhCyclePast()) {
       this.setState({ addScOpen: false, addScEditCode: null, addScForm: {} });
@@ -9645,7 +9886,13 @@ class NDCApp extends React.Component {
         };
       });
       const totalCount = rows.reduce((a, x) => a + (parseInt(x.cnt) || 0), 0);
-      return { code: g.code, name: g.name, zone: g.zone, count: g.rows.length + ' vehicle types', sortCap: fmtIntAvail(src.sortCap), dcCount: src.dcCount == null ? '—' : src.dcCount, totalCount: totalCount, isAdding: addingAvailSC === g.code, notAdding: addingAvailSC !== g.code, addAvail: () => this.setState({ addingAvailSC: g.code, availAddForm: defAvailForm(), editingAvail: null }), addForm: availFormFor(g.code), rows: rows };
+      return { code: g.code, name: g.name, zone: g.zone, count: g.rows.length + ' vehicle types', sortCap: fmtIntAvail(src.sortCap), dcCount: src.dcCount == null ? '—' : src.dcCount, totalCount: totalCount, isAdding: addingAvailSC === g.code, notAdding: addingAvailSC !== g.code, addAvail: () => this.setState({ addingAvailSC: g.code, availAddForm: defAvailForm(), editingAvail: null }), addForm: availFormFor(g.code), rows: rows,
+        // 2026-09-03 — Speed Profile (item 1): opens the SC x Vehicle Type x Time popup for this
+        // SC. vehicleTypeNames is this SC's own assigned vehicle types (from its Vehicle
+        // Availability rows) — the popup's "every vehicle type must have a complete profile"
+        // validation checks against exactly this list, not some separate global vehicle set.
+        openSpeedProfile: () => this.openSpeedProfileModal(g.code, rows.map(r => r.t)),
+        hasSpeedProfile: !!getSpeedProfile(this.engineStore, this.state.activeCycleMonth.rlh, g.code) };
     });
     const scVehAvailTotalRows = scVehAvailRows.reduce((a, g) => a + g.rows.length, 0);
     // §3 — search filter (by SC code/name, or any vehicle type configured on the SC), applied before paging.
@@ -9744,6 +9991,62 @@ class NDCApp extends React.Component {
       delConfirmLabel: st.delConfirm ? st.delConfirm.label : '', delConfirmIsSc: !!(st.delConfirm && st.delConfirm.kind === 'sc'),
       closeDelConfirm: () => this.setState({ delConfirm: null }),
       confirmDelete: () => this.confirmDelete(),
+      speedProfileModal: this.buildSpeedProfileModal(),
+    };
+  }
+  // buildSpeedProfileModal() (2026-09-03, item 1) — render-ready props for the Speed Profile
+  // popup. Kept as its own method (mirroring buildSchedCard/buildSchedNcFields elsewhere) since
+  // it's a substantial sub-tree, not because anything else calls it.
+  buildSpeedProfileModal() {
+    const st = this.state;
+    const scCode = st.speedProfileSC;
+    if (!scCode) return { open: false };
+    const draft = st.speedProfileDraft || { bandStarts: [], vehicles: {} };
+    const vehicleTypeNames = st.speedProfileVehicleTypes || [];
+    const activeVeh = st.speedProfileActiveVeh || vehicleTypeNames[0] || null;
+    const sc = this.state.data.scs.find(s => s.code === scCode);
+    const bandLabel = (i) => {
+      const start = draft.bandStarts[i];
+      const end = draft.bandStarts[i + 1] || draft.bandStarts[0];
+      return start + '\u2013' + end;
+    };
+    const activeEntry = activeVeh ? (draft.vehicles[activeVeh] || { local: [], zonal: [] }) : { local: [], zonal: [] };
+    const bandRows = draft.bandStarts.map((b, i) => ({
+      idx: i, label: bandLabel(i),
+      local: activeEntry.local[i] != null ? activeEntry.local[i] : '',
+      zonal: activeEntry.zonal[i] != null ? activeEntry.zonal[i] : '',
+      onLocalChange: (v) => this.setSpeedCell(activeVeh, 'local', i, v === '' ? '' : Number(v)),
+      onZonalChange: (v) => this.setSpeedCell(activeVeh, 'zonal', i, v === '' ? '' : Number(v)),
+    }));
+    const vehicleTabs = vehicleTypeNames.map(vt => {
+      const e = draft.vehicles[vt] || { local: [], zonal: [] };
+      const complete = e.local.length === draft.bandStarts.length && e.local.every(v => v !== '' && v != null) && e.zonal.every(v => v !== '' && v != null);
+      return { name: vt, active: vt === activeVeh, complete, onClick: () => this.setState({ speedProfileActiveVeh: vt }) };
+    });
+    return {
+      open: true, scCode, scName: sc ? sc.name : scCode,
+      tab: st.speedProfileTab || 'form', onTabForm: () => this.setState({ speedProfileTab: 'form' }), onTabUpload: () => this.setState({ speedProfileTab: 'upload' }),
+      close: () => this.closeSpeedProfileModal(),
+      vehicleTabs, activeVeh, bandRows,
+      onPreset3h: () => this.setSpeedBandPreset('3h'), onPreset1h: () => this.setSpeedBandPreset('1h'),
+      onFillLocalAllDay: () => this.speedFillSameAllDay(activeVeh, 'local'),
+      onFillZonalAllDay: () => this.speedFillSameAllDay(activeVeh, 'zonal'),
+      onCopyToAllVehicles: () => this.speedCopyToAllVehicles(activeVeh),
+      canCopy: vehicleTypeNames.length > 1,
+      errors: st.speedProfileErrors || [],
+      onSave: () => this.saveSpeedProfileModal(),
+      uploadText: st.speedProfileUploadText || '',
+      onUploadTextChange: (e) => this.setState({ speedProfileUploadText: e.target.value }),
+      uploadErrors: st.speedProfileUploadErrors || [],
+      onParseUpload: () => this.parseSpeedProfileUpload(),
+      onUploadFile: (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => this.setState({ speedProfileUploadText: String(ev.target.result || '') });
+        reader.readAsText(file);
+      },
+      uploadTemplate: () => this.downloadTemplate('Speed Profile', [{ k: 'sort_centre_id' }, { k: 'vehicle_type' }, { k: 'band_start' }, { k: 'local_speed' }, { k: 'zonal_speed' }]),
     };
   }
 
@@ -10812,13 +11115,15 @@ class NDCApp extends React.Component {
     const localSpeedBySC = st.schedulerLocalSpeedBySC || {};
     const nonLocalSpeedBySC = st.schedulerNonLocalSpeedBySC || {};
     const holdOnBySC = st.schedulerHoldOnBySC || {};
-    const maxHoldLocalBySC = st.schedulerMaxHoldLocalBySC || {};
-    const maxHoldNonLocalBySC = st.schedulerMaxHoldNonLocalBySC || {};
     const localSpeed = localSpeedBySC[code] !== undefined ? localSpeedBySC[code] : localSpeedBase;
     const nonLocalSpeed = nonLocalSpeedBySC[code] !== undefined ? nonLocalSpeedBySC[code] : nonLocalSpeedBase;
     const holdOn = holdOnBySC[code] !== undefined ? holdOnBySC[code] : holdOnBase;
-    const maxHoldLocal = maxHoldLocalBySC[code] !== undefined ? maxHoldLocalBySC[code] : maxHoldLocalBase;
-    const maxHoldNonLocal = maxHoldNonLocalBySC[code] !== undefined ? maxHoldNonLocalBySC[code] : maxHoldNonLocalBase;
+    // 2026-09-03 — Max Hold Local/Non-Local no longer have a wizard override tier at all: the
+    // user only controls Hold Time On/Off here (above); when On, the minute ceilings always come
+    // straight from SC Master (maxHoldLocalBase/maxHoldNonLocalBase, i.e. rf.maxHoldLocal/
+    // rf.maxHoldNonLocal) — editing them means editing the SC's own master record, not this run.
+    const maxHoldLocal = maxHoldLocalBase;
+    const maxHoldNonLocal = maxHoldNonLocalBase;
     const hw = hwBySC[code] !== undefined ? hwBySC[code] : hwGlobal;
     const d0 = d0BySC[code] !== undefined ? d0BySC[code] : d0Global;
     const docks = rlhDocksBySC[code] !== undefined ? rlhDocksBySC[code] : docksBase;
@@ -10834,8 +11139,6 @@ class NDCApp extends React.Component {
       localSpeedOverridden: localSpeedBySC[code] !== undefined && localSpeedBySC[code] !== localSpeedBase,
       nonLocalSpeedOverridden: nonLocalSpeedBySC[code] !== undefined && nonLocalSpeedBySC[code] !== nonLocalSpeedBase,
       holdOnOverridden: holdOnBySC[code] !== undefined && holdOnBySC[code] !== holdOnBase,
-      maxHoldLocalOverridden: maxHoldLocalBySC[code] !== undefined && maxHoldLocalBySC[code] !== maxHoldLocalBase,
-      maxHoldNonLocalOverridden: maxHoldNonLocalBySC[code] !== undefined && maxHoldNonLocalBySC[code] !== maxHoldNonLocalBase,
     };
   }
   // fmtD0Cutoff(n) — n = number of 30-min increments (-4..+12) relative to the 09:00 base, giving
@@ -10849,120 +11152,11 @@ class NDCApp extends React.Component {
   // schedulerPlans row PER selected Finalised RLH plan, each carrying its own resolved operating-
   // mode params (via resolveSchedulerParamsFor, same values the preview showed) and the chosen
   // (global) NLH plan. Never touches this.state.data.plans — separate linked entity, own lifecycle.
-  // startSchedGeneration() (2026-08-10) — simulates the DS backend computing NLH landing matches
-  // and each selected plan's Start-Time-vs-D0% curve (real lead time ~5-10 min per the product
-  // ask; here a few real seconds standing in for it, same abstraction the existing Run Queue
-  // ticker already uses for DS runtime). Preview & Trigger shows a loading state until this
-  // finishes, then the real per-plan rows + graphs are ready.
-  startSchedGeneration() {
-    this.setState({ schedGenerating: true, schedGenTicks: 0 });
-    const iv = setInterval(() => {
-      const ticks = (this.state.schedGenTicks || 0) + 1;
-      if (ticks >= 6) {
-        clearInterval(iv);
-        this.computeSchedStartTimeCurves();
-        this.setState({ schedGenerating: false, schedGenTicks: 0 });
-      } else {
-        this.setState({ schedGenTicks: ticks });
-      }
-    }, 450);
-  }
-  // computeSchedStartTimeCurves() (2026-08-13, redesigned) — for every plan selected in Step 1,
-  // sweeps a candidate dispatch "start time" across the day (30-min grid, 03:00-23:00) and
-  // computes TWO curves at each point:
-  //   Ready to Ship %  — cumulative volume-readiness at the SC by that time of day; rises through
-  //                       the day (an S-curve, seeded per plan for a bit of variety — this
-  //                       prototype has no real sort-completion telemetry to draw from).
-  //   D0 Landing %     — same per-DC travel-time logic schedulerRouteDcInfo() already uses, just
-  //                       parameterised by the swept start time instead of a cutoff-relative
-  //                       window; falls through the day (dispatching later leaves less transit
-  //                       buffer before the SC-level D0 Cutoff).
-  // The DS-"suggested" start time is where the two curves CROSS — the latest point at which
-  // enough volume is ready to ship without giving up material D0 performance — not simply
-  // whichever point maximises D0% on its own. Stored separately from the user's own chosen
-  // point, which defaults to the suggestion until they pick something else on the graph.
-  computeSchedStartTimeCurves() {
-    const st = this.state, d = st.data;
-    const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
-    const selectedPlanIds = st.schedulerSelectedPlanIds || [];
-    const finalisedPlans = d.plans.filter(p => p.status === 'Finalised');
-    const plans = finalisedPlans.filter(p => selectedPlanIds.indexOf(p.id) >= 0);
-    const curves = {}, recommended = {}, chosen = Object.assign({}, st.schedChosenStartTime || {});
-    plans.forEach(plan => {
-      const params = this.resolveSchedulerParamsFor(plan.scCode);
-      const cutoffMin = 9 * 60 + params.d0 * 30;
-      const seed = plan.id;
-      const seedH = hash(seed);
-      // Ready-to-Ship S-curve — deterministic per plan, midpoint between 08:00-14:00, seeded slope.
-      const midpoint = 480 + (seedH % 360);
-      const slope = 55 + ((seedH >> 4) % 55);
-      const points = [];
-      const lmdcEditsOverlaySweep = st.lmdcEdits || {};
-      const lmdcByCodeSweep = {}; (d.lmdcs || []).forEach(l => { lmdcByCodeSweep[l.code] = l; });
-      const timeToMinSweep = (hhmm) => { const parts = String(hhmm || '05:00').split(':'); const hh = parseInt(parts[0], 10), mm = parseInt(parts[1], 10); return (isNaN(hh) ? 5 : hh) * 60 + (isNaN(mm) ? 0 : mm); };
-      const holdForArrivalSweep = (arrivalAbsMin, dcCode) => {
-        const base = lmdcByCodeSweep[dcCode]; const patch = lmdcEditsOverlaySweep[dcCode];
-        const open = timeToMinSweep((patch && patch.open) || (base ? base.open : '05:00'));
-        const close = timeToMinSweep((patch && patch.close) || (base ? base.close : '21:00'));
-        const arrivalTod = ((Math.round(arrivalAbsMin) % 1440) + 1440) % 1440;
-        if (arrivalTod < open) return open - arrivalTod;
-        if (arrivalTod >= close) return (open + 1440) - arrivalTod;
-        return 0;
-      };
-      for (let s = 180; s <= 1380; s += 30) {
-        let onTimeVol = 0, totalVol = 0;
-        (plan.rows || []).forEach(route => {
-          const dispatchMin = s + (hash(route.routeCode + seed) % 90);
-          this.genDcRows(route).forEach(dc => {
-            const isLocal = dc.isLocal !== undefined ? dc.isLocal : true; // real per-DC attribute (2026-08-19), not a hash guess
-            const speed = isLocal ? params.localSpeed : params.nonLocalSpeed;
-            const distKm = parseFloat(dc.dist) || 0;
-            const travelMin = speed > 0 ? (distKm / speed) * 60 : distKm * 2;
-            const arrivalMin = dispatchMin + travelMin;
-            const holdMin = holdForArrivalSweep(arrivalMin, dc.code);
-            const landingMin = arrivalMin + holdMin; // Landing Time = Arrival + Hold (2026-08-14)
-            totalVol += dc.vol;
-            if (landingMin <= cutoffMin) onTimeVol += dc.vol;
-          });
-        });
-        const d0Pct = totalVol > 0 ? Math.round((onTimeVol / totalVol) * 1000) / 10 : 0;
-        const readyPct = Math.round((100 / (1 + Math.exp(-(s - midpoint) / slope))) * 10) / 10;
-        points.push({ min: s, d0Pct, readyPct });
-      }
-      curves[plan.id] = points;
-      // Intersection — first point (scanning earliest to latest) where Ready-to-Ship catches up
-      // to/overtakes D0 Landing; linearly interpolated between the two straddling points for a
-      // precise crossing minute. Falls back to the closest point by absolute gap if the two
-      // curves never cleanly cross (rare, but possible with the seeded synthetic data).
-      let crossMin = null;
-      for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1], cur = points[i];
-        const prevDiff = prev.readyPct - prev.d0Pct, curDiff = cur.readyPct - cur.d0Pct;
-        if (prevDiff <= 0 && curDiff >= 0) {
-          const t = curDiff === prevDiff ? 0 : (0 - prevDiff) / (curDiff - prevDiff);
-          crossMin = Math.round((prev.min + t * (cur.min - prev.min)) / 30) * 30;
-          break;
-        }
-      }
-      if (crossMin == null) {
-        let best = points[0], bestGap = Math.abs(points[0].readyPct - points[0].d0Pct);
-        points.forEach(pt => { const gap = Math.abs(pt.readyPct - pt.d0Pct); if (gap < bestGap) { bestGap = gap; best = pt; } });
-        crossMin = best.min;
-      }
-      recommended[plan.id] = crossMin;
-      if (chosen[plan.id] === undefined) chosen[plan.id] = crossMin;
-    });
-    this.setState({ schedStartTimeCurves: curves, schedRecommendedStartTime: recommended, schedChosenStartTime: chosen });
-  }
-  // schedD0AtStartTime(planId, min) (2026-08-13) — looks up (or nearest-interpolates) the D0%
-  // that corresponds to a given start time on that plan's already-computed curve, for the inline
-  // Start Time control on Preview & Trigger (Fix 4) — no recomputation needed, the curve already
-  // has every 30-min point across the day.
-  schedD0AtStartTime(planId, min) {
-    const points = (this.state.schedStartTimeCurves || {})[planId] || [];
-    const pt = points.find(p => p.min === min);
-    return pt ? pt.d0Pct : null;
-  }
+  // 2026-09-03 — startSchedGeneration()/computeSchedStartTimeCurves()/schedD0AtStartTime() (the
+  // old pre-trigger, illustrative-only Start-Time/Ready-to-Ship simulation) removed outright: the
+  // real, post-completion Connection Start Time curve (computeConnStartCurveFor(), Run Queue) now
+  // fully supersedes them — it runs the actual schedulerRouteDcInfo() pipeline per candidate
+  // instead of a separate simulated sweep, so keeping both would be two competing sources of truth.
   triggerSchedulerRuns() {
     const st = this.state, d = st.data;
     const selectedPlanIds = st.schedulerSelectedPlanIds || [];
@@ -11145,8 +11339,6 @@ class NDCApp extends React.Component {
       return Object.assign({ code, name: sc ? sc.name : code, zone: sc ? sc.zone : '', d0Label: this.fmtD0Cutoff(p.d0), refOptions: refOptionsFor(code) }, p,
         { onHw: (v) => { const m = Object.assign({}, st.schedulerHwBySC || {}); m[code] = v; this.setState({ schedulerHwBySC: m }); },
           onToggleHold: () => { const m = Object.assign({}, st.schedulerHoldOnBySC || {}); m[code] = !p.holdOn; this.setState({ schedulerHoldOnBySC: m }); },
-          onMaxHoldLocalChange: (v) => { const m = Object.assign({}, st.schedulerMaxHoldLocalBySC || {}); m[code] = v; this.setState({ schedulerMaxHoldLocalBySC: m }); },
-          onMaxHoldNonLocalChange: (v) => { const m = Object.assign({}, st.schedulerMaxHoldNonLocalBySC || {}); m[code] = v; this.setState({ schedulerMaxHoldNonLocalBySC: m }); },
           onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(12, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(-4, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
           onDocksChange: (v) => { const m = Object.assign({}, st.schedulerRlhDocksBySC || {}); m[code] = v; this.setState({ schedulerRlhDocksBySC: m }); },
@@ -11156,21 +11348,19 @@ class NDCApp extends React.Component {
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
             const hom = Object.assign({}, st.schedulerHoldOnBySC || {}); delete hom[code];
-            const mhl = Object.assign({}, st.schedulerMaxHoldLocalBySC || {}); delete mhl[code];
-            const mhn = Object.assign({}, st.schedulerMaxHoldNonLocalBySC || {}); delete mhn[code];
             const dm = Object.assign({}, st.schedulerD0BySC || {}); delete dm[code];
             const rm = Object.assign({}, st.schedulerRlhDocksBySC || {}); delete rm[code];
             const refm = Object.assign({}, st.schedulerRefBySC || {}); delete refm[code];
             const lsm = Object.assign({}, st.schedulerLocalSpeedBySC || {}); delete lsm[code];
             const nlsm = Object.assign({}, st.schedulerNonLocalSpeedBySC || {}); delete nlsm[code];
-            this.setState({ schedulerHwBySC: hm, schedulerHoldOnBySC: hom, schedulerMaxHoldLocalBySC: mhl, schedulerMaxHoldNonLocalBySC: mhn, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm, schedulerLocalSpeedBySC: lsm, schedulerNonLocalSpeedBySC: nlsm });
+            this.setState({ schedulerHwBySC: hm, schedulerHoldOnBySC: hom, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm, schedulerLocalSpeedBySC: lsm, schedulerNonLocalSpeedBySC: nlsm });
           } });
     });
     const hwGlobalNeedsRef = hwGlobal > 0;
     const globalRefOptions = selectedScCodesStep1.length === 1 ? refOptionsFor(selectedScCodesStep1[0]) : [];
     const globalRefAmbiguous = hwGlobalNeedsRef && selectedScCodesStep1.length > 1;
     const anyRefMissing = opModeRows.some(r => r.refMissing);
-    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.d0Overridden || r.docksOverridden || r.holdOnOverridden || r.maxHoldLocalOverridden || r.maxHoldNonLocalOverridden).length;
+    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.d0Overridden || r.docksOverridden || r.holdOnOverridden).length;
     const canNextScheduler2 = !anyRefMissing;
 
     // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30), unchanged:
@@ -11252,16 +11442,9 @@ class NDCApp extends React.Component {
       const expanded = st.previewExpandedPlanId === plan.id;
       // Inline Start Time control (2026-08-13) — defaults to the DS suggestion (the curve's
       // crossing point), editable here in 30-min increments without opening the graph popup;
-      // reads the live D0% straight off the same curve computeSchedStartTimeCurves() already
-      // built, no recomputation needed.
-      const fmtTRow = (m) => { if (m == null) return '\u2014'; const mm = ((m % 1440) + 1440) % 1440; return String(Math.floor(mm / 60)).padStart(2, '0') + ':' + String(mm % 60).padStart(2, '0'); };
-      const recMinForPlan = (st.schedRecommendedStartTime || {})[plan.id];
-      const chosenMinForPlan = (st.schedChosenStartTime || {})[plan.id];
-      const curveForPlan = (st.schedStartTimeCurves || {})[plan.id] || [];
-      const effectiveStartMin = chosenMinForPlan != null ? chosenMinForPlan : recMinForPlan;
-      const startPt = curveForPlan.find(pt => pt.min === effectiveStartMin);
-      const minBound = curveForPlan.length ? curveForPlan[0].min : 180;
-      const maxBound = curveForPlan.length ? curveForPlan[curveForPlan.length - 1].min : 1380;
+      // 2026-09-03 — Connection Start Time is no longer previewed or controlled here at all; it
+      // moves to Run Queue, computed against the real triggered dispatch schedule once a run
+      // actually completes (see the Run Queue section for the new curve + picker).
       return Object.assign({}, r, {
         planId: plan.id, code: plan.scCode, name: sc ? sc.name : plan.scCode, zone: sc ? sc.zone : (plan.zone || ''),
         rlhVol, nlhVol, flags, hasError, hasWarning,
@@ -11269,12 +11452,6 @@ class NDCApp extends React.Component {
         expanded, planDcRows: expanded ? planDcRows : [], hasDcRows: expanded && planDcRows.length > 0,
         expandChev: expanded ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',
         onToggleExpand: () => this.setState({ previewExpandedPlanId: expanded ? null : plan.id }),
-        onOpenGraph: () => this.setState({ schedGraphPlanId: plan.id }),
-        startTimeLabel: fmtTRow(effectiveStartMin), startD0Pct: startPt ? startPt.d0Pct : '\u2014',
-        isStartTimeDefault: recMinForPlan != null && effectiveStartMin === recMinForPlan,
-        onStartTimeDec: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); const cur = m[plan.id] != null ? m[plan.id] : recMinForPlan; m[plan.id] = Math.max(minBound, (cur != null ? cur : minBound) - 30); this.setState({ schedChosenStartTime: m }); },
-        onStartTimeInc: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); const cur = m[plan.id] != null ? m[plan.id] : recMinForPlan; m[plan.id] = Math.min(maxBound, (cur != null ? cur : minBound) + 30); this.setState({ schedChosenStartTime: m }); },
-        onResetStartTime: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[plan.id] = recMinForPlan; this.setState({ schedChosenStartTime: m }); },
       });
     });
     const step4NlhLabel = nlhPicked ? (selectedScCodesForNlh.length + ' SC' + (selectedScCodesForNlh.length === 1 ? '' : 's') + ' paired with their own NLH plan') : '\u2014';
@@ -11317,49 +11494,68 @@ class NDCApp extends React.Component {
       remark: st.laneFlagDraft || '', onRemark: (e) => this.setState({ laneFlagDraft: e.target.value }),
       close: () => this.closeLaneFlag(), onSubmit: () => this.submitLaneFlag(),
     } : { open: false, routeCode: '', remark: '', onRemark: () => {}, close: () => {}, onSubmit: () => {} };
-    // ===== Start-Time vs D0%/Ready-to-Ship graph popup (2026-08-13, redesigned) — opened via the
-    // graph icon on a Preview & Trigger row. X-axis: Time of Day. Y-axis: Volume %. Two curves —
-    // Ready to Ship % (rising) and D0 Landing % (falling) — with their crossing point marked as
-    // the DS suggestion. Curve points come from computeSchedStartTimeCurves() (run once, right
-    // after the simulated DS generation finishes). Clicking anywhere on the curve previews an
-    // alternate start time; the DS's own suggestion stays visible as a separate marker either
-    // way. =====
-    const schedGraphPlanId = st.schedGraphPlanId;
-    let schedGraph = { open: false };
-    if (schedGraphPlanId) {
-      const plan = finalisedPlans.find(p => p.id === schedGraphPlanId);
-      const points = (st.schedStartTimeCurves || {})[schedGraphPlanId] || [];
-      const recMin = (st.schedRecommendedStartTime || {})[schedGraphPlanId];
-      const chosenMin = (st.schedChosenStartTime || {})[schedGraphPlanId];
-      const fmtT = (m) => { const mm = ((m % 1440) + 1440) % 1440; return String(Math.floor(mm / 60)).padStart(2, '0') + ':' + String(mm % 60).padStart(2, '0'); };
+    // ===== Connection Start Time vs D0 Landing % curve popup (2026-09-03, items 5/6) — opened
+    // from a COMPLETED Run Queue row (not Preview & Trigger anymore). Points come from
+    // computeConnStartCurveFor(sp), i.e. the real dispatch-schedule pipeline run once per
+    // candidate shift — not a separate illustrative simulation. Clicking a point (or the row's
+    // own +/- stepper) writes schedulerConnStartShiftByRunId[sp.id], which schedulerRouteDcInfo()
+    // already reads as its default shift for every other consumer (Design Review, Ops Alignment,
+    // detail tables) — so a selection made here is what actually reaches Design Review, unlike
+    // the old pre-trigger curve which never fed anything real. =====
+    const schedConnCurveRunId = st.schedConnCurveRunId;
+    let schedConnCurve = { open: false };
+    if (schedConnCurveRunId) {
+      const sp = (d.schedulerPlans || []).find(x => x.id === schedConnCurveRunId);
+      const points = sp ? this.computeConnStartCurveFor(sp) : [];
+      const shiftMap = st.schedulerConnStartShiftByRunId || {};
+      const chosenShift = shiftMap[schedConnCurveRunId] || 0;
+      const fmtShift = (s) => (s === 0 ? 'DS Default' : (s > 0 ? '+' : '') + s + ' min');
       const W = 640, H = 240, padL = 40, padR = 16, padT = 16, padB = 30;
-      const minX = points.length ? points[0].min : 180, maxX = points.length ? points[points.length - 1].min : 1380;
-      const xScale = (m) => padL + ((m - minX) / Math.max(1, (maxX - minX))) * (W - padL - padR);
-      const yScale = (pct) => padT + (1 - pct / 100) * (H - padT - padB);
-      const d0PathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.min).toFixed(1) + ',' + yScale(pt.d0Pct).toFixed(1)).join(' ');
-      const readyPathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.min).toFixed(1) + ',' + yScale(pt.readyPct).toFixed(1)).join(' ');
-      const recPt = points.find(pt => pt.min === recMin) || points.reduce((a, b) => (Math.abs(b.min - recMin) < Math.abs(a.min - recMin) ? b : a), points[0]);
-      const chosenPt = points.find(pt => pt.min === chosenMin);
-      const xTicks = []; for (let m = minX; m <= maxX; m += 180) xTicks.push(m);
-      schedGraph = {
-        open: true, planId: schedGraphPlanId, scCode: plan ? plan.scCode : '', scName: plan ? plan.scName : '',
-        d0PathD, readyPathD, W, H,
-        xTicks: xTicks.map(m => ({ x: xScale(m), label: fmtT(m) })),
-        yTicks: [0, 25, 50, 75, 100].map(pct => ({ y: yScale(pct), label: pct + '%' })),
-        recX: recPt ? xScale(recPt.min) : 0, recY: recPt ? yScale(recPt.d0Pct) : 0,
-        recLabel: recMin != null ? (fmtT(recMin) + ' \u2014 D0 ' + (recPt ? recPt.d0Pct : 0) + '% \u00b7 Ready ' + (recPt ? recPt.readyPct : 0) + '%') : '',
-        chosenX: chosenPt ? xScale(chosenPt.min) : 0, chosenD0Y: chosenPt ? yScale(chosenPt.d0Pct) : 0, chosenReadyY: chosenPt ? yScale(chosenPt.readyPct) : 0,
-        chosenLabel: chosenMin != null ? (fmtT(chosenMin) + ' \u2014 D0 ' + (chosenPt ? chosenPt.d0Pct : 0) + '%') : '',
-        chosenIsRecommended: chosenMin === recMin,
-        onUseRecommended: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = recMin; this.setState({ schedChosenStartTime: m }); },
-        points: points.map(pt => ({ min: pt.min, x: xScale(pt.min), d0Pct: pt.d0Pct, readyPct: pt.readyPct, label: fmtT(pt.min) + ' \u2014 D0 ' + pt.d0Pct + '% \u00b7 Ready ' + pt.readyPct + '%', onClick: () => { const m = Object.assign({}, this.state.schedChosenStartTime || {}); m[schedGraphPlanId] = pt.min; this.setState({ schedChosenStartTime: m }); } })),
-        close: () => this.setState({ schedGraphPlanId: null }),
+      const minX = points.length ? points[0].shiftMin : -180, maxX = points.length ? points[points.length - 1].shiftMin : 180;
+      const xScale = (s) => padL + ((s - minX) / Math.max(1, (maxX - minX))) * (W - padL - padR);
+      const yVals = points.map(pt => pt.d0LandingPct);
+      const yMin = Math.max(0, Math.floor((Math.min.apply(null, yVals.length ? yVals : [0]) - 5) / 10) * 10);
+      const yMax = Math.min(100, Math.ceil((Math.max.apply(null, yVals.length ? yVals : [100]) + 5) / 10) * 10);
+      const yScale = (pct) => padT + (1 - (pct - yMin) / Math.max(1, (yMax - yMin))) * (H - padT - padB);
+      const d0PathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.shiftMin).toFixed(1) + ',' + yScale(pt.d0LandingPct).toFixed(1)).join(' ');
+      const defaultPt = points.find(pt => pt.isDsDefault);
+      const chosenPt = points.find(pt => pt.shiftMin === chosenShift);
+      const xTicks = points.filter((_, i) => i % 2 === 0);
+      schedConnCurve = {
+        open: true, runId: schedConnCurveRunId, scCode: sp ? sp.scCode : '', scName: sp ? sp.scName : '',
+        d0PathD, W, H,
+        xTicks: xTicks.map(pt => ({ x: xScale(pt.shiftMin), label: fmtShift(pt.shiftMin) })),
+        yTicks: [0, 0.25, 0.5, 0.75, 1].map(f => ({ y: padT + f * (H - padT - padB), label: Math.round(yMax - f * (yMax - yMin)) + '%' })),
+        defX: defaultPt ? xScale(defaultPt.shiftMin) : 0, defY: defaultPt ? yScale(defaultPt.d0LandingPct) : 0,
+        defLabel: defaultPt ? (defaultPt.connectionStartTime + ' \u2014 D0 ' + defaultPt.d0LandingPct + '%') : '',
+        chosenX: chosenPt ? xScale(chosenPt.shiftMin) : 0, chosenY: chosenPt ? yScale(chosenPt.d0LandingPct) : 0,
+        chosenLabel: chosenPt ? (chosenPt.connectionStartTime + ' \u2014 D0 ' + chosenPt.d0LandingPct + '%' + (chosenPt.isDsDefault ? ' (DS Default)' : '')) : '',
+        chosenIsDefault: chosenShift === 0,
+        onUseDefault: () => { const m = Object.assign({}, st.schedulerConnStartShiftByRunId || {}); delete m[schedConnCurveRunId]; this.setState({ schedulerConnStartShiftByRunId: m }); },
+        points: points.map(pt => ({ shiftMin: pt.shiftMin, x: xScale(pt.shiftMin), d0LandingPct: pt.d0LandingPct, label: pt.connectionStartTime + ' \u2014 D0 ' + pt.d0LandingPct + '%' + (pt.isDsDefault ? ' (DS Default)' : ''), onClick: () => { const m = Object.assign({}, this.state.schedulerConnStartShiftByRunId || {}); if (pt.shiftMin === 0) delete m[schedConnCurveRunId]; else m[schedConnCurveRunId] = pt.shiftMin; this.setState({ schedulerConnStartShiftByRunId: m }); } })),
+        close: () => this.setState({ schedConnCurveRunId: null }),
       };
     }
     // ===== Run Queue tab (Route Scheduler's own, separate from Route Planner's runQueue) =====
     const schedRunQueue = st.schedulerRunQueue || [];
     const SP_LABEL = { Queued: ['Queued', '#F2F5FA', '#5A5E66'], 'In Progress': ['In Progress', '#EAF0FB', '#1E6FB8'], Completed: ['Completed', '#E7F4EC', '#128A3E'] };
-    const schedulerQueueRows = schedRunQueue.map(r => ({ id: r.id, scCode: r.scCode, statusLabel: SP_LABEL[r.status][0], statusBg: SP_LABEL[r.status][1], statusFg: SP_LABEL[r.status][2] }));
+    const schedulerQueueRows = schedRunQueue.map(r => {
+      const base = { id: r.id, scCode: r.scCode, statusLabel: SP_LABEL[r.status][0], statusBg: SP_LABEL[r.status][1], statusFg: SP_LABEL[r.status][2], isCompleted: r.status === 'Completed' };
+      if (r.status !== 'Completed') return base;
+      const sp = (d.schedulerPlans || []).find(x => x.id === r.id);
+      if (!sp) return base;
+      const shiftMap = st.schedulerConnStartShiftByRunId || {};
+      const shiftMin = shiftMap[sp.id] || 0;
+      const m = this.computeSchedulerMetricsFor(sp) || {};
+      const setShift = (v) => { const mm = Object.assign({}, st.schedulerConnStartShiftByRunId || {}); if (v === 0) delete mm[sp.id]; else mm[sp.id] = v; this.setState({ schedulerConnStartShiftByRunId: mm }); };
+      return Object.assign({}, base, {
+        connectionStartTime: m.connectionStartTime || '\u2014', d0LandingPct: m.d0LandingPct != null ? m.d0LandingPct : '\u2014',
+        isDsDefault: shiftMin === 0,
+        onShiftDec: () => setShift(shiftMin - 30), onShiftInc: () => setShift(shiftMin + 30),
+        onResetShift: () => setShift(0),
+        onOpenCurve: () => this.setState({ schedConnCurveRunId: sp.id }),
+      });
+    });
     const schedQueueActive = schedRunQueue.some(r => r.status !== 'Completed');
     const schedQueueAllDone = schedRunQueue.length > 0 && !schedQueueActive;
     const schedRunTotal = schedRunQueue.length;
@@ -11383,7 +11579,7 @@ class NDCApp extends React.Component {
       onD0GlobalDec: () => this.setState({ schedulerD0Global: Math.max(-4, d0Global - 1) }),
       onRefGlobalPick: (v) => this.setState({ schedulerRefGlobal: v }),
       // Step 4
-      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedGraph, schedNcModal, schedReviewModal, laneFlagModal,
+      previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedConnCurve, schedNcModal, schedReviewModal, laneFlagModal,
       onTriggerScheduler: () => this.triggerSchedulerRuns(),
       // Run Queue tab
       schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
@@ -11391,11 +11587,10 @@ class NDCApp extends React.Component {
       schedulerBack: () => this.setState({ schedulerStep: Math.max(1, step - 1) }),
       schedulerNext: () => {
         if (step === 1) { if (canNextScheduler1) this.setState({ schedulerStep: 2 }); }
-        else if (step === 2) { if (canNextScheduler2) { this.setState({ schedulerStep: 3 }); this.startSchedGeneration(); } }
+        else if (step === 2) { if (canNextScheduler2) { this.setState({ schedulerStep: 3 }); } }
       },
       schedulerCanNext: step === 1 ? canNextScheduler1 : step === 2 ? canNextScheduler2 : !step4Blocked,
       schedulerNextLabel: step === 1 ? 'Operating Mode' : step === 2 ? 'Preview' : 'Trigger',
-      schedGenerating: !!st.schedGenerating, schedGenTicks: st.schedGenTicks || 0,
     };
   }
   // schedulerPlans row here. Matches Route Planner's own "nothing commits until Preview & Trigger"
@@ -11526,7 +11721,7 @@ class NDCApp extends React.Component {
   // applied to the result — when On, the generator searches (bounded, 30-min steps, up to 8 hrs
   // later) for a dispatch time keeping every DC's real computed hold under its applicable ceiling,
   // "minimising hold time and keeping it within the limit" rather than just drawing and clipping.
-  schedulerRouteDcInfo(sp) {
+  schedulerRouteDcInfo(sp, connStartShiftOverride) {
     const st = this.state, d = st.data;
     const parent = d.plans.find(p => p.id === sp.parentPlanId);
     if (!parent) return null;
@@ -11537,7 +11732,26 @@ class NDCApp extends React.Component {
     const holdOn = sp.holdOn !== false;
     const maxHoldLocal = sp.maxHoldLocal != null ? sp.maxHoldLocal : 30;
     const maxHoldNonLocal = sp.maxHoldNonLocal != null ? sp.maxHoldNonLocal : 120;
+    // 2026-09-03 — Connection Start Time shift (item 5/6): D0 Cutoff (cutoffMin above) stays
+    // exactly as configured at Trigger — this ONLY shifts where each route's dispatch-time search
+    // starts looking from. connStartShiftOverride lets the curve builder probe an arbitrary
+    // candidate without touching state; omitted, it reads the user's actual Run Queue selection
+    // for this run (0 = DS default, i.e. untouched).
+    const connStartShiftMin = connStartShiftOverride !== undefined ? connStartShiftOverride : ((st.schedulerConnStartShiftByRunId || {})[sp.id] || 0);
     const localSpeed = sp.localSpeed || 22, nonLocalSpeed = sp.nonLocalSpeed || 32;
+    // 2026-09-03 — Speed Profile (SC x Vehicle Type x Time-band, set via the popup on SC Vehicle
+    // Availability's card) takes over from the flat SC-level Local/Non-Local Speed WHEREVER that
+    // specific (SC, vehicle type) combination has one. speedFor() is called per candidate dispatch
+    // time during the bounded search below (not just once), since a shifted dispatch time can land
+    // in a different band and genuinely change the resolved speed. Falls back to the flat
+    // localSpeed/nonLocalSpeed above when this SC has no profile at all for that vehicle type —
+    // nothing breaks for an SC that hasn't had a Speed Profile entered yet.
+    const speedCycleMonth = st.activeCycleMonth.rlh;
+    const speedFor = (vehicleType, isLocal, minuteOfDay) => {
+      const zone = isLocal ? 'Local' : 'Zonal';
+      const fromProfile = lookupSpeedProfile(this.engineStore, speedCycleMonth, sp.scCode, vehicleType, zone, minuteOfDay);
+      return fromProfile != null ? fromProfile : (isLocal ? localSpeed : nonLocalSpeed);
+    };
     const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
     // roundUp(min, step) (2026-08-18) — Dispatch/Cutoff times are always a multiple of 30 min;
     // Travel time and Hold time are always a multiple of 15 min (confirmed product rule). Always
@@ -11641,7 +11855,7 @@ class NDCApp extends React.Component {
       const cutoffOverrideStr = routeCutoffOverrides[r.routeCode];
       const baseDispatchRaw = cutoffOverrideStr
         ? (() => { const parts = cutoffOverrideStr.split(':'); return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10); })()
-        : cutoffMin - 90 + (hash(r.routeCode + seed) % 150); // 150-min window, mostly straddling cutoff
+        : cutoffMin - 90 + (hash(r.routeCode + seed) % 150) + connStartShiftMin; // 150-min window straddling cutoff, shifted by the user's chosen Connection Start Time
       const baseDispatch = roundUp(baseDispatchRaw, 30);
       const hasCutoffOverride = !!cutoffOverrideStr;
       // computeAt(dispatchCandidate) — the per-DC breakdown for one candidate dispatch time,
@@ -11654,7 +11868,7 @@ class NDCApp extends React.Component {
         const dockViol = ((laneSlotCounts[slotHere] || 0) + (realRouteSlotCounts[slotHere] || 0)) >= docksCap && docksCap > 0 ? 1 : 0;
         const perDc = dcRows.map((dc) => {
           const isLocal = dc.isLocal !== undefined ? dc.isLocal : true; // real per-DC attribute (2026-08-19), not a hash guess
-          const speed = isLocal ? localSpeed : nonLocalSpeed;
+          const speed = speedFor(r.veh, isLocal, dispatchCandidate);
           const breakdownDistKm = parseFloat(dc.dist) || 0;
           // Accepted TAT feedback (Stage 1, from LH) overrides the synthetic travel time outright
           // for that DC — same explicit-override convention as the cutoff override above. Both
@@ -11704,11 +11918,19 @@ class NDCApp extends React.Component {
       realRouteSlotCounts[finalSlot] = (realRouteSlotCounts[finalSlot] || 0) + 1;
       routeInfo.push({ route: r, dispatchMin, dcInfo, holdMin: routeHoldMin, dockStillViolated: chosen.dockViol === 1 });
     });
-    return { parent, routes, cutoffMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp, laneSlotCounts, slotOf };
+    return { parent, routes, cutoffMin, connStartShiftMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp, laneSlotCounts, slotOf };
   }
   computeSchedulerMetricsFor(sp) {
     const info = this.schedulerRouteDcInfo(sp);
     if (!info) return null;
+    return this.deriveSchedulerMetrics(info, sp);
+  }
+  // deriveSchedulerMetrics(info, sp) (2026-09-03, split out of computeSchedulerMetricsFor) — pure
+  // w.r.t. its two arguments, so the Run Queue Connection Start Time curve (computeConnStartCurveFor,
+  // below) can call schedulerRouteDcInfo(sp, candidateShift) for a swept set of shift values and
+  // run the SAME metrics formulas against each candidate, without duplicating this math or
+  // touching component state per sweep point.
+  deriveSchedulerMetrics(info, sp) {
     const { routes, cutoffMin, routeInfo, fmtTime } = info;
     const connectionStartMin = routeInfo.length ? Math.min.apply(null, routeInfo.map(x => x.dispatchMin)) : cutoffMin;
     const slotSet = {}; routeInfo.forEach(x => { slotSet[Math.round(x.dispatchMin / 30) * 30] = true; });
@@ -11790,7 +12012,7 @@ class NDCApp extends React.Component {
       pct: docks > 0 ? Math.round(slotCounts[slot] / docks * 100) : 0,
     }));
     return {
-      connectionStartTime: fmtTime(connectionStartMin), connectionSlots,
+      connectionStartTime: fmtTime(connectionStartMin), connectionStartMin, connectionSlots,
       d0LandingPct: Math.round(d0LandingPct * 10) / 10,
       rolloverPct: Math.round(rolloverPct * 10) / 10,
       lmscInOutDays: Math.round(lmscInOutDays * 10) / 10,
@@ -11800,6 +12022,27 @@ class NDCApp extends React.Component {
       docksForUtil: docks, slotBreakdown, dockUtilPct: Math.round(dockUtilPct * 10) / 10,
       warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
     };
+  }
+  // computeConnStartCurveFor(sp) (2026-09-03, item 5/6) — the Run Queue Connection Start Time
+  // curve: sweeps shiftMin across a bounded window (-180..+180 min, 30-min steps — the same grid
+  // every other dispatch-time control in this app already uses) and, for EACH candidate, runs the
+  // real schedulerRouteDcInfo(sp, shiftMin) pipeline (hold-time search, dock-capacity avoidance,
+  // Speed Profile lookups — all of it) rather than a separate simulated sweep. This is what makes
+  // the curve genuinely reflect what would be pushed to Design Review at each point, not an
+  // illustrative approximation. shiftMin=0 is "DS Default" — the untouched, as-triggered schedule.
+  computeConnStartCurveFor(sp) {
+    const points = [];
+    for (let shiftMin = -180; shiftMin <= 180; shiftMin += 30) {
+      const info = this.schedulerRouteDcInfo(sp, shiftMin);
+      if (!info) continue;
+      const m = this.deriveSchedulerMetrics(info, sp);
+      points.push({
+        shiftMin, isDsDefault: shiftMin === 0,
+        connectionStartTime: m.connectionStartTime, connectionStartMin: m.connectionStartMin,
+        d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours,
+      });
+    }
+    return points;
   }
   // computeSchedulerDetailTables(sp) (2026-08-04) — Plan Details / Route View / Dock Schedule, the
   // three tabs behind Route Scheduler's "view detail" (mirrors Route Planner's own Plan Details /

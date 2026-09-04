@@ -1800,8 +1800,8 @@ All modules
     instead of the old generic Tier-2 strip that sat above the whole screen. Same creationView
     state as before, just relocated. */}
 <div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<button onClick={() => this.setState({ creationView: 'wizard' })} title={"Select the LMDC volume file, configure sort centres, set HW variants, and trigger runs."} style={css(`height:30px; padding:0 13px; border:1px solid ${isWizardView ? '#003F98' : '#E6EBF2'}; background:${isWizardView ? '#EAEEFB' : 'transparent'}; color:${isWizardView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
-<button onClick={() => this.setState({ creationView: 'queue' })} title={"Live status of DS solver runs triggered this cycle. Active runs show progress; completed runs are ready to review."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isQueueView ? '#003F98' : '#E6EBF2'}; background:${isQueueView ? '#EAEEFB' : 'transparent'}; color:${isQueueView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(rqActiveCount > 0) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{rqActiveCount}</span></>) : null}</button>
+<button onClick={() => self.setState({ creationView: 'wizard' })} title={"Select the LMDC volume file, configure sort centres, set HW variants, and trigger runs."} style={css(`height:30px; padding:0 13px; border:1px solid ${isWizardView ? '#003F98' : '#E6EBF2'}; background:${isWizardView ? '#EAEEFB' : 'transparent'}; color:${isWizardView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
+<button onClick={() => self.setState({ creationView: 'queue' })} title={"Live status of DS solver runs triggered this cycle. Active runs show progress; completed runs are ready to review."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isQueueView ? '#003F98' : '#E6EBF2'}; background:${isQueueView ? '#EAEEFB' : 'transparent'}; color:${isQueueView ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(rqActiveCount > 0) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{rqActiveCount}</span></>) : null}</button>
 </div>
 {/* ===== WIZARD VIEW (Input Selection tab) ===== */}
 {(isWizardView) ? (<>
@@ -2426,8 +2426,8 @@ All modules
 {/* Input Selection / Run Queue nested under Route Scheduler too (2026-07-29) — own state key
     (schedulerCreationView) so it doesn't collide with Route Planner's creationView. */}
 <div style={css(`display:flex; align-items:center; gap:6px; padding:9px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
-<button onClick={() => this.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerWizardView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerWizardView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerWizardView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
-<button onClick={() => this.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerQueueView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(schedQueueActive) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{schedRunTotal}</span></>) : null}</button>
+<button onClick={() => self.setState({ schedulerCreationView: 'wizard' })} title={"Plan Selection · NLH Landing Plan Selection · Operating Mode · Preview & Trigger"} style={css(`height:30px; padding:0 13px; border:1px solid ${isSchedulerWizardView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerWizardView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerWizardView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerWizardView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Input Selection</button>
+<button onClick={() => self.setState({ schedulerCreationView: 'queue' })} title={"Live status of Route Scheduler runs triggered this cycle."} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 13px; border:1px solid ${isSchedulerQueueView ? '#0D7377' : '#E6EBF2'}; background:${isSchedulerQueueView ? '#E4F2F1' : 'transparent'}; color:${isSchedulerQueueView ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:${isSchedulerQueueView ? '700' : '600'}; border-radius:7px; cursor:pointer;`)}>Run Queue{(schedQueueActive) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}>{schedRunTotal}</span></>) : null}</button>
 </div>
 {(isSchedulerWizardView) ? (<>
 {/* ===== SCHEDULER STEPPER ===== */}
@@ -2717,7 +2717,7 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:12px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums; min-width:44px; text-align:center;`)}>{r.connectionStartTime}</span>
 <button onClick={r.onShiftInc} aria-label={"Later by 30 min"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
 {(r.isDsDefault) ? (<span style={css(`font-size:10px; color:#1E6FB8; font-weight:600; white-space:nowrap;`)}>· DS Default</span>) : (<button onClick={r.onResetShift} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:10px; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; white-space:nowrap;`)}>reset</button>)}
-<button onClick={r.onOpenCurve} aria-label={"Open Connection Start Time curve"} title={"Connection Start Time vs D0 Landing % curve"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; flex-shrink:0; margin-left:2px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onOpenCurve} aria-label={"Open Connection Start Time curve"} title={"Ready to Ship % vs D0 Landing % curve"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; flex-shrink:0; margin-left:2px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 <div style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0LandingPct}{r.d0LandingPct !== '\u2014' ? '%' : ''}</div>
 </>) : (<>
@@ -2727,7 +2727,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-{(schedQueueAllDone) ? (<><button onClick={() => this.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
+{(schedQueueAllDone) ? (<><button onClick={() => self.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
 </div>
 </>)}
 </>) : null}
@@ -2887,7 +2887,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`width:52px; height:52px; border-radius:14px; background:#EAF3EF; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={mapAccent} strokeWidth={"1.8"}><path d={"M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Run complete — {mapActiveRunName}</div>
 <div style={css(`font-size:12.5px; color:#5A5E66; line-height:1.5;`)}>Reviewing and deciding DC-level changes now happens in Design Review, not here — head to Design Review's Node Mapping tier to accept/reject each proposed move and commit.</div>
-<button onClick={() => this.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 20px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:6px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={() => self.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 20px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:6px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 </>) : null}
@@ -5699,18 +5699,19 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </>) : null}
-{/* CONNECTION START TIME vs D0 LANDING % CURVE POPUP (2026-09-03) — opened from a completed Run Queue row */}
+{/* CONNECTION START TIME vs D0 LANDING % / READY TO SHIP % CURVE POPUP (2026-09-03, two-curve
+    restore 2026-09-04) — opened from a completed Run Queue row */}
 {(schedConnCurve.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedConnCurve.close}>
 <div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:740px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
 <div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Connection Start Time vs D0 Landing %</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Connection Start Time — Ready to Ship % vs D0 Landing %</div>
 <div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{schedConnCurve.scCode} · {schedConnCurve.scName}</div>
 </div>
 <button onClick={schedConnCurve.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Each point is a genuinely different triggered schedule — moving Connection Start Time earlier or later re-runs the real dispatch-time search (hold-time constraints, dock capacity, Speed Profile bands included) rather than an illustrative estimate. D0 Cutoff itself is unchanged across every point. Click anywhere on the curve to select that schedule, or use DS Default.</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>D0 Landing % is a genuinely different triggered schedule at every point — moving Connection Start Time earlier or later re-runs the real dispatch-time search (hold-time constraints, dock capacity, Speed Profile bands included), not an illustrative estimate. Ready to Ship % is still a seeded estimate (no real sort-completion telemetry to draw from). D0 Cutoff itself is unchanged across every point. Click anywhere on the curve to select that schedule, or use DS Default.</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:10px; padding:14px 10px; background:#FAFBFD;`)}>
 <svg width={"100%"} viewBox={"0 0 " + schedConnCurve.W + " " + schedConnCurve.H} style={css(`display:block;`)}>
 {(schedConnCurve.yTicks || []).map((t, __iSG1) => (<React.Fragment key={__iSG1}>
@@ -5718,16 +5719,20 @@ NLH cycle: {schedNlhMonthLabel}
 <text x={"4"} y={t.y + 4} fontSize={"10"} fill={"#8E96A3"}>{t.label}</text>
 </React.Fragment>))}
 {(schedConnCurve.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedConnCurve.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={"middle"}>{t.label}</text></React.Fragment>))}
+<path d={schedConnCurve.readyPathD} fill={"none"} stroke={"#C77B00"} strokeWidth={"2.2"} strokeDasharray={"5,3"} />
 <path d={schedConnCurve.d0PathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
 {(schedConnCurve.points || []).map((pt, __iSG3) => (<React.Fragment key={__iSG3}><rect x={pt.x - 6} y={"0"} width={"12"} height={schedConnCurve.H} fill={"transparent"} onClick={pt.onClick} style={css(`cursor:pointer;`)}><title>{pt.label}</title></rect></React.Fragment>))}
 <line x1={schedConnCurve.defX} y1={"16"} x2={schedConnCurve.defX} y2={schedConnCurve.H - 30} stroke={"#1E6FB8"} strokeWidth={"1.3"} strokeDasharray={"3,3"} />
 <circle cx={schedConnCurve.defX} cy={schedConnCurve.defY} r={"5"} fill={"#fff"} stroke={"#1E6FB8"} strokeWidth={"2.5"} />
+{(schedConnCurve.showSuggested) ? (<><circle cx={schedConnCurve.sugX} cy={schedConnCurve.sugY} r={"5"} fill={"#fff"} stroke={"#C77B00"} strokeWidth={"2.5"} /></>) : null}
 <circle cx={schedConnCurve.chosenX} cy={schedConnCurve.chosenY} r={"5"} fill={schedConnCurve.chosenIsDefault ? "#1E6FB8" : "#0D7377"} stroke={"#fff"} strokeWidth={"2"} />
 </svg>
 </div>
 <div style={css(`display:flex; align-items:center; gap:16px; margin-top:12px; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#0D7377; display:inline-block; border-radius:2px;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>D0 Landing %</span></div>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:14px; height:3px; background:#C77B00; display:inline-block; border-radius:2px; border-top:1px dashed #C77B00;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>Ready to Ship %</span></div>
 <div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #1E6FB8; display:inline-block;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>DS Default — {schedConnCurve.defLabel}</span></div>
+{(schedConnCurve.showSuggested) ? (<><div style={css(`display:flex; align-items:center; gap:6px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid #C77B00; display:inline-block;`)} /><span style={css(`font-size:11px; color:#5A5E66;`)}>Suggested (crossing) — {schedConnCurve.sugLabel}</span></div></>) : null}
 </div>
 <div style={css(`display:flex; align-items:center; gap:7px; margin-top:8px;`)}><span style={css(`width:9px; height:9px; border-radius:50%; background:${schedConnCurve.chosenIsDefault ? '#1E6FB8' : '#0D7377'}; display:inline-block;`)} /><span style={css(`font-size:11.5px; color:#5A5E66;`)}>Currently selected — {schedConnCurve.chosenLabel}</span></div>
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
@@ -8573,7 +8578,14 @@ class NDCApp extends React.Component {
     // d.lmdcs is always freshly re-materialized from the engine after every edit.
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const rlhMode = f.rlhMode || 'Valmo RLH';
-    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || '', unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
+    // 2026-09-04 fix — Max Vehicle Size used to fall back to '' (blank) when the draft field was
+    // empty at Save, instead of the largest RLH-feasible vehicle — the same default buildSeed()
+    // already applies when an LMDC is first created. Recomputed live here (not read from a stale
+    // seed-time constant) so it stays correct even if Vehicle Master's RLH-feasible set has
+    // changed since genesis (a vehicle added, removed, or resized).
+    const rlhFeasibleVehNow = (st.data.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0);
+    const defaultRlhVehNameNow = (rlhFeasibleVehNow.slice().sort((a, b) => b.cap - a.cap)[0] || {}).name || '';
+    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || defaultRlhVehNameNow, unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
       pincodes: (f.pincodes || '').split(/[;,]/).map(s => s.trim()).filter(Boolean),
       pocs: (f.pocs || '').split(/[;,]/).map(s => s.trim()).filter(Boolean) };
     let laneCorrected = false;
@@ -11513,26 +11525,37 @@ class NDCApp extends React.Component {
       const W = 640, H = 240, padL = 40, padR = 16, padT = 16, padB = 30;
       const minX = points.length ? points[0].shiftMin : -180, maxX = points.length ? points[points.length - 1].shiftMin : 180;
       const xScale = (s) => padL + ((s - minX) / Math.max(1, (maxX - minX))) * (W - padL - padR);
-      const yVals = points.map(pt => pt.d0LandingPct);
+      // Shared y-scale across BOTH curves (2026-09-04, two-curve restore) — one axis, so the two
+      // lines' crossing point is visually meaningful rather than each curve auto-scaling to its
+      // own range.
+      const yVals = points.reduce((a, pt) => a.concat([pt.d0LandingPct, pt.readyPct]), []);
       const yMin = Math.max(0, Math.floor((Math.min.apply(null, yVals.length ? yVals : [0]) - 5) / 10) * 10);
       const yMax = Math.min(100, Math.ceil((Math.max.apply(null, yVals.length ? yVals : [100]) + 5) / 10) * 10);
       const yScale = (pct) => padT + (1 - (pct - yMin) / Math.max(1, (yMax - yMin))) * (H - padT - padB);
       const d0PathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.shiftMin).toFixed(1) + ',' + yScale(pt.d0LandingPct).toFixed(1)).join(' ');
+      const readyPathD = points.map((pt, i) => (i === 0 ? 'M' : 'L') + xScale(pt.shiftMin).toFixed(1) + ',' + yScale(pt.readyPct).toFixed(1)).join(' ');
       const defaultPt = points.find(pt => pt.isDsDefault);
+      const suggestedPt = points.find(pt => pt.isSuggested);
       const chosenPt = points.find(pt => pt.shiftMin === chosenShift);
       const xTicks = points.filter((_, i) => i % 2 === 0);
       schedConnCurve = {
         open: true, runId: schedConnCurveRunId, scCode: sp ? sp.scCode : '', scName: sp ? sp.scName : '',
-        d0PathD, W, H,
+        d0PathD, readyPathD, W, H,
         xTicks: xTicks.map(pt => ({ x: xScale(pt.shiftMin), label: fmtShift(pt.shiftMin) })),
         yTicks: [0, 0.25, 0.5, 0.75, 1].map(f => ({ y: padT + f * (H - padT - padB), label: Math.round(yMax - f * (yMax - yMin)) + '%' })),
         defX: defaultPt ? xScale(defaultPt.shiftMin) : 0, defY: defaultPt ? yScale(defaultPt.d0LandingPct) : 0,
-        defLabel: defaultPt ? (defaultPt.connectionStartTime + ' \u2014 D0 ' + defaultPt.d0LandingPct + '%') : '',
+        defLabel: defaultPt ? (defaultPt.connectionStartTime + ' \u2014 D0 ' + defaultPt.d0LandingPct + '% \u00b7 Ready ' + defaultPt.readyPct + '%') : '',
+        // Suggested — the Ready-to-Ship/D0 crossing point, shown as a distinct marker from DS
+        // Default. Informational only: picking it still requires the user to click it (or the
+        // point in the list), same as any other candidate — it is never auto-applied.
+        sugX: suggestedPt ? xScale(suggestedPt.shiftMin) : 0, sugY: suggestedPt ? yScale(suggestedPt.d0LandingPct) : 0,
+        sugLabel: suggestedPt ? (suggestedPt.connectionStartTime + ' \u2014 D0 ' + suggestedPt.d0LandingPct + '% \u00b7 Ready ' + suggestedPt.readyPct + '%') : '',
+        showSuggested: !!(suggestedPt && !suggestedPt.isDsDefault),
         chosenX: chosenPt ? xScale(chosenPt.shiftMin) : 0, chosenY: chosenPt ? yScale(chosenPt.d0LandingPct) : 0,
-        chosenLabel: chosenPt ? (chosenPt.connectionStartTime + ' \u2014 D0 ' + chosenPt.d0LandingPct + '%' + (chosenPt.isDsDefault ? ' (DS Default)' : '')) : '',
+        chosenLabel: chosenPt ? (chosenPt.connectionStartTime + ' \u2014 D0 ' + chosenPt.d0LandingPct + '% \u00b7 Ready ' + chosenPt.readyPct + '%' + (chosenPt.isDsDefault ? ' (DS Default)' : '')) : '',
         chosenIsDefault: chosenShift === 0,
         onUseDefault: () => { const m = Object.assign({}, st.schedulerConnStartShiftByRunId || {}); delete m[schedConnCurveRunId]; this.setState({ schedulerConnStartShiftByRunId: m }); },
-        points: points.map(pt => ({ shiftMin: pt.shiftMin, x: xScale(pt.shiftMin), d0LandingPct: pt.d0LandingPct, label: pt.connectionStartTime + ' \u2014 D0 ' + pt.d0LandingPct + '%' + (pt.isDsDefault ? ' (DS Default)' : ''), onClick: () => { const m = Object.assign({}, this.state.schedulerConnStartShiftByRunId || {}); if (pt.shiftMin === 0) delete m[schedConnCurveRunId]; else m[schedConnCurveRunId] = pt.shiftMin; this.setState({ schedulerConnStartShiftByRunId: m }); } })),
+        points: points.map(pt => ({ shiftMin: pt.shiftMin, x: xScale(pt.shiftMin), d0LandingPct: pt.d0LandingPct, readyPct: pt.readyPct, label: pt.connectionStartTime + ' \u2014 D0 ' + pt.d0LandingPct + '% \u00b7 Ready ' + pt.readyPct + '%' + (pt.isDsDefault ? ' (DS Default)' : '') + (pt.isSuggested ? ' (Suggested)' : ''), onClick: () => { const m = Object.assign({}, this.state.schedulerConnStartShiftByRunId || {}); if (pt.shiftMin === 0) delete m[schedConnCurveRunId]; else m[schedConnCurveRunId] = pt.shiftMin; this.setState({ schedulerConnStartShiftByRunId: m }); } })),
         close: () => this.setState({ schedConnCurveRunId: null }),
       };
     }
@@ -11855,7 +11878,7 @@ class NDCApp extends React.Component {
       const cutoffOverrideStr = routeCutoffOverrides[r.routeCode];
       const baseDispatchRaw = cutoffOverrideStr
         ? (() => { const parts = cutoffOverrideStr.split(':'); return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10); })()
-        : cutoffMin - 90 + (hash(r.routeCode + seed) % 150) + connStartShiftMin; // 150-min window straddling cutoff, shifted by the user's chosen Connection Start Time
+        : cutoffMin - 340 + (hash(r.routeCode + seed) % 150) + connStartShiftMin; // 2026-09-04 fix — was `cutoffMin - 90`, which put dispatch only ~90 min before cutoff (same-morning), leaving almost no transit buffer and producing ~10% network D0 Landing % on seeded data. Real RLH linehaul dispatches the evening/night before a D0 cutoff; -340 (empirically tuned against the full seeded network) lands the volume-weighted network average at ~73%, matching the stated real-world 70-75% baseline. 150-min spread (unchanged) straddles that point, shifted by the user's chosen Connection Start Time.
       const baseDispatch = roundUp(baseDispatchRaw, 30);
       const hasCutoffOverride = !!cutoffOverrideStr;
       // computeAt(dispatchCandidate) — the per-DC breakdown for one candidate dispatch time,
@@ -12023,14 +12046,37 @@ class NDCApp extends React.Component {
       warnD0Low: d0LandingPct < 30, warnHoldHigh: holdingTotalHours > 12,
     };
   }
-  // computeConnStartCurveFor(sp) (2026-09-03, item 5/6) — the Run Queue Connection Start Time
-  // curve: sweeps shiftMin across a bounded window (-180..+180 min, 30-min steps — the same grid
-  // every other dispatch-time control in this app already uses) and, for EACH candidate, runs the
-  // real schedulerRouteDcInfo(sp, shiftMin) pipeline (hold-time search, dock-capacity avoidance,
-  // Speed Profile lookups — all of it) rather than a separate simulated sweep. This is what makes
-  // the curve genuinely reflect what would be pushed to Design Review at each point, not an
-  // illustrative approximation. shiftMin=0 is "DS Default" — the untouched, as-triggered schedule.
+  // computeConnStartCurveFor(sp) (2026-09-03, item 5/6; two-curve restore 2026-09-04) — the Run
+  // Queue Connection Start Time curve: sweeps shiftMin across a bounded window (-180..+180 min,
+  // 30-min steps — the same grid every other dispatch-time control in this app already uses) and,
+  // for EACH candidate, runs the real schedulerRouteDcInfo(sp, shiftMin) pipeline (hold-time
+  // search, dock-capacity avoidance, Speed Profile lookups — all of it) rather than a separate
+  // simulated sweep. This is what makes the D0 Landing % curve genuinely reflect what would be
+  // pushed to Design Review at each point, not an illustrative approximation. shiftMin=0 is
+  // "DS Default" — the untouched, as-triggered schedule; that stays true regardless of where the
+  // two curves happen to cross (see note below).
+  //
+  // Ready to Ship % — restored alongside D0 Landing % per direct request ("same as before, two
+  // curves"). This is still a deterministic seeded S-curve (no real sort-completion telemetry
+  // exists to draw from, same honest limitation the old pre-trigger version had) but is now
+  // evaluated against each candidate's own REAL achieved connectionStartMin (from
+  // schedulerRouteDcInfo's actual bounded search), not the nominal shift value — so the two
+  // curves stay comparable on the same genuine time-of-day x-axis.
+  //
+  // Deliberately NOT redefining "DS Default" as the crossing point the way the old pre-trigger
+  // version did — shiftMin=0 (the run's own untouched output) stays what actually flows to Design
+  // Review absent an explicit user pick, so a visually-suggested crossing point never silently
+  // becomes "what got triggered" without the user choosing it. The crossing point is still shown
+  // (as "Suggested"), just not auto-applied.
   computeConnStartCurveFor(sp) {
+    const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
+    const seedH = hash(sp.id);
+    const midpoint = 480 + (seedH % 360);
+    const slope = 55 + ((seedH >> 4) % 55);
+    const readyPctFor = (connectionStartMin) => {
+      const tod = ((connectionStartMin % 1440) + 1440) % 1440;
+      return Math.round((100 / (1 + Math.exp(-(tod - midpoint) / slope))) * 10) / 10;
+    };
     const points = [];
     for (let shiftMin = -180; shiftMin <= 180; shiftMin += 30) {
       const info = this.schedulerRouteDcInfo(sp, shiftMin);
@@ -12039,9 +12085,30 @@ class NDCApp extends React.Component {
       points.push({
         shiftMin, isDsDefault: shiftMin === 0,
         connectionStartTime: m.connectionStartTime, connectionStartMin: m.connectionStartMin,
-        d0LandingPct: m.d0LandingPct, holdingTotalHours: m.holdingTotalHours,
+        d0LandingPct: m.d0LandingPct, readyPct: readyPctFor(m.connectionStartMin), holdingTotalHours: m.holdingTotalHours,
       });
     }
+    // Suggested (crossing) point — later than the DS default, later than the run's own output,
+    // purely informational: the latest point (scanning earliest to latest) where Ready-to-Ship
+    // catches up to/overtakes D0 Landing, i.e. where waiting longer to ship stops being worth the
+    // D0 performance given up. Falls back to the closest-gap point if the two curves never cross
+    // (same fallback the old version used).
+    let suggestedShift = null;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1], cur = points[i];
+      const prevDiff = prev.readyPct - prev.d0LandingPct, curDiff = cur.readyPct - cur.d0LandingPct;
+      if (prevDiff <= 0 && curDiff >= 0) {
+        const t = curDiff === prevDiff ? 0 : (0 - prevDiff) / (curDiff - prevDiff);
+        suggestedShift = Math.round((prev.shiftMin + t * (cur.shiftMin - prev.shiftMin)) / 30) * 30;
+        break;
+      }
+    }
+    if (suggestedShift == null && points.length) {
+      let best = points[0], bestGap = Math.abs(points[0].readyPct - points[0].d0LandingPct);
+      points.forEach(pt => { const gap = Math.abs(pt.readyPct - pt.d0LandingPct); if (gap < bestGap) { bestGap = gap; best = pt; } });
+      suggestedShift = best.shiftMin;
+    }
+    points.forEach(pt => { pt.isSuggested = pt.shiftMin === suggestedShift; });
     return points;
   }
   // computeSchedulerDetailTables(sp) (2026-08-04) — Plan Details / Route View / Dock Schedule, the

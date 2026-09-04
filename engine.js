@@ -185,6 +185,7 @@ const FIELD_CLASS = {
   'rlh.localSpeed': { class: 'D', leg: 'rlh' },
   'rlh.nonLocalSpeed': { class: 'D', leg: 'rlh' },
   'rlh.docks': { class: 'D', leg: 'rlh' },
+  'rlh.speedProfile': { class: 'D', leg: 'rlh' }, // 2026-09-03 — SC x Vehicle Type x Time-band matrix, table='speedProfile'; see the Speed Profile section below for the read/write functions (this key is documentation-only, nothing calls resolveField('rlh.speedProfile', ...) since the whole-map write/read goes through the dedicated functions, not the generic per-field path).
   'lmdc.capacity': { class: 'D', leg: 'rlh' }, // LMDC Master (RLH-only module); location field intentionally kept OUT of this shared engine per product decision -- stays inside RLH's own local screen state, not even class-D-registered here, revisit later.
   'vehicleMaster.type': { class: 'D', leg: null },
   'vehicleMaster.capacity': { class: 'D', leg: null },
@@ -732,8 +733,79 @@ function setLegScLocalField(store, leg, cycleMonth, code, field, value) {
 }
 
 // ---------------------------------------------------------------------------
-// Uploads (Class F) -- thin, deliberately un-clever. Never cloned.
+// Speed Profile / "Speed Master" (2026-09-03) — SC x Vehicle Type x Time-of-day speed matrix,
+// extending SC Vehicle Availability (accessed as a popup off that screen's SC card). Reuses the
+// existing generic Class D machinery (leg='rlh', table='speedProfile', entityCode=SC code) rather
+// than inventing new plumbing — the whole per-vehicle-type matrix is stored as a single 'vehicles'
+// field on that SC's Class D record, written/read via the ordinary setClassDField/peekClassD.
+//
+// Shape written per SC:
+//   { vehicles: { [vehicleType]: { bandStarts: ['00:00','03:00',...], local: [n,...], zonal: [n,...] } } }
+//
+// Deliberately "nimble": band granularity is NOT a fixed config anywhere — it's just whatever
+// bandStarts array this SC's Form/Upload actually produced. One SC can be on a 3-hour grid while
+// another is on a 1-hour grid; a re-upload with a different band cadence for the same SC simply
+// replaces its own bandStarts + value arrays. Same reasoning for vehicle type: a plain SC-level
+// speed with no vehicle split is just a store with one vehicle-type key.
 // ---------------------------------------------------------------------------
+
+function timeStrToMin(hhmm) {
+  const parts = String(hhmm || '00:00').split(':');
+  const hh = parseInt(parts[0], 10), mm = parseInt(parts[1], 10);
+  return (isNaN(hh) ? 0 : hh) * 60 + (isNaN(mm) ? 0 : mm);
+}
+
+function getSpeedProfile(store, cycleMonth, scCode) {
+  const rec = peekClassD(store, 'rlh', 'speedProfile', cycleMonth, scCode);
+  return (rec && rec.vehicles) ? rec.vehicles : null;
+}
+
+// Overwrites the WHOLE vehicles map for this SC (the Form/Upload UI always saves a complete,
+// already-validated map — see isSpeedProfileComplete below — so there's no partial-merge case to
+// handle here, unlike setClassDField's usual single-field semantics elsewhere in this engine).
+function setSpeedProfile(store, cycleMonth, scCode, vehicles) {
+  const existing = peekClassD(store, 'rlh', 'speedProfile', cycleMonth, scCode) || {};
+  return setClassDField(store, 'rlh', 'speedProfile', cycleMonth, scCode, 'vehicles', vehicles, existing);
+}
+
+// isSpeedProfileComplete(vehicles, vehicleTypes) — the "no gaps allowed" save rule: every vehicle
+// type actually assigned to this SC (from SC Vehicle Availability's own row list) must have an
+// entry, with a value at every one of its own declared bands, for BOTH Local and Zonal. Returns
+// {complete, missing: [{vehicleType, reason}]} rather than a bare boolean, so the save UI can
+// list exactly what's missing instead of a generic "incomplete" message.
+function isSpeedProfileComplete(vehicles, vehicleTypes) {
+  const missing = [];
+  (vehicleTypes || []).forEach(vt => {
+    const e = vehicles && vehicles[vt];
+    if (!e || !e.bandStarts || !e.bandStarts.length) { missing.push({ vehicleType: vt, reason: 'No speed data entered' }); return; }
+    const n = e.bandStarts.length;
+    const localOk = Array.isArray(e.local) && e.local.length === n && e.local.every(v => v !== null && v !== undefined && v !== '');
+    const zonalOk = Array.isArray(e.zonal) && e.zonal.length === n && e.zonal.every(v => v !== null && v !== undefined && v !== '');
+    if (!localOk) missing.push({ vehicleType: vt, reason: 'Local speed missing for one or more bands' });
+    if (!zonalOk) missing.push({ vehicleType: vt, reason: 'Zonal speed missing for one or more bands' });
+  });
+  return { complete: missing.length === 0, missing };
+}
+
+// lookupSpeedProfile(store, cycleMonth, scCode, vehicleType, zone, minuteOfDay) — zone is 'Local'
+// or 'Zonal'. Finds which band minuteOfDay falls into against THIS SC+vehicle's own bandStarts
+// (sorted ascending, each band running until the next one starts, the last wrapping to midnight),
+// and returns that band's value. Returns null (not a fallback number) when no profile exists for
+// this exact SC+vehicle combination — the CALLER decides the fallback (existing flat SC Master /
+// synthetic default), so this function stays a pure lookup, not a policy decision.
+function lookupSpeedProfile(store, cycleMonth, scCode, vehicleType, zone, minuteOfDay) {
+  const vehicles = getSpeedProfile(store, cycleMonth, scCode);
+  const entry = vehicles && vehicles[vehicleType];
+  if (!entry || !entry.bandStarts || !entry.bandStarts.length) return null;
+  const bandMins = entry.bandStarts.map(timeStrToMin);
+  const mod = ((minuteOfDay % 1440) + 1440) % 1440;
+  let idx = 0;
+  for (let i = 0; i < bandMins.length; i++) { if (mod >= bandMins[i]) idx = i; }
+  const arr = zone === 'Local' ? entry.local : entry.zonal;
+  return (arr && arr[idx] !== undefined && arr[idx] !== null && arr[idx] !== '') ? Number(arr[idx]) : null;
+}
+
+
 
 function setUpload(store, leg, cycleMonth, slot, payload) {
   store.uploads[leg] = store.uploads[leg] || {};

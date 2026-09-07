@@ -768,23 +768,45 @@ function setSpeedProfile(store, cycleMonth, scCode, vehicles) {
   return setClassDField(store, 'rlh', 'speedProfile', cycleMonth, scCode, 'vehicles', vehicles, existing);
 }
 
-// isSpeedProfileComplete(vehicles, vehicleTypes) — the "no gaps allowed" save rule: every vehicle
-// type actually assigned to this SC (from SC Vehicle Availability's own row list) must have an
-// entry, with a value at every one of its own declared bands, for BOTH Local and Zonal. Returns
-// {complete, missing: [{vehicleType, reason}]} rather than a bare boolean, so the save UI can
-// list exactly what's missing instead of a generic "incomplete" message.
-function isSpeedProfileComplete(vehicles, vehicleTypes) {
-  const missing = [];
-  (vehicleTypes || []).forEach(vt => {
-    const e = vehicles && vehicles[vt];
-    if (!e || !e.bandStarts || !e.bandStarts.length) { missing.push({ vehicleType: vt, reason: 'No speed data entered' }); return; }
-    const n = e.bandStarts.length;
-    const localOk = Array.isArray(e.local) && e.local.length === n && e.local.every(v => v !== null && v !== undefined && v !== '');
-    const zonalOk = Array.isArray(e.zonal) && e.zonal.length === n && e.zonal.every(v => v !== null && v !== undefined && v !== '');
-    if (!localOk) missing.push({ vehicleType: vt, reason: 'Local speed missing for one or more bands' });
-    if (!zonalOk) missing.push({ vehicleType: vt, reason: 'Zonal speed missing for one or more bands' });
+// isSpeedProfileComplete(vehicles) (2026-09-07, loosened) — "no gaps allowed" is gone: a blank
+// hour after the first entered one is meant to inherit forward from the previous hour (applied
+// by the caller before this ever gets called — see applySpeedProfileInheritance below), and a
+// vehicle/zone row with NO data at all simply falls through to Vehicle Master's own speed, then
+// SC Master's flat speed, at read time (lookupSpeedProfile already returns null for that case,
+// by design). The only hard requirement left: at least one seed cell anywhere in the table — any
+// vehicle type × any zone × 00:00 — so there's something to build the rest of the profile from.
+function isSpeedProfileComplete(vehicles) {
+  const hasSeed = Object.keys(vehicles || {}).some(vt => {
+    const e = vehicles[vt];
+    const localSeed = e && Array.isArray(e.local) && e.local[0] !== null && e.local[0] !== undefined && e.local[0] !== '';
+    const zonalSeed = e && Array.isArray(e.zonal) && e.zonal[0] !== null && e.zonal[0] !== undefined && e.zonal[0] !== '';
+    return localSeed || zonalSeed;
   });
-  return { complete: missing.length === 0, missing };
+  return { complete: hasSeed, missing: hasSeed ? [] : [{ vehicleType: null, reason: 'Enter at least one vehicle type/zone\u2019s 00:00 speed before saving.' }] };
+}
+
+// applySpeedProfileInheritance(vehicles) (2026-09-07) — for every vehicle/zone array that has AT
+// LEAST one entered value, fills every blank hour forward from the nearest earlier hour with a
+// value (a genuinely blank leading run before the first real value stays blank — there's nothing
+// to inherit from yet). Rows with zero values anywhere are left untouched (still entirely blank),
+// so lookupSpeedProfile's existing null-fallthrough continues to work for them unchanged.
+function applySpeedProfileInheritance(vehicles) {
+  const out = {};
+  Object.keys(vehicles || {}).forEach(vt => {
+    const e = vehicles[vt];
+    const fillRow = (arr) => {
+      if (!Array.isArray(arr) || !arr.some(v => v !== null && v !== undefined && v !== '')) return arr;
+      const filled = arr.slice();
+      let last = null;
+      for (let i = 0; i < filled.length; i++) {
+        if (filled[i] !== null && filled[i] !== undefined && filled[i] !== '') last = filled[i];
+        else if (last !== null) filled[i] = last;
+      }
+      return filled;
+    };
+    out[vt] = Object.assign({}, e, { local: fillRow(e.local), zonal: fillRow(e.zonal) });
+  });
+  return out;
 }
 
 // lookupSpeedProfile(store, cycleMonth, scCode, vehicleType, zone, minuteOfDay) — zone is 'Local'

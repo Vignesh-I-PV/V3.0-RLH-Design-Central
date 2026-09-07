@@ -1162,83 +1162,6 @@ All modules
 </div>
 </>) : null}
 </>) : null}
-{/* ===== SPEED PROFILE POPUP (2026-09-03, item 1) — SC x Vehicle Type x Time, opened from a
-     SC Vehicle Availability card. Form tab (per-vehicle band table + fill helpers) and Upload
-     tab (long-format CSV: sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed).
-     "No gaps allowed" — Save is blocked with a precise missing-cell list until every vehicle
-     type on this SC has a value in every band, both zones. ===== */}
-{(speedProfileModal.open) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={speedProfileModal.close}>
-<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
-<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
-<div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{speedProfileModal.scCode} · {speedProfileModal.scName}</div>
-</div>
-<button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Speed by vehicle type and time of day, Local vs Non-Local. This feeds Route Scheduler's dispatch-time search directly — an SC with no profile here falls back to the flat SC Master default. Every vehicle type needs a value in every band before this can be saved.</div>
-<div style={css(`display:flex; gap:6px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
-<button onClick={speedProfileModal.onTabForm} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'form' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'form' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Form</button>
-<button onClick={speedProfileModal.onTabUpload} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'upload' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'upload' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Upload</button>
-</div>
-{(speedProfileModal.tab === 'form') ? (<>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>GRID</span>
-<button onClick={speedProfileModal.onPreset3h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>3-hour bands</button>
-<button onClick={speedProfileModal.onPreset1h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>1-hour bands</button>
-<span style={css(`font-size:10.5px; color:#C77B00;`)}>Switching the grid clears all entered values for this SC.</span>
-</div>
-<div style={css(`display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;`)}>
-{(speedProfileModal.vehicleTabs || []).map((vt, __iSpv) => (<React.Fragment key={__iSpv}>
-<button onClick={vt.onClick} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; border:1px solid ${vt.active ? '#003F98' : '#E6EBF2'}; background:${vt.active ? '#EAEEFB' : '#fff'}; color:${vt.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{vt.name}<span style={css(`width:7px; height:7px; border-radius:50%; background:${vt.complete ? '#128A3E' : '#D0D5DD'};`)} /></button>
-</React.Fragment>))}
-</div>
-{(speedProfileModal.canCopy) ? (<><button onClick={speedProfileModal.onCopyToAllVehicles} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px solid #0D7377; background:#fff; color:#0D7377; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; margin-bottom:10px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M8 8V5a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1h-3M4 8h10a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Same for all vehicles \u2014 copy {speedProfileModal.activeVeh}\u2019s speeds</button></>) : null}
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:8px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>TIME BAND</div>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>LOCAL (KM/H) <button onClick={speedProfileModal.onFillLocalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>NON-LOCAL (KM/H) <button onClick={speedProfileModal.onFillZonalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
-</div>
-<div style={css(`max-height:280px; overflow-y:auto;`)}>
-{(speedProfileModal.bandRows || []).map((br, __iSpb) => (<React.Fragment key={__iSpb}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:7px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
-<div style={css(`font-size:12px; color:#14171F; font-weight:600; font-variant-numeric:tabular-nums;`)}>{br.label}</div>
-<input value={br.local} onChange={(e) => br.onLocalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.local === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-<input value={br.zonal} onChange={(e) => br.onZonalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.zonal === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-</div>
-</React.Fragment>))}
-</div>
-</div>
-</>) : (<>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;`)}>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>One row per SC \u00d7 Vehicle Type \u00d7 Time band \u2014 rows for other SCs are ignored, not an error.</span>
-<button onClick={speedProfileModal.uploadTemplate} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Download template</button>
-</div>
-<input type={"file"} accept={".csv"} onChange={speedProfileModal.onUploadFile} style={css(`margin-bottom:10px; font-size:12px;`)} />
-<textarea value={speedProfileModal.uploadText} onChange={speedProfileModal.onUploadTextChange} placeholder={"sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed\n" + speedProfileModal.scCode + ",Truck,00:00,28,38"} style={css(`width:100%; height:140px; padding:10px; border:1px solid #E6EBF2; border-radius:8px; font-family:monospace; font-size:11.5px; box-sizing:border-box; margin-bottom:10px; resize:vertical;`)} />
-{(speedProfileModal.uploadErrors && speedProfileModal.uploadErrors.length > 0) ? (<>
-<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-bottom:10px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t parse this file:</div>
-{(speedProfileModal.uploadErrors || []).map((e, __iSpe) => (<React.Fragment key={__iSpe}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
-</div>
-</>) : null}
-<button onClick={speedProfileModal.onParseUpload} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Parse &amp; load into Form</button>
-</>)}
-{(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
-<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t save \u2014 missing:</div>
-{(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
-</div>
-</>) : null}
-<div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
-<button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Save Speed Profile</button>
-</div>
-</div>
-</div>
-</>) : null}
 {(isVehMaster) ? (<>
 {/* roadmap banner + "N vehicle types" count banner removed per request */}
 <div style={css(`display:flex; align-items:center; gap:12px; margin-bottom:14px;`)}>
@@ -2475,13 +2398,15 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : (<>
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO \u2014 {schedNlhMonthLabel}</div>
-<div style={css(`display:flex; flex-direction:column; gap:6px; margin-bottom:16px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; margin-bottom:16px;`)}>
 {(schedulerNlhScenarioCards || []).map((sc, __iNsc) => (<React.Fragment key={__iNsc}>
-<button onClick={sc.onClick} style={css(`display:flex; align-items:center; gap:10px; text-align:left; padding:10px 12px; border:1px solid ${sc.active ? '#003F98' : '#E6EBF2'}; background:${sc.active ? '#EAEEFB' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
-<div style={css(`width:16px; height:16px; border-radius:50%; border:2px solid ${sc.active ? '#003F98' : '#C3C9D4'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(sc.active) ? (<><div style={css(`width:8px; height:8px; border-radius:50%; background:#003F98;`)} /></>) : null}</div>
-<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{sc.name}</span>
-<span style={css(`display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:${sc.origin === 'finalised' ? '#EAF3EF' : '#F2F5FA'}; color:${sc.origin === 'finalised' ? '#128A3E' : '#5A5E66'};`)}>{sc.origin === 'finalised' ? 'System Finalised' : 'Ingested'}</span>
-<span style={css(`font-size:11px; color:#8E96A3; margin-left:auto;`)}>{sc.scCount} SCs covered</span>
+<button onClick={sc.onClick} style={css(`display:flex; align-items:center; gap:13px; text-align:left; padding:14px 16px; border:1.5px solid ${sc.active ? '#003F98' : '#E6EBF2'}; background:${sc.active ? '#EAEEFB' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
+<span style={css(`width:18px; height:18px; border-radius:50%; border:2px solid ${sc.active ? '#003F98' : '#C3C9D4'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(sc.active) ? (<><span style={css(`width:9px; height:9px; border-radius:50%; background:#003F98;`)} /></>) : null}</span>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>{sc.name}</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; margin-top:3px;`)}>{sc.scCount} SCs covered</div>
+</div>
+<span style={css(`display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:${sc.origin === 'finalised' ? '#EAF3EF' : '#F2F5FA'}; color:${sc.origin === 'finalised' ? '#128A3E' : '#5A5E66'}; flex-shrink:0;`)}>{sc.origin === 'finalised' ? 'System Finalised' : 'Ingested'}</span>
 </button>
 </React.Fragment>))}
 </div>
@@ -2505,38 +2430,39 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12.5px; color:#5A5E66;`)}>{step1Summary}</span>
 </div>
-<div style={css(`display:flex; gap:0; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; height:520px;`)}>
-{/* rail */}
-<aside style={css(`width:260px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#FAFBFD; padding:14px; overflow:auto;`)}>
-<input value={schedulerSearch} onChange={onSchedulerSearch} placeholder={"Search SC code or name"} style={css(`width:100%; height:34px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; margin-bottom:12px; box-sizing:border-box;`)} />
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;`)}>
-{(zoneChipsStep1 || []).map((z, __i42) => (<React.Fragment key={__i42}><button onClick={z.onClick} style={css(`font-size:11.5px; padding:4px 10px; border-radius:999px; border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
+{/* 2026-09-04 — SC selection rebuilt to mirror Route Planner's own Step 1 (zone-grouped
+    collapsible sections, single-line SC rows, inline accordion expand) instead of a rail +
+    separate detail pane. Search + zone chips filter the rows directly, same as Route Planner. */}
+<div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={schedulerSearch} onChange={onSchedulerSearch} placeholder={"Search SC code or name"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:190px;`)} />
 </div>
-<label style={css(`display:flex; align-items:center; gap:7px; font-size:12.5px; color:#5A5E66; cursor:pointer; margin-bottom:12px;`)}><input type={"checkbox"} checked={allVisibleSelected} onChange={onSelectAllVisible} style={css(`width:15px; height:15px; cursor:pointer;`)} />Select all visible</label>
-{(scsWithFinalEmpty) ? (<><div style={css(`padding:20px 6px; text-align:center; font-size:12px; color:#8E96A3;`)}>No Finalised RLH plans yet.</div></>) : ((schedulerScGroups || []).map((g, __i43) => (<React.Fragment key={__i43}>
-<button onClick={g.onClick} style={css(`width:100%; text-align:left; display:flex; align-items:center; gap:9px; padding:9px 10px; margin-bottom:4px; border:1px solid ${g.active ? '#003F98' : '#E6EBF2'}; border-radius:9px; background:${g.active ? '#EAEEFB' : '#fff'}; cursor:pointer; font-family:inherit;`)}>
-<span style={css(`width:9px; height:9px; border-radius:50%; background:${g.allChecked ? '#128A3E' : g.someChecked ? '#C77B00' : '#D0D5DD'}; flex-shrink:0;`)} />
-<div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`font-size:12.5px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{g.code}<span style={css(`font-size:11px; color:#5A5E66; font-weight:400; margin-left:6px;`)}>{g.zone}</span></div>
-<div style={css(`font-size:11px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{g.name}</div>
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap;`)}>
+{(zoneChipsStep1 || []).map((z, __i42) => (<React.Fragment key={__i42}><button onClick={z.onClick} style={css(`border:1px solid ${z.active ? '#003F98' : '#E6EBF2'}; background:${z.active ? '#EAEEFB' : '#fff'}; color:${z.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; padding:7px 13px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
 </div>
-<span style={css(`font-size:10.5px; color:#8E96A3; flex-shrink:0; white-space:nowrap;`)}>{g.selCountLabel}</span>
+</div>
+{(scsWithFinalEmpty) ? (<><div style={css(`padding:36px 24px; text-align:center; font-size:12.5px; color:#8E96A3; border:1px dashed #E6EBF2; border-radius:8px;`)}>No Finalised RLH plans yet.</div></>) : ((schedulerZoneSections || []).map((zs, __iZs) => (<React.Fragment key={__iZs}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:12px; overflow:hidden;`)}>
+<button onClick={zs.onToggleCollapse} style={css(`width:100%; display:flex; align-items:center; gap:10px; border:none; background:#F7F8FB; cursor:pointer; font-family:inherit; text-align:left; padding:11px 16px;`)}>
+<svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"2"}><path d={zs.chev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>{zs.zone}</span>
+<span style={css(`font-size:11.5px; color:#5A5E66;`)}>{zs.count} SC{zs.count === 1 ? '' : 's'}</span>
 </button>
-</React.Fragment>)))}
-</aside>
-{/* main pane */}
-<div style={css(`flex:1; overflow:auto; padding:18px 20px; background:#fff;`)}>
-{(!curRailGroup) ? (<><div style={css(`display:flex; align-items:center; justify-content:center; height:100%; color:#8E96A3; font-size:13px;`)}>Pick a SC from the rail.</div></>) : (<>
-<div style={css(`display:flex; align-items:center; gap:10px; margin-bottom:14px;`)}>
-<div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{curRailGroup.code} <span style={css(`font-size:13px; color:#5A5E66; font-weight:400;`)}>{curRailGroup.name}</span></div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:2px;`)}>{curRailGroup.zone} · {curRailGroup.planCount} finalised plan{curRailGroup.planCount === 1 ? '' : 's'}</div>
-</div>
-<label style={css(`display:flex; align-items:center; gap:7px; font-size:12px; color:#5A5E66; cursor:pointer; flex-shrink:0;`)}><input type={"checkbox"} checked={curRailGroup.allChecked} onChange={curRailGroup.onToggleAll} style={css(`width:15px; height:15px; cursor:pointer;`)} />Select all for this SC</label>
-</div>
-<div style={css(`display:flex; flex-direction:column; gap:8px;`)}>
-{(curRailGroup.plans || []).map((p, __i44) => (<React.Fragment key={__i44}>
-<label style={css(`display:flex; align-items:center; gap:10px; padding:11px 13px; border:1px solid ${p.checked ? '#003F98' : '#E6EBF2'}; background:${p.checked ? '#EAEEFB' : '#fff'}; border-radius:9px; cursor:pointer;`)}>
+{(!zs.collapsed) ? (<><div>
+{(zs.scs || []).map((g, __i43) => (<React.Fragment key={__i43}>
+<div style={css(`border-top:1px solid #EEF1F6;`)}>
+<button onClick={g.onToggleExpand} style={css(`width:100%; display:flex; align-items:center; gap:12px; border:none; background:${g.expanded ? '#FAFBFD' : '#fff'}; cursor:pointer; font-family:inherit; text-align:left; padding:11px 16px;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"} style={css(`transform:rotate(${g.expanded ? '90deg' : '0deg'}); transition:transform 120ms; flex-shrink:0;`)}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12.5px; font-weight:700; color:#003F98; width:62px; flex-shrink:0;`)}>{g.code}</span>
+<span style={css(`font-size:12.5px; color:#14171F; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{g.name}</span>
+{(g.checkedCount > 0) ? (<><span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#EAEEFB; color:#003F98; flex-shrink:0;`)}>{g.selCountLabel}</span></>) : (<><span style={css(`font-size:11.5px; color:#8E96A3; flex-shrink:0;`)}>{g.selCountLabel}</span></>)}
+<span style={css(`font-size:11.5px; color:#8E96A3; width:80px; text-align:right; flex-shrink:0;`)}>{g.latestDateLabel}</span>
+</button>
+{(g.expanded) ? (<>
+<div style={css(`background:#FAFBFD; border-top:1px solid #EEF1F6; padding:10px 16px 12px 43px; display:flex; flex-direction:column; gap:8px;`)}>
+{(g.plans || []).map((p, __i44) => (<React.Fragment key={__i44}>
+<label style={css(`display:flex; align-items:center; gap:10px; padding:10px 13px; border:1px solid ${p.checked ? '#003F98' : '#E6EBF2'}; background:${p.checked ? '#EAEEFB' : '#fff'}; border-radius:9px; cursor:pointer;`)}>
 <input type={"checkbox"} checked={p.checked} onChange={p.onToggle} style={css(`width:16px; height:16px; cursor:pointer; flex-shrink:0;`)} />
 <div style={css(`flex:1; min-width:0;`)}>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{p.runId} · HW {p.hw} · {p.routes} routes</div>
@@ -2546,9 +2472,13 @@ NLH cycle: {schedNlhMonthLabel}
 </label>
 </React.Fragment>))}
 </div>
-</>)}
+</>) : null}
 </div>
+</React.Fragment>))}
 </div>
+</>) : null}
+</div>
+</React.Fragment>)))}
 {(!nlhPicked) ? (<><div style={css(`display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px 13px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; color:#14171F;`)}>Pick an NLH Landing Plan above before continuing to Operating Mode.</span></div></>) : null}
 </>) : null}
 {(isSchedStep2) ? (<>
@@ -2558,7 +2488,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
 <div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
 <div style={css(`display:flex; gap:5px;`)}>
-{[0, 0.5, 1].map((v, __i46) => (<React.Fragment key={__i46}><button onClick={() => onHwGlobal(v)} style={css(`flex:1; height:30px; border:1px solid ${schedHwGlobal === v ? '#003F98' : '#E6EBF2'}; background:${schedHwGlobal === v ? '#003F98' : '#fff'}; color:${schedHwGlobal === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
+<button onClick={() => onHwGlobal(schedHwGlobal > 0 ? 0 : 1)} style={css(`width:100%; height:30px; border:1px solid ${schedHwGlobal > 0 ? '#128A3E' : '#E6EBF2'}; background:${schedHwGlobal > 0 ? '#E7F4EC' : '#fff'}; color:${schedHwGlobal > 0 ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;`)}>{schedHwGlobal > 0 ? 'On' : 'Off'}</button>
 </div>
 {(hwGlobalNeedsRef) ? (<>
 {(globalRefAmbiguous) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>Multiple SCs selected — set a reference plan per SC below.</div></>) : (globalRefOptions.length === 0) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>No reference plan available yet for this SC.</div></>) : (<>
@@ -2584,35 +2514,35 @@ NLH cycle: {schedNlhMonthLabel}
 {(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['SC', 'HW', 'D0 Cutoff', 'RLH Docks', 'Local Spd', 'Non-Local Spd', 'Hold Time', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.6fr 0.6fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['SC Code', 'D0 Cutoff', 'Hold Time', 'HW', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(opModeRows || []).map((r, __i50) => (<React.Fragment key={__i50}>
-<div style={css(`display:grid; grid-template-columns:1.1fr 0.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
-<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone}</div></div>
-<div style={css(`display:flex; gap:3px;`)}>
-{[0, 0.5, 1].map((v, __i51) => (<React.Fragment key={__i51}><button onClick={() => r.onHw(v)} style={css(`flex:1; height:24px; border:1px solid ${r.hw === v ? '#003F98' : '#E6EBF2'}; background:${r.hw === v ? '#003F98' : '#fff'}; color:${r.hw === v ? '#fff' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:5px; cursor:pointer;`)}>{v}</button></React.Fragment>))}
-</div>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.6fr 0.6fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone} · {r.planLabel}</div></div>
 <div style={css(`display:flex; align-items:center; gap:4px;`)}>
 <button onClick={r.onD0Dec} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>−</button>
 <span style={css(`font-size:11.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0Label}</span>
 <button onClick={r.onD0Inc} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
 </div>
-<input value={r.docks} onChange={(e) => r.onDocksChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
-<input value={r.localSpeed} onChange={(e) => r.onLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
-<input value={r.nonLocalSpeed} onChange={(e) => r.onNonLocalSpeedChange(e.target.value === '' ? '' : Number(e.target.value))} type={"number"} min={"0"} style={css(`width:100%; height:26px; padding:0 6px; border:1px solid #E6EBF2; border-radius:5px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
-{/* 2026-09-03 — Max Hold Local/Non-Local inputs removed: Hold Time is now On/Off only. When
-    On, the ceilings used by schedulerRouteDcInfo()'s dispatch-time search come straight from
-    this SC's own SC Master record (r.maxHoldLocal/r.maxHoldNonLocal below are now read-only,
-    non-overridable display values) — edit them on SC Master, not here. */}
+{/* 2026-09-03/04 — Max Hold Local/Non-Local inputs removed: Hold Time is On/Off only, ceilings
+    always come from SC Master (r.maxHoldLocal/r.maxHoldNonLocal here are read-only). RLH
+    Docks/Local Speed/Non-Local Speed wizard inputs removed entirely per 2026-09-04 — those now
+    always resolve from SC Master / Speed Profile; edit them there, or via the new Speed Profile
+    icon below (Dock Profile icon is a placeholder, wired up in a later pass). */}
 <button onClick={r.onToggleHold} title={r.holdOn ? ('Uses SC Master: ' + r.maxHoldLocal + 'm local / ' + r.maxHoldNonLocal + 'm non-local') : 'Hold time constraint disabled for this run'} style={css(`height:24px; border:1px solid ${r.holdOn ? '#128A3E' : '#E6EBF2'}; background:${r.holdOn ? '#E7F4EC' : '#fff'}; color:${r.holdOn ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{r.holdOn ? 'On' : 'Off'}</button>
+<button onClick={r.onToggleHw} style={css(`height:24px; border:1px solid ${r.hw > 0 ? '#128A3E' : '#E6EBF2'}; background:${r.hw > 0 ? '#E7F4EC' : '#fff'}; color:${r.hw > 0 ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{r.hw > 0 ? 'On' : 'Off'}</button>
 {(r.needsRef) ? (<>
 <select value={r.ref} onChange={(e) => r.onRefPick(e.target.value)} style={css(`width:100%; height:26px; border:1px solid ${r.refMissing ? '#D14B4B' : '#E6EBF2'}; border-radius:5px; font-family:inherit; font-size:11px;`)}>
 <option value={""}>{r.refOptions.length === 0 ? 'None available' : 'Pick…'}</option>
 {(r.refOptions || []).map((id, __i53) => (<option key={__i53} value={id}>{id}</option>))}
 </select>
 </>) : (<><span style={css(`font-size:11px; color:#8E96A3;`)}>—</span></>)}
+<div style={css(`display:flex; align-items:center; gap:4px;`)}>
+<button onClick={r.onOpenSpeedProfile} title={"Speed Profile"} aria-label={"Open Speed Profile for " + r.code} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onOpenDockProfile} title={"Dock Profile"} aria-label={"Open Dock Profile for " + r.code} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={r.onResetRow} title={"Reset to overall defaults"} style={css(`width:24px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
 </div>
 </React.Fragment>))}
 </div>
@@ -2634,23 +2564,30 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:1080px;`)}>
-<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'RLH Docks', 'DCs', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.6fr 0.6fr 0.6fr 1.1fr 1.8fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+{['', 'SC / Plan', 'HW', 'Hold Time', 'D0 Cutoff', 'Overrides', 'Validation'].map((h, __i54) => (<React.Fragment key={__i54}><div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>{h}</div></React.Fragment>))}
 </div>
 {(previewRows || []).map((r, __i55) => (<React.Fragment key={__i55}>
-<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.5fr 0.6fr 0.7fr 0.7fr 0.9fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:32px 1.1fr 0.6fr 0.6fr 0.6fr 1.1fr 1.8fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6; background:${r.hasError ? '#FFFBFB' : 'transparent'};`)}>
 {/* 2026-09-03 — graph icon removed: no curve is computed pre-trigger anymore (see Run Queue
     for the real, post-completion Connection Start Time curve). Only the DC-list expand toggle
     remains here. */}
 <button onClick={r.onToggleExpand} aria-label={r.expanded ? 'Collapse DC list' : 'Expand DC list'} title={r.expanded ? 'Collapse DC list' : 'Expand DC list'} style={css(`width:22px; height:22px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={r.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone} · {r.planId}</div></div>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.hw}</div>
+{/* 2026-09-04 — Reference plan now shown under HW, same "value + subtitle" pattern SC/Plan uses
+    above — only meaningful when HW is On, since that's the only case a reference plan applies. */}
+<div>
+<div style={css(`font-size:11.5px; font-weight:700; color:${r.hw > 0 ? '#128A3E' : '#8E96A3'};`)}>{r.hw > 0 ? 'On' : 'Off'}</div>
+{(r.hw > 0) ? (<><div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.ref || 'No ref. plan'}</div></>) : null}
+</div>
 <div style={css(`font-size:11.5px; font-weight:600; color:${r.holdOn ? '#128A3E' : '#8E96A3'};`)}>{r.holdOn ? ('On (' + r.maxHoldLocal + '/' + r.maxHoldNonLocal + 'm)') : 'Off'}</div>
 <div style={css(`font-size:12.5px; color:#14171F;`)}>{r.d0Label}</div>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.docks}</div>
-<div style={css(`display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.dcTotal}</span>
-{(r.hasCustomized) ? (<><span style={css(`display:inline-flex; padding:1px 7px; border-radius:999px; font-size:9.5px; font-weight:700; background:#E9F5F5; color:#0D7377; white-space:nowrap;`)}>{r.customizedCount} customized</span></>) : null}
+<div style={css(`display:flex; flex-direction:column; gap:2px;`)}>
+{(r.hasAnyOverride) ? (<>
+{(r.d0OverrideCount > 0) ? (<><span style={css(`font-size:10.5px; color:#0D7377;`)}>{r.d0OverrideCount} DC{r.d0OverrideCount === 1 ? '' : 's'} with DC cutoff override</span></>) : null}
+{(r.opTimeOverrideCount > 0) ? (<><span style={css(`font-size:10.5px; color:#0D7377;`)}>{r.opTimeOverrideCount} DC{r.opTimeOverrideCount === 1 ? '' : 's'} with operating time override</span></>) : null}
+{(r.unloadOverrideCount > 0) ? (<><span style={css(`font-size:10.5px; color:#0D7377;`)}>{r.unloadOverrideCount} DC{r.unloadOverrideCount === 1 ? '' : 's'} with unloading time override</span></>) : null}
+</>) : (<><span style={css(`font-size:10.5px; color:#8E96A3;`)}>No overrides</span></>)}
 </div>
 <div style={css(`display:flex; flex-direction:column; gap:4px;`)}>
 {(r.flags && r.flags.length > 0) ? (r.flags.map((f, __i56) => (<React.Fragment key={__i56}><div style={css(`display:flex; align-items:flex-start; gap:5px; font-size:11px; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'};`)}><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:${f.sev === 'error' ? '#FBEAEA' : '#FBF1DF'}; color:${f.sev === 'error' ? '#D14B4B' : '#C77B00'}; flex-shrink:0; margin-top:1px;`)}>{f.sev === 'error' ? 'ERROR' : 'WARNING'}</span><span>{f.text}</span></div></React.Fragment>))) : (<><span style={css(`font-size:11px; color:#128A3E;`)}>Clean</span></>)}
@@ -6250,6 +6187,91 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`width:8px; height:8px; border-radius:50%; background:${toastDot}; flex-shrink:0;`)} />
 <span style={css(`flex:1;`)}>{toastMsg}</span>
 {(toastHasUndo) ? (<><button onClick={onToastUndo} style={css(`flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)} onMouseLeave={(e) => hoverOff(e, `flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)}>Undo</button></>) : null}
+</div>
+</>) : null}
+{/* ===== SPEED PROFILE POPUP (2026-09-03, item 1; moved to global scope 2026-09-04) — SC x
+     Vehicle Type x Time, opened from a SC Vehicle Availability card OR Route Scheduler's Step 2
+     icon. Form tab (per-vehicle band table + fill helpers) and Upload tab (long-format CSV:
+     sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed). "No gaps allowed" — Save is
+     blocked with a precise missing-cell list until every vehicle type on this SC has a value in
+     every band, both zones.
+     2026-09-04 fix — this used to live nested inside the Design Inputs / SC Vehicle Availability
+     branch of the render tree, so speedProfileSC being set had no visible effect from any other
+     view (confirmed via headless-browser click testing: opening it from Step 2 silently updated
+     state but rendered nothing). Moved here, alongside the toast, so it renders regardless of
+     which top-level view is active — the same fix in spirit as the this/self binding issue found
+     earlier: code that "looks" reachable from everywhere but is actually buried in one branch of
+     the tree. ===== */}
+{(speedProfileModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={speedProfileModal.close}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
+<div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{speedProfileModal.scCode} · {speedProfileModal.scName}</div>
+</div>
+<button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Speed by vehicle type and time of day, Local vs Non-Local. This feeds Route Scheduler's dispatch-time search directly — an SC with no profile here falls back to the flat SC Master default. Every vehicle type needs a value in every band before this can be saved.</div>
+<div style={css(`display:flex; gap:6px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
+<button onClick={speedProfileModal.onTabForm} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'form' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'form' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Form</button>
+<button onClick={speedProfileModal.onTabUpload} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'upload' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'upload' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Upload</button>
+</div>
+{(speedProfileModal.tab === 'form') ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>GRID</span>
+<button onClick={speedProfileModal.onPreset3h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>3-hour bands</button>
+<button onClick={speedProfileModal.onPreset1h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>1-hour bands</button>
+<span style={css(`font-size:10.5px; color:#C77B00;`)}>Switching the grid clears all entered values for this SC.</span>
+</div>
+<div style={css(`display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;`)}>
+{(speedProfileModal.vehicleTabs || []).map((vt, __iSpv) => (<React.Fragment key={__iSpv}>
+<button onClick={vt.onClick} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; border:1px solid ${vt.active ? '#003F98' : '#E6EBF2'}; background:${vt.active ? '#EAEEFB' : '#fff'}; color:${vt.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{vt.name}<span style={css(`width:7px; height:7px; border-radius:50%; background:${vt.complete ? '#128A3E' : '#D0D5DD'};`)} /></button>
+</React.Fragment>))}
+</div>
+{(speedProfileModal.canCopy) ? (<><button onClick={speedProfileModal.onCopyToAllVehicles} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px solid #0D7377; background:#fff; color:#0D7377; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; margin-bottom:10px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M8 8V5a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1h-3M4 8h10a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Same for all vehicles \u2014 copy {speedProfileModal.activeVeh}\u2019s speeds</button></>) : null}
+<div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:8px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>TIME BAND</div>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>LOCAL (KM/H) <button onClick={speedProfileModal.onFillLocalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
+<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>NON-LOCAL (KM/H) <button onClick={speedProfileModal.onFillZonalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
+</div>
+<div style={css(`max-height:280px; overflow-y:auto;`)}>
+{(speedProfileModal.bandRows || []).map((br, __iSpb) => (<React.Fragment key={__iSpb}>
+<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:7px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`font-size:12px; color:#14171F; font-weight:600; font-variant-numeric:tabular-nums;`)}>{br.label}</div>
+<input value={br.local} onChange={(e) => br.onLocalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.local === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<input value={br.zonal} onChange={(e) => br.onZonalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.zonal === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</>) : (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;`)}>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>One row per SC \u00d7 Vehicle Type \u00d7 Time band \u2014 rows for other SCs are ignored, not an error.</span>
+<button onClick={speedProfileModal.uploadTemplate} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Download template</button>
+</div>
+<input type={"file"} accept={".csv"} onChange={speedProfileModal.onUploadFile} style={css(`margin-bottom:10px; font-size:12px;`)} />
+<textarea value={speedProfileModal.uploadText} onChange={speedProfileModal.onUploadTextChange} placeholder={"sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed\n" + speedProfileModal.scCode + ",Truck,00:00,28,38"} style={css(`width:100%; height:140px; padding:10px; border:1px solid #E6EBF2; border-radius:8px; font-family:monospace; font-size:11.5px; box-sizing:border-box; margin-bottom:10px; resize:vertical;`)} />
+{(speedProfileModal.uploadErrors && speedProfileModal.uploadErrors.length > 0) ? (<>
+<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-bottom:10px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t parse this file:</div>
+{(speedProfileModal.uploadErrors || []).map((e, __iSpe) => (<React.Fragment key={__iSpe}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
+</div>
+</>) : null}
+<button onClick={speedProfileModal.onParseUpload} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Parse &amp; load into Form</button>
+</>)}
+{(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
+<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t save \u2014 missing:</div>
+{(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
+</div>
+</>) : null}
+<div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
+<button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Save Speed Profile</button>
+</div>
+</div>
 </div>
 </>) : null}
 </div>
@@ -11103,17 +11125,20 @@ class NDCApp extends React.Component {
     const hwBySC = st.schedulerHwBySC || {};
     const d0Global = st.schedulerD0Global || 0;
     const d0BySC = st.schedulerD0BySC || {};
-    const rlhDocksBySC = st.schedulerRlhDocksBySC || {};
     const refGlobal = st.schedulerRefGlobal || '';
     const refBySC = st.schedulerRefBySC || {};
-    // RLH Docks / Local Speed / Non-Local Speed (2026-08-04) — these are SC-level factors, not
-    // plan-level ones, so there's no "overall default" tier for them anymore: resolution is just
-    // per-SC override (below) falling back straight to the SC's own default/SC Master value.
+    // RLH Docks / Local Speed / Non-Local Speed (2026-08-04) — SC-level facts, not plan-level
+    // ones, so there's no "overall default" tier for them.
     // 2026-08-05 — now goes through the same resolveScFields() SC Master's own table uses, which
     // also checks scEdits/addedScs (previously this only read the base d.scs list, so an SC
     // edited via Add/Edit SC after the initial load wouldn't be picked up here).
     // 2026-08-09 — Hold Time (On/Off + Max Hold Local/Non-Local) joins this same SC-level-fact
     // group, replacing HTF (removed entirely). No overall-default tier for these either.
+    // 2026-09-04 — RLH Docks / Local Speed / Non-Local Speed lose their wizard per-SC override
+    // tier entirely (Step 2's inputs for them are gone): resolution is now always the SC Master /
+    // Speed Profile value, exactly the same retirement Max Hold Local/Non-Local already got.
+    // Docks will move to a proper Dock Profile master (mirroring Speed Profile) in a later pass;
+    // until then SC Master's own rlhDocks stays the source of truth, same as it already was.
     const st2 = this.state; const d2 = st2.data;
     const scBase = (d2 && d2.scs) ? d2.scs.find(s => s.code === code) : (st2.addedScs || []).find(s => s.code === code);
     const sc = scBase ? (((st2.scEdits || {})[code]) ? Object.assign({}, scBase, st2.scEdits[code]) : scBase) : { code };
@@ -11124,11 +11149,9 @@ class NDCApp extends React.Component {
     const holdOnBase = rf.holdTimeOn;
     const maxHoldLocalBase = rf.maxHoldLocal;
     const maxHoldNonLocalBase = rf.maxHoldNonLocal;
-    const localSpeedBySC = st.schedulerLocalSpeedBySC || {};
-    const nonLocalSpeedBySC = st.schedulerNonLocalSpeedBySC || {};
     const holdOnBySC = st.schedulerHoldOnBySC || {};
-    const localSpeed = localSpeedBySC[code] !== undefined ? localSpeedBySC[code] : localSpeedBase;
-    const nonLocalSpeed = nonLocalSpeedBySC[code] !== undefined ? nonLocalSpeedBySC[code] : nonLocalSpeedBase;
+    const localSpeed = localSpeedBase;
+    const nonLocalSpeed = nonLocalSpeedBase;
     const holdOn = holdOnBySC[code] !== undefined ? holdOnBySC[code] : holdOnBase;
     // 2026-09-03 — Max Hold Local/Non-Local no longer have a wizard override tier at all: the
     // user only controls Hold Time On/Off here (above); when On, the minute ceilings always come
@@ -11136,20 +11159,21 @@ class NDCApp extends React.Component {
     // rf.maxHoldNonLocal) — editing them means editing the SC's own master record, not this run.
     const maxHoldLocal = maxHoldLocalBase;
     const maxHoldNonLocal = maxHoldNonLocalBase;
-    const hw = hwBySC[code] !== undefined ? hwBySC[code] : hwGlobal;
+    // 2026-09-04 — HW collapses from a 3-way {0, 0.5, 1} selector to On/Off; only 0 or 1 are valid
+    // values from here on (a stale 0.5 written by an older session, if any, reads as On/1 — see
+    // the >0 check just below, unchanged from before).
+    const hwRaw = hwBySC[code] !== undefined ? hwBySC[code] : hwGlobal;
+    const hw = hwRaw > 0 ? 1 : 0;
     const d0 = d0BySC[code] !== undefined ? d0BySC[code] : d0Global;
-    const docks = rlhDocksBySC[code] !== undefined ? rlhDocksBySC[code] : docksBase;
+    const docks = docksBase;
     const ref = refBySC[code] !== undefined ? refBySC[code] : refGlobal;
     const needsRef = hw > 0;
     return {
       hw, d0, docks, defaultDocks: docksBase, docksBase, ref, needsRef, refMissing: needsRef && !ref,
       localSpeed, nonLocalSpeed, defaultLocalSpeed: localSpeedBase, defaultNonLocalSpeed: nonLocalSpeedBase,
       holdOn, maxHoldLocal, maxHoldNonLocal,
-      hwOverridden: hwBySC[code] !== undefined && hwBySC[code] !== hwGlobal,
+      hwOverridden: hwBySC[code] !== undefined && hw !== (hwGlobal > 0 ? 1 : 0),
       d0Overridden: d0BySC[code] !== undefined && d0BySC[code] !== d0Global,
-      docksOverridden: rlhDocksBySC[code] !== undefined && rlhDocksBySC[code] !== docksBase,
-      localSpeedOverridden: localSpeedBySC[code] !== undefined && localSpeedBySC[code] !== localSpeedBase,
-      nonLocalSpeedOverridden: nonLocalSpeedBySC[code] !== undefined && nonLocalSpeedBySC[code] !== nonLocalSpeedBase,
       holdOnOverridden: holdOnBySC[code] !== undefined && holdOnBySC[code] !== holdOnBase,
     };
   }
@@ -11262,34 +11286,46 @@ class NDCApp extends React.Component {
     const filteredScsStep1 = scsWithFinal.filter(s => (zf1 === 'All' || s.zone === zf1) && (!q1 || s.code.toLowerCase().indexOf(q1) >= 0 || s.name.toLowerCase().indexOf(q1) >= 0));
 
     const toggleIds = (ids, id) => { const set = new Set(ids); if (set.has(id)) set.delete(id); else set.add(id); return Array.from(set); };
-    const railSCRaw = st.schedulerRailSC;
-    const railSCValid = filteredScsStep1.some(s => s.code === railSCRaw);
-    const curRailSC = railSCValid ? railSCRaw : null;
+    const parseDateKey = (s) => { if (!s) return 0; if (s === 'Today') return 999; const m = String(s).match(/^(\d+)/); return m ? parseInt(m[1], 10) : 0; };
+    // 2026-09-04 — SC rail + separate detail pane replaced with Route Planner's own Step 1
+    // pattern: zone-grouped collapsible sections, each SC a single-line row that expands INLINE
+    // (accordion, multiple SCs can be open at once — schedulerExpandedScs is a set of codes, not
+    // a single "active" pointer the way the old rail was) to reveal that SC's plan cards directly
+    // beneath it. No SC-level bulk checkbox (per product decision) — clicking a row only
+    // expands/collapses it; every actual selection happens on the plan cards themselves. Zone
+    // headers are pure grouping/collapse, same as the zone chips above — no bulk-select action
+    // lives on a zone, that's what the Select All Plans / Select All SCs (latest) / Clear All
+    // toolbar already does.
+    const expandedScs = st.schedulerExpandedScs || [];
     const schedulerScGroups = filteredScsStep1.map(sc => {
       const plansForSc = finalisedPlans.filter(p => p.scCode === sc.code);
       const checkedCount = plansForSc.filter(p => selectedPlanIds.indexOf(p.id) >= 0).length;
+      const expanded = expandedScs.indexOf(sc.code) >= 0;
       return { code: sc.code, name: sc.name, zone: sc.zone, planCount: plansForSc.length,
-        active: sc.code === curRailSC, onClick: () => this.setState({ schedulerRailSC: sc.code }),
-        allChecked: plansForSc.length > 0 && checkedCount === plansForSc.length, someChecked: checkedCount > 0 && checkedCount < plansForSc.length,
-        selCountLabel: checkedCount + '/' + plansForSc.length + ' selected',
-        onToggleAll: () => { const allOn = checkedCount === plansForSc.length; let ids = selectedPlanIds.slice();
-          plansForSc.forEach(p => { const has = ids.indexOf(p.id) >= 0; if (allOn && has) ids = ids.filter(x => x !== p.id); if (!allOn && !has) ids = ids.concat([p.id]); });
-          this.setState({ schedulerSelectedPlanIds: ids }); },
+        expanded, checkedCount,
+        selCountLabel: checkedCount > 0 ? (checkedCount + '/' + plansForSc.length + ' selected') : (plansForSc.length + ' plan' + (plansForSc.length === 1 ? '' : 's')),
+        latestDateLabel: plansForSc.length ? plansForSc.slice().sort((a, b) => parseDateKey(b.sentDate) - parseDateKey(a.sentDate))[0].sentDate : '\u2014',
+        onToggleExpand: () => { const ids = toggleIds(expandedScs, sc.code); this.setState({ schedulerExpandedScs: ids }); },
         plans: plansForSc.map(p => ({ id: p.id, runId: 'RUN-' + p.scCode + '-01', hw: p.hw, routes: (p.rows || []).length, finalisedDate: p.sentDate,
           checked: selectedPlanIds.indexOf(p.id) >= 0, isPreselected: p.id === preselectId,
           onToggle: () => this.setState({ schedulerSelectedPlanIds: toggleIds(selectedPlanIds, p.id) }) })) };
     });
-    const curRailGroup = schedulerScGroups.find(g => g.code === curRailSC) || null;
-    const visiblePlanIds = []; schedulerScGroups.forEach(g => g.plans.forEach(p => visiblePlanIds.push(p.id)));
-    const allVisibleSelected = visiblePlanIds.length > 0 && visiblePlanIds.every(id => selectedPlanIds.indexOf(id) >= 0);
-    const onSelectAllVisible = () => { const ids = new Set(selectedPlanIds); if (allVisibleSelected) visiblePlanIds.forEach(id => ids.delete(id)); else visiblePlanIds.forEach(id => ids.add(id)); this.setState({ schedulerSelectedPlanIds: Array.from(ids) }); };
-    // Two bulk actions (2026-08-10) — distinct from "select all visible" above, which only ever
-    // covers whatever's currently zone/search-filtered:
+    // Zone sections — collapsible grouping only (no select-zone action); default expanded.
+    const collapsedZones = st.schedulerCollapsedZones || {};
+    const zoneOrder = Array.from(new Set(schedulerScGroups.map(g => g.zone)));
+    const schedulerZoneSections = zoneOrder.map(zone => {
+      const scs = schedulerScGroups.filter(g => g.zone === zone);
+      const collapsed = !!collapsedZones[zone];
+      return { zone, count: scs.length, collapsed, scs,
+        onToggleCollapse: () => { const m = Object.assign({}, collapsedZones); m[zone] = !collapsed; this.setState({ schedulerCollapsedZones: m }); },
+        chev: collapsed ? 'M9 18l6-6-6-6' : 'M6 9l6 6 6-6' };
+    });
+    // Two bulk actions (2026-08-10) — the only bulk-select actions now that "select all visible"
+    // and the old per-SC "select all for this SC" checkbox are both gone (2026-09-04):
     //   Select All Plans     — every Finalised plan, every SC, every version.
     //   Select All SCs       — exactly one plan per SC: whichever is most recently finalised.
     // One-shot buttons, not toggles — a checkbox here would imply an undo-by-unchecking
     // relationship that gets ambiguous once the user has hand-edited individual plans afterward.
-    const parseDateKey = (s) => { if (!s) return 0; if (s === 'Today') return 999; const m = String(s).match(/^(\d+)/); return m ? parseInt(m[1], 10) : 0; };
     const onSelectAllPlans = () => { const ids = []; schedulerScGroups.forEach(g => g.plans.forEach(p => ids.push(p.id))); this.setState({ schedulerSelectedPlanIds: ids }); };
     const onSelectAllScsLatest = () => { const ids = []; schedulerScGroups.forEach(g => { if (!g.plans.length) return; const sorted = g.plans.slice().sort((a, b) => parseDateKey(b.finalisedDate) - parseDateKey(a.finalisedDate)); ids.push(sorted[0].id); }); this.setState({ schedulerSelectedPlanIds: ids }); };
     const onClearAllPlans = () => this.setState({ schedulerSelectedPlanIds: [] });
@@ -11348,31 +11384,31 @@ class NDCApp extends React.Component {
     const opModeRows = selectedScCodesStep1.map(code => {
       const sc = d.scs.find(s => s.code === code);
       const p = this.resolveSchedulerParamsFor(code);
-      return Object.assign({ code, name: sc ? sc.name : code, zone: sc ? sc.zone : '', d0Label: this.fmtD0Cutoff(p.d0), refOptions: refOptionsFor(code) }, p,
-        { onHw: (v) => { const m = Object.assign({}, st.schedulerHwBySC || {}); m[code] = v; this.setState({ schedulerHwBySC: m }); },
+      // 2026-09-04 — Plan/Run ID(s) selected for this SC back in Step 1, shown alongside the SC
+      // code here (Step 2 stays one row per SC — see comment above — so a SC with multiple
+      // selected plans lists all of them together, not split into separate rows).
+      const planLabel = selectedPlansFull.filter(pl => pl.scCode === code).map(pl => 'RUN-' + pl.scCode + '-01').join(', ') || '\u2014';
+      return Object.assign({ code, name: sc ? sc.name : code, zone: sc ? sc.zone : '', planLabel, d0Label: this.fmtD0Cutoff(p.d0), refOptions: refOptionsFor(code) }, p,
+        { onToggleHw: () => { const m = Object.assign({}, st.schedulerHwBySC || {}); m[code] = p.hw > 0 ? 0 : 1; this.setState({ schedulerHwBySC: m }); },
           onToggleHold: () => { const m = Object.assign({}, st.schedulerHoldOnBySC || {}); m[code] = !p.holdOn; this.setState({ schedulerHoldOnBySC: m }); },
           onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(12, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(-4, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
-          onDocksChange: (v) => { const m = Object.assign({}, st.schedulerRlhDocksBySC || {}); m[code] = v; this.setState({ schedulerRlhDocksBySC: m }); },
-          onLocalSpeedChange: (v) => { const m = Object.assign({}, st.schedulerLocalSpeedBySC || {}); m[code] = v; this.setState({ schedulerLocalSpeedBySC: m }); },
-          onNonLocalSpeedChange: (v) => { const m = Object.assign({}, st.schedulerNonLocalSpeedBySC || {}); m[code] = v; this.setState({ schedulerNonLocalSpeedBySC: m }); },
           onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
+          onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => r.t)),
+          onOpenDockProfile: () => {},
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
             const hom = Object.assign({}, st.schedulerHoldOnBySC || {}); delete hom[code];
             const dm = Object.assign({}, st.schedulerD0BySC || {}); delete dm[code];
-            const rm = Object.assign({}, st.schedulerRlhDocksBySC || {}); delete rm[code];
             const refm = Object.assign({}, st.schedulerRefBySC || {}); delete refm[code];
-            const lsm = Object.assign({}, st.schedulerLocalSpeedBySC || {}); delete lsm[code];
-            const nlsm = Object.assign({}, st.schedulerNonLocalSpeedBySC || {}); delete nlsm[code];
-            this.setState({ schedulerHwBySC: hm, schedulerHoldOnBySC: hom, schedulerD0BySC: dm, schedulerRlhDocksBySC: rm, schedulerRefBySC: refm, schedulerLocalSpeedBySC: lsm, schedulerNonLocalSpeedBySC: nlsm });
+            this.setState({ schedulerHwBySC: hm, schedulerHoldOnBySC: hom, schedulerD0BySC: dm, schedulerRefBySC: refm });
           } });
     });
     const hwGlobalNeedsRef = hwGlobal > 0;
     const globalRefOptions = selectedScCodesStep1.length === 1 ? refOptionsFor(selectedScCodesStep1[0]) : [];
     const globalRefAmbiguous = hwGlobalNeedsRef && selectedScCodesStep1.length > 1;
     const anyRefMissing = opModeRows.some(r => r.refMissing);
-    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.d0Overridden || r.docksOverridden || r.holdOnOverridden).length;
+    const overriddenCount = opModeRows.filter(r => r.hwOverridden || r.d0Overridden || r.holdOnOverridden).length;
     const canNextScheduler2 = !anyRefMissing;
 
     // ===== STEP 4 — Preview & Trigger. Two validation rules (2026-07-30), unchanged:
@@ -11450,7 +11486,14 @@ class NDCApp extends React.Component {
           });
         });
       });
-      const customizedCount = planDcRows.filter(x => x.customized).length;
+      // 2026-09-04 — the single "N customized" badge splits into three specific counts (DC
+      // cutoff, operating time = open and/or close, unloading time) per product request — same
+      // underlying per-DC override flags planDcRows already computed, just reported separately
+      // instead of collapsed into one generic tally. Max Vehicle overrides exist in the same data
+      // but are intentionally left out of this column (still visible in the expanded DC list).
+      const d0OverrideCount = planDcRows.filter(x => x.d0Overridden).length;
+      const opTimeOverrideCount = planDcRows.filter(x => x.openOverridden || x.closeOverridden).length;
+      const unloadOverrideCount = planDcRows.filter(x => x.unloadOverridden).length;
       const expanded = st.previewExpandedPlanId === plan.id;
       // Inline Start Time control (2026-08-13) — defaults to the DS suggestion (the curve's
       // crossing point), editable here in 30-min increments without opening the graph popup;
@@ -11460,7 +11503,8 @@ class NDCApp extends React.Component {
       return Object.assign({}, r, {
         planId: plan.id, code: plan.scCode, name: sc ? sc.name : plan.scCode, zone: sc ? sc.zone : (plan.zone || ''),
         rlhVol, nlhVol, flags, hasError, hasWarning,
-        dcTotal: planDcRows.length, customizedCount, hasCustomized: customizedCount > 0,
+        dcTotal: planDcRows.length, d0OverrideCount, opTimeOverrideCount, unloadOverrideCount,
+        hasAnyOverride: d0OverrideCount + opTimeOverrideCount + unloadOverrideCount > 0,
         expanded, planDcRows: expanded ? planDcRows : [], hasDcRows: expanded && planDcRows.length > 0,
         expandChev: expanded ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',
         onToggleExpand: () => this.setState({ previewExpandedPlanId: expanded ? null : plan.id }),
@@ -11587,10 +11631,9 @@ class NDCApp extends React.Component {
       schedulerStepper, schedulerStep: step,
       isSchedStep1: step === 1, isSchedStep2: step === 2, isSchedStep3: step === 3,
       // Step 1
-      zoneChipsStep1, schedulerScGroups, scsWithFinalEmpty, step1Summary, canNextScheduler1, nlhPicked, selectedScCodesStep1,
-      curRailGroup, onSelectAllPlans, onSelectAllScsLatest, onClearAllPlans,
+      zoneChipsStep1, schedulerScGroups, schedulerZoneSections, scsWithFinalEmpty, step1Summary, canNextScheduler1, nlhPicked, selectedScCodesStep1,
+      onSelectAllPlans, onSelectAllScsLatest, onClearAllPlans,
       schedulerSearch: st.schedulerSearch || '', onSchedulerSearch: (e) => this.setState({ schedulerSearch: e.target.value }),
-      allVisibleSelected, onSelectAllVisible,
       // Step 2
       nlhPairingRows, canNextScheduler2, schedulerNlhEmpty,
       schedulerNlhScenarioCards, chosenNlhScenarioName: chosenNlhScenario ? chosenNlhScenario.name : null,

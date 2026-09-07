@@ -938,19 +938,18 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Latitude, Longitude"}>COORDINATES</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
-<div style={css(`padding:5px; display:flex; align-items:center; justify-content:center;`)}>
-<button onClick={onToggleScRlh} aria-label={scRlhOpen ? "Collapse RLH-specific columns" : "Expand RLH-specific columns"} title={scRlhOpen ? "Collapse RLH-specific columns" : "Expand RLH-specific columns"} style={css(`width:24px; height:24px; border-radius:50%; border:1px solid ${scRlhOpen ? '#0D7377' : '#C3C9D4'}; background:${scRlhOpen ? '#0D7377' : '#fff'}; color:${scRlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:${scRlhOpen ? '#fff' : '#0D7377'};`)} onMouseLeave={(e) => hoverOff(e, `width:24px; height:24px; border-radius:50%; border:1px solid ${scRlhOpen ? '#0D7377' : '#C3C9D4'}; background:${scRlhOpen ? '#0D7377' : '#fff'}; color:${scRlhOpen ? '#fff' : '#5A5E66'}; display:flex; align-items:center; justify-content:center; cursor:pointer;`, `border-color:#0D7377; color:${scRlhOpen ? '#fff' : '#0D7377'};`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}>{(scRlhOpen) ? (<><path d={"M5 12h14"} strokeLinecap={"round"} /></>) : (<><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></>)}</svg></button>
-</div>
-{(scRlhOpen) ? (<>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>RLH DOCKS</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>LOCAL TP</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)}>NON-LOCAL TP</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Whether Route Scheduler models hold time (destination-DC unload wait) for this SC at all"}>HOLD TIME</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On"}>MAX HOLD LOCAL</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; background:#DFF1F1;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On"}>MAX HOLD NON-LOCAL</div>
-</>) : null}
+{/* 2026-09-07 fix — collapse toggle + teal section tinting removed: RLH-specific columns are
+    now always visible, styled identically to every other header (#5A5E66, no background), which
+    also directly fixes the low-contrast headers the screenshot flagged. Hold Time On/Off column
+    removed (now purely plan-level, no per-SC default) — Max Hold Local/Non-Local stay, since
+    those minute ceilings are still genuinely SC-level facts. */}
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>RLH DOCKS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
 {/* 2026-08-26 fix — NLH Docks column removed from RLH's SC Master table (see edit-form removal
     above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
@@ -969,16 +968,16 @@ All modules
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.closeTime}</div>
 <div />
-{(scRlhOpen) ? (<>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.rlhDocks}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.localTp}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.nonLocalTp}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.localSpeed}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.nonLocalSpeed}</div>
-<div style={css(`padding:10px 10px; text-align:center; background:#F2FAFA;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${s.holdTimeOn ? '#E7F4EC' : '#F2F5FA'}; color:${s.holdTimeOn ? '#128A3E' : '#8E96A3'};`)}>{s.holdTimeOn ? 'On' : 'Off'}</span></div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.holdTimeOn ? s.maxHoldLocal + ' min' : '\u2014'}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; background:#F2FAFA;`)}>{s.holdTimeOn ? s.maxHoldNonLocal + ' min' : '\u2014'}</div>
-</>) : null}
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localSpeed}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalSpeed}</div>
+{/* 2026-09-07 fix — Hold Time On/Off badge removed (now purely plan-level, no SC-level default
+    to show); Max Hold Local/Non-Local no longer gated by a holdTimeOn that doesn't exist at this
+    level anymore — they're SC-level facts regardless of whether a given plan turns hold time on. */}
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.maxHoldLocal} min</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.maxHoldNonLocal} min</div>
 {/* 2026-08-26 fix — NLH Docks body cell removed alongside the header/toggle above. The
     unconditional placeholder <div/> that used to pair with the (now-removed) NLH-toggle header
     cell is ALSO removed here — leaving it in was exactly what broke row alignment (14 body
@@ -1058,6 +1057,11 @@ All modules
 <span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>{scVehAvailCountLabel}</span>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:11.5px; color:#8E96A3;`)}>Vehicle availability is configured per SC — use Add on each SC below.</span>
+{/* 2026-09-07 — Speed Profile upload moved out of the per-SC popup entirely, now a global action
+    here: SC Code becomes part of the row grain (SC x Vehicle Type x Zone, 24 hourly columns). */}
+<input ref={speedProfileUploadRef} type={"file"} accept={".csv"} onChange={onSpeedProfileGlobalUpload} style={css(`display:none;`)} />
+<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Speed Profile Template</button>
+<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload Speed Profile</button>
 </div>
 {(scVehAvail || []).map((g, __i22) => (<React.Fragment key={__i22}>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:12px; overflow:hidden;`)}>
@@ -1096,21 +1100,22 @@ All modules
 {(g.addForm.tpWarn) ? (<><div style={css(`margin-top:10px; font-size:11.5px; color:#C77B00; display:inline-flex; align-items:center; gap:5px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{g.addForm.tpWarnText}</div></>) : null}
 </div>
 </>) : null}
-<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.8fr 0.9fr 0.85fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.9fr 0.85fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>VEHICLES</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>TP LIMIT</div>
-<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LOCAL SPD</div>
-<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>NON-LOCAL SPD</div>
+{/* 2026-09-07 fix — Local/Non-Local Speed columns removed: Speed Profile (the popup on each
+    SC's card) now governs speed entirely, at a finer SC x Vehicle x Zone x Hour grain than this
+    flat per-vehicle-type column ever could. */}
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ZONE FEASIBILITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>WITHIN LIMIT</div>
 <div />
 </div>
 <div style={css(`max-height:138px; overflow-y:auto;`)}>
 {(g.rows || []).map((r, __i21) => (<React.Fragment key={__i21}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.8fr 0.9fr 0.85fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.9fr 0.85fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.t}</div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><select value={r.draftType} onChange={r.onDraftType} style={css(`width:100%; height:30px; padding:0 6px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto; box-sizing:border-box;`)}>{(r.typeOpts || []).map((to, __i19) => (<React.Fragment key={__i19}><option value={to.value}>{to.label}</option></React.Fragment>))}</select></div></>) : null}
@@ -1126,9 +1131,7 @@ All modules
 {/* TP LIMIT */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:#F2F5FA; color:#14171F;`)}>{r.tp}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><input type={"number"} min={"0"} value={r.draftTp} onInput={r.onDraftTp} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
-{/* LOCAL / NON-LOCAL SPEED (2026-07-30) — defaults from Vehicle Master, overridable per-SC here. */}
-<div style={css(`padding:11px 14px; text-align:right; font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.localSpeed}</div>
-<div style={css(`padding:11px 14px; text-align:right; font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.nonLocalSpeed}</div>
+{/* 2026-09-07 fix — Local/Non-Local Speed cells removed (see header comment above). */}
 {/* ZONE FEASIBILITY */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:${r.zfBg}; color:${r.zfFg};`)}>{r.zf}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center;`)}>{(r.zfChips || []).map((zc, __i20) => (<React.Fragment key={__i20}><button onClick={zc.onSelect} style={css(`height:26px; padding:0 8px; border:1px solid ${zc.bd}; background:${zc.bg}; color:${zc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)}>{zc.label}</button></React.Fragment>))}</div></>) : null}
@@ -1285,7 +1288,7 @@ All modules
 </div>
 <div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, Capacity and LMSC Active Status come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size, Unloading Time and Pincodes can be changed — inline, or by uploading a CSV matched on LMDC Code.</span>
+<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, and Capacity come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size, Unloading Time and Pincodes can be changed — inline, or by uploading a CSV matched on LMDC Code. An italic "Default" means a plan can still override that field at creation time; setting an explicit value here (even one numerically equal to the default) means a plan can't.</span>
 </div>
 {(hasLmdcUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1302,34 +1305,39 @@ All modules
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
 <div style={css(`min-width:1560px;`)}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMSC</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>CAPACITY</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LMSC ACTIVE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #5B4FA0;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; white-space:nowrap;`)}>MDC / LANE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5B4FA0; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"DC-level \u2014 LMSC to this DC transit time, in hours, varies within the same lane"}>TAT (HRS)</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:3px solid #0D7377;`)}>OPEN</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>D0 CUTOFF</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap;`)}>MAX VEHICLE SIZE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>UNLOADING TIME (MIN)</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#1F6F5C; letter-spacing:0.04em; white-space:nowrap; border-left:3px solid #1F6F5C;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#0D7377; letter-spacing:0.04em; white-space:nowrap; border-left:3px solid #0D7377;`)} title={"LM points of contact \u2014 feeds Route Scheduler's LM reviewer assignment"}>LM POCS</div>
+{/* 2026-09-07 fix — purple/teal/green section colour-coding removed entirely (headers were
+    reported hard to read); every header is now the same neutral #5A5E66, and each logical group
+    is separated ONLY by a plain gray divider (border-left), not a colour. LMSC + LMSC ACTIVE
+    columns removed outright. Open/Close/D0 Cutoff/Max Vehicle/Unloading headers now show their
+    system default inline, matching the new 'Default' sentinel each of those fields uses. */}
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"Valmo RLH (default) / MDC (routes from the MDC instead) / Co-Loading (never DS-planned)"}>RLH MODE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>MDC / LANE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Lane-level \u2014 every DC sharing a Lane Name must show the same Cutoff"}>CUTOFF</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"DC-level \u2014 LMSC to this DC transit time, in hours, varies within the same lane"}>TAT (HRS)</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"Default " + lmdcSysDefaults.open + " \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>OPEN ({lmdcSysDefaults.open})</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Default " + lmdcSysDefaults.close + " \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>CLOSE ({lmdcSysDefaults.close})</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Default " + lmdcSysDefaults.d0Cutoff + " \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>D0 CUTOFF ({lmdcSysDefaults.d0Cutoff})</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Default \u2014 largest RLH-feasible vehicle in Vehicle Master (" + lmdcSysDefaults.maxVehicle + "). An explicit value here (even if the same) can't be overridden by a plan; Default can."}>MAX VEHICLE SIZE ({lmdcSysDefaults.maxVehicle})</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Default " + lmdcSysDefaults.unloadMin + " min \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>UNLOADING TIME ({lmdcSysDefaults.unloadMin} MIN)</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"LM points of contact \u2014 feeds Route Scheduler's LM reviewer assignment"}>LM POCS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
-<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 90px 100px 120px 80px 70px 80px 80px 90px 160px 130px 140px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:110px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:${l.pending ? '#8E96A3' : '#5A5E66'}; font-style:${l.pending ? 'italic' : 'normal'}; white-space:nowrap;`)}>{l.lmscCode}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
-<div style={css(`padding:10px 10px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600; background:${l.active ? '#E7F4EC' : '#FBEAEA'}; color:${l.active ? '#128A3E' : '#D14B4B'}; white-space:nowrap;`)}>{l.statusLabel}</span></div>
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; border-left:3px solid #5B4FA0;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #5B4FA0;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
+{/* 2026-09-07 fix — LMSC + LMSC ACTIVE columns removed; every remaining section divider is now
+    a plain 1px gray line (border-left:#D0D5DD), not a colour; Open/Close/Max Vehicle/Unloading
+    now get the same Default-vs-explicit italic treatment D0 Cutoff already had, resolved through
+    resolveLmdcField() rather than ever showing the literal sentinel string to the user. */}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; border-left:1px solid #D0D5DD;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; `)}>{l.isMdc ? l.mdcCode : (l.isCoLoad ? l.laneName : '\u2014')}</div></>) : null}
 {(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC\u2026</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"text"} value={l.draftLaneName} onInput={l.onDraftLaneName} placeholder={"e.g. CL-01"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
@@ -1340,20 +1348,20 @@ All modules
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; `)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"number"} step={"0.25"} min={"0.25"} value={l.draftTat} onInput={l.onDraftTat} placeholder={"hrs"} title={"Free numeric entry, in hours \u2014 rounds up to the nearest 15 min (0.25 hr) on save"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
 {(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; border-left:3px solid #0D7377;`)}>{l.open}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #0D7377;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.close}</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; border-left:1px solid #D0D5DD; color:${l.open === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.open === 'Default' ? 'italic' : 'normal'};`)}>{l.open === 'Default' ? 'Default' : l.open}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; color:${l.close === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.close === 'Default' ? 'italic' : 'normal'};`)}>{l.close === 'Default' ? 'Default' : l.close}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftClose} onChange={l.onDraftClose} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i46) => (<React.Fragment key={__i46}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums;  color:${l.d0Cutoff === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.d0Cutoff === 'Default' ? 'italic' : 'normal'};`)}>{l.d0Cutoff}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftD0} onChange={l.onDraftD0} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcD0Options || []).map((d0, __i47) => (<React.Fragment key={__i47}><option value={d0}>{d0}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; `)}>{l.maxVehicle}</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:${l.maxVehicle === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.maxVehicle === 'Default' ? 'italic' : 'normal'};`)}>{l.maxVehicle === 'Default' ? 'Default' : l.maxVehicle}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftVehicle} onChange={l.onDraftVehicle} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcVehNames || []).map((vn, __i43) => (<React.Fragment key={__i43}><option value={vn}>{vn}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums; `)}>{l.unloadMin}</div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; color:${l.unloadMin === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.unloadMin === 'Default' ? 'italic' : 'normal'};`)}>{l.unloadMin === 'Default' ? 'Default' : l.unloadMin}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid #1F6F5C;`)} title={l.pincodes.join(', ') || 'No pincodes mapped'}>{l.pincodesLabel}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #1F6F5C;`)}><input type={"text"} value={l.draftPincodes} onInput={l.onDraftPincodes} placeholder={"e.g. 110001, 110002"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid #0D7377;`)} title={l.pocs.join(', ') || 'No LM POCs set'}>{l.pocsLabel}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:3px solid #0D7377;`)}><input type={"text"} value={l.draftPocs} onInput={l.onDraftPocs} placeholder={"e.g. Rahul Sharma, Megha Bose"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:1px solid #D0D5DD;`)} title={l.pincodes.join(', ') || 'No pincodes mapped'}>{l.pincodesLabel}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><input type={"text"} value={l.draftPincodes} onInput={l.onDraftPincodes} placeholder={"e.g. 110001, 110002"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:1px solid #D0D5DD;`)} title={l.pocs.join(', ') || 'No LM POCs set'}>{l.pocsLabel}</div></>) : null}
+{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><input type={"text"} value={l.draftPocs} onInput={l.onDraftPocs} placeholder={"e.g. Rahul Sharma, Megha Bose"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={l.onEdit} disabled={rlhCyclePast} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {/* 2026-08-26 fix (#11) — Deactivate/Reactivate, same pattern as SC Master, now that LMDC rows have real per-DC existence tracking. */}
@@ -2482,43 +2490,48 @@ NLH cycle: {schedNlhMonthLabel}
 {(!nlhPicked) ? (<><div style={css(`display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px 13px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; color:#14171F;`)}>Pick an NLH Landing Plan above before continuing to Operating Mode.</span></div></>) : null}
 </>) : null}
 {(isSchedStep2) ? (<>
-<div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Overall defaults</div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px;`)}>Applies to all {selectedScCodesStep1.length} selected SC{selectedScCodesStep1.length === 1 ? '' : 's'} unless overridden below.</div>
-<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:20px;`)}>
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>Historical Weight (HW)</div>
-<div style={css(`display:flex; gap:5px;`)}>
-<button onClick={() => onHwGlobal(schedHwGlobal > 0 ? 0 : 1)} style={css(`width:100%; height:30px; border:1px solid ${schedHwGlobal > 0 ? '#128A3E' : '#E6EBF2'}; background:${schedHwGlobal > 0 ? '#E7F4EC' : '#fff'}; color:${schedHwGlobal > 0 ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;`)}>{schedHwGlobal > 0 ? 'On' : 'Off'}</button>
-</div>
-{(hwGlobalNeedsRef) ? (<>
-{(globalRefAmbiguous) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>Multiple SCs selected — set a reference plan per SC below.</div></>) : (globalRefOptions.length === 0) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:8px;`)}>No reference plan available yet for this SC.</div></>) : (<>
-<select value={refGlobal} onChange={(e) => onRefGlobalPick(e.target.value)} style={css(`width:100%; height:30px; margin-top:8px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:11.5px;`)}>
-<option value={""}>Pick a reference plan…</option>
-{(globalRefOptions || []).map((id, __i47) => (<option key={__i47} value={id}>{id}</option>))}
-</select>
-</>)}
-</>) : null}
-</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:9px; padding:12px 14px;`)}>
-<div style={css(`font-size:11.5px; font-weight:700; color:#5A5E66; margin-bottom:8px;`)}>D0 Cutoff</div>
-<div style={css(`display:flex; align-items:center; gap:8px;`)}>
-<button onClick={onD0GlobalDec} disabled={d0Global === -4} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${d0Global === -4 ? 'default' : 'pointer'}; opacity:${d0Global === -4 ? '0.4' : '1'}; font-size:15px; color:#5A5E66;`)}>−</button>
-<div style={css(`flex:1; text-align:center; font-size:14px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{d0GlobalLabel}</div>
-<button onClick={onD0GlobalInc} disabled={d0Global === 12} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${d0Global === 12 ? 'default' : 'pointer'}; opacity:${d0Global === 12 ? '0.4' : '1'}; font-size:15px; color:#5A5E66;`)}>+</button>
-</div>
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:6px;`)}>30-min steps, 07:00\u201315:00 (default 09:00).</div>
-</div>
-</div>
+{/* 2026-09-07 fix — the two large "Overall defaults" cards (HW, D0 Cutoff) are gone; both
+    global controls now live directly in the table's own header row below, trading the two full-
+    width cards for a couple of compact header-cell controls — the same information, far less
+    vertical space, more plan rows visible without scrolling. The global reference-plan picker
+    (only relevant when HW is globally On) moves to a slim banner just under the header, shown
+    only when it's actually needed rather than permanently reserving space for it. */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;`)}>
-<div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Per-SC overrides</div>
+<div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Per-SC operating mode</div>
 {(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.6fr 0.6fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-{['SC Code', 'D0 Cutoff', 'Hold Time', 'HW', 'Reference plan', ''].map((h, __i49) => (<React.Fragment key={__i49}><div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>{h}</div></React.Fragment>))}
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.6fr 0.7fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>SC CODE</div>
+<div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:4px;`)}>D0 CUTOFF (ALL)</div>
+<div style={css(`display:flex; align-items:center; gap:3px;`)}>
+<button onClick={onD0GlobalDec} disabled={d0Global === -4} style={css(`width:18px; height:18px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:${d0Global === -4 ? 'default' : 'pointer'}; opacity:${d0Global === -4 ? '0.4' : '1'}; font-size:11px; color:#5A5E66; flex-shrink:0;`)}>−</button>
+<span style={css(`font-size:11px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums;`)}>{d0GlobalLabel}</span>
+<button onClick={onD0GlobalInc} disabled={d0Global === 12} style={css(`width:18px; height:18px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:${d0Global === 12 ? 'default' : 'pointer'}; opacity:${d0Global === 12 ? '0.4' : '1'}; font-size:11px; color:#5A5E66; flex-shrink:0;`)}>+</button>
 </div>
+</div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>HOLD TIME</div>
+<div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; margin-bottom:4px;`)}>HW (ALL)</div>
+<button onClick={() => onHwGlobal(schedHwGlobal > 0 ? 0 : 1)} style={css(`height:20px; padding:0 8px; border:1px solid ${schedHwGlobal > 0 ? '#128A3E' : '#E6EBF2'}; background:${schedHwGlobal > 0 ? '#E7F4EC' : '#fff'}; color:${schedHwGlobal > 0 ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{schedHwGlobal > 0 ? 'On' : 'Off'}</button>
+</div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>REFERENCE PLAN</div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}></div>
+</div>
+{(hwGlobalNeedsRef && !globalRefAmbiguous && globalRefOptions.length > 0) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:7px 10px; background:#FBF1DF; border-bottom:1px solid #EDD9AF;`)}>
+<span style={css(`font-size:11px; color:#14171F;`)}>Reference plan for all selected SCs:</span>
+<select value={refGlobal} onChange={(e) => onRefGlobalPick(e.target.value)} style={css(`height:26px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:11px;`)}>
+<option value={""}>Pick a reference plan…</option>
+{(globalRefOptions || []).map((id, __i47) => (<option key={__i47} value={id}>{id}</option>))}
+</select>
+</div>
+</>) : (hwGlobalNeedsRef && globalRefAmbiguous) ? (<>
+<div style={css(`padding:7px 10px; background:#FBF1DF; border-bottom:1px solid #EDD9AF; font-size:11px; color:#14171F;`)}>Multiple SCs selected — set a reference plan per SC below.</div>
+</>) : null}
 {(opModeRows || []).map((r, __i50) => (<React.Fragment key={__i50}>
-<div style={css(`display:grid; grid-template-columns:1.3fr 0.7fr 0.6fr 0.6fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 0.9fr 0.6fr 0.7fr 0.9fr 0.7fr; gap:6px; padding:9px 10px; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`font-size:12.5px; color:#14171F; font-weight:600;`)}>{r.code}<div style={css(`font-size:10.5px; color:#8E96A3; font-weight:400;`)}>{r.zone} · {r.planLabel}</div></div>
 <div style={css(`display:flex; align-items:center; gap:4px;`)}>
 <button onClick={r.onD0Dec} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>−</button>
@@ -6189,87 +6202,65 @@ NLH cycle: {schedNlhMonthLabel}
 {(toastHasUndo) ? (<><button onClick={onToastUndo} style={css(`flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)} onMouseLeave={(e) => hoverOff(e, `flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)}>Undo</button></>) : null}
 </div>
 </>) : null}
-{/* ===== SPEED PROFILE POPUP (2026-09-03, item 1; moved to global scope 2026-09-04) — SC x
-     Vehicle Type x Time, opened from a SC Vehicle Availability card OR Route Scheduler's Step 2
-     icon. Form tab (per-vehicle band table + fill helpers) and Upload tab (long-format CSV:
-     sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed). "No gaps allowed" — Save is
-     blocked with a precise missing-cell list until every vehicle type on this SC has a value in
-     every band, both zones.
-     2026-09-04 fix — this used to live nested inside the Design Inputs / SC Vehicle Availability
-     branch of the render tree, so speedProfileSC being set had no visible effect from any other
-     view (confirmed via headless-browser click testing: opening it from Step 2 silently updated
-     state but rendered nothing). Moved here, alongside the toast, so it renders regardless of
-     which top-level view is active — the same fix in spirit as the this/self binding issue found
-     earlier: code that "looks" reachable from everywhere but is actually buried in one branch of
-     the tree. ===== */}
+{/* ===== SPEED PROFILE POPUP (2026-09-03, item 1; reworked 2026-09-07) — SC x Vehicle Type x
+     Zone x Time, opened from a SC Vehicle Availability card (editable) or Route Scheduler's Step
+     2 icon (read-only). One row per (vehicle type, zone) pair, 24 fixed hourly columns. Only one
+     hard requirement to save: at least one seed cell (any row's 00:00) anywhere in the table —
+     everything else can be left blank and inherited forward from the previous hour, or left
+     entirely blank for a row that falls through to Vehicle Master's own speed at read time.
+     Upload moved out of this popup entirely — it's now a global action on SC Vehicle
+     Availability's own toolbar (SC Code becomes part of the row grain there).
+     2026-09-04 fix (kept) — lives at global scope (alongside the toast), not nested inside the
+     Design Inputs branch, so it renders regardless of which top-level view opened it. ===== */}
 {(speedProfileModal.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={speedProfileModal.close}>
-<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:960px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
 <div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile{(speedProfileModal.readOnly) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#F2F5FA; color:#5A5E66;`)}>Read-only</span></>) : null}{(speedProfileModal.reviewMode) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#EAEEFB; color:#003F98;`)}>Review</span></>) : null}</div>
 <div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{speedProfileModal.scCode} · {speedProfileModal.scName}</div>
 </div>
 <button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px; line-height:1.5;`)}>Speed by vehicle type and time of day, Local vs Non-Local. This feeds Route Scheduler's dispatch-time search directly — an SC with no profile here falls back to the flat SC Master default. Every vehicle type needs a value in every band before this can be saved.</div>
-<div style={css(`display:flex; gap:6px; border-bottom:1px solid #E6EBF2; margin-bottom:16px;`)}>
-<button onClick={speedProfileModal.onTabForm} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'form' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'form' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Form</button>
-<button onClick={speedProfileModal.onTabUpload} style={css(`height:34px; padding:0 14px; border:none; border-bottom:2px solid ${speedProfileModal.tab === 'upload' ? '#0D7377' : 'transparent'}; background:none; color:${speedProfileModal.tab === 'upload' ? '#0D7377' : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;`)}>Upload</button>
-</div>
-{(speedProfileModal.tab === 'form') ? (<>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>GRID</span>
-<button onClick={speedProfileModal.onPreset3h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>3-hour bands</button>
-<button onClick={speedProfileModal.onPreset1h} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer;`)}>1-hour bands</button>
-<span style={css(`font-size:10.5px; color:#C77B00;`)}>Switching the grid clears all entered values for this SC.</span>
-</div>
-<div style={css(`display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;`)}>
-{(speedProfileModal.vehicleTabs || []).map((vt, __iSpv) => (<React.Fragment key={__iSpv}>
-<button onClick={vt.onClick} style={css(`display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 12px; border:1px solid ${vt.active ? '#003F98' : '#E6EBF2'}; background:${vt.active ? '#EAEEFB' : '#fff'}; color:${vt.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{vt.name}<span style={css(`width:7px; height:7px; border-radius:50%; background:${vt.complete ? '#128A3E' : '#D0D5DD'};`)} /></button>
-</React.Fragment>))}
-</div>
-{(speedProfileModal.canCopy) ? (<><button onClick={speedProfileModal.onCopyToAllVehicles} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px solid #0D7377; background:#fff; color:#0D7377; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; margin-bottom:10px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M8 8V5a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1h-3M4 8h10a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Same for all vehicles \u2014 copy {speedProfileModal.activeVeh}\u2019s speeds</button></>) : null}
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px; line-height:1.5;`)}>{(speedProfileModal.readOnly) ? 'Speed by vehicle type, zone, and hour of day. View-only here — edit from SC Vehicle Availability.' : (speedProfileModal.reviewMode) ? 'This is the fully resolved matrix \u2014 blank hours filled forward from the previous hour. Confirm to save exactly this.' : 'Speed by vehicle type, zone, and hour of day. Feeds Route Scheduler\u2019s dispatch-time search directly \u2014 a row left entirely blank falls back to Vehicle Master\u2019s own speed for that vehicle type. Enter at least one row\u2019s 00:00 value, then use the row actions to apply it across.'}</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:8px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>TIME BAND</div>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>LOCAL (KM/H) <button onClick={speedProfileModal.onFillLocalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
-<div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:flex; align-items:center; gap:8px;`)}>NON-LOCAL (KM/H) <button onClick={speedProfileModal.onFillZonalAllDay} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:9.5px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline;`)}>same all day</button></div>
+<div style={css(`overflow-x:auto;`)}>
+<div style={css(`min-width:1500px;`)}>
+<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px) ${speedProfileModal.readOnly || speedProfileModal.reviewMode ? '' : '260px'}; gap:0; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; position:sticky; left:0; background:#FAFBFD;`)}>VEHICLE \u2014 ZONE</div>
+{(speedProfileModal.rows[0] ? speedProfileModal.rows[0].cells : []).map((c, __iSph) => (<React.Fragment key={__iSph}><div style={css(`padding:8px 4px; font-size:9.5px; font-weight:700; color:#5A5E66; text-align:center; white-space:nowrap;`)}>{c.label}</div></React.Fragment>))}
+{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW ACTIONS</div></>) : null}
 </div>
-<div style={css(`max-height:280px; overflow-y:auto;`)}>
-{(speedProfileModal.bandRows || []).map((br, __iSpb) => (<React.Fragment key={__iSpb}>
-<div style={css(`display:grid; grid-template-columns:1fr 0.9fr 0.9fr; gap:8px; padding:7px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
-<div style={css(`font-size:12px; color:#14171F; font-weight:600; font-variant-numeric:tabular-nums;`)}>{br.label}</div>
-<input value={br.local} onChange={(e) => br.onLocalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.local === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
-<input value={br.zonal} onChange={(e) => br.onZonalChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${br.zonal === '' ? '#F0C6C6' : '#E6EBF2'}; border-radius:6px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+{(speedProfileModal.rows || []).map((r, __iSpr) => (<React.Fragment key={__iSpr}>
+<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px) ${speedProfileModal.readOnly || speedProfileModal.reviewMode ? '' : '260px'}; gap:0; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`padding:8px 12px; font-size:12px; font-weight:600; color:#14171F; position:sticky; left:0; background:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{r.rowLabel}</div>
+{(r.cells || []).map((c, __iSpc) => (<React.Fragment key={__iSpc}>
+{(speedProfileModal.readOnly || speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 4px; font-size:11.5px; text-align:center; color:${c.value === '' ? '#C3C9D4' : '#14171F'}; font-variant-numeric:tabular-nums;`)}>{c.value === '' ? '\u2014' : c.value}</div></>) : (<><div style={css(`padding:3px;`)}><input value={c.value} onChange={(e) => c.onChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:28px; padding:0 3px; text-align:center; border:1px solid ${c.value === '' ? '#E6EBF2' : '#C3C9D4'}; border-radius:5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /></div></>) }
+</React.Fragment>))}
+{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 10px; display:flex; gap:4px; flex-wrap:wrap;`)}>
+<button onClick={r.onFillAllDay} disabled={!speedProfileModal.hasSeed} title={"Stamp this row's 00:00 value across all 24 hours"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>Same all day</button>
+<button onClick={r.onCopyToOtherZone} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the other zone, same vehicle"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>All zones</button>
+<button onClick={r.onCopyToAllVehicles} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the same zone, every vehicle type"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>All vehicles</button>
+</div></>) : null}
 </div>
 </React.Fragment>))}
 </div>
 </div>
-</>) : (<>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;`)}>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>One row per SC \u00d7 Vehicle Type \u00d7 Time band \u2014 rows for other SCs are ignored, not an error.</span>
-<button onClick={speedProfileModal.uploadTemplate} style={css(`height:28px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Download template</button>
 </div>
-<input type={"file"} accept={".csv"} onChange={speedProfileModal.onUploadFile} style={css(`margin-bottom:10px; font-size:12px;`)} />
-<textarea value={speedProfileModal.uploadText} onChange={speedProfileModal.onUploadTextChange} placeholder={"sort_centre_id,vehicle_type,band_start,local_speed,zonal_speed\n" + speedProfileModal.scCode + ",Truck,00:00,28,38"} style={css(`width:100%; height:140px; padding:10px; border:1px solid #E6EBF2; border-radius:8px; font-family:monospace; font-size:11.5px; box-sizing:border-box; margin-bottom:10px; resize:vertical;`)} />
-{(speedProfileModal.uploadErrors && speedProfileModal.uploadErrors.length > 0) ? (<>
-<div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-bottom:10px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t parse this file:</div>
-{(speedProfileModal.uploadErrors || []).map((e, __iSpe) => (<React.Fragment key={__iSpe}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
-</div>
-</>) : null}
-<button onClick={speedProfileModal.onParseUpload} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Parse &amp; load into Form</button>
-</>)}
 {(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
 <div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t save \u2014 missing:</div>
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t continue:</div>
 {(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
 </div>
 </>) : null}
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
+{(speedProfileModal.readOnly) ? (<><button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Close</button></>) : (speedProfileModal.reviewMode) ? (<>
+<button onClick={speedProfileModal.onBackToEdit} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Back to Edit</button>
+<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Confirm &amp; Save</button>
+</>) : (<>
 <button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Save Speed Profile</button>
+<button onClick={speedProfileModal.onReview} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Review &amp; Save</button>
+</>)}
 </div>
 </div>
 </div>
@@ -7225,7 +7216,16 @@ class NDCApp extends React.Component {
     // lane-row at generation time (05_Core_Flows.md). Cutoff is lane-level (validated identical
     // across every DC sharing a Lane Name); TAT is DC-level (LMSC→that DC transit time, varies row
     // to row within the same lane).
-    const lmdcDefaults = { open: '05:00', close: '21:00', d0Cutoff: 'Default', maxVehicle: defaultRlhVehName, unloadMin: 15, pincodes: [] };
+    const lmdcDefaults = { open: 'Default', close: 'Default', d0Cutoff: 'Default', maxVehicle: 'Default', unloadMin: 'Default', pincodes: [] };
+    // seedPincodesFor(idx) — a realistic, distinct 6-digit Indian pincode per LMDC (previously
+    // always empty). Cycles through a spread of real state prefixes so the data doesn't look like
+    // one region; suffix varies deterministically by index so re-seeding is stable.
+    const PIN_STATE_PREFIXES = ['110', '400', '560', '600', '700', '380', '500', '302', '682', '831'];
+    const seedPincodesFor = (idx) => {
+      const prefix = PIN_STATE_PREFIXES[idx % PIN_STATE_PREFIXES.length];
+      const suffix = String(1000 + ((idx * 37) % 9000)).padStart(4, '0');
+      return [prefix + suffix];
+    };
     // scLmPocs (later session) — LMDC Master's own POC pool, per SC (shared across that SC's
     // whole DC pool, matching the real-world fact that ~100-150 DCs under one SC only have 5-6
     // LM points of contact, not one each). Feeds Route Scheduler's LM reviewer assignment
@@ -7241,18 +7241,18 @@ class NDCApp extends React.Component {
     // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
     // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
     // and the actual routable pool can never disagree on which DCs are excluded.
-    const lmdcs = allPoolDcs.map(dc => Object.assign({
+    const lmdcs = allPoolDcs.map((dc, idx) => Object.assign({
       code: dc.code, lmscCode: dc.scCode, zone: dc.zone, lat: dc.lat, lng: dc.lng,
       capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
       rlhMode: dc.rlhMode || 'Valmo RLH', mdcCode: dc.mdcCode || null, laneName: dc.laneName || null, cutoff: dc.cutoff || null, tat: dc.tat || null,
       isLocal: dc.isLocal !== undefined ? dc.isLocal : true, distFromSc: dc.distFromSc != null ? dc.distFromSc : 0,
       pocs: scLmPocs[dc.scCode] || [],
-    }, lmdcDefaults));
-    nodeAdditions.filter(a => a.mapped && a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: scLmPocs[a.sc] || [] }, lmdcDefaults));
+    }, lmdcDefaults, { pincodes: seedPincodesFor(idx) }));
+    nodeAdditions.filter(a => a.mapped && a.sc).forEach((a, idx) => {
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: scLmPocs[a.sc] || [] }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
     });
-    nodeAdditions.filter(a => !a.mapped || !a.sc).forEach(a => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: [] }, lmdcDefaults));
+    nodeAdditions.filter(a => !a.mapped || !a.sc).forEach((a, idx) => {
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: [] }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
     });
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
@@ -7432,6 +7432,24 @@ class NDCApp extends React.Component {
   // when Hold Time is Off, the DS algorithm isn't trying to minimise hold time at all for this SC
   // (Route Scheduler treats every DC's hold time as 0); when On, each DC's hold draw is capped at
   // whichever ceiling matches its Local/Non-Local classification, not scaled by an abstract factor.
+  // resolveLmdcField(raw, fallback) (2026-09-07) — Open/Close/D0 Cutoff/Max Vehicle/Unloading Time
+  // all store the literal string 'Default' when never explicitly touched (same sentinel D0
+  // Cutoff already used), so "never touched" and "user explicitly chose the default's own value"
+  // stay distinguishable everywhere — including at plan-creation time, where a Default-tagged
+  // LMDC value can still be overridden by the run, but an explicit one (even if numerically
+  // identical) cannot.
+  resolveLmdcField(raw, fallback) {
+    return (raw === 'Default' || raw == null || raw === '') ? fallback : raw;
+  }
+  // lmdcSystemDefaults() — the five system defaults themselves, one place so Open/Close/
+  // Unloading Time's numbers and Max Vehicle Size's dynamic largest-RLH-vehicle lookup never
+  // drift out of sync between the table headers, the resolver, and the edit form.
+  lmdcSystemDefaults() {
+    const VEH = (this.state.data && this.state.data.VEH) || [];
+    const rlhFeasible = VEH.filter(v => (v.feas || []).indexOf('RLH') >= 0);
+    const maxVehicle = (rlhFeasible.slice().sort((a, b) => b.cap - a.cap)[0] || {}).name || (VEH[0] || {}).name || '';
+    return { open: '05:00', close: '21:00', d0Cutoff: '09:00', maxVehicle, unloadMin: 20 };
+  }
   resolveScFields(sc) {
     const h = sc.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
     const num = (v, dflt) => (v != null && v !== '' ? Number(v) : dflt);
@@ -7479,7 +7497,9 @@ class NDCApp extends React.Component {
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
       txt('localSpeed', 'Local Speed (km/h)', false, 'e.g. 25'),
       txt('nonLocalSpeed', 'Non-Local Speed (km/h)', false, 'e.g. 38'),
-      sel('holdTimeOn', 'Hold Time', true, opt(['On', 'Off'])),
+      // 2026-09-07 fix — Hold Time On/Off removed from SC Master's edit form (now purely a
+      // plan-level toggle, no SC-level default). Max Hold Local/Non-Local stay — genuinely
+      // SC-level facts regardless of whether a given plan turns hold time on.
       txt('maxHoldLocal', 'Max Hold Time \u2014 Local (min)', false, 'e.g. 30'),
       txt('maxHoldNonLocal', 'Max Hold Time \u2014 Non-Local (min)', false, 'e.g. 120'),
     ];
@@ -7779,58 +7799,45 @@ class NDCApp extends React.Component {
     this.setAvailField(scCode, vehType, 'cnt', (isNaN(n) || n < 0) ? 0 : n);
   }
   // ===========================================================================================
-  // Speed Profile modal (2026-09-03, item 1) — SC x Vehicle Type x Time popup opened from SC
-  // Vehicle Availability's card. Draft shape while editing (st.speedProfileDraft):
-  //   { bandStarts: ['00:00','03:00',...] shared across every vehicle type in this SC's popup,
+  // Speed Profile modal (2026-09-03, item 1; reworked 2026-09-07) — SC x Vehicle Type x Zone x
+  // Time popup opened from SC Vehicle Availability's card, or read-only from Design Creation.
+  // Draft shape while editing (st.speedProfileDraft):
+  //   { bandStarts: ['00:00','01:00',...,'23:00'] — fixed 24 hourly columns, no more 3h/1h choice
   //     vehicles: { [vehicleType]: { local: [n,...], zonal: [n,...] } } }
-  // Only written to the engine (setSpeedProfile) on explicit Save, and only once
-  // isSpeedProfileComplete() passes — the modal never partially persists a draft.
+  // Rendered as one row per (vehicle type, zone) pair, not vehicle-type tabs. Only one hard
+  // requirement to save: at least one seed cell (any vehicle x zone x 00:00) anywhere in the
+  // table — everything else can be left blank and inherited forward from the previous hour
+  // (applied at save time, see applySpeedProfileInheritance in engine.js), or left entirely
+  // blank for a vehicle/zone that was never touched, falling through to Vehicle Master's own
+  // speed at read time. Save goes through a review step showing the fully resolved matrix.
   // ===========================================================================================
-  defaultSpeedBandStarts(preset) {
-    if (preset === '1h') return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00');
-    return ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'];
+  defaultSpeedBandStarts() {
+    return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00');
   }
-  openSpeedProfileModal(scCode, vehicleTypeNames) {
+  openSpeedProfileModal(scCode, vehicleTypeNames, readOnly) {
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const existing = getSpeedProfile(this.engineStore, cycleMonth, scCode);
-    let bandStarts, vehicles;
-    if (existing && Object.keys(existing).length) {
-      // Existing profile may have been saved with per-vehicle bandStarts (engine.js allows it);
-      // the popup itself always shows ONE shared band grid, so take the first vehicle's
-      // bandStarts as the shared grid and re-key every vehicle onto it, dropping any value at a
-      // band that vehicle didn't originally have (rare — only possible from a hand-edited/older
-      // upload) rather than guessing a value for it.
-      const firstVeh = Object.keys(existing)[0];
-      bandStarts = (existing[firstVeh] && existing[firstVeh].bandStarts) ? existing[firstVeh].bandStarts.slice() : this.defaultSpeedBandStarts();
-      vehicles = {};
-      vehicleTypeNames.forEach(vt => {
-        const e = existing[vt];
-        if (e && e.bandStarts && e.bandStarts.length === bandStarts.length && e.bandStarts.every((b, i) => b === bandStarts[i])) {
-          vehicles[vt] = { local: e.local.slice(), zonal: e.zonal.slice() };
-        } else {
-          vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
-        }
-      });
-    } else {
-      bandStarts = this.defaultSpeedBandStarts();
-      vehicles = {};
-      vehicleTypeNames.forEach(vt => { vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') }; });
-    }
+    const bandStarts = this.defaultSpeedBandStarts();
+    const vehicles = {};
+    vehicleTypeNames.forEach(vt => {
+      const e = existing && existing[vt];
+      // An existing profile saved under a different band grid (rare — only possible from an old
+      // 3h/1h-preset-era save) is re-keyed onto the fixed 24-hour grid, dropping values at bands
+      // that don't line up, rather than guessing at a mapping.
+      if (e && e.bandStarts && e.bandStarts.length === bandStarts.length && e.bandStarts.every((b, i) => b === bandStarts[i])) {
+        vehicles[vt] = { local: e.local.slice(), zonal: e.zonal.slice() };
+      } else {
+        vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
+      }
+    });
     this.setState({
-      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames,
+      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileReadOnly: !!readOnly,
       speedProfileDraft: { bandStarts, vehicles },
-      speedProfileActiveVeh: vehicleTypeNames[0] || null,
-      speedProfileTab: 'form', speedProfileErrors: [], speedProfileUploadText: '', speedProfileUploadErrors: [],
+      speedProfileReviewMode: false, speedProfileErrors: [],
     });
   }
   closeSpeedProfileModal() {
-    this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileActiveVeh: null, speedProfileErrors: [] });
-  }
-  setSpeedBandPreset(preset) {
-    const bandStarts = this.defaultSpeedBandStarts(preset);
-    const vehicles = {};
-    (this.state.speedProfileVehicleTypes || []).forEach(vt => { vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') }; });
-    this.setState({ speedProfileDraft: { bandStarts, vehicles }, speedProfileErrors: [] });
+    this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileReadOnly: false, speedProfileReviewMode: false, speedProfileErrors: [] });
   }
   setSpeedCell(vehicleType, zone, bandIdx, value) {
     const draft = this.state.speedProfileDraft;
@@ -7843,105 +7850,138 @@ class NDCApp extends React.Component {
     vehicles[vehicleType] = entry;
     this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
   }
+  // speedFillSameAllDay(vehicleType, zone) — "Same all day": stamps this row's own 00:00 value
+  // across all 24 hours. Row-level, only touches the one row it's called on.
   speedFillSameAllDay(vehicleType, zone) {
     const draft = this.state.speedProfileDraft;
     if (!draft) return;
     const entry = draft.vehicles[vehicleType] || {};
     const arr = zone === 'local' ? entry.local : entry.zonal;
     const seed = arr && arr[0];
-    if (seed === '' || seed == null) { this.showToast('Enter the first band\u2019s value, then use this to copy it across the day', '#C77B00'); return; }
+    if (seed === '' || seed == null) { this.showToast('Enter this row\u2019s 00:00 value first, then use this to copy it across the day', '#C77B00'); return; }
     const vehicles = Object.assign({}, draft.vehicles);
     vehicles[vehicleType] = Object.assign({}, entry, { [zone]: draft.bandStarts.map(() => seed) });
     this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
   }
-  speedCopyToAllVehicles(fromVehicleType) {
+  // speedCopyToOtherZone(vehicleType, zone) — "Same for all zones" / "Apply to all zones": copies
+  // this row's 24 values to the SIBLING zone for the SAME vehicle type only.
+  speedCopyToOtherZone(vehicleType, zone) {
     const draft = this.state.speedProfileDraft;
     if (!draft) return;
-    const src = draft.vehicles[fromVehicleType];
-    if (!src) return;
+    const entry = draft.vehicles[vehicleType] || {};
+    const srcArr = zone === 'local' ? entry.local : entry.zonal;
+    const otherZone = zone === 'local' ? 'zonal' : 'local';
     const vehicles = Object.assign({}, draft.vehicles);
-    (this.state.speedProfileVehicleTypes || []).forEach(vt => { vehicles[vt] = { local: src.local.slice(), zonal: src.zonal.slice() }; });
+    vehicles[vehicleType] = Object.assign({}, entry, { [otherZone]: (srcArr || []).slice() });
     this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
-    this.showToast('Copied ' + fromVehicleType + '\u2019s speeds to every vehicle type on this SC', '#128A3E');
+    this.showToast('Copied to ' + (otherZone === 'local' ? 'Local' : 'Non-Local') + ' for ' + vehicleType, '#128A3E');
+  }
+  // speedCopyToAllVehicles(vehicleType, zone) — "Apply to all vehicles": copies this row's 24
+  // values to the SAME zone across every OTHER vehicle type on this SC.
+  speedCopyToAllVehicles(vehicleType, zone) {
+    const draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const entry = draft.vehicles[vehicleType] || {};
+    const srcArr = (zone === 'local' ? entry.local : entry.zonal) || [];
+    const vehicles = Object.assign({}, draft.vehicles);
+    (this.state.speedProfileVehicleTypes || []).forEach(vt => {
+      const e = Object.assign({}, vehicles[vt] || { local: [], zonal: [] });
+      e[zone] = srcArr.slice();
+      vehicles[vt] = e;
+    });
+    this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
+    this.showToast('Copied ' + (zone === 'local' ? 'Local' : 'Non-Local') + ' speeds to every vehicle type', '#128A3E');
+  }
+  // openSpeedProfileReview() — moves to the read-only preview: resolves inheritance (blank hours
+  // fill forward from the previous hour, within any row that has at least one value) so what's
+  // shown is exactly what Save will persist, not the raw draft with gaps still visible.
+  openSpeedProfileReview() {
+    const draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const check = isSpeedProfileComplete(draft.vehicles);
+    if (!check.complete) { this.setState({ speedProfileErrors: check.missing.map(m => m.reason) }); return; }
+    this.setState({ speedProfileReviewMode: true, speedProfileErrors: [] });
+  }
+  backToEditSpeedProfile() {
+    this.setState({ speedProfileReviewMode: false });
   }
   saveSpeedProfileModal() {
     const scCode = this.state.speedProfileSC;
     const draft = this.state.speedProfileDraft;
     if (!scCode || !draft) return;
-    const vehicleTypeNames = this.state.speedProfileVehicleTypes || [];
-    // Write bandStarts onto every vehicle's own entry before validating/saving — the engine's
-    // shape keys bandStarts per vehicle type (see engine.js header comment); the popup's shared
-    // grid is a UI simplification on top of that, applied here at save time.
-    const vehiclesOut = {};
+    const vehiclesRaw = {};
     Object.keys(draft.vehicles).forEach(vt => {
       const e = draft.vehicles[vt];
-      vehiclesOut[vt] = { bandStarts: draft.bandStarts.slice(), local: e.local.slice(), zonal: e.zonal.slice() };
+      vehiclesRaw[vt] = { bandStarts: draft.bandStarts.slice(), local: e.local.slice(), zonal: e.zonal.slice() };
     });
-    const check = isSpeedProfileComplete(vehiclesOut, vehicleTypeNames);
-    if (!check.complete) {
-      this.setState({ speedProfileErrors: check.missing.map(m => m.vehicleType + ' \u2014 ' + m.reason) });
-      return;
-    }
+    const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw);
     const cycleMonth = this.state.activeCycleMonth.rlh;
     setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
     this.showToast('Speed Profile saved for ' + scCode, '#128A3E');
     this.closeSpeedProfileModal();
   }
-  // parseSpeedProfileUpload() — long format: sort_centre_id,vehicle_type,band_start,local_speed,
-  // zonal_speed. Only rows matching the currently-open SC are applied; rows for other SCs are
-  // counted and reported, not silently dropped. All vehicle types actually assigned to this SC
-  // (speedProfileVehicleTypes) must appear with a value at every distinct band_start found for
-  // this SC, in both columns — same "no gaps allowed" rule the Form enforces, checked before the
-  // parsed data ever reaches the draft.
-  parseSpeedProfileUpload() {
-    const scCode = this.state.speedProfileSC;
-    const vehicleTypeNames = this.state.speedProfileVehicleTypes || [];
-    const text = this.state.speedProfileUploadText || '';
-    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
-    if (lines.length < 2) { this.setState({ speedProfileUploadErrors: ['Paste or upload a CSV with a header row plus at least one data row.'] }); return; }
-    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
-    const idx = (name) => header.indexOf(name);
-    const iSc = idx('sort_centre_id'), iVeh = idx('vehicle_type'), iBand = idx('band_start'), iLocal = idx('local_speed'), iZonal = idx('zonal_speed');
-    if (iSc < 0 || iVeh < 0 || iBand < 0 || iLocal < 0 || iZonal < 0) {
-      this.setState({ speedProfileUploadErrors: ['Header must include: sort_centre_id, vehicle_type, band_start, local_speed, zonal_speed'] });
-      return;
-    }
-    let otherScCount = 0;
-    const byVeh = {}; // vehicleType -> { [band_start]: {local, zonal} }
-    const rowErrors = [];
-    for (let i = 1; i < lines.length; i++) {
-      const cols = lines[i].split(',').map(c => c.trim());
-      if (cols[iSc] !== scCode) { otherScCount++; continue; }
-      const vt = cols[iVeh], band = cols[iBand];
-      const localN = parseFloat(cols[iLocal]), zonalN = parseFloat(cols[iZonal]);
-      if (!vt || !band) { rowErrors.push('Row ' + (i + 1) + ': missing vehicle_type or band_start'); continue; }
-      if (isNaN(localN) || isNaN(zonalN)) { rowErrors.push('Row ' + (i + 1) + ' (' + vt + ' \u00b7 ' + band + '): local_speed/zonal_speed must be numbers'); continue; }
-      byVeh[vt] = byVeh[vt] || {};
-      byVeh[vt][band] = { local: localN, zonal: zonalN };
-    }
-    if (rowErrors.length) { this.setState({ speedProfileUploadErrors: rowErrors }); return; }
-    // All vehicle types present in the file (for this SC) must share the exact same band_start
-    // set — the popup's shared-grid model (see openSpeedProfileModal) can't represent per-vehicle
-    // grids, so a mismatch here is reported rather than silently reconciled.
-    const vehKeys = Object.keys(byVeh);
-    if (!vehKeys.length) { this.setState({ speedProfileUploadErrors: ['No rows matched SC ' + scCode + (otherScCount ? ' (' + otherScCount + ' row' + (otherScCount === 1 ? '' : 's') + ' belonged to other SCs)' : '') + '.'] }); return; }
-    const bandSetOf = (vt) => Object.keys(byVeh[vt]).sort();
-    const refBands = bandSetOf(vehKeys[0]);
-    const mismatch = vehKeys.find(vt => { const b = bandSetOf(vt); return b.length !== refBands.length || b.some((x, i) => x !== refBands[i]); });
-    if (mismatch) { this.setState({ speedProfileUploadErrors: ['"' + mismatch + '" has a different set of time bands than "' + vehKeys[0] + '" \u2014 every vehicle type in one upload must share the same bands.'] }); return; }
-    const missingVeh = vehicleTypeNames.filter(vt => vehKeys.indexOf(vt) < 0);
-    if (missingVeh.length) { this.setState({ speedProfileUploadErrors: missingVeh.map(vt => vt + ' \u2014 not present in this file at all') }); return; }
-    const bandStarts = refBands;
-    const vehicles = {};
-    vehKeys.forEach(vt => {
-      vehicles[vt] = { local: bandStarts.map(b => byVeh[vt][b].local), zonal: bandStarts.map(b => byVeh[vt][b].zonal) };
-    });
-    this.setState({
-      speedProfileDraft: { bandStarts, vehicles },
-      speedProfileActiveVeh: vehicleTypeNames[0] || vehKeys[0],
-      speedProfileTab: 'form', speedProfileUploadErrors: [], speedProfileErrors: [],
-    });
-    this.showToast('Parsed ' + vehKeys.length + ' vehicle type' + (vehKeys.length === 1 ? '' : 's') + ' \u00d7 ' + bandStarts.length + ' bands' + (otherScCount ? ' (' + otherScCount + ' row' + (otherScCount === 1 ? '' : 's') + ' for other SCs ignored)' : '') + ' \u2014 review below, then Save.', '#128A3E');
+  // handleSpeedProfileGlobalUpload(e) (2026-09-07) — replaces the old per-SC-scoped Upload tab.
+  // Wide format matching the Form exactly: sort_centre_id, vehicle_type, zone, then 24 hourly
+  // columns (00:00..23:00) as the value columns — one row per (SC, Vehicle Type, Zone). Every SC
+  // present needs at least one seed cell (any vehicle x zone x 00:00) for that SC; blanks after
+  // that inherit forward from the previous hour, same rule the Form uses. Vehicle types not
+  // actually assigned to a given SC (per SC Vehicle Availability) are accepted but flagged as
+  // informational, not blocked — the profile just won't be read for a vehicle that SC doesn't run.
+  handleSpeedProfileGlobalUpload(e) {
+    if (this.isRlhCyclePast()) { e.target.value = ''; this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result || '');
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
+        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
+        const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+        const idx = (name) => header.indexOf(name);
+        const iSc = idx('sort_centre_id'), iVeh = idx('vehicle_type'), iZone = idx('zone');
+        const hourIdx = this.defaultSpeedBandStarts().map(h => idx(h));
+        if (iSc < 0 || iVeh < 0 || iZone < 0 || hourIdx.some(i => i < 0)) {
+          this.showToast('Header must include sort_centre_id, vehicle_type, zone, and all 24 hourly columns (00:00..23:00)', '#D14B4B');
+          return;
+        }
+        const bandStarts = this.defaultSpeedBandStarts();
+        const bySc = {}; // scCode -> { vehicleType -> { local: [24], zonal: [24] } }
+        const rowErrors = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.trim());
+          const scCode = cols[iSc], vt = cols[iVeh], zoneRaw = (cols[iZone] || '').toLowerCase();
+          if (!scCode || !vt) { rowErrors.push('Row ' + (i + 1) + ': missing sort_centre_id or vehicle_type'); continue; }
+          const zone = zoneRaw === 'local' ? 'local' : (zoneRaw === 'non-local' || zoneRaw === 'zonal' ? 'zonal' : null);
+          if (!zone) { rowErrors.push('Row ' + (i + 1) + ' (' + scCode + ' \u00b7 ' + vt + '): zone must be "Local" or "Non-Local"'); continue; }
+          const values = hourIdx.map(hi => cols[hi]);
+          const parsed = values.map(v => (v === '' || v == null) ? '' : Number(v));
+          if (parsed.some(v => v !== '' && isNaN(v))) { rowErrors.push('Row ' + (i + 1) + ' (' + scCode + ' \u00b7 ' + vt + '): one or more hourly values aren\u2019t numbers'); continue; }
+          bySc[scCode] = bySc[scCode] || {};
+          bySc[scCode][vt] = bySc[scCode][vt] || { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
+          bySc[scCode][vt][zone] = parsed;
+        }
+        if (rowErrors.length) { this.showToast(rowErrors.length + ' row' + (rowErrors.length === 1 ? '' : 's') + ' flagged \u2014 nothing applied. First: ' + rowErrors[0], '#D14B4B'); return; }
+        const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
+        const cycleMonth = this.state.activeCycleMonth.rlh;
+        let scCount = 0, skippedScCount = 0;
+        Object.keys(bySc).forEach(scCode => {
+          if (!validCodes[scCode]) { skippedScCount++; return; }
+          const vehiclesRaw = {};
+          Object.keys(bySc[scCode]).forEach(vt => { vehiclesRaw[vt] = Object.assign({ bandStarts: bandStarts.slice() }, bySc[scCode][vt]); });
+          const check = isSpeedProfileComplete(vehiclesRaw);
+          if (!check.complete) return; // no seed cell anywhere for this SC — skip it, don't error the whole file
+          const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw);
+          setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
+          scCount++;
+        });
+        this.showToast('Speed Profile upload \u00b7 ' + scCount + ' SC' + (scCount === 1 ? '' : 's') + ' updated' + (skippedScCount ? ', ' + skippedScCount + ' skipped (unrecognised SC code)' : ''), scCount > 0 ? '#128A3E' : '#C77B00');
+      } catch (err) {
+        this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
+      }
+    };
+    reader.readAsText(file);
   }
   submitAddSc() {
     if (this.isRlhCyclePast()) {
@@ -8600,14 +8640,15 @@ class NDCApp extends React.Component {
     // d.lmdcs is always freshly re-materialized from the engine after every edit.
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const rlhMode = f.rlhMode || 'Valmo RLH';
-    // 2026-09-04 fix — Max Vehicle Size used to fall back to '' (blank) when the draft field was
-    // empty at Save, instead of the largest RLH-feasible vehicle — the same default buildSeed()
-    // already applies when an LMDC is first created. Recomputed live here (not read from a stale
-    // seed-time constant) so it stays correct even if Vehicle Master's RLH-feasible set has
-    // changed since genesis (a vehicle added, removed, or resized).
-    const rlhFeasibleVehNow = (st.data.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0);
-    const defaultRlhVehNameNow = (rlhFeasibleVehNow.slice().sort((a, b) => b.cap - a.cap)[0] || {}).name || '';
-    const patch = { open: f.open || '06:00', close: f.close || '22:00', d0Cutoff: f.d0Cutoff || '09:00', maxVehicle: f.maxVehicle || defaultRlhVehNameNow, unloadMin: num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
+    // 2026-09-07 fix — Open/Close/Max Vehicle/Unloading now use the same 'Default' sentinel
+    // pattern D0 Cutoff already used: once 'Default' is a real, selectable option in each
+    // dropdown, whatever the user picked (including literally 'Default') passes through as-is —
+    // no more silently resolving a blank/untouched draft to a literal value, which is exactly
+    // what made "never touched" and "user explicitly chose the default's own value"
+    // indistinguishable before. sysDefaultsNow only backstops a genuinely empty draft (shouldn't
+    // happen with a dropdown, but kept as a safety net).
+    const sysDefaultsNow = this.lmdcSystemDefaults();
+    const patch = { open: f.open || sysDefaultsNow.open, close: f.close || sysDefaultsNow.close, d0Cutoff: f.d0Cutoff || 'Default', maxVehicle: f.maxVehicle || sysDefaultsNow.maxVehicle, unloadMin: f.unloadMin === 'Default' ? 'Default' : num(f.unloadMin), rlhMode, mdcCode: null, laneName: null, cutoff: null, tat: null,
       pincodes: (f.pincodes || '').split(/[;,]/).map(s => s.trim()).filter(Boolean),
       pocs: (f.pocs || '').split(/[;,]/).map(s => s.trim()).filter(Boolean) };
     let laneCorrected = false;
@@ -8689,10 +8730,13 @@ class NDCApp extends React.Component {
         // text/number. An uploaded value that doesn't match one of those options flags the WHOLE
         // row (nothing from it is applied) rather than silently snapping or partially applying —
         // same "flag it" convention the volume-file uploader already uses for its error rows.
-        const TIME_SET = {}; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) TIME_SET[String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0')] = true;
+        // 2026-09-07 fix — 'Default' now accepted for Open/Close/Unloading/Max Vehicle too, same
+        // pattern D0_SET already used, so a CSV can explicitly reset a field back to "defer to
+        // system default" rather than only ever setting a literal value.
+        const TIME_SET = { 'Default': true }; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) TIME_SET[String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0')] = true;
         const D0_SET = { 'Default': true }; for (let m = 7 * 60; m <= 15 * 60; m += 30) D0_SET[String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')] = true;
         const UNLOAD_SET = {}; for (let m = 15; m <= 60; m += 5) UNLOAD_SET[m] = true;
-        const VEH_SET = {}; (((this.state.data || {}).VEH || [])).filter(v => (v.feas || []).indexOf('RLH') >= 0).forEach(v => { VEH_SET[v.name] = true; });
+        const VEH_SET = { 'Default': true }; (((this.state.data || {}).VEH || [])).filter(v => (v.feas || []).indexOf('RLH') >= 0).forEach(v => { VEH_SET[v.name] = true; });
         // 2026-08-26 fix (#11) — writes straight through each matched DC's engine entity instead
         // of the old lmdcEdits session overlay (same bug/fix as saveLmdcEdit above).
         const cycleMonth = this.state.activeCycleMonth.rlh;
@@ -8708,7 +8752,7 @@ class NDCApp extends React.Component {
           if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_SET[cols[closeIdx]]) patch.close = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not a 30-min slot'); }
           if (d0Idx >= 0 && cols[d0Idx]) { if (D0_SET[cols[d0Idx]]) patch.d0Cutoff = cols[d0Idx]; else rowErrs.push('D0 Cutoff "' + cols[d0Idx] + '" is not "Default" or 07:00\u201315:00 in 30-min steps'); }
           if (vehIdx >= 0 && cols[vehIdx]) { if (VEH_SET[cols[vehIdx]]) patch.maxVehicle = cols[vehIdx]; else rowErrs.push('Max Vehicle Size "' + cols[vehIdx] + '" is not an RLH-feasible vehicle type'); }
-          if (unloadIdx >= 0 && cols[unloadIdx] !== '') { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not 15\u201360 in steps of 5'); }
+          if (unloadIdx >= 0 && cols[unloadIdx] !== '') { if (cols[unloadIdx] === 'Default') { patch.unloadMin = 'Default'; } else { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not "Default" or 15\u201360 in steps of 5'); } }
           if (pincodesIdx >= 0 && cols[pincodesIdx]) patch.pincodes = cols[pincodesIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
           if (pocsIdx >= 0 && cols[pocsIdx]) patch.pocs = cols[pocsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
@@ -8791,7 +8835,9 @@ class NDCApp extends React.Component {
           if (nonLocalTpIdx >= 0 && cols[nonLocalTpIdx] !== '') { const n = parseInt(cols[nonLocalTpIdx], 10); if (!isNaN(n)) dPatch.nonLocalTp = n; else rowErrs.push('Non-Local TP Limit "' + cols[nonLocalTpIdx] + '" is not a number'); }
           if (localSpeedIdx >= 0 && cols[localSpeedIdx] !== '') { const n = parseInt(cols[localSpeedIdx], 10); if (!isNaN(n)) dPatch.localSpeed = n; else rowErrs.push('Local Speed "' + cols[localSpeedIdx] + '" is not a number'); }
           if (nonLocalSpeedIdx >= 0 && cols[nonLocalSpeedIdx] !== '') { const n = parseInt(cols[nonLocalSpeedIdx], 10); if (!isNaN(n)) dPatch.nonLocalSpeed = n; else rowErrs.push('Non-Local Speed "' + cols[nonLocalSpeedIdx] + '" is not a number'); }
-          if (holdOnIdx >= 0 && cols[holdOnIdx]) { if (ONOFF_SET[cols[holdOnIdx]]) dPatch.holdTimeOn = cols[holdOnIdx] === 'On'; else rowErrs.push('Hold Time (On/Off) "' + cols[holdOnIdx] + '" is not On/Off'); }
+          // 2026-09-07 fix — Hold Time (On/Off) column parser removed: no longer part of the
+          // SC Master template (purely plan-level now), so holdOnIdx will just be -1 for any
+          // uploaded file going forward.
           if (maxHoldLocalIdx >= 0 && cols[maxHoldLocalIdx] !== '') { const n = parseInt(cols[maxHoldLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldLocal = n; else rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); }
           if (maxHoldNonLocalIdx >= 0 && cols[maxHoldNonLocalIdx] !== '') { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldNonLocal = n; else rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); }
           if (openIdx >= 0 && cols[openIdx]) { if (TIME_RE.test(cols[openIdx])) dPatch.openTime = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not HH:MM'); }
@@ -9619,18 +9665,24 @@ class NDCApp extends React.Component {
     //                  (09:00..12:00 in 30-min steps) — see rule 5 in schedulerRouteDcInfo().
     //   Max Vehicle  — RLH-feasible Vehicle Master types only, default = largest by capacity.
     //   Unload Time  — 15..60 in 5-min steps, default 15.
-    const LMDC_TIME_SLOTS = []; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) LMDC_TIME_SLOTS.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+    // 2026-09-07 fix — 'Default' prepended as a real, selectable option (same pattern
+    // LMDC_D0_OPTIONS already used) so Open/Close/Unloading can be explicitly reset to "defer to
+    // the system default" rather than only ever holding a resolved literal value.
+    const LMDC_TIME_SLOTS = ['Default']; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) LMDC_TIME_SLOTS.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
     const LMDC_D0_OPTIONS = ['Default']; for (let m = 7 * 60; m <= 15 * 60; m += 30) LMDC_D0_OPTIONS.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
     // RLH Mode (2026-08-19) — 'Valmo RLH' (default, unchanged), 'MDC' (this DC's link moves to the
     // named MDC node), 'Co-Loading' (never DS-planned — Lane Name/Cutoff/TAT hand-entered here and
     // stitched into the RLH plan at generation time). Cutoff shares the same 30-min grid as
     // everywhere else in this app; TAT is 15-min-step minute counts, same rule as Route Scheduler's.
     const RLH_MODE_OPTIONS = ['Valmo RLH', 'MDC', 'Co-Loading'];
-    const LMDC_CUTOFF_OPTIONS = LMDC_TIME_SLOTS;
+    // Co-Loading's own lane Cutoff is a required time, no "system default" concept applies —
+    // deliberately a plain list, not LMDC_TIME_SLOTS (which now leads with 'Default' for Open/
+    // Close specifically).
+    const LMDC_CUTOFF_OPTIONS = []; for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 30) LMDC_CUTOFF_OPTIONS.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
     // LMDC_TAT_OPTIONS removed (2026-08-19) — TAT is a free numeric hours input now, not a
     // fixed dropdown list; see hrsToMinRoundUp()/minToHrsLabel().
     const mdcCodeOptions = d.scs.filter(s => s.nodeKind === 'MDC').map(s => s.code);
-    const LMDC_UNLOAD_OPTIONS = []; for (let m = 15; m <= 60; m += 5) LMDC_UNLOAD_OPTIONS.push(m);
+    const LMDC_UNLOAD_OPTIONS = ['Default']; for (let m = 15; m <= 60; m += 5) LMDC_UNLOAD_OPTIONS.push(m);
     const rlhFeasibleVehNames = (d.VEH || []).filter(v => (v.feas || []).indexOf('RLH') >= 0).map(v => v.name);
     const lmdcEdits = st.lmdcEdits || {};
     const lq = (st.lmdcSearch || '').toLowerCase();
@@ -9701,7 +9753,7 @@ class NDCApp extends React.Component {
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
-    const lmdcVehNames = rlhFeasibleVehNames;
+    const lmdcVehNames = ['Default'].concat(rlhFeasibleVehNames);
     const lmdcUploadErrors = st.lmdcUploadErrors || [];
     const closeLmdcUploadErrors = () => this.setState({ lmdcUploadErrors: [] });
     // vehEdits / vehRemoved / addedVehTypes are applied over the same base so Master edits
@@ -9959,7 +10011,7 @@ class NDCApp extends React.Component {
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 40px' + (st.scRlhOpen ? ' 70px 60px 80px 68px 76px 70px 95px 110px' : '') + ' 140px 80px',
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 70px 60px 80px 68px 76px 95px 110px 140px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -9980,10 +10032,10 @@ class NDCApp extends React.Component {
       addVehBtnBg: (addVehValid && !this.isRlhCyclePast()) ? '#003F98' : '#E6EBF2', addVehBtnFg: (addVehValid && !this.isRlhCyclePast()) ? '#fff' : '#8E96A3', addVehBtnCursor: (addVehValid && !this.isRlhCyclePast()) ? 'pointer' : 'not-allowed', addVehBtnDisabled: !addVehValid || this.isRlhCyclePast(),
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Hold Time (On/Off)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
-      lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS,
+      lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS, lmdcSysDefaults: this.lmdcSystemDefaults(),
       rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS,
       lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
@@ -10006,6 +10058,10 @@ class NDCApp extends React.Component {
       nodeChangeUploadedBy: st.nodeChangeBy || 'Shashvat Jain', nodeChangeUploadedDate: st.nodeChangeDate || '10 Jul · 11:24', uploadNodeChanges: () => this.uploadNodeChanges(),
       ingestTemplate: () => (ing === 'nlh' ? this.downloadTemplate('NLH Landing Plan Ingestion', [{ k: 'LMSC Code' }, { k: 'Origin SC Code' }, { k: 'Inbound Vehicle Type' }, { k: 'Scheduled Arrival Time' }, { k: 'Dock Number' }, { k: 'Shipment Volume' }]) : this.downloadTemplate('RLH Plan Ingestion', [{ k: 'SC Code' }, { k: 'Route Code' }, { k: 'Vehicle Type' }, { k: 'Touch Points' }, { k: 'Round-Trip Distance' }, { k: 'Out Cutoff' }])),
       scVehAvail: scAvailPager.pageRows, scAvailPager: scAvailPager, scVehAvailCountLabel: availQuery ? (availShownRows + ' vehicle row' + (availShownRows === 1 ? '' : 's') + ' across ' + scVehAvailFiltered.length + ' of ' + scVehAvailRows.length + ' SCs') : (scVehAvailTotalRows + ' vehicle rows across ' + scVehAvailRows.length + ' SCs'), availSearch: st.availSearch || '', onAvailSearch: (e) => this.setState({ availSearch: e.target.value, pgAvail: 1 }), availNoResults: scVehAvailFiltered.length === 0,
+      speedProfileUploadRef: (el) => { this.speedProfileUploadEl = el; },
+      triggerSpeedProfileUpload: () => { if (this.speedProfileUploadEl) this.speedProfileUploadEl.click(); },
+      onSpeedProfileGlobalUpload: (e) => this.handleSpeedProfileGlobalUpload(e),
+      downloadSpeedProfileTemplate: () => this.downloadTemplate('Speed Profile', [{ k: 'sort_centre_id' }, { k: 'vehicle_type' }, { k: 'zone' }].concat(this.defaultSpeedBandStarts().map(h => ({ k: h })))),
       ingTabs, isIngComingSoon,
       // 2026-07-29 — NLH Plan ingestion activated: separate store (st.ingestedNlhPlans) from RLH's
       // (st.ingestedPlans), so the two tabs never mix data. Card copy/labels below are tab-aware.
@@ -10028,59 +10084,52 @@ class NDCApp extends React.Component {
       speedProfileModal: this.buildSpeedProfileModal(),
     };
   }
-  // buildSpeedProfileModal() (2026-09-03, item 1) — render-ready props for the Speed Profile
-  // popup. Kept as its own method (mirroring buildSchedCard/buildSchedNcFields elsewhere) since
-  // it's a substantial sub-tree, not because anything else calls it.
+  // buildSpeedProfileModal() (2026-09-03, item 1; reworked 2026-09-07) — render-ready props for
+  // the Speed Profile popup. One row per (vehicle type, zone) pair, 24 hourly columns. Kept as
+  // its own method (mirroring buildSchedCard/buildSchedNcFields elsewhere) since it's a
+  // substantial sub-tree, not because anything else calls it.
   buildSpeedProfileModal() {
     const st = this.state;
     const scCode = st.speedProfileSC;
     if (!scCode) return { open: false };
     const draft = st.speedProfileDraft || { bandStarts: [], vehicles: {} };
     const vehicleTypeNames = st.speedProfileVehicleTypes || [];
-    const activeVeh = st.speedProfileActiveVeh || vehicleTypeNames[0] || null;
     const sc = this.state.data.scs.find(s => s.code === scCode);
-    const bandLabel = (i) => {
-      const start = draft.bandStarts[i];
-      const end = draft.bandStarts[i + 1] || draft.bandStarts[0];
-      return start + '\u2013' + end;
-    };
-    const activeEntry = activeVeh ? (draft.vehicles[activeVeh] || { local: [], zonal: [] }) : { local: [], zonal: [] };
-    const bandRows = draft.bandStarts.map((b, i) => ({
-      idx: i, label: bandLabel(i),
-      local: activeEntry.local[i] != null ? activeEntry.local[i] : '',
-      zonal: activeEntry.zonal[i] != null ? activeEntry.zonal[i] : '',
-      onLocalChange: (v) => this.setSpeedCell(activeVeh, 'local', i, v === '' ? '' : Number(v)),
-      onZonalChange: (v) => this.setSpeedCell(activeVeh, 'zonal', i, v === '' ? '' : Number(v)),
-    }));
-    const vehicleTabs = vehicleTypeNames.map(vt => {
-      const e = draft.vehicles[vt] || { local: [], zonal: [] };
-      const complete = e.local.length === draft.bandStarts.length && e.local.every(v => v !== '' && v != null) && e.zonal.every(v => v !== '' && v != null);
-      return { name: vt, active: vt === activeVeh, complete, onClick: () => this.setState({ speedProfileActiveVeh: vt }) };
+    const readOnly = !!st.speedProfileReadOnly;
+    const reviewMode = !!st.speedProfileReviewMode;
+    const hasSeed = Object.keys(draft.vehicles).some(vt => {
+      const e = draft.vehicles[vt];
+      return (e.local[0] !== '' && e.local[0] != null) || (e.zonal[0] !== '' && e.zonal[0] != null);
+    });
+    // In review mode, show the actually-resolved matrix (inheritance applied) — exactly what
+    // Save will persist, not the raw draft with its gaps still showing.
+    const resolvedVehicles = reviewMode ? applySpeedProfileInheritance(draft.vehicles) : draft.vehicles;
+    const rows = [];
+    vehicleTypeNames.forEach(vt => {
+      const e = resolvedVehicles[vt] || { local: [], zonal: [] };
+      [['local', 'Local'], ['zonal', 'Non-Local']].forEach(([zoneKey, zoneLabel]) => {
+        const arr = e[zoneKey] || draft.bandStarts.map(() => '');
+        rows.push({
+          vehicleType: vt, zoneKey, zoneLabel, rowLabel: vt + ' \u2014 ' + zoneLabel,
+          hasAny: arr.some(v => v !== '' && v != null),
+          cells: draft.bandStarts.map((b, i) => ({
+            idx: i, label: b, value: arr[i] != null ? arr[i] : '',
+            onChange: (v) => this.setSpeedCell(vt, zoneKey, i, v === '' ? '' : Number(v)),
+          })),
+          onFillAllDay: () => this.speedFillSameAllDay(vt, zoneKey),
+          onCopyToOtherZone: () => this.speedCopyToOtherZone(vt, zoneKey),
+          onCopyToAllVehicles: () => this.speedCopyToAllVehicles(vt, zoneKey),
+        });
+      });
     });
     return {
-      open: true, scCode, scName: sc ? sc.name : scCode,
-      tab: st.speedProfileTab || 'form', onTabForm: () => this.setState({ speedProfileTab: 'form' }), onTabUpload: () => this.setState({ speedProfileTab: 'upload' }),
+      open: true, scCode, scName: sc ? sc.name : scCode, readOnly, reviewMode,
       close: () => this.closeSpeedProfileModal(),
-      vehicleTabs, activeVeh, bandRows,
-      onPreset3h: () => this.setSpeedBandPreset('3h'), onPreset1h: () => this.setSpeedBandPreset('1h'),
-      onFillLocalAllDay: () => this.speedFillSameAllDay(activeVeh, 'local'),
-      onFillZonalAllDay: () => this.speedFillSameAllDay(activeVeh, 'zonal'),
-      onCopyToAllVehicles: () => this.speedCopyToAllVehicles(activeVeh),
-      canCopy: vehicleTypeNames.length > 1,
+      rows, hasSeed,
       errors: st.speedProfileErrors || [],
+      onReview: () => this.openSpeedProfileReview(),
+      onBackToEdit: () => this.backToEditSpeedProfile(),
       onSave: () => this.saveSpeedProfileModal(),
-      uploadText: st.speedProfileUploadText || '',
-      onUploadTextChange: (e) => this.setState({ speedProfileUploadText: e.target.value }),
-      uploadErrors: st.speedProfileUploadErrors || [],
-      onParseUpload: () => this.parseSpeedProfileUpload(),
-      onUploadFile: (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => this.setState({ speedProfileUploadText: String(ev.target.result || '') });
-        reader.readAsText(file);
-      },
-      uploadTemplate: () => this.downloadTemplate('Speed Profile', [{ k: 'sort_centre_id' }, { k: 'vehicle_type' }, { k: 'band_start' }, { k: 'local_speed' }, { k: 'zonal_speed' }]),
     };
   }
 
@@ -11146,7 +11195,11 @@ class NDCApp extends React.Component {
     const docksBase = rf.rlhDocks;
     const localSpeedBase = rf.localSpeed;
     const nonLocalSpeedBase = rf.nonLocalSpeed;
-    const holdOnBase = rf.holdTimeOn;
+    // 2026-09-07 fix — Hold Time On/Off removed from SC Master entirely (now purely a
+    // plan-level toggle, no persistent per-SC default) — base is a fixed On, not read from
+    // SC Master, which still keeps rf.holdTimeOn (frozen at whatever seed value it started
+    // with, unreachable via any UI) purely for the historical schedulerPlans seed above.
+    const holdOnBase = true;
     const maxHoldLocalBase = rf.maxHoldLocal;
     const maxHoldNonLocalBase = rf.maxHoldNonLocal;
     const holdOnBySC = st.schedulerHoldOnBySC || {};
@@ -11394,7 +11447,7 @@ class NDCApp extends React.Component {
           onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(12, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(-4, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
           onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
-          onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => r.t)),
+          onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => r.t), true),
           onOpenDockProfile: () => {},
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
@@ -11460,6 +11513,7 @@ class NDCApp extends React.Component {
       // Per-plan DC list — this exact Finalised plan's own DCs, "as is" (matches how Route
       // Scheduler will actually consume it), matched against LMDC Master by code.
       const lmdcByCodeS4 = {}; (d.lmdcs || []).forEach(l => { lmdcByCodeS4[l.code] = l; });
+      const sysDefaultsS4 = this.lmdcSystemDefaults();
       const seenCode = {};
       const planDcRows = [];
       (plan.rows || []).forEach(route => {
@@ -11468,21 +11522,29 @@ class NDCApp extends React.Component {
           const base = lmdcByCodeS4[dc.code];
           const patch = lmdcEditsOverlayS4[dc.code];
           const overriddenFields = [];
-          if (patch) {
-            if (patch.open) overriddenFields.push('Open ' + patch.open);
-            if (patch.close) overriddenFields.push('Close ' + patch.close);
-            if (patch.d0Cutoff) overriddenFields.push('D0 Cutoff ' + patch.d0Cutoff);
-            if (patch.maxVehicle) overriddenFields.push('Max Vehicle ' + patch.maxVehicle);
-            if (patch.unloadMin != null) overriddenFields.push('Unload ' + patch.unloadMin + ' min');
-          }
-          // 2026-08-13 — per-field Default/Override breakdown for the new expanded columns.
-          const fieldOf = (key) => (patch && patch[key] !== undefined) ? { value: patch[key], overridden: true } : { value: base ? base[key] : undefined, overridden: false };
-          const openF = fieldOf('open'), closeF = fieldOf('close'), d0F = fieldOf('d0Cutoff'), unloadF = fieldOf('unloadMin');
-          planDcRows.push({ code: dc.code, routeCode: route.routeCode, vol: dc.vol, customized: !!patch, overriddenSummary: overriddenFields.join(' \u00b7 '),
-            openTime: openF.value || '\u2014', openOverridden: openF.overridden,
-            closeTime: closeF.value || '\u2014', closeOverridden: closeF.overridden,
+          // 2026-09-07 fix — "overridden" now means the EFFECTIVE value (a Design Review session
+          // edit if one exists, else LMDC Master's own stored value) is explicitly set — i.e. not
+          // the 'Default' sentinel — rather than only checking whether a session edit exists.
+          // Previously this only caught in-session Design Review edits, which is nearly always
+          // empty on a fresh plan; the actual "N DCs with an override" the product asks for is
+          // almost always about LMDC Master's own persisted values, which this now reflects.
+          const fieldOf = (key) => {
+            const sessionVal = (patch && patch[key] !== undefined) ? patch[key] : undefined;
+            const masterVal = base ? base[key] : undefined;
+            const effective = sessionVal !== undefined ? sessionVal : masterVal;
+            return { value: effective, overridden: effective !== undefined && effective !== 'Default' && effective !== null && effective !== '' };
+          };
+          const openF = fieldOf('open'), closeF = fieldOf('close'), d0F = fieldOf('d0Cutoff'), unloadF = fieldOf('unloadMin'), vehF = fieldOf('maxVehicle');
+          if (openF.overridden) overriddenFields.push('Open ' + openF.value);
+          if (closeF.overridden) overriddenFields.push('Close ' + closeF.value);
+          if (d0F.overridden) overriddenFields.push('D0 Cutoff ' + d0F.value);
+          if (vehF.overridden) overriddenFields.push('Max Vehicle ' + vehF.value);
+          if (unloadF.overridden) overriddenFields.push('Unload ' + unloadF.value + ' min');
+          planDcRows.push({ code: dc.code, routeCode: route.routeCode, vol: dc.vol, customized: overriddenFields.length > 0, overriddenSummary: overriddenFields.join(' \u00b7 '),
+            openTime: this.resolveLmdcField(openF.value, sysDefaultsS4.open), openOverridden: openF.overridden,
+            closeTime: this.resolveLmdcField(closeF.value, sysDefaultsS4.close), closeOverridden: closeF.overridden,
             d0Cutoff: d0F.value || 'Default', d0Overridden: d0F.overridden,
-            unloadMin: unloadF.value != null ? unloadF.value + ' min' : '\u2014', unloadOverridden: unloadF.overridden,
+            unloadMin: this.resolveLmdcField(unloadF.value, sysDefaultsS4.unloadMin) + ' min', unloadOverridden: unloadF.overridden,
           });
         });
       });
@@ -11813,10 +11875,18 @@ class NDCApp extends React.Component {
     // localSpeed/nonLocalSpeed above when this SC has no profile at all for that vehicle type —
     // nothing breaks for an SC that hasn't had a Speed Profile entered yet.
     const speedCycleMonth = st.activeCycleMonth.rlh;
+    const VEH_for_speed = (d.VEH || []);
     const speedFor = (vehicleType, isLocal, minuteOfDay) => {
       const zone = isLocal ? 'Local' : 'Zonal';
       const fromProfile = lookupSpeedProfile(this.engineStore, speedCycleMonth, sp.scCode, vehicleType, zone, minuteOfDay);
-      return fromProfile != null ? fromProfile : (isLocal ? localSpeed : nonLocalSpeed);
+      if (fromProfile != null) return fromProfile;
+      // 2026-09-07 — Vehicle Master's own per-vehicle-type speed is the next fallback tier (more
+      // specific than the flat SC-level value, since it varies by vehicle type even without a
+      // Speed Profile entry) before finally falling back to the flat SC Master value.
+      const veh = VEH_for_speed.find(v => v.name === vehicleType);
+      const fromVehMaster = veh ? (isLocal ? veh.localSpeed : veh.nonLocalSpeed) : null;
+      if (fromVehMaster != null) return fromVehMaster;
+      return isLocal ? localSpeed : nonLocalSpeed;
     };
     const fmtTime = (min) => { const m = ((min % 1440) + 1440) % 1440; const hh = Math.floor(m / 60), mm = m % 60; return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'); };
     // roundUp(min, step) (2026-08-18) — Dispatch/Cutoff times are always a multiple of 30 min;
@@ -11850,8 +11920,10 @@ class NDCApp extends React.Component {
     const resolveDcHours = (code) => {
       const base = lmdcByCode[code];
       const patch = lmdcEditsOverlay[code];
-      const open = (patch && patch.open) || (base ? base.open : '05:00');
-      const close = (patch && patch.close) || (base ? base.close : '21:00');
+      const rawOpen = (patch && patch.open !== undefined) ? patch.open : (base ? base.open : 'Default');
+      const rawClose = (patch && patch.close !== undefined) ? patch.close : (base ? base.close : 'Default');
+      const open = this.resolveLmdcField(rawOpen, '05:00');
+      const close = this.resolveLmdcField(rawClose, '21:00');
       return { openMin: timeToMin(open), closeMin: timeToMin(close) };
     };
     // holdForArrival(arrivalAbsMin, dcCode) — the real formula: 0 while the DC is open, otherwise

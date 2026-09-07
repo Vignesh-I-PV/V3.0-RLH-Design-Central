@@ -404,7 +404,7 @@ All modules
 </>) : null}
 {/* ===== NODE INPUTS (2026-08-26, new) — tab created, deliberately left blank per product decision. ===== */}
 {(legIsNodesTab) ? (<>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Node Inputs \u2014 not built for {activeLegShort} yet.</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Node Inputs — not built for {activeLegShort} yet.</div>
 </>) : null}
 {/* ===== NODE & VEHICLE MASTER (2026-08-26 rebuild) — 3 sub-tabs: Sort Centre Master, SC Vehicle
      Availability, Vehicle Master. NLH gets real content in all 3; FM shows the tab shell only,
@@ -418,7 +418,7 @@ All modules
 {(legIsScSubTab) ? (<>
 <div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>Shared columns (name, zone, capacity, dispatch role) come from the network-wide SC registry — editable from any leg. {(legIsNlh) ? 'NLH Dock Capacity and Lane Name are NLH-local, visible only here.' : 'Add FM-specific columns here once they\u2019re defined.'}</div>
 {(legIsFm) ? (<>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Sort Centre Master \u2014 not built for FM Carting yet.</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Sort Centre Master — not built for FM Carting yet.</div>
 </>) : (<>
 {(legMastersEmpty) ? (<>
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>No Sort Centres visible yet for this cycle.</div>
@@ -454,10 +454,10 @@ All modules
 </>) : null}
 {(legIsAvailSubTab) ? (<>
 {(legIsFm) ? (<>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>SC Vehicle Availability \u2014 not built for FM Carting yet.</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>SC Vehicle Availability — not built for FM Carting yet.</div>
 </>) : (<>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
-<div style={css(`font-size:11.5px; color:#8E96A3;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) \u2014 NLH originates only from FMSCs.</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>Scoped to SCs that dispatch NLH (FMSC and Hybrid nodes) — NLH originates only from FMSCs.</div>
 <button onClick={onLegAvailAddScOpen} disabled={legCycleIsPast} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>+ Add SC</button>
 </div>
 {(legAvailAddScOpen) ? (<>
@@ -532,7 +532,7 @@ All modules
 </>) : null}
 {(legIsVehicleSubTab) ? (<>
 {(legIsFm) ? (<>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Vehicle Master \u2014 not built for FM Carting yet.</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Vehicle Master — not built for FM Carting yet.</div>
 </>) : (<>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
 <div style={css(`font-size:11.5px; color:#8E96A3;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
@@ -594,7 +594,7 @@ All modules
 {/* ===== DESIGN INGESTION — NLH real (unchanged), FM empty. ===== */}
 {(legIsIngestionTab) ? (<>
 {(legIsFm) ? (<>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Design Ingestion \u2014 not built for FM Carting yet.</div>
+<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Design Ingestion — not built for FM Carting yet.</div>
 </>) : (<>
 <div style={css(`padding:18px 20px; border:1px solid #E6EBF2; border-radius:10px; background:#fff; margin-bottom:16px;`)}>
 <div style={css(`font-size:13.5px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Add an NLH scenario</div>
@@ -947,9 +947,15 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
+{/* 2026-09-07 fix — these three headers no longer rely on guessing an exact pixel width wide
+    enough for the label at nowrap: confirmed via screen recording that "NON-LOCAL SPD"/"MAX HOLD
+    LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS" were overlapping into garbled text. Allowing wrap
+    (with a line-height that fits two lines within the header row's existing padding) removes the
+    overflow risk entirely, rather than just reducing it with a wider column that could still be
+    wrong. */}
+<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
+<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
+<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
 {/* 2026-08-26 fix — NLH Docks column removed from RLH's SC Master table (see edit-form removal
     above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
@@ -967,7 +973,11 @@ All modules
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.closeTime}</div>
-<div />
+{/* 2026-09-07 fix — a stray leftover placeholder <div/> used to sit here (paired with the
+    collapse-toggle header column removed earlier this session, whose matching header cell was
+    deleted but this body-side partner was missed) — it shifted every subsequent cell one column
+    out of alignment with the 19-track header, so the row had 20 grid items for 19 tracks and the
+    last one (the edit/deactivate icons) had nowhere to go and wrapped onto a new implicit row. */}
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
@@ -1030,12 +1040,24 @@ All modules
 </div>{/* /full-height SC Master */}
 </>) : null}
 {(isAvail) ? (<>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px;`)}>
-<div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — SC Vehicle Availability</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per vehicle type per SC · upload replaces all prior records</div></div>
-<button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+{/* 2026-09-07 fix — the "Bulk Upload — SC Vehicle Availability" card (icon + title + subtitle)
+    and the search/Speed-Profile toolbar used to be two separate bordered sections stacked on top
+    of each other. Merged into one toolbar row per request, with the descriptive title/subtitle
+    text removed entirely — just the functional controls remain. */}
+<div style={css(`display:flex; align-items:center; gap:14px; padding:10px 16px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={availSearch} onInput={onAvailSearch} placeholder={"Search SC code, name or vehicle…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:220px;`)} />
+</div>
+<span style={css(`font-size:13px; font-weight:700; color:#14171F; white-space:nowrap;`)}>{scVehAvailCountLabel}</span>
+<div style={css(`flex:1; min-width:12px;`)} />
+<button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
+<button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'}; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 <input ref={availFileInputRef} type={"file"} accept={".csv"} onChange={onAvailFileChange} style={css(`display:none;`)} />
+<div style={css(`width:1px; height:26px; background:#E6EBF2; flex-shrink:0;`)} />
+<input ref={speedProfileUploadRef} type={"file"} accept={".csv"} onChange={onSpeedProfileGlobalUpload} style={css(`display:none;`)} />
+<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Speed Profile Template</button>
+<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload Speed Profile</button>
 </div>
 {(hasAvailUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1049,20 +1071,6 @@ All modules
 </div>
 </div>
 </>) : null}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; display:flex; align-items:center; gap:14px; margin-bottom:12px;`)}>
-<div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
-<input value={availSearch} onInput={onAvailSearch} placeholder={"Search SC code, name or vehicle…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:220px;`)} />
-</div>
-<span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>{scVehAvailCountLabel}</span>
-<div style={css(`flex:1;`)} />
-<span style={css(`font-size:11.5px; color:#8E96A3;`)}>Vehicle availability is configured per SC — use Add on each SC below.</span>
-{/* 2026-09-07 — Speed Profile upload moved out of the per-SC popup entirely, now a global action
-    here: SC Code becomes part of the row grain (SC x Vehicle Type x Zone, 24 hourly columns). */}
-<input ref={speedProfileUploadRef} type={"file"} accept={".csv"} onChange={onSpeedProfileGlobalUpload} style={css(`display:none;`)} />
-<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Speed Profile Template</button>
-<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload Speed Profile</button>
-</div>
 {(scVehAvail || []).map((g, __i22) => (<React.Fragment key={__i22}>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:12px; overflow:hidden;`)}>
 {/* SC header — mirrors Design-Creation Step 2 Vehicle Configuration cards */}
@@ -1339,15 +1347,15 @@ All modules
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; text-align:center; border-left:1px solid #D0D5DD;`)}><span style={css(`display:inline-flex; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${l.isMdc ? '#EEEAFB' : (l.isCoLoad ? '#F0EDFB' : '#F2F5FA')}; color:${l.isMdc ? '#5B4FA0' : (l.isCoLoad ? '#5B4FA0' : '#5A5E66')}; white-space:nowrap;`)}>{l.rlhMode}</span></div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><select value={l.draftRlhMode} onChange={l.onDraftRlhMode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}>{(rlhModeOptions || []).map((rm, __iRM) => (<React.Fragment key={__iRM}><option value={rm}>{rm}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; `)}>{l.isMdc ? l.mdcCode : (l.isCoLoad ? l.laneName : '\u2014')}</div></>) : null}
-{(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC\u2026</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
+{(l.editing && l.draftIsMdc) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftMdcCode} onChange={l.onDraftMdcCode} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 4px; box-sizing:border-box; outline:none; background:#fff;`)}><option value={""}>Select MDC…</option>{(mdcCodeOptions || []).map((mc, __iMC) => (<React.Fragment key={__iMC}><option value={mc}>{mc}</option></React.Fragment>))}</select></div></>) : null}
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"text"} value={l.draftLaneName} onInput={l.onDraftLaneName} placeholder={"e.g. CL-01"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
-{(l.editing && !l.draftIsMdc && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; `)}>\u2014</div></>) : null}
+{(l.editing && !l.draftIsMdc && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; `)}>—</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; font-variant-numeric:tabular-nums; color:#14171F; `)}>{l.isCoLoad ? l.cutoff : '\u2014'}</div></>) : null}
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftCutoff} onChange={l.onDraftCutoff} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 2px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcCutoffOptions || []).map((co, __iCO) => (<React.Fragment key={__iCO}><option value={co}>{co}</option></React.Fragment>))}</select></div></>) : null}
-{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>—</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11.5px; text-align:center; color:#14171F; `)}>{l.isCoLoad ? l.tat : '\u2014'}</div></>) : null}
 {(l.editing && l.draftIsCoLoad) ? (<><div style={css(`padding:5px 6px; `)}><input type={"number"} step={"0.25"} min={"0.25"} value={l.draftTat} onInput={l.onDraftTat} placeholder={"hrs"} title={"Free numeric entry, in hours \u2014 rounds up to the nearest 15 min (0.25 hr) on save"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
-{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>\u2014</div></>) : null}
+{(l.editing && !l.draftIsCoLoad) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#C3C9D4; text-align:center; `)}>—</div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; border-left:1px solid #D0D5DD; color:${l.open === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.open === 'Default' ? 'italic' : 'normal'};`)}>{l.open === 'Default' ? 'Default' : l.open}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><select value={l.draftOpen} onChange={l.onDraftOpen} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; background:#fff;`)}>{(lmdcTimeSlots || []).map((ts, __i45) => (<React.Fragment key={__i45}><option value={ts}>{ts}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:12px; text-align:center; font-variant-numeric:tabular-nums; color:${l.close === 'Default' ? '#8E96A3' : '#14171F'}; font-style:${l.close === 'Default' ? 'italic' : 'normal'};`)}>{l.close === 'Default' ? 'Default' : l.close}</div></>) : null}
@@ -2405,7 +2413,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Add one on the SC-SC and NLH Design card's Design Ingestion tab, or pick a different month above.</div>
 </div>
 </>) : (<>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO \u2014 {schedNlhMonthLabel}</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO — {schedNlhMonthLabel}</div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; margin-bottom:16px;`)}>
 {(schedulerNlhScenarioCards || []).map((sc, __iNsc) => (<React.Fragment key={__iNsc}>
 <button onClick={sc.onClick} style={css(`display:flex; align-items:center; gap:13px; text-align:left; padding:14px 16px; border:1.5px solid ${sc.active ? '#003F98' : '#E6EBF2'}; background:${sc.active ? '#EAEEFB' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
@@ -2671,8 +2679,8 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 <div style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0LandingPct}{r.d0LandingPct !== '\u2014' ? '%' : ''}</div>
 </>) : (<>
-<div style={css(`font-size:11.5px; color:#8E96A3;`)}>\u2014</div>
-<div style={css(`font-size:11.5px; color:#8E96A3;`)}>\u2014</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>—</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>—</div>
 </>)}
 </div>
 </React.Fragment>))}
@@ -2695,7 +2703,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`max-width:460px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;`)}>
 <div style={css(`width:52px; height:52px; border-radius:14px; background:#EAF3EF; display:flex; align-items:center; justify-content:center;`)}><svg width={"26"} height={"26"} viewBox={"0 0 24 24"} fill={"none"} stroke={mapAccent} strokeWidth={"1.8"}><path d={"M9 20l-5.5-2.2V6.4L9 4l6 2 5.5-2.2v11.4L15 17M9 20V6M15 19V5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>SC-DC Mapping</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; line-height:1.5;`)}>Joint multi-SC assignment planning \u2014 upstream of Route Planner, not a peer of it. Cluster 2+ SCs, review the suggested DC assignment, and commit the migrations you accept.</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; line-height:1.5;`)}>Joint multi-SC assignment planning — upstream of Route Planner, not a peer of it. Cluster 2+ SCs, review the suggested DC assignment, and commit the migrations you accept.</div>
 <button onClick={goMapping} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 20px; border:none; background:${mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:6px;`)}>Start a mapping run<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
@@ -2717,14 +2725,14 @@ NLH cycle: {schedNlhMonthLabel}
 {/* ===== STEP 1 — Cluster Definition ===== */}
 {(mapStep === 1) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Cluster Definition</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Pick at least 2 SCs to include in this joint-solve run. No distance guidance is shown here \u2014 pick freely.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Pick at least 2 SCs to include in this joint-solve run. No distance guidance is shown here — pick freely.</div>
 <input value={mapDraftName} onInput={onMapSetName} placeholder={"Cluster / run name (optional)"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13px; margin-bottom:16px; box-sizing:border-box;`)} />
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>{mapScCount} SC{mapScCount === 1 ? '' : 's'} selected</div>
 <div style={css(`display:flex; flex-direction:column; gap:6px; max-height:360px; overflow-y:auto; border:1px solid #E6EBF2; border-radius:8px; padding:6px;`)}>
 {(mapScList || []).map((s, __iMsc) => (<React.Fragment key={__iMsc}>
 <div onClick={s.onClick} style={css(`display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:7px; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)} onMouseEnter={(e) => hoverOn(e, `background:${s.selected ? '#EAF3EF' : '#F7F9FC'};`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:7px; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)}>
 <div style={css(`width:18px; height:18px; border-radius:5px; border:2px solid ${s.selected ? mapAccent : '#C3C9D4'}; background:${s.selected ? mapAccent : '#fff'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(s.selected) ? (<><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"3"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}</div>
-<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{s.code} \u2014 {s.name}</div>
+<div style={css(`flex:1; font-size:12.5px; font-weight:600; color:#14171F;`)}>{s.code} — {s.name}</div>
 <div style={css(`font-size:10.5px; color:#8E96A3;`)}>{s.zone}</div>
 </div>
 </React.Fragment>))}
@@ -2733,7 +2741,7 @@ NLH cycle: {schedNlhMonthLabel}
 {/* ===== STEP 2 — DC Group ===== */}
 {(mapStep === 2) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>DC Group</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Auto-computed from the SCs you picked \u2014 every DC with an active AutoDML link to one of them, plus any unmapped new additions, minus anything flagged for closure. Nothing here is manually edited; fix the source data in SC-DC Connections if something looks wrong.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Auto-computed from the SCs you picked — every DC with an active AutoDML link to one of them, plus any unmapped new additions, minus anything flagged for closure. Nothing here is manually edited; fix the source data in SC-DC Connections if something looks wrong.</div>
 <div style={css(`display:flex; gap:10px; margin-bottom:16px;`)}>
 <div style={css(`flex:1; padding:12px 14px; background:#EAF3EF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:${mapAccent};`)}>{mapDcLinkCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>active AutoDML links</div></div>
 <div style={css(`flex:1; padding:12px 14px; background:#FBF1DF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:#C77B00;`)}>{mapDcAdditionCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>unmapped additions</div></div>
@@ -2758,7 +2766,7 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={() => onMapBaselineSource('finalisedPlan')} style={css(`flex:1; height:44px; padding:0 12px; border:1px solid ${mapBaselineSource === 'finalisedPlan' ? mapAccent : '#E6EBF2'}; background:${mapBaselineSource === 'finalisedPlan' ? '#EAF3EF' : '#fff'}; color:#14171F; font-family:inherit; font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; text-align:left;`)}>Existing Finalised RLH plan<br /><span style={css(`font-weight:400; color:#8E96A3; font-size:11px;`)}>{mapBaselinePlans.length} available for the selected SCs</span></button>
 <button onClick={() => onMapBaselineSource('nearestSc')} style={css(`flex:1; height:44px; padding:0 12px; border:1px solid ${mapBaselineSource === 'nearestSc' ? mapAccent : '#E6EBF2'}; background:${mapBaselineSource === 'nearestSc' ? '#EAF3EF' : '#fff'}; color:#14171F; font-family:inherit; font-size:12px; font-weight:600; border-radius:8px; cursor:pointer; text-align:left;`)}>Auto-computed nearest-SC<br /><span style={css(`font-weight:400; color:#8E96A3; font-size:11px;`)}>Fallback, no prior plan needed</span></button>
 </div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>CROSS-SC MIGRATION PENALTY (\u03c1) \u2014 {mapRho.toFixed(2)}</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>CROSS-SC MIGRATION PENALTY (ρ) — {mapRho.toFixed(2)}</div>
 <input type={"range"} min={"0"} max={"1"} step={"0.01"} value={mapRho} onInput={onMapRho} style={css(`width:100%; margin-bottom:20px; accent-color:${mapAccent};`)} />
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>HISTORICAL WEIGHT (HW)</div>
 <div style={css(`display:flex; gap:8px; margin-bottom:6px;`)}>
@@ -2773,7 +2781,7 @@ NLH cycle: {schedNlhMonthLabel}
 {/* ===== STEP 4 — Preview & Trigger ===== */}
 {(mapStep === 4) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Preview &amp; Trigger</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{mapScCount} SCs \u00b7 {mapDcCount2} DCs in this run.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{mapScCount} SCs · {mapDcCount2} DCs in this run.</div>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12px; color:#14171F;`)}>Dock scheduling isn't yet integrated into this solver \u2014 arrival time, D0 flag, hold time and TAT in this run's results aren't reliable. Valid for SC/DC assignment and cost analysis only, not operational timing.</span>
@@ -2781,7 +2789,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(mapAnyMissingCap) ? (<>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBEAEA; border:1px solid #F3C9C9; border-radius:8px; margin-bottom:16px;`)}>
 <svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>One or more selected SCs is missing Sort Capacity / Volume Capacity / HTP in SC Master \u2014 populate these before triggering. An unconstrained capacity would produce a wrong-but-plausible result.</span>
+<span style={css(`font-size:12px; color:#14171F;`)}>One or more selected SCs is missing Sort Capacity / Volume Capacity / HTP in SC Master — populate these before triggering. An unconstrained capacity would produce a wrong-but-plausible result.</span>
 </div>
 </>) : null}
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
@@ -2790,7 +2798,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(mapPreviewScs || []).map((s, __iMps) => (<React.Fragment key={__iMps}>
 <div style={css(`display:grid; grid-template-columns:1fr 100px 100px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{s.code} \u2014 {s.name}</div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{s.code} — {s.name}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F;`)}>{s.sortCap || '\u2014'}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F;`)}>{s.volCap || '\u2014'}</div>
 <div style={css(`text-align:center;`)}><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${s.missingCap ? '#FBEAEA' : '#E7F4EC'}; color:${s.missingCap ? '#D14B4B' : '#128A3E'};`)}>{s.missingCap ? 'Missing data' : 'Ready'}</span></div>
@@ -2813,7 +2821,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(mapSection === 'queue') ? (<>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`width:420px; max-width:100%; background:#fff; border:1px solid #E6EBF2; border-radius:12px; padding:24px;`)}>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Running the joint solve\u2026</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Running the joint solve…</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Same queue mechanism RLH and Route Scheduler already use.</div>
 <div style={css(`display:grid; grid-template-columns:1.4fr 1fr; gap:8px; padding:9px 12px; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
 <div style={css(`font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Run</div>
@@ -3275,7 +3283,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
-<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
 <div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>Triggered {c.createdAt} · {c.createdBy}</div>
 </div>
@@ -3298,7 +3306,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in→LMDC-out (days)</div></div>
 </div>
 {/* Merged hold-metrics box (later session) — Holding Time + Lanes w/ Hold used to be separate
     tiles above; avg/max hold are new. All three now live together, one box, three rows —
@@ -3314,7 +3322,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -3401,7 +3409,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${reviewSchedDetail.d0Color}; line-height:1;`)}>{reviewSchedDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.rolloverPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Rollover</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{reviewSchedDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in→LMDC-out (days)</div></div>
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:6px 18px; margin-bottom:18px;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{reviewSchedDetail.avgHoldHours} hrs</span></div>
@@ -3515,14 +3523,14 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(!reviewMapHasRuns) ? (<>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
-<div style={css(`max-width:420px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>No completed mapping runs yet \u2014 trigger one from Design Creation's SC-DC Mapping module.</div>
+<div style={css(`max-width:420px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>No completed mapping runs yet — trigger one from Design Creation's SC-DC Mapping module.</div>
 </div>
 </>) : (<>
 <div style={css(`flex:1; overflow-y:auto; padding:24px 32px;`)}>
 <div style={css(`max-width:980px; margin:0 auto;`)}>
 {/* Run picker */}
 <div style={css(`display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;`)}>
-{(reviewMapRunList || []).map((r, __iRmr) => (<React.Fragment key={__iRmr}><button onClick={r.onClick} style={css(`height:32px; padding:0 14px; border:1px solid ${r.active ? reviewMapAccent : '#E6EBF2'}; background:${r.active ? '#EAF3EF' : '#fff'}; color:${r.active ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{r.name} \u00b7 {r.statusLabel}</button></React.Fragment>))}
+{(reviewMapRunList || []).map((r, __iRmr) => (<React.Fragment key={__iRmr}><button onClick={r.onClick} style={css(`height:32px; padding:0 14px; border:1px solid ${r.active ? reviewMapAccent : '#E6EBF2'}; background:${r.active ? '#EAF3EF' : '#fff'}; color:${r.active ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{r.name} · {r.statusLabel}</button></React.Fragment>))}
 </div>
 {/* ===== STAGE 1 \u2014 decide ===== */}
 {(reviewMapStage === 'decide') ? (<>
@@ -3532,7 +3540,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {/* View 1 — DC-Level Changes */}
 {(reviewMapTab === 'changes') ? (<>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>{reviewMapUnchangedCount} unchanged (no decision needed) \u00b7 {reviewMapNewUnservedCount} new-DC unserved (flagged only, no action available)</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:12px;`)}>{reviewMapUnchangedCount} unchanged (no decision needed) · {reviewMapNewUnservedCount} new-DC unserved (flagged only, no action available)</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
 <div>DC</div><div>OLD SC</div><div>NEW SC</div><div>REMARK</div><div style={css(`text-align:center;`)}>DECISION</div>
@@ -3553,7 +3561,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </React.Fragment>))}
-{((reviewMapDcRows || []).length === 0) ? (<><div style={css(`padding:24px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Nothing needs a decision \u2014 every DC is either unchanged or a new unserved addition.</div></>) : null}
+{((reviewMapDcRows || []).length === 0) ? (<><div style={css(`padding:24px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Nothing needs a decision — every DC is either unchanged or a new unserved addition.</div></>) : null}
 </div>
 </>) : null}
 {/* View 2 — SC Pivot Summary */}
@@ -3605,7 +3613,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SC \u00d7 SC MOVEMENT</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SC × SC MOVEMENT</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow-x:auto; margin-bottom:20px;`)}>
 <div style={css(`display:grid; grid-template-columns:110px repeat(${(reviewMapMatrixScs || []).length}, 90px); background:#F7F9FC;`)}>
 <div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66;`)}>FROM \\ TO</div>
@@ -3625,7 +3633,7 @@ NLH cycle: {schedNlhMonthLabel}
 </>) : null}
 {/* ===== STAGE 2 \u2014 per-SC plan cards, post-commit ===== */}
 {(reviewMapStage === 'cards') ? (<>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Committed \u2014 {reviewMapRunName}</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Committed — {reviewMapRunName}</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Each SC below can be pushed to Ops Alignment independently.</div>
 <div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
 {(reviewMapCards || []).map((c, __iRmcd) => (<React.Fragment key={__iRmcd}>
@@ -3637,7 +3645,7 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`color:#D14B4B;`)}>Removed <strong>{c.removed}</strong></span>
 <span style={css(`color:#128A3E;`)}>Added <strong>{c.added}</strong></span>
 </div>
-{(c.isPushed) ? (<><span style={css(`padding:4px 12px; border-radius:999px; font-size:11px; font-weight:600; background:#E7F4EC; color:#128A3E;`)}>Pushed \u00b7 {c.pushedAt}</span></>) : (<>
+{(c.isPushed) ? (<><span style={css(`padding:4px 12px; border-radius:999px; font-size:11px; font-weight:600; background:#E7F4EC; color:#128A3E;`)}>Pushed · {c.pushedAt}</span></>) : (<>
 <button onClick={c.onPush} style={css(`height:32px; padding:0 16px; border:none; background:${reviewMapAccent}; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer; white-space:nowrap;`)}>Push to Alignment</button>
 </>)}
 </div>
@@ -3752,7 +3760,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
-<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
 {/* Stage tracker (2026-08-18) — replaces the old bare stage chip, which reused the same 4-word
     status vocabulary for both stages ("Acknowledged" appearing once per stage) and forced the
@@ -3787,7 +3795,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in→LMDC-out (days)</div></div>
 </div>
 <div style={css(`margin-top:10px; background:#F7F9FC; border-radius:8px; padding:2px 12px;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.avgHoldHours} hrs</span></div>
@@ -3798,7 +3806,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -4820,7 +4828,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
-<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw} · Hold {c.holdOn ? 'On' : 'Off'}</span>
+<span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
 {/* Stage tracker (2026-08-18) — same shared shape as Design Review/Planner's card; see the
     Planner-card copy above for the full rationale comment. */}
@@ -4852,7 +4860,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-top:8px;`)}>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:${c.d0Color}; line-height:1;`)}>{c.d0LandingPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>D0 Landing</div>{(c.warnD0Low) ? (<><div style={css(`font-size:8.5px; font-weight:700; color:#D14B4B; margin-top:3px; line-height:1.3;`)}>Below 30% threshold</div></>) : null}</div>
 <div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.rolloverPct}%</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>Rollover</div></div>
-<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+<div style={css(`background:#fff; padding:8px 10px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:500; color:#14171F; line-height:1;`)}>{c.lmscInOutDays}</div><div style={css(`font-size:9.5px; color:#5A5E66; margin-top:4px;`)}>LMSC-in→LMDC-out (days)</div></div>
 </div>
 <div style={css(`margin-top:10px; background:#F7F9FC; border-radius:8px; padding:2px 12px;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:10.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>{c.avgHoldHours} hrs</span></div>
@@ -4863,7 +4871,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`margin-top:10px;`)}>
 <details style={css(`border:1px solid #EEF1F6; border-radius:7px; overflow:hidden;`)}>
 <summary style={css(`cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; padding:6px 9px; background:#FAFBFD; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>
-<span>SLOT-WISE DISPATCH \u00b7 {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
+<span>SLOT-WISE DISPATCH · {c.slotBreakdown.length} slot{c.slotBreakdown.length === 1 ? '' : 's'}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 </summary>
 <div>
@@ -5414,7 +5422,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; margin-top:8px;`)}>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Latitude</div><input value={dc.latVal} onInput={dc.onLat} placeholder={dc.curLat} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Longitude</div><input value={dc.lngVal} onInput={dc.onLng} placeholder={dc.curLng} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
-<div><div style={css(`font-size:10px; color:${dc.tpRequired ? '#C77B00' : '#8E96A3'}; margin-bottom:3px; font-weight:${dc.tpRequired ? '700' : '400'};`)}>Touch-point #{(dc.isPendingRoute) ? (<> <span style={css(`color:#D14B4B;`)}>*</span></>) : null}</div><input value={dc.tpVal} onInput={dc.onTp} placeholder={dc.tpPlaceholder} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${dc.tpRequired ? '#D14B4B' : '#C77B00'}; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} />{(dc.tpRequired) ? (<><div style={css(`font-size:9.5px; color:#D14B4B; margin-top:3px;`)}>Required \u2014 no established order in the new route yet</div></>) : null}</div>
+<div><div style={css(`font-size:10px; color:${dc.tpRequired ? '#C77B00' : '#8E96A3'}; margin-bottom:3px; font-weight:${dc.tpRequired ? '700' : '400'};`)}>Touch-point #{(dc.isPendingRoute) ? (<> <span style={css(`color:#D14B4B;`)}>*</span></>) : null}</div><input value={dc.tpVal} onInput={dc.onTp} placeholder={dc.tpPlaceholder} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid ${dc.tpRequired ? '#D14B4B' : '#C77B00'}; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} />{(dc.tpRequired) ? (<><div style={css(`font-size:9.5px; color:#D14B4B; margin-top:3px;`)}>Required — no established order in the new route yet</div></>) : null}</div>
 <div><div style={css(`font-size:10px; color:#8E96A3; margin-bottom:3px;`)}>Distance (km) <span title={"Leg into this DC, from whichever node precedes it. The return leg back to the SC is always calculated automatically — never editable."} style={css(`cursor:help;`)}>ⓘ</span></div><input value={dc.distVal} onInput={dc.onDist} placeholder={dc.curDist} style={css(`width:100%; height:30px; padding:0 8px; border:1px solid #C77B00; border-radius:6px; font-family:inherit; font-size:12px; color:#14171F; outline:none;`)} /></div>
 </div>
 <div style={css(`display:grid; grid-template-columns:${dc.isSplitTarget ? '1fr 1fr' : '1fr'}; gap:8px; margin-top:8px;`)}>
@@ -5542,7 +5550,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
 <div style={css(`width:600px; max-width:100%; max-height:92vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedNcModal.title} \u00b7 {schedNcModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedNcModal.intro} Reviewing as <strong>{schedNcModal.roleLabel}</strong>.</div></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{schedNcModal.title} · {schedNcModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{schedNcModal.intro} Reviewing as <strong>{schedNcModal.roleLabel}</strong>.</div></div>
 <button onClick={schedNcModal.close} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`padding:20px 22px;`)}>
@@ -5550,7 +5558,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(schedNcModal.fields || []).map((f, __iSNC1) => (<React.Fragment key={__iSNC1}>
 <div style={css(`border:1px solid #EEF1F6; border-radius:8px; padding:10px 12px; background:#FAFBFD;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px;`)}>
-<span style={css(`font-size:11.5px; font-weight:600; color:#14171F;`)}>{f.label}<span style={css(`font-weight:400; color:#8E96A3;`)}> \u2014 currently {f.currentLabel}</span></span>
+<span style={css(`font-size:11.5px; font-weight:600; color:#14171F;`)}>{f.label}<span style={css(`font-weight:400; color:#8E96A3;`)}> — currently {f.currentLabel}</span></span>
 <button onClick={f.onToggleFlag} aria-label={"Flag this field"} style={css(`display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 9px; border:1px solid ${f.toggleBd}; background:${f.toggleBg}; color:${f.toggleFg}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:6px; cursor:pointer;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{f.toggleLabel}</button>
 </div>
 {(f.flagged) ? (<>
@@ -5561,7 +5569,7 @@ NLH cycle: {schedNlhMonthLabel}
 </select>
 </>)}
 <select value={f.reasonVal} onChange={f.onReason} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
-<option value={""}>Select reason\u2026</option>
+<option value={""}>Select reason…</option>
 {(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
 </select>
 </div>
@@ -5570,7 +5578,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>\u2014 required only if any flagged reason is "Others"</span></div><textarea value={schedNcModal.remark} onInput={schedNcModal.onRemark} placeholder={"Why this change is needed (ground reality, vendor, DC constraint)\u2026"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} /></div>
+<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required only if any flagged reason is "Others"</span></div><textarea value={schedNcModal.remark} onInput={schedNcModal.onRemark} placeholder={"Why this change is needed (ground reality, vendor, DC constraint)\u2026"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} /></div>
 </div>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
 <div style={css(`flex:1; min-width:0;`)}>{(schedNcModal.hasFlagged) ? (<><span style={css(`font-size:11.5px; color:#5A5E66;`)}>{(schedNcModal.fields || []).filter(f => f.flagged).length} field(s) flagged</span></>) : (<><span style={css(`font-size:11.5px; color:#8E96A3;`)}>Flag at least one field to submit</span></>)}</div>
@@ -5608,7 +5616,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:2px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>{c.whereLabel}</span><span style={css(`padding:1px 7px; border-radius:999px; font-size:9px; font-weight:700; background:#EAEEFB; color:#2F4FC6; white-space:nowrap;`)}>{c.proposedBy}</span></div>
 {/* Change visibility (2026-08-18) — struck original value → colored proposed value, mirroring
     Route Planner's own diff pattern (dv.hasTpChange etc.), instead of only showing the new value. */}
-{(c.hasChange) ? (<><div style={css(`font-size:12.5px; display:flex; align-items:center; gap:6px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{c.origLabel}</span><span style={css(`color:#C77B00; font-weight:700;`)}>{c.changeVal}</span></div></>) : (<><div style={css(`font-size:12.5px; color:#14171F;`)}>\u2192 {c.changeVal}</div></>)}
+{(c.hasChange) ? (<><div style={css(`font-size:12.5px; display:flex; align-items:center; gap:6px;`)}><span style={css(`text-decoration:line-through; color:#8E96A3; font-size:11px;`)}>{c.origLabel}</span><span style={css(`color:#C77B00; font-weight:700;`)}>{c.changeVal}</span></div></>) : (<><div style={css(`font-size:12.5px; color:#14171F;`)}>→ {c.changeVal}</div></>)}
 <div style={css(`font-size:10.5px; color:#5A5E66; margin-top:2px;`)}>{c.reason}</div>
 {(c.remark) ? (<><div style={css(`margin-top:6px; padding:8px 11px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:7px; font-size:11.5px; color:#14171F; font-style:italic;`)}>"{c.remark}"</div></>) : null}
 {(c.superseded) ? (<><div style={css(`margin-top:4px; font-size:10.5px; color:#8E96A3;`)}>{c.supersededNote}</div></>) : null}
@@ -5635,7 +5643,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={laneFlagModal.close}>
 <div style={css(`width:440px; max-width:100%; background:#fff; border-radius:14px; box-shadow:0 24px 60px rgba(0,0,0,0.3); overflow:hidden;`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`padding:20px 22px 0; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;`)}>
-<div><div style={css(`font-size:15.5px; font-weight:700; color:#14171F;`)}>Flag lane {laneFlagModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:3px;`)}>Co-Loading lanes are LMDC Master data \u2014 add a remark for the Planner, no route/DC-level fields to propose.</div></div>
+<div><div style={css(`font-size:15.5px; font-weight:700; color:#14171F;`)}>Flag lane {laneFlagModal.routeCode}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:3px;`)}>Co-Loading lanes are LMDC Master data — add a remark for the Planner, no route/DC-level fields to propose.</div></div>
 <button onClick={laneFlagModal.close} aria-label={"Close"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#5A5E66; display:flex; flex-shrink:0;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`padding:16px 22px 0;`)}>
@@ -5668,7 +5676,7 @@ NLH cycle: {schedNlhMonthLabel}
 <line x1={"40"} y1={t.y} x2={schedConnCurve.W - 16} y2={t.y} stroke={"#E6EBF2"} strokeWidth={"1"} />
 <text x={"4"} y={t.y + 4} fontSize={"10"} fill={"#8E96A3"}>{t.label}</text>
 </React.Fragment>))}
-{(schedConnCurve.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedConnCurve.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={"middle"}>{t.label}</text></React.Fragment>))}
+{(schedConnCurve.xTicks || []).map((t, __iSG2) => (<React.Fragment key={__iSG2}><text x={t.x} y={schedConnCurve.H - 8} fontSize={"10"} fill={"#8E96A3"} textAnchor={t.anchor}>{t.label}</text></React.Fragment>))}
 <path d={schedConnCurve.readyPathD} fill={"none"} stroke={"#C77B00"} strokeWidth={"2.2"} strokeDasharray={"5,3"} />
 <path d={schedConnCurve.d0PathD} fill={"none"} stroke={"#0D7377"} strokeWidth={"2.2"} />
 {(schedConnCurve.points || []).map((pt, __iSG3) => (<React.Fragment key={__iSG3}><rect x={pt.x - 6} y={"0"} width={"12"} height={schedConnCurve.H} fill={"transparent"} onClick={pt.onClick} style={css(`cursor:pointer;`)}><title>{pt.label}</title></rect></React.Fragment>))}
@@ -5769,7 +5777,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:#EEF1F6; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:${schedAlignDetail.d0Color}; line-height:1;`)}>{schedAlignDetail.d0LandingPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>D0 Landing (Vol%)</div></div>
 <div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.rolloverPct}%</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>Rollover</div></div>
-<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in\u2192LMDC-out (days)</div></div>
+<div style={css(`background:#fff; padding:14px 15px;`)}><div style={css(`font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:500; color:#14171F; line-height:1;`)}>{schedAlignDetail.lmscInOutDays}</div><div style={css(`font-size:11.5px; font-weight:600; color:#14171F; margin-top:7px;`)}>LMSC-in→LMDC-out (days)</div></div>
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:6px 18px; margin-bottom:18px;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #E6EBF2;`)}><span style={css(`font-size:12.5px; color:#5A5E66;`)}>Avg hold</span><span style={css(`font-size:15px; font-weight:600; color:#14171F;`)}>{schedAlignDetail.avgHoldHours} hrs</span></div>
@@ -5816,7 +5824,7 @@ NLH cycle: {schedNlhMonthLabel}
     remark is just surfaced here so the Planner can act on it directly in LMDC Master if needed. */}
 {((schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).isCoLoadLane && (schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag) ? (<>
 <div style={css(`grid-column:1 / -1; margin-top:4px; padding:7px 10px; background:#FFF9EC; border:1px solid #F3E2BC; border-left:3px solid #C77B00; border-radius:6px; font-size:11px; color:#14171F;`)}>
-<span style={css(`font-weight:700; color:#C77B00;`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.by}</span> \u00b7 {(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.at}: "{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.remark}"
+<span style={css(`font-weight:700; color:#C77B00;`)}>{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.by}</span> · {(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.at}: "{(schedAlignDetail.routeGroupHeaders[r.routeCode] || {}).laneFlag.remark}"
 </div>
 </>) : null}
 </div>
@@ -6227,7 +6235,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:1500px;`)}>
 <div style={css(`display:grid; grid-template-columns:170px repeat(24,54px) ${speedProfileModal.readOnly || speedProfileModal.reviewMode ? '' : '260px'}; gap:0; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; position:sticky; left:0; background:#FAFBFD;`)}>VEHICLE \u2014 ZONE</div>
+<div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; position:sticky; left:0; background:#FAFBFD;`)}>VEHICLE — ZONE</div>
 {(speedProfileModal.rows[0] ? speedProfileModal.rows[0].cells : []).map((c, __iSph) => (<React.Fragment key={__iSph}><div style={css(`padding:8px 4px; font-size:9.5px; font-weight:700; color:#5A5E66; text-align:center; white-space:nowrap;`)}>{c.label}</div></React.Fragment>))}
 {(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW ACTIONS</div></>) : null}
 </div>
@@ -6249,8 +6257,8 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
 <div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can\u2019t continue:</div>
-{(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>\u2022 {e}</div></React.Fragment>))}
+<div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can’t continue:</div>
+{(speedProfileModal.errors || []).map((e, __iSpErr) => (<React.Fragment key={__iSpErr}><div style={css(`font-size:11.5px; color:#D14B4B;`)}>• {e}</div></React.Fragment>))}
 </div>
 </>) : null}
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
@@ -10011,7 +10019,12 @@ class NDCApp extends React.Component {
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
       scNlhOpen: !!st.scNlhOpen, onToggleScNlh: () => this.setState({ scNlhOpen: !st.scNlhOpen }),
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 70px 60px 80px 68px 76px 95px 110px 140px 80px',
+      // 2026-09-07 fix — Non-Local Speed / Max Hold Local / Max Hold Non-Local columns were too
+      // narrow for their header labels at this font-size/letter-spacing with white-space:nowrap,
+      // so the text overflowed and visually overlapped the next column's header (confirmed via
+      // screen recording: "NON-LOCAL SPD"/"MAX HOLD LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS"
+      // were rendering as garbled overlapping text). Widened each affected column.
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 70px 60px 80px 85px 115px 130px 165px 140px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -11647,7 +11660,7 @@ class NDCApp extends React.Component {
       schedConnCurve = {
         open: true, runId: schedConnCurveRunId, scCode: sp ? sp.scCode : '', scName: sp ? sp.scName : '',
         d0PathD, readyPathD, W, H,
-        xTicks: xTicks.map(pt => ({ x: xScale(pt.shiftMin), label: fmtShift(pt.shiftMin) })),
+        xTicks: xTicks.map((pt, i) => ({ x: xScale(pt.shiftMin), label: fmtShift(pt.shiftMin), anchor: i === 0 ? 'start' : (i === xTicks.length - 1 ? 'end' : 'middle') })),
         yTicks: [0, 0.25, 0.5, 0.75, 1].map(f => ({ y: padT + f * (H - padT - padB), label: Math.round(yMax - f * (yMax - yMin)) + '%' })),
         defX: defaultPt ? xScale(defaultPt.shiftMin) : 0, defY: defaultPt ? yScale(defaultPt.d0LandingPct) : 0,
         defLabel: defaultPt ? (defaultPt.connectionStartTime + ' \u2014 D0 ' + defaultPt.d0LandingPct + '% \u00b7 Ready ' + defaultPt.readyPct + '%') : '',
@@ -12183,15 +12196,32 @@ class NDCApp extends React.Component {
   // Review absent an explicit user pick, so a visually-suggested crossing point never silently
   // becomes "what got triggered" without the user choosing it. The crossing point is still shown
   // (as "Suggested"), just not auto-applied.
-  computeConnStartCurveFor(sp) {
-    const hash = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff; return h; };
-    const seedH = hash(sp.id);
-    const midpoint = 480 + (seedH % 360);
-    const slope = 55 + ((seedH >> 4) % 55);
-    const readyPctFor = (connectionStartMin) => {
-      const tod = ((connectionStartMin % 1440) + 1440) % 1440;
-      return Math.round((100 / (1 + Math.exp(-(tod - midpoint) / slope))) * 10) / 10;
+  // Ready to Ship % — no longer a seeded sigmoid (that was miscalibrated for the actual swept
+  // range, producing a flat-near-zero curve for early-morning DS defaults — confirmed via a real
+  // screen recording). Now genuinely data-driven: each SC's chosen NLH scenario already stores a
+  // real per-trailer landing schedule (trailers: [{landingMin, volume}], see genNlhTrailers() /
+  // ingestNlhPlan()) — "ready to ship" for a given trailer is landingMin + 4h processing (240
+  // min), and Ready to Ship % at any candidate connection start time is the cumulative share of
+  // that SC's NLH volume whose 4-hour processing window has already elapsed by then. RLH dispatch
+  // is treated as the morning AFTER the NLH landing window (candidates here run ~00:00-07:00,
+  // trailers land across the full prior 24h), so thresholds are compared on a single extended
+  // timeline (candidate + 1440) rather than wrapped independently — a trailer landing at 22:00
+  // the previous evening (ready at 02:00) has already cleared by a 03:30 dispatch; one landing at
+  // 01:00 (ready at 05:00) hasn't yet. Falls back to 0% if this SC has no scenario/trailer data at
+  // all, rather than fabricating a curve.
+  readyToShipCurveFor(sp) {
+    const nlhPlan = sp.nlhPlanId ? findNlhIngestedPlanById(this.engineStore, sp.nlhPlanId) : null;
+    const trailers = (nlhPlan && nlhPlan.scData && nlhPlan.scData[sp.scCode] && nlhPlan.scData[sp.scCode].trailers) || [];
+    const totalVol = trailers.reduce((a, t) => a + t.volume, 0);
+    return (connectionStartMin) => {
+      if (!trailers.length || totalVol <= 0) return 0;
+      const extendedStart = 1440 + connectionStartMin; // dispatch = the morning after the NLH landing window
+      const readyVol = trailers.reduce((a, t) => a + ((t.landingMin + 240) <= extendedStart ? t.volume : 0), 0);
+      return Math.round((readyVol / totalVol) * 1000) / 10;
     };
+  }
+  computeConnStartCurveFor(sp) {
+    const readyPctFor = this.readyToShipCurveFor(sp);
     const points = [];
     for (let shiftMin = -180; shiftMin <= 180; shiftMin += 30) {
       const info = this.schedulerRouteDcInfo(sp, shiftMin);

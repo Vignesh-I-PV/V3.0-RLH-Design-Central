@@ -1040,24 +1040,29 @@ All modules
 </div>{/* /full-height SC Master */}
 </>) : null}
 {(isAvail) ? (<>
-{/* 2026-09-07 fix — the "Bulk Upload — SC Vehicle Availability" card (icon + title + subtitle)
-    and the search/Speed-Profile toolbar used to be two separate bordered sections stacked on top
-    of each other. Merged into one toolbar row per request, with the descriptive title/subtitle
-    text removed entirely — just the functional controls remain. */}
-<div style={css(`display:flex; align-items:center; gap:14px; padding:10px 16px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px; flex-wrap:wrap;`)}>
+{/* 2026-09-08 fix (item 5) — restructured again: search+count now on its own line, and the two
+    upload actions are grouped into labelled columns (Template stacked above Upload, per group)
+    sitting side by side, rather than a single flat row of buttons that wrapped awkwardly. */}
+<div style={css(`display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={availSearch} onInput={onAvailSearch} placeholder={"Search SC code, name or vehicle…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:220px;`)} />
 </div>
 <span style={css(`font-size:13px; font-weight:700; color:#14171F; white-space:nowrap;`)}>{scVehAvailCountLabel}</span>
-<div style={css(`flex:1; min-width:12px;`)} />
+</div>
+<div style={css(`display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; flex-direction:column; gap:6px; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:2px;`)}>SC VEHICLE AVAILABILITY</div>
 <button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
 <button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'}; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 <input ref={availFileInputRef} type={"file"} accept={".csv"} onChange={onAvailFileChange} style={css(`display:none;`)} />
-<div style={css(`width:1px; height:26px; background:#E6EBF2; flex-shrink:0;`)} />
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:2px;`)}>SPEED PROFILE</div>
 <input ref={speedProfileUploadRef} type={"file"} accept={".csv"} onChange={onSpeedProfileGlobalUpload} style={css(`display:none;`)} />
-<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Speed Profile Template</button>
-<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload Speed Profile</button>
+<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
+<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
+</div>
 </div>
 {(hasAvailUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1102,13 +1107,14 @@ All modules
 <div style={css(`flex:1; min-width:86px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>CAPACITY <span style={css(`font-weight:400; color:#8E96A3;`)}>(VM {g.addForm.vmCap})</span></div><input type={"number"} min={"0"} placeholder={g.addForm.vmCap} value={g.addForm.cap} onInput={g.addForm.onCapChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none; text-align:right; font-variant-numeric:tabular-nums;`)} /></div>
 <div style={css(`flex:1; min-width:90px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>DISTANCE</div><div style={css(`height:36px; display:flex; align-items:center; padding:0 10px; border:1px solid #EEF1F6; border-radius:8px; background:#F2F5FA; font-size:13px; color:#5A5E66;`)}>{g.addForm.dist}</div></div>
 <div style={css(`flex:1; min-width:108px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>ZONE FEASIBILITY</div><select value={g.addForm.zoneFeas} onChange={g.addForm.onZoneFeasChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto;`)}><option value={"Both"}>Both</option><option value={"Local"}>Local</option><option value={"Non-Local"}>Non-Local</option></select></div>
+<div style={css(`flex:0.9; min-width:96px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:5px;`)}>LOADING TIME (MIN)</div><input type={"number"} min={"0"} value={g.addForm.loadingTime} onInput={g.addForm.onLoadingTimeChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none; text-align:center;`)} /></div>
 <button onClick={g.addForm.onAdd} style={css(`height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`, `background:#00337D;`)}>{g.addForm.submitLabel}</button>
 <button onClick={g.addForm.onCancel} style={css(`height:36px; padding:0 14px; border:1px solid #D0D5DD; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `color:#14171F; border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 14px; border:1px solid #D0D5DD; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`, `color:#14171F; border-color:#C3C9D4;`)}>Cancel</button>
 </div>
 {(g.addForm.tpWarn) ? (<><div style={css(`margin-top:10px; font-size:11.5px; color:#C77B00; display:inline-flex; align-items:center; gap:5px;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{g.addForm.tpWarnText}</div></>) : null}
 </div>
 </>) : null}
-<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.9fr 0.85fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.9fr 0.85fr 108px; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLE TYPE</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>DISTANCE LIMIT</div>
@@ -1117,13 +1123,16 @@ All modules
 {/* 2026-09-07 fix — Local/Non-Local Speed columns removed: Speed Profile (the popup on each
     SC's card) now governs speed entirely, at a finer SC x Vehicle x Zone x Hour grain than this
     flat per-vehicle-type column ever could. */}
+{/* 2026-09-08 (item 6) — Loading Time added, at vehicle-type level (same grain as TP Limit),
+    included in the Add/Edit form and CSV template/parser too. */}
+<div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>LOADING TIME</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ZONE FEASIBILITY</div>
 <div style={css(`padding:9px 14px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>WITHIN LIMIT</div>
 <div />
 </div>
 <div style={css(`max-height:138px; overflow-y:auto;`)}>
 {(g.rows || []).map((r, __i21) => (<React.Fragment key={__i21}>
-<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.9fr 0.85fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:1.4fr 0.9fr 0.9fr 0.8fr 0.75fr 0.8fr 0.9fr 0.85fr 108px; align-items:center; border-top:1px solid #EEF1F6; background:${r.rowEditing ? '#F7F9FC' : 'transparent'};`)}>
 {/* VEHICLE TYPE */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.t}</div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><select value={r.draftType} onChange={r.onDraftType} style={css(`width:100%; height:30px; padding:0 6px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F; background:#fff; outline:none; cursor:pointer; appearance:auto; box-sizing:border-box;`)}>{(r.typeOpts || []).map((to, __i19) => (<React.Fragment key={__i19}><option value={to.value}>{to.label}</option></React.Fragment>))}</select></div></>) : null}
@@ -1140,6 +1149,9 @@ All modules
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; text-align:center;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:#F2F5FA; color:#14171F;`)}>{r.tp}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><input type={"number"} min={"0"} value={r.draftTp} onInput={r.onDraftTp} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
 {/* 2026-09-07 fix — Local/Non-Local Speed cells removed (see header comment above). */}
+{/* LOADING TIME (min) — item 6 */}
+{(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px; font-size:12.5px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{r.loadingTime} min</div></>) : null}
+{(r.rowEditing) ? (<><div style={css(`padding:5px 8px;`)}><input type={"number"} min={"0"} value={r.draftLoadingTime} onInput={r.onDraftLoadingTime} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)} /></div></>) : null}
 {/* ZONE FEASIBILITY */}
 {(r.rowNotEditing) ? (<><div style={css(`padding:11px 14px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:600; background:${r.zfBg}; color:${r.zfFg};`)}>{r.zf}</span></div></>) : null}
 {(r.rowEditing) ? (<><div style={css(`padding:5px 8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center;`)}>{(r.zfChips || []).map((zc, __i20) => (<React.Fragment key={__i20}><button onClick={zc.onSelect} style={css(`height:26px; padding:0 8px; border:1px solid ${zc.bd}; background:${zc.bg}; color:${zc.fg}; font-family:inherit; font-size:11px; font-weight:600; border-radius:999px; cursor:pointer; white-space:nowrap;`)}>{zc.label}</button></React.Fragment>))}</div></>) : null}
@@ -6231,6 +6243,16 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px; line-height:1.5;`)}>{(speedProfileModal.readOnly) ? 'Speed by vehicle type, zone, and hour of day. View-only here — edit from SC Vehicle Availability.' : (speedProfileModal.reviewMode) ? 'This is the fully resolved matrix \u2014 blank hours filled forward from the previous hour. Confirm to save exactly this.' : 'Speed by vehicle type, zone, and hour of day. Feeds Route Scheduler\u2019s dispatch-time search directly \u2014 a row left entirely blank falls back to Vehicle Master\u2019s own speed for that vehicle type. Enter at least one row\u2019s 00:00 value, then use the row actions to apply it across.'}</div>
+{/* 2026-09-08 fix (item 7) — this SC has zero rows in SC Vehicle Availability at all (confirmed
+    this was JLRS's exact situation), so there's nothing to build a Speed Profile table from. The
+    modal used to silently render a headers-only, contentless table with a huge empty gap before
+    Close — now shows a clear message instead. */}
+{(speedProfileModal.isEmpty) ? (<>
+<div style={css(`padding:36px 24px; text-align:center; border:1px dashed #E6EBF2; border-radius:9px; background:#FAFBFD;`)}>
+<div style={css(`font-size:13px; font-weight:600; color:#14171F; margin-bottom:4px;`)}>No vehicle types configured for this SC</div>
+<div style={css(`font-size:12px; color:#8E96A3;`)}>Add vehicle types in SC Vehicle Availability first, then a Speed Profile can be entered for them.</div>
+</div>
+</>) : (<>
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:1500px;`)}>
@@ -6247,7 +6269,9 @@ NLH cycle: {schedNlhMonthLabel}
 </React.Fragment>))}
 {(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 10px; display:flex; gap:4px; flex-wrap:wrap;`)}>
 <button onClick={r.onFillAllDay} disabled={!speedProfileModal.hasSeed} title={"Stamp this row's 00:00 value across all 24 hours"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>Same all day</button>
-<button onClick={r.onCopyToOtherZone} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the other zone, same vehicle"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>All zones</button>
+{/* 2026-09-08 (items 1 & 3) — "All zones" only renders when this vehicle type actually has a
+    sibling zone to copy to; a Local-only vehicle type never shows a dead/no-op button. */}
+{(r.hasOtherZone) ? (<><button onClick={r.onCopyToOtherZone} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the other zone, same vehicle"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>All zones</button></>) : null}
 <button onClick={r.onCopyToAllVehicles} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the same zone, every vehicle type"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>All vehicles</button>
 </div></>) : null}
 </div>
@@ -6255,6 +6279,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </div>
+</>)}
 {(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
 <div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
 <div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can’t continue:</div>
@@ -7795,16 +7820,16 @@ class NDCApp extends React.Component {
   // C12 — functional INLINE edit for SC Vehicle Availability: per-field overlay stored as
   // { cnt, tp, zf } objects keyed by "scCode|vehType". setAvailField is the generic writer;
   // setAvailRow is kept as a thin wrapper for backward compat (only caller is onCntInput).
-  setAvailField(scCode, vehType, field, value) {
-    const key = scCode + '|' + vehType;
+  setAvailField(scCode, vehType, zf, field, value) {
+    const key = scCode + '|' + vehType + '|' + (zf || 'Both');
     const ov = Object.assign({}, this.state.availEdits || {});
     const prev = (typeof ov[key] === 'object' && ov[key] !== null) ? ov[key] : {};
     ov[key] = Object.assign({}, prev, { [field]: value });
     this.setState({ availEdits: ov });
   }
-  setAvailRow(scCode, vehType, raw) {
+  setAvailRow(scCode, vehType, zf, raw) {
     const n = parseInt(String(raw == null ? '' : raw).replace(/[^0-9]/g, ''), 10);
-    this.setAvailField(scCode, vehType, 'cnt', (isNaN(n) || n < 0) ? 0 : n);
+    this.setAvailField(scCode, vehType, zf, 'cnt', (isNaN(n) || n < 0) ? 0 : n);
   }
   // ===========================================================================================
   // Speed Profile modal (2026-09-03, item 1; reworked 2026-09-07) — SC x Vehicle Type x Zone x
@@ -7822,10 +7847,27 @@ class NDCApp extends React.Component {
   defaultSpeedBandStarts() {
     return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + ':00');
   }
-  openSpeedProfileModal(scCode, vehicleTypeNames, readOnly) {
+  // openSpeedProfileModal(scCode, vehicleRows, readOnly) (2026-09-08 rework, items 1/2/3/7) —
+  // vehicleRows is now the FULL row list from SC Vehicle Availability ({vehicleType, zoneFeas}
+  // per row), not just names. Rows sharing a vehicleType (even with different capacity/TP/
+  // distance — item 2) collapse onto ONE shared speed entry per zone; the applicable zone(s) for
+  // that vehicle type are the UNION of every one of its rows' zoneFeas (Both -> both zones,
+  // Local-only -> Local only, etc — items 1 & 3), so e.g. two separately-added "7ft Trailer" rows
+  // (one Local-only, one Non-Local-only) correctly produce two rows here, while a vehicle type
+  // with no Non-Local-eligible row anywhere never gets a Non-Local input at all.
+  openSpeedProfileModal(scCode, vehicleRows, readOnly) {
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const existing = getSpeedProfile(this.engineStore, cycleMonth, scCode);
     const bandStarts = this.defaultSpeedBandStarts();
+    const vehicleZones = {}; // vehicleType -> { local: bool, zonal: bool }
+    (vehicleRows || []).forEach(r => {
+      const vt = r.vehicleType, zf = r.zoneFeas || 'Both';
+      const z = vehicleZones[vt] || { local: false, zonal: false };
+      if (zf === 'Both' || zf === 'Local') z.local = true;
+      if (zf === 'Both' || zf === 'Non-Local') z.zonal = true;
+      vehicleZones[vt] = z;
+    });
+    const vehicleTypeNames = Object.keys(vehicleZones);
     const vehicles = {};
     vehicleTypeNames.forEach(vt => {
       const e = existing && existing[vt];
@@ -7839,13 +7881,13 @@ class NDCApp extends React.Component {
       }
     });
     this.setState({
-      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileReadOnly: !!readOnly,
+      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileVehicleZones: vehicleZones, speedProfileReadOnly: !!readOnly,
       speedProfileDraft: { bandStarts, vehicles },
       speedProfileReviewMode: false, speedProfileErrors: [],
     });
   }
   closeSpeedProfileModal() {
-    this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileReadOnly: false, speedProfileReviewMode: false, speedProfileErrors: [] });
+    this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileVehicleZones: null, speedProfileReadOnly: false, speedProfileReviewMode: false, speedProfileErrors: [] });
   }
   setSpeedCell(vehicleType, zone, bandIdx, value) {
     const draft = this.state.speedProfileDraft;
@@ -7889,16 +7931,23 @@ class NDCApp extends React.Component {
   speedCopyToAllVehicles(vehicleType, zone) {
     const draft = this.state.speedProfileDraft;
     if (!draft) return;
+    const zones = this.state.speedProfileVehicleZones || {};
     const entry = draft.vehicles[vehicleType] || {};
     const srcArr = (zone === 'local' ? entry.local : entry.zonal) || [];
     const vehicles = Object.assign({}, draft.vehicles);
+    let copiedCount = 0;
     (this.state.speedProfileVehicleTypes || []).forEach(vt => {
+      if (vt === vehicleType) return;
+      const vtZones = zones[vt] || { local: true, zonal: true };
+      if (zone === 'local' && !vtZones.local) return;
+      if (zone === 'zonal' && !vtZones.zonal) return;
       const e = Object.assign({}, vehicles[vt] || { local: [], zonal: [] });
       e[zone] = srcArr.slice();
       vehicles[vt] = e;
+      copiedCount++;
     });
     this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }) });
-    this.showToast('Copied ' + (zone === 'local' ? 'Local' : 'Non-Local') + ' speeds to every vehicle type', '#128A3E');
+    this.showToast('Copied ' + (zone === 'local' ? 'Local' : 'Non-Local') + ' speeds to ' + copiedCount + ' other vehicle type' + (copiedCount === 1 ? '' : 's') + ' eligible for that zone', '#128A3E');
   }
   // openSpeedProfileReview() — moves to the read-only preview: resolves inheritance (blank hours
   // fill forward from the previous hour, within any row that has at least one value) so what's
@@ -7906,7 +7955,7 @@ class NDCApp extends React.Component {
   openSpeedProfileReview() {
     const draft = this.state.speedProfileDraft;
     if (!draft) return;
-    const check = isSpeedProfileComplete(draft.vehicles);
+    const check = isSpeedProfileComplete(draft.vehicles, this.state.speedProfileVehicleZones);
     if (!check.complete) { this.setState({ speedProfileErrors: check.missing.map(m => m.reason) }); return; }
     this.setState({ speedProfileReviewMode: true, speedProfileErrors: [] });
   }
@@ -7917,12 +7966,13 @@ class NDCApp extends React.Component {
     const scCode = this.state.speedProfileSC;
     const draft = this.state.speedProfileDraft;
     if (!scCode || !draft) return;
+    const zones = this.state.speedProfileVehicleZones;
     const vehiclesRaw = {};
     Object.keys(draft.vehicles).forEach(vt => {
       const e = draft.vehicles[vt];
       vehiclesRaw[vt] = { bandStarts: draft.bandStarts.slice(), local: e.local.slice(), zonal: e.zonal.slice() };
     });
-    const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw);
+    const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw, zones);
     const cycleMonth = this.state.activeCycleMonth.rlh;
     setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
     this.showToast('Speed Profile saved for ' + scCode, '#128A3E');
@@ -7956,6 +8006,7 @@ class NDCApp extends React.Component {
         }
         const bandStarts = this.defaultSpeedBandStarts();
         const bySc = {}; // scCode -> { vehicleType -> { local: [24], zonal: [24] } }
+        const zonesSeenBySc = {}; // scCode -> { vehicleType -> { local: bool, zonal: bool } } — which (type,zone) rows the file actually had
         const rowErrors = [];
         for (let i = 1; i < lines.length; i++) {
           const cols = lines[i].split(',').map(c => c.trim());
@@ -7969,6 +8020,9 @@ class NDCApp extends React.Component {
           bySc[scCode] = bySc[scCode] || {};
           bySc[scCode][vt] = bySc[scCode][vt] || { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
           bySc[scCode][vt][zone] = parsed;
+          zonesSeenBySc[scCode] = zonesSeenBySc[scCode] || {};
+          zonesSeenBySc[scCode][vt] = Object.assign({ local: false, zonal: false }, zonesSeenBySc[scCode][vt]);
+          zonesSeenBySc[scCode][vt][zone] = true;
         }
         if (rowErrors.length) { this.showToast(rowErrors.length + ' row' + (rowErrors.length === 1 ? '' : 's') + ' flagged \u2014 nothing applied. First: ' + rowErrors[0], '#D14B4B'); return; }
         const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
@@ -7978,9 +8032,13 @@ class NDCApp extends React.Component {
           if (!validCodes[scCode]) { skippedScCount++; return; }
           const vehiclesRaw = {};
           Object.keys(bySc[scCode]).forEach(vt => { vehiclesRaw[vt] = Object.assign({ bandStarts: bandStarts.slice() }, bySc[scCode][vt]); });
-          const check = isSpeedProfileComplete(vehiclesRaw);
-          if (!check.complete) return; // no seed cell anywhere for this SC — skip it, don't error the whole file
-          const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw);
+          // 2026-09-08 fix — applicableZones now comes from which (type, zone) rows the file
+          // actually contained for this SC (zonesSeenBySc), not the old no-argument call that
+          // silently skipped the mandatory-00:00 check entirely once isSpeedProfileComplete's
+          // signature changed to require this argument (item 4).
+          const check = isSpeedProfileComplete(vehiclesRaw, zonesSeenBySc[scCode]);
+          if (!check.complete) return; // one or more applicable rows missing 00:00 for this SC — skip it, don't error the whole file
+          const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw, zonesSeenBySc[scCode]);
           setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
           scCount++;
         });
@@ -8911,7 +8969,7 @@ class NDCApp extends React.Component {
         };
         const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
         const idx = (name) => headers.indexOf(name);
-        const codeIdx = idx('sc code'), vehIdx = idx('vehicle type'), cntIdx = idx('available count'), zfIdx = idx('zone feasibility');
+        const codeIdx = idx('sc code'), vehIdx = idx('vehicle type'), cntIdx = idx('available count'), zfIdx = idx('zone feasibility'), loadIdx = idx('loading time (min)');
         if (codeIdx < 0) { this.showToast('Column "SC Code" not found in the uploaded file', '#D14B4B'); return; }
         if (vehIdx < 0) { this.showToast('Column "Vehicle Type" not found in the uploaded file', '#D14B4B'); return; }
         const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
@@ -8932,15 +8990,25 @@ class NDCApp extends React.Component {
           if (cntIdx >= 0 && cols[cntIdx] !== '') { const n = parseInt(cols[cntIdx], 10); if (!isNaN(n) && n >= 0) count = n; else rowErrs.push('Available Count "' + cols[cntIdx] + '" is not a valid number'); }
           let zoneFeas = null;
           if (zfIdx >= 0 && cols[zfIdx]) { if (ZFEAS_SET[cols[zfIdx]]) zoneFeas = cols[zfIdx]; else rowErrs.push('Zone Feasibility "' + cols[zfIdx] + '" is not Both/Local/Non-Local'); }
+          let loadingTime = null;
+          if (loadIdx >= 0 && cols[loadIdx] !== '') { const n = parseInt(cols[loadIdx], 10); if (!isNaN(n) && n >= 0) loadingTime = n; else rowErrs.push('Loading Time "' + cols[loadIdx] + '" is not a valid number'); }
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code) || { rows: [] };
-          const existingRow = (blob.rows || []).find(r => r.vehicleType === vehType);
+          // 2026-09-08 fix (item 3) — match by (vehicleType, zoneFeas) so an upload row for one
+          // zone-variant doesn't collide with a different existing zone-variant of the same
+          // vehicle type. If the file doesn't specify a zone and more than one variant already
+          // exists for this type, that's genuinely ambiguous — flagged rather than guessed.
+          const existingForType = (blob.rows || []).filter(r => r.vehicleType === vehType);
+          let existingRow;
+          if (zoneFeas) existingRow = existingForType.find(r => (r.zoneFeas || 'Both') === zoneFeas);
+          else if (existingForType.length === 1) existingRow = existingForType[0];
+          else if (existingForType.length > 1) { errorRows.push({ row: i + 1, code, msg: vehType + ' has multiple zone-variants at ' + code + ' — specify Zone Feasibility to disambiguate' }); continue; }
           let newRows;
           if (existingRow) {
-            newRows = (blob.rows || []).map(r => r.vehicleType === vehType ? Object.assign({}, r, count != null ? { vehicleCount: count } : {}, zoneFeas ? { zoneFeas } : {}) : r);
+            newRows = (blob.rows || []).map(r => (r.vehicleType === vehType && (r.zoneFeas || 'Both') === (existingRow.zoneFeas || 'Both')) ? Object.assign({}, r, count != null ? { vehicleCount: count } : {}, zoneFeas ? { zoneFeas } : {}, loadingTime != null ? { loadingTime } : {}) : r);
           } else {
             const vm = (this.state.data.VEH || []).find(v => v.name === vehType) || {};
-            newRows = (blob.rows || []).concat([{ vehicleType: vehType, vehicleCount: count != null ? count : 1, tpLimit: vm.tp || 7, localSpeed: vm.localSpeed, nonLocalSpeed: vm.nonLocalSpeed, zoneFeas: zoneFeas || 'Both' }]);
+            newRows = (blob.rows || []).concat([{ vehicleType: vehType, vehicleCount: count != null ? count : 1, tpLimit: vm.tp || 7, localSpeed: vm.localSpeed, nonLocalSpeed: vm.nonLocalSpeed, zoneFeas: zoneFeas || 'Both', loadingTime: loadingTime != null ? loadingTime : 15 }]);
           }
           setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code, 'rows', newRows, blob);
           matched++;
@@ -9864,7 +9932,7 @@ class NDCApp extends React.Component {
     const vehDistAvail = (name) => { const v = (VEHMA || []).find(x => x.name === name); return v ? v.dist : 600; };
     const availAdded = st.availAdded || {};
     const addingAvailSC = st.addingAvailSC || null;
-    const defAvailForm = () => ({ vehicleType: (VEHMA[0] || {}).name || 'TATA ACE / 7ft', count: 1, tp: (VEHMA[0] || {}).tp || 7, zoneFeas: 'Both' });
+    const defAvailForm = () => ({ vehicleType: (VEHMA[0] || {}).name || 'TATA ACE / 7ft', count: 1, tp: (VEHMA[0] || {}).tp || 7, zoneFeas: 'Both', loadingTime: 15 });
     const availForm = st.availAddForm || defAvailForm();
     const availZfStyle = (zf) => ({ zfBg: zf === 'Both' ? '#EAEEFB' : zf === 'Local' ? '#E7F0F8' : '#FBEAF1', zfFg: zf === 'Both' ? '#2F4FC6' : zf === 'Local' ? '#1E6FB8' : '#C03977' });
     const availFormFor = (code) => {
@@ -9872,6 +9940,7 @@ class NDCApp extends React.Component {
       const tp = availForm.tp == null ? m.tp : availForm.tp; const tpWarn = tp > m.tp; const zf = availZfStyle(availForm.zoneFeas || 'Both');
       const afCap = availForm.cap == null ? m.cap : availForm.cap;
       return { vehicleType: availForm.vehicleType, count: availForm.count, tp: tp, cap: afCap, vmCap: m.cap, dist: vehDistAvail(availForm.vehicleType) + ' km', vmTp: m.tp, zoneFeas: availForm.zoneFeas || 'Both',
+        loadingTime: availForm.loadingTime == null ? 15 : availForm.loadingTime,
         typeOptions: VEHMA.map(x => ({ value: x.name, label: x.name, selected: x.name === availForm.vehicleType })), zfBg: zf.zfBg, zfFg: zf.zfFg,
         tpWarn: tpWarn, tpBd: tpWarn ? '#E0B84A' : '#E6EBF2', tpWarnText: 'Entered TP ' + tp + ' exceeds the vehicle-master limit of ' + m.tp + ' — allowed, but the DS plan may be infeasible.',
         title: 'Add vehicle',
@@ -9881,7 +9950,8 @@ class NDCApp extends React.Component {
         onTpChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { tp: parseInt(e.target.value) || 1 }) }),
         onCapChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { cap: e.target.value }) }),
         onZoneFeasChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { zoneFeas: e.target.value }) }),
-        onAdd: () => { if (this.isRlhCyclePast()) { this.setState({ addingAvailSC: null, availAddForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both' };
+        onLoadingTimeChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { loadingTime: parseInt(e.target.value) || 15 }) }),
+        onAdd: () => { if (this.isRlhCyclePast()) { this.setState({ addingAvailSC: null, availAddForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both', loadingTime: f.loadingTime == null ? 15 : f.loadingTime };
           // 2026-08-26 fix (#12) — writes straight through the engine instead of the old
           // availAdded session overlay.
           const cycleMonth = this.state.activeCycleMonth.rlh;
@@ -9901,16 +9971,21 @@ class NDCApp extends React.Component {
     // Hybrid) only, mirroring the same rule now applied to NLH's own availability screen.
     const scVehAvailRows = (d.scVehAvail || []).filter(g => { const sc = scByCode(g.code); return sc.dispatchesRLH !== false && sc.isActive !== false; }).map(g => {
       const src = scByCode(g.code);
-      const rows = g.rows.concat(availAdded[g.code] || []).filter(r => !availRemovedMap[g.code + '|' + r.vehicleType]).map(r => {
-        const availKey = g.code + '|' + r.vehicleType;
+      const rows = g.rows.concat(availAdded[g.code] || []).filter(r => !availRemovedMap[g.code + '|' + r.vehicleType + '|' + (r.zoneFeas || 'Both')]).map(r => {
+        const rowZf = r.zoneFeas || 'Both';
+        const availKey = g.code + '|' + r.vehicleType + '|' + rowZf;
         const ov = availEdits[availKey]; const ovObj = (ov != null && typeof ov === 'object') ? ov : (ov != null ? { cnt: ov } : {});
         const cnt = ovObj.cnt != null ? ovObj.cnt : r.vehicleCount;
         const tp = ovObj.tp != null ? ovObj.tp : r.tpLimit;
-        const zf = ovObj.zf != null ? ovObj.zf : (r.zoneFeas || 'Both');
+        const zf = ovObj.zf != null ? ovObj.zf : rowZf;
         const cap = ovObj.cap != null ? ovObj.cap : r.capacity;
         const dist = ovObj.dist != null ? ovObj.dist : r.distanceLimit;
         const localSpeed = ovObj.localSpeed != null ? ovObj.localSpeed : r.localSpeed;
         const nonLocalSpeed = ovObj.nonLocalSpeed != null ? ovObj.nonLocalSpeed : r.nonLocalSpeed;
+        // 2026-09-08 (item 6) — Loading Time (min), at vehicle-type level, same shape as the
+        // other per-row fields above (falls back to a 15-min default for rows/uploads that
+        // predate this field).
+        const loadingTime = ovObj.loadingTime != null ? ovObj.loadingTime : (r.loadingTime != null ? r.loadingTime : 15);
         const distNum = parseInt(String(dist).replace(/[^0-9]/g, ''), 10) || 0;
         const displayType = ovObj.type != null ? ovObj.type : r.vehicleType;
         const vmTp = vmTpFor(displayType); const tpExceeds = tp > vmTp; const cntExceeds = cnt > VMMAXCOUNT; const exceeds = tpExceeds || cntExceeds;
@@ -9924,6 +9999,7 @@ class NDCApp extends React.Component {
         const typeOpts = VEHMA.map(x => ({ value: x.name, label: x.name, selected: x.name === (rowEditing ? (ead.type || displayType) : displayType) }));
         return {
           t: displayType, cap: cap, dist: distNum + ' km', cnt: cnt, tp: tp, localSpeed: localSpeed, nonLocalSpeed: nonLocalSpeed, zf: zf, zfBg: zfBg, zfFg: zfFg,
+          loadingTime: loadingTime,
           vmLabel: exceeds ? (cntExceeds ? 'Exceeds limit' : '\u26a0 TP over master') : 'OK', vmBg: exceeds ? (cntExceeds ? '#FBEAEA' : '#FBF1DF') : '#E7F4EC', vmFg: exceeds ? (cntExceeds ? '#D14B4B' : '#C77B00') : '#128A3E',
           rowEditing: rowEditing, rowNotEditing: !rowEditing,
           draftType: rowEditing ? (ead.type || displayType) : displayType,
@@ -9931,6 +10007,7 @@ class NDCApp extends React.Component {
           draftDist: rowEditing ? (ead.dist != null ? ead.dist : distNum) : distNum,
           draftCnt: rowEditing ? (ead.cnt != null ? ead.cnt : cnt) : cnt,
           draftTp: rowEditing ? (ead.tp != null ? ead.tp : tp) : tp,
+          draftLoadingTime: rowEditing ? (ead.loadingTime != null ? ead.loadingTime : loadingTime) : loadingTime,
           draftZf: draftZf, draftZfBg: draftZfBg, draftZfFg: draftZfFg,
           zfChips: rowEditing ? zfChips : [],
           typeOpts: rowEditing ? typeOpts : [],
@@ -9939,7 +10016,8 @@ class NDCApp extends React.Component {
           onDraftDist: (e) => eadSet({ dist: e.target.value }),
           onDraftCnt: (e) => eadSet({ cnt: e.target.value }),
           onDraftTp: (e) => eadSet({ tp: e.target.value }),
-          onEditAvail: () => this.setState({ editAvailKey: availKey, editAvailDraft: { type: displayType, cap: cap, dist: distNum, cnt: cnt, tp: tp, zf: zf } }),
+          onDraftLoadingTime: (e) => eadSet({ loadingTime: e.target.value }),
+          onEditAvail: () => this.setState({ editAvailKey: availKey, editAvailDraft: { type: displayType, cap: cap, dist: distNum, cnt: cnt, tp: tp, zf: zf, loadingTime: loadingTime } }),
           onSaveAvailRow: () => {
             if (this.isRlhCyclePast()) { this.setState({ editAvailKey: null, editAvailDraft: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
             const d2 = this.state.editAvailDraft || {};
@@ -9948,27 +10026,38 @@ class NDCApp extends React.Component {
             // availEdits session overlay: fetch this SC's Class-D blob, mutate the matching row
             // in place, write the whole blob back, then re-materialize data.scVehAvail so the
             // change survives a cycle switch instead of being lost (the bug this was fixing).
+            // 2026-09-08 fix (item 3) — matches by (vehicleType, ORIGINAL zoneFeas) now, not
+            // vehicleType alone, so editing one of two same-named-but-differently-zoned rows
+            // (e.g. "7ft Trailer" Local vs Non-Local) no longer silently also updates the other.
+            // If the draft changes the zone to one that already has its own row for this vehicle
+            // type, that's a genuine collision — block it rather than silently merging two rows.
             const cycleMonth = this.state.activeCycleMonth.rlh;
             const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code) || { name: g.name, zone: g.zone, rows: [] };
-            const newRows = (blob.rows || []).map(row => row.vehicleType === r.vehicleType
-              ? Object.assign({}, row, { vehicleCount: pi(d2.cnt), tpLimit: pi(d2.tp), zoneFeas: d2.zf || zf, vehicleType: d2.type || displayType, capacity: d2.cap != null ? pi(d2.cap) : cap, distanceLimit: (d2.dist != null ? pi(d2.dist) : distNum) + ' km' })
+            const targetZf = d2.zf || zf;
+            const collision = targetZf !== rowZf && (blob.rows || []).some(row => row.vehicleType === r.vehicleType && (row.zoneFeas || 'Both') === targetZf);
+            if (collision) { this.showToast('A ' + (d2.type || displayType) + ' row already exists for ' + targetZf + ' at ' + g.code, '#D14B4B'); return; }
+            const newRows = (blob.rows || []).map(row => (row.vehicleType === r.vehicleType && (row.zoneFeas || 'Both') === rowZf)
+              ? Object.assign({}, row, { vehicleCount: pi(d2.cnt), tpLimit: pi(d2.tp), zoneFeas: targetZf, vehicleType: d2.type || displayType, capacity: d2.cap != null ? pi(d2.cap) : cap, distanceLimit: (d2.dist != null ? pi(d2.dist) : distNum) + ' km', loadingTime: d2.loadingTime != null ? pi(d2.loadingTime) : loadingTime })
               : row);
             setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code, 'rows', newRows, blob);
             this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }), editAvailKey: null, editAvailDraft: null });
             this.showToast((d2.type || displayType) + ' updated in ' + g.code, '#128A3E');
           },
           onCancelAvailRow: () => this.setState({ editAvailKey: null, editAvailDraft: null }),
-          onCntInput: (e) => this.setAvailRow(g.code, r.vehicleType, e.target.value),
-          onTpInput: (e) => this.setAvailField(g.code, r.vehicleType, 'tp', parseInt(e.target.value) || r.tpLimit),
-          onZoneInput: (e) => this.setAvailField(g.code, r.vehicleType, 'zf', e.target.value),
+          onCntInput: (e) => this.setAvailRow(g.code, r.vehicleType, rowZf, e.target.value),
+          onTpInput: (e) => this.setAvailField(g.code, r.vehicleType, rowZf, 'tp', parseInt(e.target.value) || r.tpLimit),
+          onZoneInput: (e) => this.setAvailField(g.code, r.vehicleType, rowZf, 'zf', e.target.value),
+          onLoadingTimeInput: (e) => this.setAvailField(g.code, r.vehicleType, rowZf, 'loadingTime', parseInt(e.target.value) || loadingTime),
           // 2026-08-26 fix (#12) — engine-backed delete with undo, same pattern as SC Master's
           // row delete, replacing the old availRemoved session-only overlay.
+          // 2026-09-08 fix (item 3) — matches by (vehicleType, zoneFeas) now, not vehicleType
+          // alone, so deleting one zone-variant no longer removes every row sharing that name.
           rowDelete: () => {
             if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
             const cycleMonth = this.state.activeCycleMonth.rlh;
             const blob = peekClassD(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code) || { name: g.name, zone: g.zone, rows: [] };
-            const removedRow = (blob.rows || []).find(row => row.vehicleType === r.vehicleType);
-            const newRows = (blob.rows || []).filter(row => row.vehicleType !== r.vehicleType);
+            const removedRow = (blob.rows || []).find(row => row.vehicleType === r.vehicleType && (row.zoneFeas || 'Both') === rowZf);
+            const newRows = (blob.rows || []).filter(row => !(row.vehicleType === r.vehicleType && (row.zoneFeas || 'Both') === rowZf));
             setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, g.code, 'rows', newRows, blob);
             this.setState({ data: Object.assign({}, this.state.data, { scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', cycleMonth) }) });
             this.showToast(r.vehicleType + ' removed from ' + g.code, '#D14B4B', () => {
@@ -9985,7 +10074,7 @@ class NDCApp extends React.Component {
         // SC. vehicleTypeNames is this SC's own assigned vehicle types (from its Vehicle
         // Availability rows) — the popup's "every vehicle type must have a complete profile"
         // validation checks against exactly this list, not some separate global vehicle set.
-        openSpeedProfile: () => this.openSpeedProfileModal(g.code, rows.map(r => r.t)),
+        openSpeedProfile: () => this.openSpeedProfileModal(g.code, rows.map(r => ({ vehicleType: r.t, zoneFeas: r.zf }))),
         hasSpeedProfile: !!getSpeedProfile(this.engineStore, this.state.activeCycleMonth.rlh, g.code) };
     });
     const scVehAvailTotalRows = scVehAvailRows.reduce((a, g) => a + g.rows.length, 0);
@@ -10044,7 +10133,7 @@ class NDCApp extends React.Component {
       // both correctly grey the button out through the one computation instead of two competing ones.
       addVehBtnBg: (addVehValid && !this.isRlhCyclePast()) ? '#003F98' : '#E6EBF2', addVehBtnFg: (addVehValid && !this.isRlhCyclePast()) ? '#fff' : '#8E96A3', addVehBtnCursor: (addVehValid && !this.isRlhCyclePast()) ? 'pointer' : 'not-allowed', addVehBtnDisabled: !addVehValid || this.isRlhCyclePast(),
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
-      submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }]),
+      submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }, { k: 'Loading Time (min)' }]),
       scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
@@ -10107,36 +10196,45 @@ class NDCApp extends React.Component {
     if (!scCode) return { open: false };
     const draft = st.speedProfileDraft || { bandStarts: [], vehicles: {} };
     const vehicleTypeNames = st.speedProfileVehicleTypes || [];
+    const vehicleZones = st.speedProfileVehicleZones || {};
     const sc = this.state.data.scs.find(s => s.code === scCode);
     const readOnly = !!st.speedProfileReadOnly;
     const reviewMode = !!st.speedProfileReviewMode;
+    const isEmpty = vehicleTypeNames.length === 0;
     const hasSeed = Object.keys(draft.vehicles).some(vt => {
       const e = draft.vehicles[vt];
       return (e.local[0] !== '' && e.local[0] != null) || (e.zonal[0] !== '' && e.zonal[0] != null);
     });
     // In review mode, show the actually-resolved matrix (inheritance applied) — exactly what
     // Save will persist, not the raw draft with its gaps still showing.
-    const resolvedVehicles = reviewMode ? applySpeedProfileInheritance(draft.vehicles) : draft.vehicles;
+    const resolvedVehicles = reviewMode ? applySpeedProfileInheritance(draft.vehicles, vehicleZones) : draft.vehicles;
     const rows = [];
     vehicleTypeNames.forEach(vt => {
       const e = resolvedVehicles[vt] || { local: [], zonal: [] };
-      [['local', 'Local'], ['zonal', 'Non-Local']].forEach(([zoneKey, zoneLabel]) => {
+      const zones = vehicleZones[vt] || { local: true, zonal: true };
+      // 2026-09-08 (items 1 & 3) — only one row per zone this vehicle type is actually eligible
+      // for (the union computed in openSpeedProfileModal from all of that SC's rows sharing this
+      // vehicle type name) — a Local-only vehicle never gets a Non-Local input at all, and two
+      // separately-zoned rows for the "same" vehicle type correctly produce two rows here.
+      [['local', 'Local', zones.local], ['zonal', 'Non-Local', zones.zonal]].filter(([, , applicable]) => applicable).forEach(([zoneKey, zoneLabel]) => {
         const arr = e[zoneKey] || draft.bandStarts.map(() => '');
+        const hasOtherZone = zoneKey === 'local' ? zones.zonal : zones.local;
         rows.push({
           vehicleType: vt, zoneKey, zoneLabel, rowLabel: vt + ' \u2014 ' + zoneLabel,
           hasAny: arr.some(v => v !== '' && v != null),
+          hasOtherZone,
           cells: draft.bandStarts.map((b, i) => ({
             idx: i, label: b, value: arr[i] != null ? arr[i] : '',
             onChange: (v) => this.setSpeedCell(vt, zoneKey, i, v === '' ? '' : Number(v)),
           })),
           onFillAllDay: () => this.speedFillSameAllDay(vt, zoneKey),
-          onCopyToOtherZone: () => this.speedCopyToOtherZone(vt, zoneKey),
+          onCopyToOtherZone: hasOtherZone ? (() => this.speedCopyToOtherZone(vt, zoneKey)) : null,
           onCopyToAllVehicles: () => this.speedCopyToAllVehicles(vt, zoneKey),
         });
       });
     });
     return {
-      open: true, scCode, scName: sc ? sc.name : scCode, readOnly, reviewMode,
+      open: true, scCode, scName: sc ? sc.name : scCode, readOnly, reviewMode, isEmpty,
       close: () => this.closeSpeedProfileModal(),
       rows, hasSeed,
       errors: st.speedProfileErrors || [],
@@ -11460,7 +11558,7 @@ class NDCApp extends React.Component {
           onD0Inc: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.min(12, p.d0 + 1); this.setState({ schedulerD0BySC: m }); },
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(-4, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
           onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
-          onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => r.t), true),
+          onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => ({ vehicleType: r.t, zoneFeas: r.zf })), true),
           onOpenDockProfile: () => {},
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];

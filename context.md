@@ -3013,3 +3013,58 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     duplicate-name/empty-scenario guards actually fire, and picking between "30L Base" and "45L
     Peak" in Design Creation to confirm the coverage/volume-variance flags read correctly end to
     end.
+
+- **2026-09-08 — UI density pass (pilot scope): persistent explainer banners → hover-ⓘ tooltips.**
+  Directly **supersedes the 2026-08-28 "definition box" plan** (tooltip stays, add a fuller-context
+  box alongside it) — that direction was discussed but never built; this session replaced it with
+  the opposite call: no persistent box at all for static, always-on guidance. Only the existing
+  `.ndc-tip`/`.ndc-tip-pop` hover icon carries that content now. The distinction that survived from
+  08-28's rubric is still the operative one: **conditional/actionable messages stay as visible
+  banners** (errors, empty states, status locks, confirm-dialog bodies); **generic always-on
+  guidance goes behind an icon.** Piloted on the two most text-heavy screens before wider rollout,
+  per explicit request — this entry covers the pilot only, not a full sweep.
+  - **Design Inputs' "Masters — shared across all design cycles" banner removed** (previously shown
+    unconditionally on all 4 sub-tabs regardless of relevance). Fact folded into the **Node &
+    Vehicle Master** tab's own tooltip (`IT_TIP.masters`).
+  - **LMDC Master's 3-sentence field-rules banner removed** (which fields come from AutoDML vs. are
+    editable, what italic "Default" means). Folded into the **LMDC Master** tab's own tooltip
+    (`mastersTabs`'s `lmdc` entry).
+  - **Vehicle Master's Touch-Point-Limit banner removed**. Folded into the **Vehicle Master** tab's
+    own tooltip (`mastersTabs`'s `vehicle` entry).
+  - **Volume file library's 2-sentence description** ("RLH's own volume library — LMDC Landing
+    only...") replaced with a header + inline ⓘ tooltip, same pattern.
+  - **Design Creation Step 1's "NLH Plan Selection" heading rewritten to state the action**
+    ("Pick an NLH scenario for these SCs") rather than just naming the concept; its 2-line
+    explainer moved to the heading's own ⓘ tooltip.
+  - **Step 3's "Vehicle Configuration" heading** — same treatment: description moved to a tooltip
+    on the heading.
+  - **SC-edit-modal's boxed "contact fields are emails" note** shrunk to a plain unboxed caption
+    (11px, no icon, no border) — this one wasn't a candidate for a tab tooltip (it's inside a
+    modal, not attached to a persistent tab), so it was just de-boxed instead of relocated.
+  - **Interaction confirmed with the user before building**: hover tooltip, not click-to-open
+    popover — matches the existing `.ndc-tip` mechanism already used elsewhere in the app, so no
+    new interaction pattern was introduced.
+  - **Deliberately left untouched** (conditional/actionable, not generic guidance — correctly
+    stayed as visible banners): the historical-plan vehicle-lock notice (`vehAddOnly`), "Ops
+    feedback is in → Acknowledge & freeze," the closed-cycle read-only notice, all empty states,
+    all validation/error messages, all confirm-dialog bodies.
+  - **Also deliberately left untouched, scope note for next time**: roughly 15-20 smaller
+    single-line muted captions elsewhere in the app (e.g. "Scoped to SCs that dispatch NLH…") —
+    these were already unboxed, already compact, already single-line: converting them to tooltips
+    would be pure churn with no space payoff. Flagged as optional follow-up, not done here.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only. `engine.js` and `index.html` confirmed
+    byte-identical to their pre-session state (diffed directly, not assumed).
+  - **Verification**: Babel-compiled clean (`@babel/preset-react`) after each edit, not just at the
+    end. **No live render/browser test performed** — same standing caveat as every session before
+    it; the next real confirmation is deploying and hovering each converted ⓘ to confirm the tip
+    text renders and positions correctly, especially on the touch/tablet case the tooltip-vs-
+    popover decision was made without being able to test directly.
+  - **Not done this session, flagged for the next pass**: the wider rollout beyond this two-screen
+    pilot (Design Review, Ops Alignment, SC-DC Mapping, Network Map, Finalise all still have their
+    own static explainer text, some already compact/caption-style, some still boxed — needs the
+    same screen-by-screen audit this pilot did for Design Inputs/Design Creation before touching
+    them, not a blind find-replace of every `#EAF1FB` box).
+  - **Companion docs**: `01_Complete_Context.md` through `PROJECT_CONTEXT.md`, `06_Future_Scope_
+    SC-DC_Mapping.md` (now retired — SC-DC Mapping is built, see 2026-08-27/29 entries above) all
+    rewritten this session to catch up from 2026-08-26 through today — a 12-session gap. See those
+    files' own update logs for what changed in each.

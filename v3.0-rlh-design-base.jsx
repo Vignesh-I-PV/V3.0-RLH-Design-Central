@@ -784,11 +784,6 @@ All modules
 {/* subtab strip hoisted to Tier-2 nav — hidden here to avoid duplication */}
 {/* panels */}
 <div style={css(`flex:1; overflow:auto; padding:22px 28px;`)}>
-{/* 1.1 LIBRARY-INDEPENDENCE BANNER — always visible, independent of selected tab */}
-<div style={css(`display:flex; align-items:center; gap:9px; padding:9px 14px; margin-bottom:18px; background:#F2F5FA; border:1px solid #DDE3ED; border-radius:7px;`)}>
-<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>Masters — shared across all design cycles. Update anytime; changes aren't tied to a plan cycle.</span>
-</div>
 {/* VOLUME INPUTS */}
 {(isVolumeTab) ? (<>
 {/* Active-per-type status strip + per-type upload/template (replaces the 4 permanent empty upload cards) */}
@@ -819,8 +814,7 @@ All modules
 </div>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-top:24px;`)}>
 <div style={css(`padding:16px 16px 16px;`)}>
-<div style={css(`font-size:14px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Volume file library</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>RLH's own volume library — LMDC Landing only. LMSC/FMSC/FM Hub manifestation now live under their own design legs (SC-SC and NLH Design / FM Hub Mapping & FM Carting Design).</div>
+<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:16px;`)}><span style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Volume file library</span><span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; color:#8E96A3;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>LMDC Landing only — LMSC/FMSC/FM Hub manifestation moved to their own design legs.</span></span></div>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
 <svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
@@ -1186,12 +1180,9 @@ All modules
 </>) : null}
 </>) : null}
 {(isVehMaster) ? (<>
-{/* roadmap banner + "N vehicle types" count banner removed per request */}
-<div style={css(`display:flex; align-items:center; gap:12px; margin-bottom:14px;`)}>
-<div style={css(`display:flex; align-items:center; gap:8px; padding:10px 14px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px; flex:1;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#1E6FB8; font-weight:600;`)}>Touch Point Limit is the reference cap — SC Vehicle Availability and plan creation flag (don't block) when a vehicle's TPs exceed it. Default cap is 7; setting a limit above 7 here is also flagged.</span>
-</div> {(addVehNotOpen) ? (<><button onClick={addVehType} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add Vehicle Type</button></>) : null}
+{/* roadmap banner + "N vehicle types" count banner removed per request; TP-limit note moved to tab tooltip */}
+<div style={css(`display:flex; align-items:center; gap:12px; margin-bottom:14px; justify-content:flex-end;`)}>
+{(addVehNotOpen) ? (<><button onClick={addVehType} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add Vehicle Type</button></>) : null}
 {(addVehOpen) ? (<><span style={css(`font-size:12px; color:#5A5E66; white-space:nowrap;`)}>{addVehInlineHint}</span></>) : null}
 </div>
 {/* INLINE ADD / EDIT VEHICLE TYPE PANEL */}
@@ -1305,10 +1296,6 @@ All modules
 <input ref={lmdcFileInputRef} type={"file"} accept={".csv"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
 <button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
 <button onClick={triggerLmdcUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
-</div>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>LMDC Code, Location, and Capacity come from AutoDML &amp; Node Inputs and aren't editable here. RLH Mode, Open/Close, D0 Cutoff, Max Vehicle Size, Unloading Time and Pincodes can be changed — inline, or by uploading a CSV matched on LMDC Code. An italic "Default" means a plan can still override that field at creation time; setting an explicit value here (even one numerically equal to the default) means a plan can't.</span>
 </div>
 {(hasLmdcUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1668,10 +1655,7 @@ All modules
 {/* 2026-08-26 fix — the old "NLH-Specific Data" section (NLH Docks) removed from RLH's own SC
     edit form: it's now a confusing duplicate of NLH's own real Dock Capacity field on the SC-SC
     and NLH Design card's own masters screen, which is where this genuinely belongs now. */}
-<div style={css(`display:flex; align-items:center; gap:8px; margin:20px 0 14px; padding:10px 13px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 7l8 6 8-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>Contact fields below are email IDs (ops contacts).</span>
-</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>Contact fields are email IDs (ops contacts)</div>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
 {(addScContacts || []).map((c, __i38) => (<React.Fragment key={__i38}>
 <div>
@@ -1943,10 +1927,10 @@ All modules
 {/* Volume step removed — the selected plan file already encodes the volume scenario */}
 {/* STEP 3 VEHICLE CONFIGURATION (reordered: now after Operating Mode & HW) */}
 {(isStep3) ? (<>
-<div style={css(`margin-bottom:14px;`)}>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Vehicle Configuration</div>
+<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:14px;`)}>
 {/* E/F/H — mirrors the SC Vehicle Availability master columns; editable per run; optional. */}
-<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>Edit vehicle type, count and parameters for this run — the SC Vehicle Availability master is untouched. Vehicle config is <strong style={css(`color:#14171F;`)}>optional</strong>: leave an SC empty and the routing engine uses its default vehicle set.</div>
+<span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Vehicle Configuration</span>
+<span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; color:#8E96A3;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>Per-run only — SC Vehicle Availability master is untouched. Optional: leave empty for the default set.</span></span>
 </div>
 {(vehAddOnly) ? (<>
 <div style={css(`display:flex; align-items:flex-start; gap:10px; padding:11px 14px; margin-bottom:12px; background:#EAF1FB; border:1px solid #CFE0F1; border-radius:8px;`)}>
@@ -2404,8 +2388,7 @@ All modules
     shape: pick the file first, then the SC/plan list below reveals once it's picked.
     2026-08-25 — NLH Design Ingestion now lives exclusively on the NLH card; this picker just
     references whichever cycle-month's plans NLH has ingested. */}
-<div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>NLH Plan Selection</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; margin-bottom:10px; line-height:1.5;`)}>NLH may produce multiple scenarios per month (e.g. different volume levels) — pick one below to apply to every SC you select. Added on the SC-SC and NLH Design card's Design Ingestion tab.</div>
+<div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:10px;`)}><span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Pick an NLH scenario for these SCs</span><span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; color:#8E96A3;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>Applies to every SC selected below. Add scenarios on SC-SC and NLH Design → Design Ingestion.</span></span></div>
 <div style={css(`position:relative; display:inline-block; margin-bottom:14px;`)}>
 <button onClick={toggleSchedNlhMonth} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
 NLH cycle: {schedNlhMonthLabel}
@@ -10118,7 +10101,7 @@ class NDCApp extends React.Component {
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
       rlhCyclePast: this.isRlhCyclePast(), rlhCycleLabel: monthLabel(st.activeCycleMonth.rlh),
-      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, 'Vehicle types and their capacity, distance limit, touch-point cap and LH feasibility.'], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Every LMDC across the network, one row per DC — location/capacity/status from AutoDML & Node Inputs; a few operating parameters editable here.']].map(t => ({ label: t[1], tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
+      mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, "Capacity, distance limit, TP cap and LH feasibility per vehicle type. TP Limit is a reference cap (default 7) — over it flags, doesn't block."], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Code/Location/Capacity: from AutoDML, locked. RLH Mode, Cutoff, Vehicle Size, Unload, Pincodes: edit inline or via CSV. Italic "Default" = a plan can still override; set a value to lock it.']].map(t => ({ label: t[1], tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
       scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
       addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
       addVehOpen: !!st.addVehOpen,
@@ -15924,7 +15907,7 @@ class NDCApp extends React.Component {
         const IT_TIP = {
           volume:    'Upload shipment volume CSV files for FM, FMSC, and LMDC flows. One active file per cycle.',
           nodes:     'AutoDML-sourced node list for this cycle. Review any flagged nodes before proceeding.',
-          masters:   'Manage SC Master (sort-centre config) and Vehicle Master (type + capacity definitions).',
+          masters:   'SC, Vehicle & LMDC masters — shared across all cycles, edit anytime.',
           ingestion: 'Import an existing route plan CSV to seed the design — skips the solver for that SC.',
         };
         const IT = [['volume', 'Volume Inputs'], ['nodes', 'SC-DC Connections'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']];

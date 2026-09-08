@@ -775,25 +775,36 @@ function setSpeedProfile(store, cycleMonth, scCode, vehicles) {
 // SC Master's flat speed, at read time (lookupSpeedProfile already returns null for that case,
 // by design). The only hard requirement left: at least one seed cell anywhere in the table — any
 // vehicle type × any zone × 00:00 — so there's something to build the rest of the profile from.
-function isSpeedProfileComplete(vehicles) {
-  const hasSeed = Object.keys(vehicles || {}).some(vt => {
-    const e = vehicles[vt];
-    const localSeed = e && Array.isArray(e.local) && e.local[0] !== null && e.local[0] !== undefined && e.local[0] !== '';
-    const zonalSeed = e && Array.isArray(e.zonal) && e.zonal[0] !== null && e.zonal[0] !== undefined && e.zonal[0] !== '';
-    return localSeed || zonalSeed;
+// isSpeedProfileComplete(vehicles, applicableZones) (2026-09-08, tightened per item 4) — "no gaps
+// allowed" for the FULL day is still gone (a blank hour after the first entered one inherits
+// forward — see applySpeedProfileInheritance below), but the 00:00 seed itself is now mandatory
+// for EVERY applicable row, not just any one anywhere in the table. applicableZones is
+// {[vehicleType]: {local: bool, zonal: bool}} (see openSpeedProfileModal's union-of-zones-per-
+// vehicle-type computation) — a vehicle type with no Non-Local-eligible row anywhere is never
+// asked for a Non-Local 00:00 value at all (items 1 & 3).
+function isSpeedProfileComplete(vehicles, applicableZones) {
+  const missing = [];
+  Object.keys(applicableZones || {}).forEach(vt => {
+    const zones = applicableZones[vt];
+    const e = (vehicles || {})[vt] || {};
+    const hasSeed = (arr) => Array.isArray(arr) && arr[0] !== null && arr[0] !== undefined && arr[0] !== '';
+    if (zones.local && !hasSeed(e.local)) missing.push({ vehicleType: vt, zone: 'Local', reason: vt + ' \u2014 Local 00:00 is required' });
+    if (zones.zonal && !hasSeed(e.zonal)) missing.push({ vehicleType: vt, zone: 'Non-Local', reason: vt + ' \u2014 Non-Local 00:00 is required' });
   });
-  return { complete: hasSeed, missing: hasSeed ? [] : [{ vehicleType: null, reason: 'Enter at least one vehicle type/zone\u2019s 00:00 speed before saving.' }] };
+  return { complete: missing.length === 0, missing };
 }
 
-// applySpeedProfileInheritance(vehicles) (2026-09-07) — for every vehicle/zone array that has AT
-// LEAST one entered value, fills every blank hour forward from the nearest earlier hour with a
-// value (a genuinely blank leading run before the first real value stays blank — there's nothing
-// to inherit from yet). Rows with zero values anywhere are left untouched (still entirely blank),
-// so lookupSpeedProfile's existing null-fallthrough continues to work for them unchanged.
-function applySpeedProfileInheritance(vehicles) {
+// applySpeedProfileInheritance(vehicles, applicableZones) — for every APPLICABLE vehicle/zone
+// array, fills every blank hour forward from the nearest earlier hour with a value (a genuinely
+// blank leading run before the first real value stays blank — there's nothing to inherit from
+// yet, though isSpeedProfileComplete above should already have blocked save in that case). Zones
+// that aren't applicable for a given vehicle type (item 1) are dropped entirely from the saved
+// output, not fabricated with inherited/blank data.
+function applySpeedProfileInheritance(vehicles, applicableZones) {
   const out = {};
   Object.keys(vehicles || {}).forEach(vt => {
     const e = vehicles[vt];
+    const zones = (applicableZones && applicableZones[vt]) || { local: true, zonal: true };
     const fillRow = (arr) => {
       if (!Array.isArray(arr) || !arr.some(v => v !== null && v !== undefined && v !== '')) return arr;
       const filled = arr.slice();
@@ -804,7 +815,10 @@ function applySpeedProfileInheritance(vehicles) {
       }
       return filled;
     };
-    out[vt] = Object.assign({}, e, { local: fillRow(e.local), zonal: fillRow(e.zonal) });
+    out[vt] = Object.assign({}, e, {
+      local: zones.local ? fillRow(e.local) : undefined,
+      zonal: zones.zonal ? fillRow(e.zonal) : undefined,
+    });
   });
   return out;
 }

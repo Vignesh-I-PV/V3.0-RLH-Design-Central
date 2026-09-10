@@ -3474,7 +3474,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT (travel + hold + service time at each stop, plus the return leg) isn't computed yet — pending real DS output.</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT = one-way TAT × 2 (travel + hold + service time to the last stop, doubled for the return leg).</div>
 </div>
 </>) : null}
 {(reviewSchedDetail.secDock) ? (<>
@@ -5864,7 +5864,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT (travel + hold + service time at each stop, plus the return leg) isn't computed yet — pending real DS output.</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Round-trip TAT = one-way TAT × 2 (travel + hold + service time to the last stop, doubled for the return leg).</div>
 </div>
 </>) : null}
 {(schedAlignDetail.secDock) ? (<>
@@ -9053,7 +9053,7 @@ class NDCApp extends React.Component {
   mapNext() {
     const step = this.state.mapStep;
     if (step === 1 && (this.state.mapDraft.scCodes || []).length < 2) { this.showToast('Pick at least 2 SCs — a single-SC "cluster" isn\u2019t supported here, use RLH Route Planner instead.', '#C77B00'); return; }
-    if (step === 2 && (this.state.mapDraft.dcCodes || []).length < 1) { this.showToast('Add at least one DC to the run', '#C77B00'); return; }
+    if (step === 2 && this.mapComputeEligibleDcs(this.state.mapDraft.scCodes || []).length < 1) { this.showToast('No DCs are linked to the selected SC(s) yet — check SC-DC Connections.', '#C77B00'); return; }
     this.setState({ mapStep: Math.min(4, step + 1) });
   }
   mapBack() { this.setState({ mapStep: Math.max(1, this.state.mapStep - 1) }); }
@@ -10397,7 +10397,6 @@ class NDCApp extends React.Component {
     const runStatusSummary = runQ.length + ' runs · ' + doneCount + ' completed · ' + runProgN + ' in progress · ' + runQueuedN + ' planned';
 
     // Step 1 = plan file + SC selection · 2 = Vehicles & HW · 3 = Preview & Trigger
-    const canNext = step === 1 ? (!!st.creationVolume && sel.length > 0 && sel.length <= SC_CAP) : step === 2 ? true : step === 3 ? true : false;
     const nextLabel = step === 1 ? 'Operating Mode & HW' : step === 2 ? 'Vehicle Configuration' : step === 3 ? 'Preview & Trigger' : 'Continue';
 
     // Global HW selector (0, 0.5, 1) + per-SC override
@@ -10617,6 +10616,7 @@ class NDCApp extends React.Component {
     // L — per-row "select to trigger" removed: everything selected in Step 1 runs. Errors block.
     const trigSelCount = selScs.length;
     const step3ErrorCount = previewCardsWithHw.filter(c => c.hasErrors).length;
+    const canNext = step === 1 ? (!!st.creationVolume && sel.length > 0 && sel.length <= SC_CAP) : step === 2 ? step3ErrorCount === 0 : step === 3 ? true : false;
 
     // 2.6 — Aggregate validation flags across selected SCs for the step-4 Validation panel.
     // Group by flag key so "zeroval across 3 SCs" renders as one row listing all three.
@@ -10774,7 +10774,7 @@ class NDCApp extends React.Component {
     // earlier approach of nesting SC-DC Mapping under RLH's own row, which mis-represented it as
     // part of RLH — Node Mapping is its own peer tier, just not built yet.
     const creationTierName = st.creationTier || 'RLH';
-    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const CTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — joint multi-SC DC assignment planning (SC-DC Mapping)', false]];
     const creationTierSeg = CTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: creationTierName === t[0],
       bg: creationTierName === t[0] ? '#EAEEFB' : '#fff', bd: creationTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: creationTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: creationTierName === t[0] ? '700' : '600',
@@ -11175,7 +11175,7 @@ class NDCApp extends React.Component {
     const pushed = Object.assign({}, st.pushedSCs); pushed[code] = true;
     // Land on the alignment LIST (L1), not the freshly-pushed plan's blank "waiting for feedback" detail.
     // Reset the filter to All so the just-pushed/finalised plan is guaranteed visible in the list.
-    this.setState({ data: Object.assign({}, d, { plans }), alignStatus, pushedSCs: pushed, pushOpen: false, finDirectOpen: false, pushRunId: null, view: 'align', opsPlanId: plan ? plan.id : st.opsPlanId, alignPlanId: null, alignFilter: 'Pending Feedback', alignPage: 0 });
+    this.setState({ data: Object.assign({}, d, { plans }), alignStatus, pushedSCs: pushed, pushOpen: false, finDirectOpen: false, pushRunId: null, view: 'align', alignTier: 'RLH', alignRlhMode: 'planner', opsPlanId: plan ? plan.id : st.opsPlanId, alignPlanId: null, alignFilter: 'Pending Feedback', alignPage: 0 });
     const runTxt = run ? (run.runId || run.id) : code;
     if (finaliseDirect) { this.clearLaneFlagsForPlan(plan ? plan.id : ('PL-' + code)); this.showToast('Finalised ' + runTxt + ' directly \u2014 skipped Ops alignment, ready for RFQ handoff', '#128A3E'); }
     else this.showToast('Pushed ' + runTxt + ' (' + hwTxt + ') to alignment \u00b7 ' + reviewers.length + ' reviewer' + (reviewers.length === 1 ? '' : 's'), '#128A3E');
@@ -12347,9 +12347,9 @@ class NDCApp extends React.Component {
   //   Route View (one row per route): route_code, count_of_nodes, total_route_volume,
   //     total_route_distance, route_vehicle_type, utilisation, vehicle_capacity, cutoff_time,
   //     hold_time (sum across the route's DCs), round_trip_tat.
-  //   round_trip_tat is intentionally shown WITHOUT a computed value for now (per Vignesh: sum of
-  //     travel times + hold time + service time at each DC + the return leg — no computation yet,
-  //     just the column) — rendered as "—" rather than inventing a number.
+  //   round_trip_tat (fixed, later session) — computed as oneWayTatHrs * 2 (see roundTripTatHrs
+  //     below); confirmed no separate hold/service-time term needed since oneWayTatHrs already
+  //     reflects the route's real breakdownTatHrs to its last stop.
   //   Dock Schedule (one row per LMDC × its route's dock/slot): which dock a route departs from,
   //     assigned sequentially from Dock-1 in dispatch order within each slot — vehicle-to-dock
   //     assignment isn't DS-driven, so this is a simple round-robin, not modeled further.
@@ -12961,7 +12961,7 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Own state key (st.alignTier /
     // st.alignRlhMode) — independent of the other two modules' choices.
     const alignTierName = st.alignTier || 'RLH';
-    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const ATIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — joint multi-SC DC assignment planning (SC-DC Mapping)', false]];
     const alignTierSeg = ATIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: alignTierName === t[0],
       bg: alignTierName === t[0] ? '#EAEEFB' : '#fff', bd: alignTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: alignTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: alignTierName === t[0] ? '700' : '600',
@@ -15233,7 +15233,7 @@ class NDCApp extends React.Component {
     // plus the Route Planner/Route Scheduler fork nested under RLH. Independent state key from
     // Design Creation's (st.creationRlhMode) — each module remembers its own tier/mode choice.
     const reviewTierName = st.reviewTier || 'RLH';
-    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — SC-DC Mapping (assignment planning) arrives in a future cycle', true]];
+    const RTIER = [['RLH', 'Regional Linehaul (LMSC → LMDC) — the V1 network tier', false], ['Node Mapping', 'Node Mapping — joint multi-SC DC assignment planning (SC-DC Mapping)', false]];
     const reviewTierSeg = RTIER.map(t => ({ label: t[0], sub: t[1], soon: t[2], active: reviewTierName === t[0],
       bg: reviewTierName === t[0] ? '#EAEEFB' : '#fff', bd: reviewTierName === t[0] ? '#003F98' : '#E6EBF2',
       fg: reviewTierName === t[0] ? '#003F98' : (t[2] ? '#8E96A3' : '#5A5E66'), weight: reviewTierName === t[0] ? '700' : '600',

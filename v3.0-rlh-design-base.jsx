@@ -867,12 +867,21 @@ All modules
 <span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{rlhCycleLabel}</strong> is a past cycle — Design Inputs are read-only. New designs can still be created against this cycle, and Finalise Directly remains available from Design Review; Push to Alignment does not.</span>
 </div>
 </>) : null}
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:stretch; gap:14px; margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
 <button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 <input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
+</div>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
+<div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Operating Hours</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Non-operating &amp; break windows · global, applies across all SCs</div></div>
+<button onClick={opHoursTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
+<button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
+<input ref={opHoursFileInputRef} type={"file"} accept={".csv"} onChange={onOpHoursFileChange} style={css(`display:none;`)} />
+</div>
 </div>
 {(hasScMasterUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -883,6 +892,18 @@ All modules
 <div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
 {(scMasterUploadErrors || []).slice(0, 20).map((er, __iScMe) => (<React.Fragment key={__iScMe}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
 {(scMasterUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {scMasterUploadErrors.length - 20} more</div></>) : null}
+</div>
+</div>
+</>) : null}
+{(hasOpHoursUploadErrors) ? (<>
+<div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{opHoursUploadErrors.length} row{opHoursUploadErrors.length === 1 ? '' : 's'} flagged in Operating Hours upload — nothing applied</span></div>
+<button onClick={closeOpHoursUploadErrors} aria-label={"Dismiss"} style={css(`width:24px; height:24px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
+{(opHoursUploadErrors || []).slice(0, 20).map((er, __iOhMe) => (<React.Fragment key={__iOhMe}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
+{(opHoursUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {opHoursUploadErrors.length - 20} more</div></>) : null}
 </div>
 </div>
 </>) : null}
@@ -920,7 +941,7 @@ All modules
 {/* 1.7 SC Master — full template columns; 1.8 freeze header via sticky; overflow-x:auto for wide table */}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 300px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
-<div style={css(`min-width:1180px;`)}>
+<div style={css(`min-width:1880px;`)}>
 <div style={css(`display:grid; grid-template-columns:${scGridCols}; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>NAME</div>
@@ -930,29 +951,20 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>VOL CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>SORT CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Latitude, Longitude"}>COORDINATES</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OPEN</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>CLOSE</div>
-{/* 2026-09-07 fix — collapse toggle + teal section tinting removed: RLH-specific columns are
-    now always visible, styled identically to every other header (#5A5E66, no background), which
-    also directly fixes the low-contrast headers the screenshot flagged. Hold Time On/Off column
-    removed (now purely plan-level, no per-SC default) — Max Hold Local/Non-Local stay, since
-    those minute ceilings are still genuinely SC-level facts. */}
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>RLH DOCKS</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>LOCAL TP</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>NON-LOCAL TP</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
-{/* 2026-09-07 fix — these three headers no longer rely on guessing an exact pixel width wide
-    enough for the label at nowrap: confirmed via screen recording that "NON-LOCAL SPD"/"MAX HOLD
-    LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS" were overlapping into garbled text. Allowing wrap
-    (with a line-height that fits two lines within the header row's existing padding) removes the
-    overflow risk entirely, rather than just reducing it with a wider column that could still be
-    wrong. */}
-<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
-<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
-<div style={css(`padding:9px 6px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
+{/* 2026-09-10 fix — Open/Close removed (replaced by the Operating Hours popup, right); the 7
+    columns below are now ALL uniform width + 2-line wrap (previously a mix of nowrap and wrap
+    at different widths, which read as inconsistent even after the 2026-09-07 overlap fix). */}
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25; border-left:1px solid #D0D5DD;`)}>RLH DOCKS</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>LOCAL TP</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>NON-LOCAL TP</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Local vehicle speed, km/h — Route Scheduler's default for local-zone DCs"}>LOCAL SPD</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Non-local vehicle speed, km/h — Route Scheduler's default for non-local-zone DCs"}>NON-LOCAL SPD</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
 {/* 2026-08-26 fix — NLH Docks column removed from RLH's SC Master table (see edit-form removal
     above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OP HOURS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
@@ -965,8 +977,6 @@ All modules
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.coords}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.openTime}</div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.closeTime}</div>
 {/* 2026-09-07 fix — a stray leftover placeholder <div/> used to sit here (paired with the
     collapse-toggle header column removed earlier this session, whose matching header cell was
     deleted but this body-side partner was missed) — it shifted every subsequent cell one column
@@ -988,6 +998,9 @@ All modules
     cells vs. 13 header cells), pushing edit/delete onto a wrapped second grid row. */}
 <div style={css(`padding:10px 10px;`)}>
 <button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.pocSummary}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+<div style={css(`padding:10px 10px; text-align:center;`)}>
+<button onClick={s.onOpenOpHours} title={"Operating Hours" + (s.opHoursConfigured ? ' — configured' : ' — falls back to always-open default')} aria-label={"Open Operating Hours for " + s.code} style={css(`width:26px; height:26px; border:1px solid ${s.opHoursConfigured ? '#0D7377' : '#E6EBF2'}; background:${s.opHoursConfigured ? '#E9F5F5' : '#fff'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 <div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={s.rowEdit} disabled={rlhCyclePast} aria-label={"Edit row"} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -1037,25 +1050,31 @@ All modules
 {/* 2026-09-08 fix (item 5) — restructured again: search+count now on its own line, and the two
     upload actions are grouped into labelled columns (Template stacked above Upload, per group)
     sitting side by side, rather than a single flat row of buttons that wrapped awkwardly. */}
-<div style={css(`display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; align-items:center; gap:10px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; flex-shrink:0;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={availSearch} onInput={onAvailSearch} placeholder={"Search SC code, name or vehicle…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:220px;`)} />
 </div>
 <span style={css(`font-size:13px; font-weight:700; color:#14171F; white-space:nowrap;`)}>{scVehAvailCountLabel}</span>
 </div>
-<div style={css(`display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;`)}>
-<div style={css(`display:flex; flex-direction:column; gap:6px; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:2px;`)}>SC VEHICLE AVAILABILITY</div>
-<button onClick={availTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'}; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+{/* 2026-09-10 fix (point 5) — the two upload cards, previously a full label-stacked row below
+    search, are now compact and pinned to the right on the SAME row: icon-only template download,
+    short "Upload" label, group name as a small caption rather than a full card header. */}
+<div style={css(`display:flex; align-items:center; gap:12px; flex-wrap:wrap;`)}>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}>
+<span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; white-space:nowrap;`)}>SC AVAILABILITY</span>
+<button onClick={availTemplate} title={"Download template"} aria-label={"Download SC Vehicle Availability template"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={triggerAvailUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 10px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'}; white-space:nowrap;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload</button>
 <input ref={availFileInputRef} type={"file"} accept={".csv"} onChange={onAvailFileChange} style={css(`display:none;`)} />
 </div>
-<div style={css(`display:flex; flex-direction:column; gap:6px; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:2px;`)}>SPEED PROFILE</div>
+<span style={css(`width:1px; height:20px; background:#E6EBF2;`)} />
+<div style={css(`display:flex; align-items:center; gap:6px;`)}>
+<span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; white-space:nowrap;`)}>SPEED PROFILE</span>
 <input ref={speedProfileUploadRef} type={"file"} accept={".csv"} onChange={onSpeedProfileGlobalUpload} style={css(`display:none;`)} />
-<button onClick={downloadSpeedProfileTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; white-space:nowrap;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
+<button onClick={downloadSpeedProfileTemplate} title={"Download template"} aria-label={"Download Speed Profile template"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={triggerSpeedProfileUpload} style={css(`display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 10px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload</button>
+</div>
 </div>
 </div>
 {(hasAvailUploadErrors) ? (<>
@@ -1311,9 +1330,10 @@ All modules
 </>) : null}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
-<div style={css(`min-width:1560px;`)}>
-<div style={css(`display:grid; grid-template-columns:110px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
+<div style={css(`min-width:1650px;`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Owning Sort Centre \u2014 sourced from AutoDML's active link for this DC"}>LMSC</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Latitude, Longitude"}>LOCATION</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>CAPACITY</div>
 {/* 2026-09-07 fix — purple/teal/green section colour-coding removed entirely (headers were
@@ -1335,8 +1355,9 @@ All modules
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
-<div style={css(`display:grid; grid-template-columns:110px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
+<div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; align-items:center; border-top:1px solid #EEF1F6; background:${l.editing ? '#F7F9FC' : 'transparent'};`)}>
 <div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{l.code}</div>
+<div style={css(`padding:10px 10px; font-size:12px; white-space:nowrap;`)}>{(l.lmscConflict) ? (<><span title={l.lmscConflictTip} style={css(`display:inline-flex; align-items:center; gap:4px; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:700; background:#FBEAEA; color:#D14B4B; cursor:help;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Conflict</span></>) : (<><span style={css(`color:${l.lmscCode === 'Pending' ? '#8E96A3' : '#14171F'}; font-style:${l.lmscCode === 'Pending' ? 'italic' : 'normal'};`)}>{l.lmscCode}</span></>)}</div>
 <div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{l.coords}</div>
 <div style={css(`padding:10px 10px; font-size:12px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:${l.zeroCap ? '#D14B4B' : '#14171F'}; font-weight:${l.zeroCap ? '700' : '400'};`)}>{l.capacity}</div>
 {/* 2026-09-07 fix — LMSC + LMSC ACTIVE columns removed; every remaining section divider is now
@@ -6205,6 +6226,118 @@ NLH cycle: {schedNlhMonthLabel}
 {(toastHasUndo) ? (<><button onClick={onToastUndo} style={css(`flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)} onMouseLeave={(e) => hoverOff(e, `flex-shrink:0; margin-left:4px; padding:5px 12px; border:none; background:rgba(255,255,255,0.12); color:#8FB4FF; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:6px; cursor:pointer;`, `background:rgba(255,255,255,0.2); color:#B9D0FF;`)}>Undo</button></>) : null}
 </div>
 </>) : null}
+{/* ===== OPERATING HOURS POPUP (2026-09-10) — non-operating + break windows, 30-min grid via
+     <select> options only (never free text), shifts derived and shown live as the two lists
+     change. Global scope like Speed Profile above, same reason: opened from SC Master's row
+     icon regardless of which screen is active. ===== */}
+{(opHoursModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={opHoursModal.onClose}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:640px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Operating Hours — {opHoursModal.code}</div>
+<button onClick={opHoursModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+
+<div style={css(`font-size:11px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:8px;`)}>NON-OPERATING HOURS</div>
+<div style={css(`display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;`)}>
+{(opHoursModal.nonOpChips || []).map((c, __iOhc1) => (<React.Fragment key={__iOhc1}><span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; background:#F2F5FA; border-radius:999px; font-size:12px; color:#14171F;`)}>{c.label}<span onClick={c.onRemove} style={css(`color:#8E96A3; cursor:pointer;`)}>&times;</span></span></React.Fragment>))}
+</div>
+{(opHoursModal.addingNonOp) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:14px;`)}>
+<select value={opHoursModal.addStart} onChange={opHoursModal.onAddStart} style={css(`height:30px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12px; padding:0 6px;`)}>{(opHoursModal.timeOptions || []).map((t, __iOht1) => (<option key={__iOht1} value={t}>{t}</option>))}</select>
+<span style={css(`font-size:12px; color:#8E96A3;`)}>to</span>
+<select value={opHoursModal.addEnd} onChange={opHoursModal.onAddEnd} style={css(`height:30px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12px; padding:0 6px;`)}>{(opHoursModal.timeOptions || []).map((t, __iOht2) => (<option key={__iOht2} value={t}>{t}</option>))}</select>
+<button onClick={opHoursModal.onConfirmAddNonOp} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; border-radius:6px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer;`)}>Add</button>
+<button onClick={opHoursModal.onCancelAdd} style={css(`height:30px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; border-radius:6px; font-family:inherit; font-size:12px; cursor:pointer;`)}>Cancel</button>
+</div>
+</>) : (<>
+<button onClick={opHoursModal.onStartAddNonOp} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px dashed #C3C9D4; border-radius:6px; background:#fff; font-family:inherit; font-size:12px; color:#5A5E66; cursor:pointer; margin-bottom:18px;`)}>+ Add non-operating hours</button>
+</>)}
+
+<div style={css(`font-size:11px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:8px;`)}>BREAK TIMINGS</div>
+<div style={css(`display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;`)}>
+{(opHoursModal.breakChips || []).map((c, __iOhc2) => (<React.Fragment key={__iOhc2}><span style={css(`display:inline-flex; align-items:center; gap:6px; padding:5px 10px; background:#FBF1DF; border-radius:999px; font-size:12px; color:#8A5A00;`)}>{c.label}<span onClick={c.onRemove} style={css(`color:#C77B00; cursor:pointer;`)}>&times;</span></span></React.Fragment>))}
+</div>
+{(opHoursModal.addingBreak) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:18px;`)}>
+<select value={opHoursModal.addStart} onChange={opHoursModal.onAddStart} style={css(`height:30px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12px; padding:0 6px;`)}>{(opHoursModal.timeOptions || []).map((t, __iOht3) => (<option key={__iOht3} value={t}>{t}</option>))}</select>
+<span style={css(`font-size:12px; color:#8E96A3;`)}>to</span>
+<select value={opHoursModal.addEnd} onChange={opHoursModal.onAddEnd} style={css(`height:30px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12px; padding:0 6px;`)}>{(opHoursModal.timeOptions || []).map((t, __iOht4) => (<option key={__iOht4} value={t}>{t}</option>))}</select>
+<button onClick={opHoursModal.onConfirmAddBreak} style={css(`height:30px; padding:0 12px; border:none; background:#003F98; color:#fff; border-radius:6px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer;`)}>Add</button>
+<button onClick={opHoursModal.onCancelAdd} style={css(`height:30px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; border-radius:6px; font-family:inherit; font-size:12px; cursor:pointer;`)}>Cancel</button>
+</div>
+</>) : (<>
+<button onClick={opHoursModal.onStartAddBreak} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px dashed #C3C9D4; border-radius:6px; background:#fff; font-family:inherit; font-size:12px; color:#5A5E66; cursor:pointer; margin-bottom:18px;`)}>+ Add break timing</button>
+</>)}
+
+<div style={css(`font-size:11px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:8px;`)}>AUTO-COMPUTED — 30-MIN GRID</div>
+<div style={css(`display:flex; height:22px; border-radius:4px; overflow:hidden; margin-bottom:8px;`)}>
+{(opHoursModal.slots || []).map((sl, __iOhs) => (<React.Fragment key={__iOhs}><div style={css(`flex:1; background:${sl.bg};`)} /></React.Fragment>))}
+</div>
+<div style={css(`display:flex; justify-content:space-between; font-size:10px; color:#8E96A3; margin-bottom:14px;`)}>
+<span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+</div>
+<div style={css(`display:flex; gap:16px; font-size:12px; padding-top:10px; border-top:1px solid #EEF1F6; margin-bottom:18px;`)}>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:9px; height:9px; border-radius:2px; background:#128A3E; display:inline-block;`)} />Operational</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:9px; height:9px; border-radius:2px; background:#C77B00; display:inline-block;`)} />Break</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:9px; height:9px; border-radius:2px; background:#D9DDE3; display:inline-block;`)} />Non-operating</span>
+</div>
+
+<div style={css(`display:flex; justify-content:flex-end; gap:8px;`)}>
+<button onClick={opHoursModal.onClose} style={css(`height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}>Cancel</button>
+<button onClick={opHoursModal.onSave} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer;`)}>Save</button>
+</div>
+</div>
+</div>
+</>) : null}
+{/* ===== DOCK PROFILE POPUP (2026-09-10) — SC-wise 30-min dock availability, opened from Route
+     Scheduler's Step 2 per-SC icon. 24 hourly columns, each carrying its own two 30-min halves
+     (product decision: hourly axis, but never lose the half-hour data underneath). Every used
+     dock is a colored unit square identifying its own cause (hover for the exact lane/trailer),
+     free docks are a fourth neutral color, non-operating hours are a single flat block, not
+     individual squares — there's nothing to enumerate when the SC is closed. ===== */}
+{(dockProfileModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={dockProfileModal.onClose}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Dock Profile — {dockProfileModal.code} · {dockProfileModal.name}</div>
+<button onClick={dockProfileModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{dockProfileModal.capacity} RLH docks base capacity · 30-min slots, grouped hourly</div>
+
+<div style={css(`overflow-x:auto; padding-bottom:6px;`)}>
+<div style={css(`display:flex; gap:3px; min-width:${dockProfileModal.capacity > 0 ? (24 * 30) : 0}px;`)}>
+{(dockProfileModal.hours || []).map((h, __iDph) => (<React.Fragment key={__iDph}>
+<div style={css(`display:flex; flex-direction:column; align-items:center; gap:2px; width:28px; flex-shrink:0;`)}>
+{(h.nonOperating) ? (<>
+<div style={css(`width:24px; height:${Math.max(24, dockProfileModal.capacity * 9)}px; border-radius:2px; background:#F1EFE8; border:1px solid #B4B2A9;`)} title={"Non-operating"} />
+</>) : (<>
+<div style={css(`display:flex; gap:2px;`)}>
+{(h.halves || []).map((half, __iDphh) => (<React.Fragment key={__iDphh}>
+<div style={css(`display:flex; flex-direction:column-reverse; gap:2px;`)}>
+{(half.squares || []).map((sq, __iDpsq) => (<React.Fragment key={__iDpsq}><div title={sq.title || 'Free dock'} style={css(`width:9px; height:9px; border-radius:1px; background:${sq.bg}; border:1px solid ${sq.bd};`)} /></React.Fragment>))}
+</div>
+</React.Fragment>))}
+</div>
+</>)}
+<div style={css(`font-size:9px; color:#C3C9D4; margin-top:4px;`)}>{h.label}</div>
+<div style={css(`font-size:9px; font-weight:700; color:${h.nonOperating ? '#8E96A3' : '#14171F'};`)}>{h.freeLabel}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+
+<div style={css(`display:flex; gap:16px; font-size:12px; flex-wrap:wrap; margin-top:18px; padding-top:12px; border-top:1px solid #EEF1F6;`)}>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:11px; height:11px; border-radius:2px; background:#EEEDFE; border:1px solid #7F77DD; display:inline-block;`)} />Free dock</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:11px; height:11px; border-radius:2px; background:#E1F5EE; border:1px solid #1D9E75; display:inline-block;`)} />NLH landing</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:11px; height:11px; border-radius:2px; background:#FAECE7; border:1px solid #D85A30; display:inline-block;`)} />Co-loading lane</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:11px; height:11px; border-radius:2px; background:#FBEAF0; border:1px solid #D4537E; display:inline-block;`)} />MDC lane</span>
+<span style={css(`display:flex; align-items:center; gap:5px; color:#14171F;`)}><span style={css(`width:11px; height:11px; border-radius:2px; background:#F1EFE8; border:1px solid #B4B2A9; display:inline-block;`)} />Non-operating (0 docks)</span>
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:10px;`)}>Hover a colored square for the exact cause (which NLH trailer, or which lane).</div>
+</div>
+</div>
+</>) : null}
 {/* ===== SPEED PROFILE POPUP (2026-09-03, item 1; reworked 2026-09-07) — SC x Vehicle Type x
      Zone x Time, opened from a SC Vehicle Availability card (editable) or Route Scheduler's Step
      2 icon (read-only). One row per (vehicle type, zone) pair, 24 fixed hourly columns. Only one
@@ -7071,7 +7204,7 @@ class NDCApp extends React.Component {
     const autodmlDetails = {
       inactive: allPoolDcs.filter(dc => dc.linkStatus === 'inactive').map(dc => ({ link: dc.scCode + ' \u2192 ' + dc.code, detail: 'LMDC node flagged inactive in AutoDML', zone: dc.zone })),
       zerocap: allPoolDcs.filter(dc => dc.linkStatus === 'zerocap').map(dc => ({ link: dc.scCode + ' \u2192 ' + dc.code, detail: 'LMDC sort / handling capacity = 0', zone: dc.zone })),
-      multi: allPoolDcs.filter(dc => dc.linkStatus === 'multi').map(dc => ({ link: dc.code + ' \u2194 ' + dc.scCode + ' + ' + dc.secondSc, detail: 'DC mapped to two SCs', zone: dc.zone })),
+      multi: allPoolDcs.filter(dc => dc.linkStatus === 'multi').map(dc => ({ link: dc.code + ' \u2194 ' + dc.scCode + ' + ' + dc.secondSc, detail: 'DC mapped to two SCs', zone: dc.zone, code: dc.code, scCode: dc.scCode, secondSc: dc.secondSc })),
     };
     const autodml = [
       { key: 'inactive', label: 'Link active but node is inactive', count: autodmlDetails.inactive.length, sev: 'warning' },
@@ -7484,7 +7617,33 @@ class NDCApp extends React.Component {
     const maxHoldNonLocal = num(sc.maxHoldNonLocal, 120);
     const lat = sc.lat != null && sc.lat !== '' ? Number(sc.lat) : 0;
     const lng = sc.lng != null && sc.lng !== '' ? Number(sc.lng) : 0;
-    return { nlhDocks, rlhDocks, localTp, nonLocalTp, localSpeed, nonLocalSpeed, openTime, closeTime, holdTimeOn, maxHoldLocal, maxHoldNonLocal, lat, lng };
+    const nonOperating = sc.nonOperating || [];
+    const breaks = sc.breaks || [];
+    return { nlhDocks, rlhDocks, localTp, nonLocalTp, localSpeed, nonLocalSpeed, openTime, closeTime, holdTimeOn, maxHoldLocal, maxHoldNonLocal, lat, lng, nonOperating, breaks };
+  }
+  // Operating Hours (2026-09-10) — windows are {start,end} in 'HH:MM', snapped to the 30-min grid
+  // by the intake form itself (see onAddOpHoursWindow). Two helpers, kept separate on purpose:
+  // opHoursSlots() is the full 48-slot classification (used to paint the bar); opHoursShifts()
+  // derives Shift 1/2/3... from non-operating gaps ONLY — a break sits inside its shift, it
+  // doesn't split one (confirmed: breaks never create a new shift boundary).
+  timeToSlot(hhmm) { const p = hhmm.split(':'); return (parseInt(p[0], 10) * 2) + (parseInt(p[1], 10) >= 30 ? 1 : 0); }
+  slotToTime(slot) { const h = Math.floor(slot / 2), m = (slot % 2) * 30; return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'); }
+  opHoursSlots(nonOperating, breaks) {
+    const slots = new Array(48).fill('operational');
+    (nonOperating || []).forEach(w => { for (let i = this.timeToSlot(w.start); i < this.timeToSlot(w.end); i++) { if (i >= 0 && i < 48) slots[i] = 'non-operating'; } });
+    (breaks || []).forEach(w => { for (let i = this.timeToSlot(w.start); i < this.timeToSlot(w.end); i++) { if (i >= 0 && i < 48 && slots[i] === 'operational') slots[i] = 'break'; } });
+    return slots;
+  }
+  opHoursShifts(nonOperating) {
+    const slots = new Array(48).fill(true); // true = operating, for shift-splitting purposes only
+    (nonOperating || []).forEach(w => { for (let i = this.timeToSlot(w.start); i < this.timeToSlot(w.end); i++) { if (i >= 0 && i < 48) slots[i] = false; } });
+    const shifts = []; let runStart = null;
+    for (let i = 0; i <= 48; i++) {
+      const on = i < 48 && slots[i];
+      if (on && runStart == null) runStart = i;
+      if (!on && runStart != null) { shifts.push({ start: this.slotToTime(runStart), end: this.slotToTime(i) }); runStart = null; }
+    }
+    return shifts.map((s, idx) => Object.assign({ n: idx + 1, label: 'Shift ' + (idx + 1) }, s));
   }
   addScVals() {
     const st = this.state;
@@ -7868,6 +8027,173 @@ class NDCApp extends React.Component {
       speedProfileDraft: { bandStarts, vehicles },
       speedProfileReviewMode: false, speedProfileErrors: [],
     });
+  }
+  // openOpHoursModal(scCode) (2026-09-10) — Operating Hours popup, same trigger/close pattern as
+  // Speed Profile above but simpler (no vehicle-type dimension): just two editable window lists
+  // (non-operating, break), both 30-min-grid-aligned via <select> options rather than free text,
+  // so a bad time string can never be saved. Shifts are DERIVED at render time (opHoursShifts()),
+  // never stored — editing non-operating hours always keeps shifts in sync automatically.
+  opHoursTimeOptions() {
+    const opts = [];
+    for (let i = 0; i < 48; i++) opts.push(this.slotToTime(i));
+    opts.push('24:00');
+    return opts;
+  }
+  openOpHoursModal(scCode) {
+    const rf = this.resolveScFields((this.state.data.scs || []).find(s => s.code === scCode) || { code: scCode });
+    this.setState({
+      opHoursModal: {
+        open: true, code: scCode,
+        nonOperating: (rf.nonOperating || []).map(w => Object.assign({}, w)),
+        breaks: (rf.breaks || []).map(w => Object.assign({}, w)),
+        addingNonOp: false, addingBreak: false, addStart: '00:00', addEnd: '00:30',
+      },
+    });
+  }
+  closeOpHoursModal() { this.setState({ opHoursModal: { open: false } }); }
+  opHoursSetAdd(field) { return (e) => { const v = e.target.value; this.setState({ opHoursModal: Object.assign({}, this.state.opHoursModal, { [field]: v }) }); }; }
+  opHoursStartAdding(type) { this.setState({ opHoursModal: Object.assign({}, this.state.opHoursModal, { addingNonOp: type === 'nonop', addingBreak: type === 'break', addStart: '00:00', addEnd: '00:30' }) }); }
+  opHoursCancelAdd() { this.setState({ opHoursModal: Object.assign({}, this.state.opHoursModal, { addingNonOp: false, addingBreak: false }) }); }
+  opHoursConfirmAdd(type) {
+    const m = this.state.opHoursModal;
+    if (m.addStart >= m.addEnd) { this.showToast('End time must be after start time', '#C77B00'); return; }
+    const key = type === 'nonop' ? 'nonOperating' : 'breaks';
+    const next = (m[key] || []).concat([{ start: m.addStart, end: m.addEnd }]).sort((a, b) => a.start < b.start ? -1 : 1);
+    this.setState({ opHoursModal: Object.assign({}, m, { [key]: next, addingNonOp: false, addingBreak: false }) });
+  }
+  opHoursRemoveWindow(type, idx) {
+    const m = this.state.opHoursModal;
+    const key = type === 'nonop' ? 'nonOperating' : 'breaks';
+    const next = (m[key] || []).filter((_, i) => i !== idx);
+    this.setState({ opHoursModal: Object.assign({}, m, { [key]: next }) });
+  }
+  saveOpHoursModal() {
+    if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const m = this.state.opHoursModal;
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code) || {};
+    setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code, 'nonOperating', m.nonOperating, dBase);
+    setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code, 'breaks', m.breaks, dBase);
+    this.refreshScs();
+    this.setState({ opHoursModal: { open: false } });
+    this.showToast('Operating Hours saved for ' + m.code, '#128A3E');
+  }
+  // Global Operating Hours CSV — long format (SC Code, Type, Start, End), one row per window.
+  // Only SCs actually present in the file are touched; every other SC's own windows are left
+  // exactly as they are (a partial upload can't silently wipe SCs it doesn't mention).
+  opHoursTemplate() {
+    const head = 'SC Code,Type,Start,End\n';
+    const sample = 'DELS,Non-Operating,00:00,06:00\nDELS,Non-Operating,22:00,24:00\nDELS,Break,13:00,13:30\n';
+    this.downloadText('operating-hours-template.csv', head + sample);
+  }
+  onOpHoursFileChange(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => this.applyOpHoursCsv(String(ev.target.result || ''));
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+  applyOpHoursCsv(text) {
+    const TIME_RE = /^([01]\d|2[0-3]|24):(00|30)$/;
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const errors = [];
+    const bySc = {};
+    lines.slice(1).forEach((line, i) => {
+      const row = i + 2;
+      const cols = line.split(',').map(c => c.trim());
+      const [code, type, start, end] = cols;
+      if (!code || !this.engineStore.scRegistry[code]) { errors.push({ row, code, msg: 'Unknown SC Code' }); return; }
+      if (type !== 'Non-Operating' && type !== 'Break') { errors.push({ row, code, msg: 'Type must be "Non-Operating" or "Break"' }); return; }
+      if (!TIME_RE.test(start) || !TIME_RE.test(end) || start >= end) { errors.push({ row, code, msg: 'Start/End must be HH:MM on the 30-min grid, start before end' }); return; }
+      bySc[code] = bySc[code] || { nonOperating: [], breaks: [] };
+      bySc[code][type === 'Non-Operating' ? 'nonOperating' : 'breaks'].push({ start, end });
+    });
+    if (errors.length) { this.setState({ opHoursUploadErrors: errors }); return; }
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    Object.keys(bySc).forEach(code => {
+      const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
+      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'nonOperating', bySc[code].nonOperating, dBase);
+      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'breaks', bySc[code].breaks, dBase);
+    });
+    this.refreshScs();
+    this.setState({ opHoursUploadErrors: [] });
+    this.showToast('Operating Hours updated for ' + Object.keys(bySc).length + ' SC' + (Object.keys(bySc).length === 1 ? '' : 's'), '#128A3E');
+  }
+  // Dock Profile (2026-09-10) — SC-wise hourly dock availability for Route Scheduler's Step 2.
+  // Computed fresh each time the modal opens (not stored): base capacity = SC Master's own RLH
+  // Docks; non-operating hours (from Operating Hours) force 0; each NLH trailer landing and each
+  // distinct Co-Loading/MDC lane cutoff blocks one dock for a 1-hour (2-slot) window. Real 30-min
+  // grid throughout — the modal groups the DISPLAY into 24 hourly columns (each showing its own
+  // two half-hour halves) per product's own call, not a lossy hourly-only computation underneath.
+  openDockProfileModal(scCode, scenario) {
+    this.setState({ dockProfileModal: { open: true, code: scCode, scenarioId: scenario ? scenario.planId : null } });
+  }
+  closeDockProfileModal() { this.setState({ dockProfileModal: { open: false } }); }
+  computeDockProfile(scCode, scenarioId) {
+    const d = this.state.data;
+    const sc = (d.scs || []).find(s => s.code === scCode);
+    if (!sc) return { hours: [], capacity: 0 };
+    const rf = this.resolveScFields(sc);
+    const capacity = rf.rlhDocks || 0;
+    const nonOp = new Array(48).fill(false);
+    (rf.nonOperating || []).forEach(w => { for (let i = this.timeToSlot(w.start); i < this.timeToSlot(w.end); i++) { if (i >= 0 && i < 48) nonOp[i] = true; } });
+    const blocks = new Array(48).fill(null).map(() => []);
+    // NLH landings — each trailer in the CHOSEN scenario (Step 1's pick) for this SC blocks one
+    // dock for 1 hour starting at its landing slot; concurrent landings each take their own dock.
+    const scenario = scenarioId ? findNlhIngestedPlanById(this.engineStore, scenarioId) : null;
+    const trailers = (scenario && scenario.scData && scenario.scData[scCode] && scenario.scData[scCode].trailers) || [];
+    trailers.forEach((t, i) => {
+      const startSlot = Math.floor(t.landingMin / 30);
+      for (let k = 0; k < 2; k++) { const s = startSlot + k; if (s >= 0 && s < 48) blocks[s].push({ type: 'nlh', label: 'NLH landing #' + (i + 1) + ' (' + this.slotToTime(startSlot) + ')' }); }
+    });
+    // Co-Loading / MDC lanes — deduped by (mode, lane name): one physical lane blocks one dock,
+    // regardless of how many LMDC rows share it. Lanes with no cutoff set yet aren't blocked.
+    const lanesSeen = {};
+    (d.lmdcs || []).filter(l => l.lmscCode === scCode && (l.rlhMode === 'Co-Loading' || l.rlhMode === 'MDC') && l.cutoff && l.cutoff !== '\u2014').forEach(l => {
+      const key = l.rlhMode + ':' + (l.laneName || l.mdcCode);
+      if (lanesSeen[key]) return; lanesSeen[key] = true;
+      const startSlot = this.timeToSlot(l.cutoff);
+      const type = l.rlhMode === 'Co-Loading' ? 'coload' : 'mdc';
+      const label = (l.rlhMode === 'Co-Loading' ? 'Co-loading lane ' : 'MDC lane ') + (l.laneName || l.mdcCode) + ' (' + l.cutoff + ')';
+      for (let k = 0; k < 2; k++) { const s = startSlot + k; if (s >= 0 && s < 48) blocks[s].push({ type, label }); }
+    });
+    // Display grouping: 24 hourly columns, each carrying its own two 30-min halves so the
+    // half-hour granularity is never lost even though the tick labels are hourly (per product
+    // decision — "keep it at hourly only across" for the axis, but show each 30-min slot too).
+    const hours = [];
+    for (let h = 0; h < 24; h++) {
+      const halves = [0, 1].map(half => {
+        const slotIdx = h * 2 + half;
+        const isNonOp = nonOp[slotIdx];
+        const slotBlocks = isNonOp ? [] : blocks[slotIdx].slice(0, capacity);
+        const free = isNonOp ? 0 : Math.max(0, capacity - slotBlocks.length);
+        return { nonOperating: isNonOp, blocks: slotBlocks, free };
+      });
+      hours.push({ label: String(h).padStart(2, '0') + ':00', halves, freeMin: Math.min(halves[0].free, halves[1].free), nonOperating: halves[0].nonOperating && halves[1].nonOperating });
+    }
+    return { hours, capacity };
+  }
+  buildDockProfileModal() {
+    const m = this.state.dockProfileModal || {};
+    if (!m.open) return { open: false };
+    const sc = (this.state.data.scs || []).find(s => s.code === m.code);
+    const profile = this.computeDockProfile(m.code, m.scenarioId);
+    const typeColor = { nlh: { bg: '#E1F5EE', bd: '#1D9E75' }, coload: { bg: '#FAECE7', bd: '#D85A30' }, mdc: { bg: '#FBEAF0', bd: '#D4537E' } };
+    const freeColor = { bg: '#EEEDFE', bd: '#7F77DD' };
+    const nonOpColor = { bg: '#F1EFE8', bd: '#B4B2A9' };
+    const hours = profile.hours.map(h => ({
+      label: h.label, nonOperating: h.nonOperating,
+      freeLabel: h.nonOperating ? '\u2014' : (h.freeMin + '/' + profile.capacity),
+      halves: h.halves.map(half => ({
+        squares: new Array(profile.capacity).fill(0).map((_, i) => {
+          if (half.nonOperating) return nonOpColor;
+          const b = half.blocks[i];
+          return b ? Object.assign({ title: b.label }, typeColor[b.type]) : freeColor;
+        }),
+      })),
+    }));
+    return { open: true, code: m.code, name: sc ? sc.name : m.code, capacity: profile.capacity, hours, onClose: () => this.closeDockProfileModal() };
   }
   closeSpeedProfileModal() {
     this.setState({ speedProfileSC: null, speedProfileDraft: null, speedProfileVehicleTypes: null, speedProfileVehicleZones: null, speedProfileReadOnly: false, speedProfileReviewMode: false, speedProfileErrors: [] });
@@ -9696,6 +10022,8 @@ class NDCApp extends React.Component {
         pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
         pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
+        opHoursConfigured: (rf.nonOperating.length > 0 || rf.breaks.length > 0),
+        onOpenOpHours: () => this.openOpHoursModal(s.code),
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
         // 2026-08-25 rewrite — delete/undo now go through the engine's effective-month existence
         // log (setSCStatus) instead of the old scRemoved session overlay. The undo toast re-adds
@@ -9760,6 +10088,12 @@ class NDCApp extends React.Component {
     const lmdcEditCode = st.lmdcEditCode;
     const lmdcDraft = st.lmdcEditDraft || {};
     const ldSet = (k) => (e) => { const v = e && e.target ? e.target.value : e; this.setState({ lmdcEditDraft: Object.assign({}, this.state.lmdcEditDraft, { [k]: v }) }); };
+    // LMSC column (restored 2026-09-10, this time cross-referenced against AutoDML's own
+    // multi-SC conflict list) — l.lmscCode is already the resolved single-value assignment used
+    // everywhere else (SC-DC Mapping, etc.); multiConflictByDc flags the rarer, "should not occur
+    // in production" case where AutoDML's raw links disagree about which SC actually owns a DC.
+    const multiConflictByDc = {};
+    (d.autodmlDetails.multi || []).forEach(m => { multiConflictByDc[m.code] = m; });
     const lmdcRows = lmdcPager.pageRows.map(l0 => {
       const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
       const editing = lmdcEditCode === l.code;
@@ -9768,8 +10102,11 @@ class NDCApp extends React.Component {
       // pre-existing `active`/`pending` fields above, which mean "is the LMSC parent active per
       // AutoDML" -- a different, unrelated concept this doesn't touch).
       const rowIsActive = resolveLmdcExistence(this.engineStore, l.code, this.state.activeCycleMonth.rlh) === 'active';
+      const lmscConflict = multiConflictByDc[l.code];
       return {
         code: l.code, lmscCode: l.lmscCode || 'Pending', pending: !!l.pending, coords: (l.lat || l.lng) ? (l.lat.toFixed(4) + ', ' + l.lng.toFixed(4)) : '\u2014',
+        lmscConflict: !!lmscConflict, lmscConflictWith: lmscConflict ? lmscConflict.secondSc : null,
+        lmscConflictTip: lmscConflict ? ('Also mapped to ' + lmscConflict.secondSc + ' in AutoDML \u2014 fix the duplicate link in Design Inputs \u2192 Node Inputs \u2192 AutoDML gate.') : null,
         capacity: l.capacity > 0 ? fmtInt(l.capacity) : '0', zeroCap: l.capacity === 0,
         active: l.active, statusLabel: l.active ? 'Active' : 'Inactive',
         rowIsActive, onDeactivate: () => this.deactivateLmdc(l.code), onReactivate: () => this.reactivateLmdc(l.code),
@@ -10096,7 +10433,7 @@ class NDCApp extends React.Component {
       // so the text overflowed and visually overlapped the next column's header (confirmed via
       // screen recording: "NON-LOCAL SPD"/"MAX HOLD LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS"
       // were rendering as garbled overlapping text). Widened each affected column.
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 68px 68px 70px 60px 80px 85px 115px 130px 165px 140px 80px',
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 100px 100px 140px 90px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -10134,6 +10471,12 @@ class NDCApp extends React.Component {
       onScMasterFileChange: (e) => this.handleScMasterCsvUpload(e),
       scMasterUploadErrors: st.scMasterUploadErrors || [], hasScMasterUploadErrors: (st.scMasterUploadErrors || []).length > 0,
       closeScMasterUploadErrors: () => this.setState({ scMasterUploadErrors: [] }),
+      opHoursTemplate: () => this.opHoursTemplate(),
+      triggerOpHoursUpload: () => { if (this.opHoursFileInputEl) this.opHoursFileInputEl.click(); },
+      opHoursFileInputRef: (el) => { this.opHoursFileInputEl = el; },
+      onOpHoursFileChange: (e) => this.onOpHoursFileChange(e),
+      opHoursUploadErrors: st.opHoursUploadErrors || [], hasOpHoursUploadErrors: (st.opHoursUploadErrors || []).length > 0,
+      closeOpHoursUploadErrors: () => this.setState({ opHoursUploadErrors: [] }),
       triggerAvailUpload: () => { if (this.availFileInputEl) this.availFileInputEl.click(); },
       availFileInputRef: (el) => { this.availFileInputEl = el; },
       onAvailFileChange: (e) => this.handleAvailCsvUpload(e),
@@ -10167,12 +10510,34 @@ class NDCApp extends React.Component {
       closeDelConfirm: () => this.setState({ delConfirm: null }),
       confirmDelete: () => this.confirmDelete(),
       speedProfileModal: this.buildSpeedProfileModal(),
+      opHoursModal: this.buildOpHoursModal(),
+      dockProfileModal: this.buildDockProfileModal(),
     };
   }
   // buildSpeedProfileModal() (2026-09-03, item 1; reworked 2026-09-07) — render-ready props for
   // the Speed Profile popup. One row per (vehicle type, zone) pair, 24 hourly columns. Kept as
   // its own method (mirroring buildSchedCard/buildSchedNcFields elsewhere) since it's a
   // substantial sub-tree, not because anything else calls it.
+  buildOpHoursModal() {
+    const m = this.state.opHoursModal || {};
+    if (!m.open) return { open: false };
+    const slots = this.opHoursSlots(m.nonOperating, m.breaks);
+    const typeBg = { 'non-operating': '#D9DDE3', 'break': '#C77B00', 'operational': '#128A3E' };
+    return {
+      open: true, code: m.code,
+      nonOpChips: (m.nonOperating || []).map((w, i) => ({ label: w.start + '–' + w.end, onRemove: () => this.opHoursRemoveWindow('nonop', i) })),
+      breakChips: (m.breaks || []).map((w, i) => ({ label: w.start + '–' + w.end, onRemove: () => this.opHoursRemoveWindow('break', i) })),
+      addingNonOp: !!m.addingNonOp, addingBreak: !!m.addingBreak,
+      addStart: m.addStart, addEnd: m.addEnd,
+      timeOptions: this.opHoursTimeOptions(),
+      onAddStart: this.opHoursSetAdd('addStart'), onAddEnd: this.opHoursSetAdd('addEnd'),
+      onStartAddNonOp: () => this.opHoursStartAdding('nonop'), onStartAddBreak: () => this.opHoursStartAdding('break'),
+      onConfirmAddNonOp: () => this.opHoursConfirmAdd('nonop'), onConfirmAddBreak: () => this.opHoursConfirmAdd('break'),
+      onCancelAdd: () => this.opHoursCancelAdd(),
+      slots: slots.map(t => ({ bg: typeBg[t] })),
+      onSave: () => this.saveOpHoursModal(), onClose: () => this.closeOpHoursModal(),
+    };
+  }
   buildSpeedProfileModal() {
     const st = this.state;
     const scCode = st.speedProfileSC;
@@ -11542,7 +11907,7 @@ class NDCApp extends React.Component {
           onD0Dec: () => { const m = Object.assign({}, st.schedulerD0BySC || {}); m[code] = Math.max(-4, p.d0 - 1); this.setState({ schedulerD0BySC: m }); },
           onRefPick: (v) => { const m = Object.assign({}, st.schedulerRefBySC || {}); m[code] = v; this.setState({ schedulerRefBySC: m }); },
           onOpenSpeedProfile: () => this.openSpeedProfileModal(code, (d.scVehAvail.find(g => g.code === code) || { rows: [] }).rows.map(r => ({ vehicleType: r.t, zoneFeas: r.zf })), true),
-          onOpenDockProfile: () => {},
+          onOpenDockProfile: () => this.openDockProfileModal(code, chosenScenario),
           onResetRow: () => {
             const hm = Object.assign({}, st.schedulerHwBySC || {}); delete hm[code];
             const hom = Object.assign({}, st.schedulerHoldOnBySC || {}); delete hom[code];

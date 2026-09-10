@@ -647,6 +647,11 @@ function materializeRLHScs(store, cycleMonth) {
       docks: d.docks || 0, rlhDocks: d.rlhDocks, nlhDocks: d.nlhDocks,
       localTp: d.localTp, nonLocalTp: d.nonLocalTp, localSpeed: d.localSpeed, nonLocalSpeed: d.nonLocalSpeed,
       open: d.openTime, close: d.closeTime, holdTimeOn: d.holdTimeOn, maxHoldLocal: d.maxHoldLocal, maxHoldNonLocal: d.maxHoldNonLocal,
+      // Operating Hours (2026-09-10) — non-operating and break windows, {start,end} in 'HH:MM',
+      // 30-min-grid values. Empty arrays = fully operational all day (matches the old Open/Close
+      // default behavior when nothing's been set). Shifts are derived from these at read time,
+      // not stored — see computeShiftsFromWindows() in the main file.
+      nonOperating: d.nonOperating || [], breaks: d.breaks || [],
       hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
       pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
       // 2026-08-26 — real dispatch-role facts, exposed for the SC Master screen's SC TYPE column

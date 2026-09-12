@@ -607,6 +607,14 @@ function seedRLHMasterData(store, opts = {}) {
   });
   generated.filter(s => s.nodeKind === 'MDC').forEach(sc => { sc.dispatchesRLH = true; sc.dispatchesNLH = false; sc.scType = 'MDC'; });
 
+  // Operating Hours demo seed (2026-09-11) — every other SC defaults to fully operational
+  // (empty nonOperating/breaks); these two get a real, realistic pattern seeded so the feature
+  // (SC Master's OP HOURS icon, the intake modal, and Dock Profile's non-operating-hours-to-0
+  // behavior) is genuinely demonstrable on first load, not just after manual configuration.
+  const opHoursDemo = { DELS: { nonOperating: [{ start: '00:00', end: '05:00' }, { start: '23:00', end: '24:00' }], breaks: [{ start: '13:00', end: '13:30' }] },
+    SXVS: { nonOperating: [{ start: '00:00', end: '06:00' }, { start: '22:00', end: '24:00' }], breaks: [{ start: '14:00', end: '14:30' }] } };
+  generated.forEach(sc => { if (opHoursDemo[sc.code]) { sc.nonOperating = opHoursDemo[sc.code].nonOperating; sc.breaks = opHoursDemo[sc.code].breaks; } });
+
   generated.forEach(sc => {
     addSC(store, sc.code, { name: sc.name, lat: sc.lat, lng: sc.lng, zone: sc.zone }, genesisMonth);
     setClassBField(store, sc.code, genesisMonth, 'scType', sc.scType);
@@ -622,6 +630,11 @@ function seedRLHMasterData(store, opts = {}) {
       holdTimeOn: sc.holdTimeOn, maxHoldLocal: sc.maxHoldLocal, maxHoldNonLocal: sc.maxHoldNonLocal,
       hasRef: sc.hasRef, farDist: sc.farDist, zeroVolDc: sc.zeroVolDc, missVolDc: sc.missVolDc,
       pocs: sc.pocs, nodeKind: sc.nodeKind,
+      // Operating Hours (2026-09-11, seed-data pass) — nonOperating/breaks default to empty
+      // (fully operational) for every SC except a couple of deliberately-seeded examples (set
+      // right after `generated` is built, by code — see "Operating Hours demo seed" below), so
+      // the feature has something real to show on first load instead of every SC looking blank.
+      nonOperating: sc.nonOperating || [], breaks: sc.breaks || [],
     };
     ensureClassDMaterialized(store, 'rlh', 'scMaster', genesisMonth, sc.code, dFields);
   });

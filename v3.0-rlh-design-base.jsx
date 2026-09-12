@@ -3907,6 +3907,12 @@ NLH cycle: {schedNlhMonthLabel}
 {(c.canUnfreeze) ? (<><button onClick={c.onOpenUnfreeze} style={css(`height:30px; padding:0 12px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Unfreeze</button></>) : null}
 {(c.canPushToLM) ? (<><button onClick={c.onOpenPushLM} style={css(`height:30px; padding:0 12px; border:1px solid #0D7377; background:#0D7377; color:#fff; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Push to LM Alignment</button></>) : null}
 {(c.canFinaliseSched) ? (<><button onClick={c.onOpenFin} style={css(`height:30px; padding:0 12px; border:1px solid #128A3E; background:#128A3E; color:#fff; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Finalise</button></>) : null}
+{/* 2026-09-11 (item 1.3) — Finalise Directly from Stage 1, skipping Stage 2 (LM) entirely.
+    Available throughout Stage 1 regardless of Acknowledge/pending-items state, matching this
+    app's own established convention that Finalise Directly is an escape hatch, not gated by the
+    same conditions as the normal flow. Reuses the exact same confirm modal as Design Review's
+    own Finalise Directly, per direct instruction. */}
+{(c.canFinaliseDirectStage1) ? (<><button onClick={c.onFinaliseDirectStage1} style={css(`height:30px; padding:0 12px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `height:30px; padding:0 12px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`, `border-color:#C77B00; color:#C77B00;`)}>Finalise directly</button></>) : null}
 </div>
 </div>
 {(c.isFinalDirect) ? (<><div style={css(`font-size:11px; color:#5B4FA0; margin-top:8px;`)}>Finalised without alignment — Ops review was skipped.</div></>) : (c.isFinalised) ? (<><div style={css(`font-size:11px; color:#128A3E; margin-top:8px;`)}>Finalised & frozen, ready for handoff.</div></>) : (c.isAcknowledged) ? (<><div style={css(`font-size:11px; color:#003F98; margin-top:8px;`)}>{c.schedStage === 'stage2' ? 'LM' : 'SC/LH'} input frozen — decide items, then {c.schedStage === 'stage2' ? 'Finalise' : 'Push to LM Alignment'} once clear.</div></>) : (<><div style={css(`font-size:11px; color:#0D7377; margin-top:8px;`)}>Awaiting {c.schedStage === 'stage2' ? 'LM' : 'SC/LH'} feedback.</div></>)}
@@ -6999,7 +7005,15 @@ class NDCApp extends React.Component {
     const mdcDonorScsEarly = plannedScPool.filter(s => s.nodeKind !== 'MDC' && s.dcCount >= 10).slice(0, 2);
     mdcDonorScsEarly.forEach((sc) => {
       const own = (dcPoolBySC[sc.code] || []).slice(0, 5);
-      own.forEach((dc, li) => { dc.rlhMode = 'MDC'; dc.mdcCode = li % 2 === 0 ? 'MDC-1' : 'MDC-2'; });
+      own.forEach((dc, li) => {
+        dc.rlhMode = 'MDC';
+        dc.mdcCode = li % 2 === 0 ? 'MDC-1' : 'MDC-2';
+        // 2026-09-11 — MDC lanes previously never got a cutoff seeded (only Co-Loading did),
+        // meaning Dock Profile's "same for MDC slots" blocking rule had nothing to actually show.
+        // Same convention as Co-Loading: one cutoff per lane, identical across that lane's DCs.
+        dc.cutoff = li % 2 === 0 ? '09:30' : '17:30';
+        dc.tat = String(20 + ((li * 10) % 60));
+      });
     });
     const coLoadDonorScEarly = plannedScPool.find(s => s.nodeKind !== 'MDC' && mdcDonorScsEarly.indexOf(s) < 0 && s.dcCount >= 12);
     if (coLoadDonorScEarly) {
@@ -11553,6 +11567,15 @@ class NDCApp extends React.Component {
     };
     card.onOpenReviewDetail = () => this.setState({ reviewSchedDetailId: sp.id });
     card.onOpenAlignDetail = () => this.setState({ schedAlignDetailId: sp.id });
+    // 2026-09-11 (item 1.3) — Finalise Directly from WITHIN Stage 1 (Ops Alignment · Planner),
+    // skipping Stage 2 (LM) — distinct from Design Review's own Finalise Directly above (which
+    // skips Ops Alignment before the plan is even pushed). Reuses the exact same modal/mechanism
+    // (schedFinaliseDirectOpen, doSchedPush(true)) per direct instruction — "the same warning
+    // modal here as well" — rather than a differently-worded variant. Set unconditionally (not
+    // gated by includeActions) since Ops Alignment's own rail cards use includeActions=false;
+    // the button itself is only rendered in the Planner's own card template, not Ops Lead's.
+    card.canFinaliseDirectStage1 = sp.schedStage === 'stage1' && sp.status !== 'Finalised';
+    card.onFinaliseDirectStage1 = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
     if (includeActions) {
       card.onPush = () => this.openSchedPush(sp.id);
       card.onFinaliseDirect = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });

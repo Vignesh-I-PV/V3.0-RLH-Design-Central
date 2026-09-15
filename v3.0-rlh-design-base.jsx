@@ -1376,7 +1376,7 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Default \u2014 largest RLH-feasible vehicle in Vehicle Master (" + lmdcSysDefaults.maxVehicle + "). An explicit value here (even if the same) can't be overridden by a plan; Default can."}>MAX VEHICLE SIZE ({lmdcSysDefaults.maxVehicle})</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Default " + lmdcSysDefaults.unloadMin + " min \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>UNLOADING TIME ({lmdcSysDefaults.unloadMin} MIN)</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"LM points of contact \u2014 feeds Route Scheduler's LM reviewer assignment"}>LM POCS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"LM contacts for this DC \u2014 ZH, CH and one AM required, second AM optional. Feeds Route Scheduler's LM reviewer assignment."}>LM CONTACTS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
@@ -1413,8 +1413,9 @@ All modules
 {(l.editing) ? (<><div style={css(`padding:5px 6px; `)}><select value={l.draftUnload} onChange={l.onDraftUnload} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; padding:0 6px; box-sizing:border-box; outline:none; text-align:center; background:#fff;`)}>{(lmdcUnloadOptions || []).map((um, __i48) => (<React.Fragment key={__i48}><option value={um}>{um}</option></React.Fragment>))}</select></div></>) : null}
 {(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:1px solid #D0D5DD;`)} title={l.pincodes.join(', ') || 'No pincodes mapped'}>{l.pincodesLabel}</div></>) : null}
 {(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><input type={"text"} value={l.draftPincodes} onInput={l.onDraftPincodes} placeholder={"e.g. 110001, 110002"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
-{(l.notEditing) ? (<><div style={css(`padding:10px 10px; font-size:11px; color:#14171F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:1px solid #D0D5DD;`)} title={l.pocs.join(', ') || 'No LM POCs set'}>{l.pocsLabel}</div></>) : null}
-{(l.editing) ? (<><div style={css(`padding:5px 6px; border-left:1px solid #D0D5DD;`)}><input type={"text"} value={l.draftPocs} onInput={l.onDraftPocs} placeholder={"e.g. Rahul Sharma, Megha Bose"} title={"Comma or semicolon-separated"} style={css(`width:100%; height:30px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:11.5px; color:#14171F; padding:0 8px; box-sizing:border-box; outline:none;`)} /></div></>) : null}
+<div style={css(`padding:10px 10px; border-left:1px solid #D0D5DD; text-align:center;`)}>
+<button onClick={l.onOpenLmContacts} title={l.lmContactsSummary} aria-label={"Edit LM contacts for " + l.code} style={css(`width:26px; height:26px; border:1px solid ${l.lmContactsComplete ? '#E6EBF2' : '#F5DEB8'}; background:${l.lmContactsComplete ? '#fff' : '#FBF1DF'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:${l.lmContactsComplete ? '#5A5E66' : '#C77B00'};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
 {(l.notEditing) ? (<><div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={l.onEdit} disabled={rlhCyclePast} aria-label={"Edit " + l.code} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {/* 2026-08-26 fix (#11) — Deactivate/Reactivate, same pattern as SC Master, now that LMDC rows have real per-DC existence tracking. */}
@@ -2717,6 +2718,9 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={r.onShiftInc} aria-label={"Later by 30 min"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:12px; color:#5A5E66; flex-shrink:0;`)}>+</button>
 {(r.isDsDefault) ? (<span style={css(`font-size:10px; color:#1E6FB8; font-weight:600; white-space:nowrap;`)}>· DS Default</span>) : (<button onClick={r.onResetShift} style={css(`border:none; background:none; color:#0D7377; font-family:inherit; font-size:10px; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; white-space:nowrap;`)}>reset</button>)}
 <button onClick={r.onOpenCurve} aria-label={"Open Connection Start Time curve"} title={"Ready to Ship % vs D0 Landing % curve"} style={css(`width:20px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; flex-shrink:0; margin-left:2px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"}><path d={"M3 3v18h18M7 15l4-5 3 3 5-7"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+{/* 2026-09-12 (item 5) — Confirm gate: a checkmark once accepted, a real button until then.
+    Re-appears (confirmation clears) the moment the shift changes again, via setShift above. */}
+{(r.isConfirmed) ? (<><span title={"Confirmed \u2014 this is the time that will reach Design Review"} style={css(`display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#E7F4EC; color:#128A3E; margin-left:4px; white-space:nowrap;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.5"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Confirmed</span></>) : (<><button onClick={r.onConfirm} title={"Confirm this Connection Start Time \u2014 required before it reaches Design Review"} style={css(`height:20px; padding:0 9px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:10px; font-weight:700; border-radius:999px; cursor:pointer; margin-left:4px; white-space:nowrap;`)}>Confirm</button></>)}
 </div>
 <div style={css(`font-size:12.5px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.d0LandingPct}{r.d0LandingPct !== '\u2014' ? '%' : ''}</div>
 </>) : (<>
@@ -2726,7 +2730,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 </div>
-{(schedQueueAllDone) ? (<><button onClick={() => self.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}
+{(schedQueueAllDone) ? (<><button onClick={() => self.setState({ view: 'review' })} style={css(`display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 18px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; margin-top:16px;`)}>Open Design Review<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : (!schedQueueActive && !schedQueueAllConfirmed && schedRunTotal > 0) ? (<><div style={css(`font-size:12px; color:#C77B00; margin-top:16px; display:flex; align-items:center; gap:6px;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Confirm every run's Connection Start Time above before Design Review is reachable.</div></>) : null}
 </div>
 </>)}
 </>) : null}
@@ -3333,6 +3337,7 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={c.onDetail} aria-label={"Open full Cutoff Plan detail"} title={"Open full Cutoff Plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenSpeedProfile} title={"Speed Profile"} aria-label={"Open Speed Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenDockProfile} title={"Dock Profile"} aria-label={"Open Dock Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onOpenSimulate} title={"Simulate impact"} aria-label={"Simulate impact"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#2F4FC6;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 3v18h18M7 14l4-4 3 3 5-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 {/* inputs strip */}
@@ -3860,6 +3865,7 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={c.onOpenAlignDetail} aria-label={"Open full Cutoff Plan detail"} title={"Open full Cutoff Plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenSpeedProfile} title={"Speed Profile"} aria-label={"Open Speed Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#0D7377; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenDockProfile} title={"Dock Profile"} aria-label={"Open Dock Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onOpenSimulate} title={"Simulate impact"} aria-label={"Simulate impact"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#2F4FC6; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 3v18h18M7 14l4-4 3 3 5-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
@@ -4636,6 +4642,14 @@ NLH cycle: {schedNlhMonthLabel}
 {(schedValidateErrors || []).map((er, __iSV1) => (<React.Fragment key={__iSV1}><div style={css(`padding:9px 12px; background:#FBEAEA; border:1px solid #F3C6C6; border-radius:8px; font-size:12px; color:#14171F;`)}>{er.t}</div></React.Fragment>))}
 </div>
 </>) : null}
+{/* 2026-09-12 fix (item 1) — warnings (Dock Capacity now lives here) rendered separately, amber
+    not red, and never gate the Close/proceed action — they just need to stay visible now that
+    they no longer block. */}
+{(schedValidateWarningCount > 0) ? (<>
+<div style={css(`margin:14px 24px 0; display:flex; flex-direction:column; gap:8px;`)}>
+{(schedValidateWarnings || []).map((wr, __iSV2) => (<React.Fragment key={__iSV2}><div style={css(`padding:9px 12px; background:#FBF1DF; border:1px solid #F5DEB8; border-radius:8px; font-size:12px; color:#14171F;`)}>{wr.t}</div></React.Fragment>))}
+</div>
+</>) : null}
 <div style={css(`display:flex; justify-content:flex-end; padding:20px 24px;`)}>
 <button onClick={closeSchedValidate} style={css(`height:36px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Close</button>
 </div>
@@ -4927,6 +4941,7 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={c.onOpenAlignDetail} aria-label={"Open full Cutoff Plan detail"} title={"Open full Cutoff Plan detail"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#0D7377; color:#0D7377; background:#E9F5F5;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7M15 3h6v6M10 14L21 3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenSpeedProfile} title={"Speed Profile"} aria-label={"Open Speed Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#0D7377; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={c.onOpenDockProfile} title={"Dock Profile"} aria-label={"Open Dock Profile"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={c.onOpenSimulate} title={"Simulate impact"} aria-label={"Simulate impact"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#2F4FC6; flex-shrink:0;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 3v18h18M7 14l4-4 3 3 5-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </div>
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:10px; padding-top:10px; border-top:1px solid #F4F5F8; font-size:11px; color:#5A5E66;`)}>
@@ -6395,6 +6410,58 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 </>) : null}
+{/* ===== SIMULATE IMPACT POPUP — Route Scheduler (2026-09-12, item 7.3) — mirrors Route
+     Planner's own "Simulate impact" (Original vs. Suggested cards), applied to Scheduler's 5
+     named metrics. "Original" = the real preAlignmentMetrics snapshot captured at trigger time;
+     "Suggested" = live, reflecting whatever's been accepted in Ops Alignment since. ===== */}
+{(schedSimulate.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={schedSimulate.onClose}>
+<div style={css(`width:720px; max-width:100%; max-height:90vh; overflow-y:auto; background:#F4F5F8; border-radius:16px; box-shadow:0 28px 70px rgba(0,0,0,0.35);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid #E6EBF2; background:#fff; border-radius:16px 16px 0 0;`)}>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Simulate impact — {schedSimulate.scName}</div><div style={css(`font-size:11.5px; color:#5A5E66; margin-top:2px;`)}>Pre- vs. post-Ops-feedback metrics</div></div>
+<button onClick={schedSimulate.onClose} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`padding:20px 24px;`)}>
+{(!schedSimulate.hasSnapshot) ? (<><div style={css(`display:flex; align-items:flex-start; gap:9px; padding:11px 14px; border-radius:8px; background:#EAF1FB; border:1px solid #CFE0F1; margin-bottom:16px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#1E6FB8"} strokeWidth={"1.8"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 8v5m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} /></svg><span style={css(`font-size:12px; color:#14171F; line-height:1.5;`)}>This plan predates the pre-alignment snapshot feature, so there's no real "before" to compare against — showing current values on both sides.</span></div></>) : null}
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:12px;`)}>
+{(schedSimulate.cards || []).map((sc, __iSSc) => (<React.Fragment key={__iSSc}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; gap:4px;`)}>
+<div style={css(`font-size:10.5px; font-weight:600; color:#7A8094; letter-spacing:0.04em; text-transform:uppercase;`)}>{sc.label}</div>
+<div style={css(`display:flex; align-items:baseline; gap:10px; margin-top:4px;`)}>
+<div style={css(`flex:1;`)}><div style={css(`font-size:9.5px; color:#8E96A3; font-weight:500; margin-bottom:2px;`)}>Original</div><div style={css(`font-size:18px; font-weight:700; color:#5A5E66; font-variant-numeric:tabular-nums; line-height:1.1;`)}>{sc.origVal}</div></div>
+<div style={css(`flex:1;`)}><div style={css(`font-size:9.5px; color:#0D7377; font-weight:700; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.04em;`)}>Suggested</div><div style={css(`font-size:18px; font-weight:700; color:#14171F; font-variant-numeric:tabular-nums; line-height:1.1;`)}>{sc.propVal}</div></div>
+</div>
+<div style={css(`font-size:11px; font-weight:600; color:${sc.deltaColor}; margin-top:2px;`)}>{sc.deltaLabel}</div>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:16px; line-height:1.5;`)}>Dock Utilisation % is shown as a plan-wide figure here rather than a full hour-by-hour breakdown — open Dock Profile for the per-slot view.</div>
+</div>
+</div>
+</div>
+</>) : null}
+{/* ===== LM CONTACTS POPUP (2026-09-12, items 2/3) — one popup per LMDC, replacing the old
+     shared "POCs" text field. ZH, CH and AM-1 are mandatory; AM-2 stays optional. ===== */}
+{(lmContactsModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={lmContactsModal.onClose}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>LM Contacts — {lmContactsModal.code}</div>
+<button onClick={lmContactsModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:14px;`)}>
+<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM ZH (Zonal Head) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.zh} onInput={lmContactsModal.onZh} placeholder={"e.g. Rahul Sharma"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
+<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM CH (Cluster Head) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.ch} onInput={lmContactsModal.onCh} placeholder={"e.g. Megha Bose"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
+<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM AM-1 (Area Manager) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.am1} onInput={lmContactsModal.onAm1} placeholder={"e.g. Karthik Varma"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
+<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM AM-2 (Area Manager) <span style={css(`color:#8E96A3; font-weight:500;`)}>optional</span></label><input type={"text"} value={lmContactsModal.am2} onInput={lmContactsModal.onAm2} placeholder={"e.g. Arjun Desai"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
+</div>
+<div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:20px;`)}>
+<button onClick={lmContactsModal.onClose} style={css(`height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}>Cancel</button>
+<button onClick={lmContactsModal.onSave} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer;`)}>Save</button>
+</div>
+</div>
+</div>
+</>) : null}
 {/* ===== SPEED PROFILE POPUP (2026-09-03, item 1; reworked 2026-09-07) — SC x Vehicle Type x
      Zone x Time, opened from a SC Vehicle Availability card (editable) or Route Scheduler's Step
      2 icon (read-only). One row per (vehicle type, zone) pair, 24 fixed hourly columns. Only one
@@ -6903,15 +6970,18 @@ class NDCApp extends React.Component {
     // the genesis definition (identical values to the old hardcoded array); VEH is what every line
     // below actually consumes, now sourced from materializeVehicleMasterLeg() so a future SC Master/
     // Vehicle Master edit made through the engine is reflected here without touching this function.
+    // 2026-09-12 fix (item 4) — loadingTimeLocal/loadingTimeNonLocal added, same fallback-field
+    // pattern as localSpeed/nonLocalSpeed above (a per-vehicle-type default SC Vehicle
+    // Availability's own row falls back to when nothing's been set at the SC level).
     const VEH_SEED = [
-      { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'], localSpeed: 20, nonLocalSpeed: 30 },
-      { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'], localSpeed: 22, nonLocalSpeed: 34 },
-      { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'], localSpeed: 24, nonLocalSpeed: 38 },
-      { name: '17ft / MCV',      tp: 6, cap: 5000,  caps: [4800, 5000, 5200],  dist: 700,  feas: ['NLH', 'RLH'], localSpeed: 25, nonLocalSpeed: 40 },
-      { name: '19ft / MCV',      tp: 5, cap: 6500,  caps: [6300, 6500, 6700],  dist: 800,  feas: ['NLH', 'RLH'], localSpeed: 26, nonLocalSpeed: 42 },
-      { name: '22ft / LCV',      tp: 4, cap: 8000,  caps: [7800, 8000, 8200],  dist: 900,  feas: ['NLH', 'RLH'], localSpeed: 27, nonLocalSpeed: 44 },
-      { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'], localSpeed: 24, nonLocalSpeed: 45 },
-      { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'], localSpeed: 22, nonLocalSpeed: 48 },
+      { name: 'TATA ACE / 7ft',  tp: 4, cap: 1600,  caps: [1400, 1600, 1800],  dist: 250,  feas: ['RLH'], localSpeed: 20, nonLocalSpeed: 30, loadingTimeLocal: 12, loadingTimeNonLocal: 18 },
+      { name: 'Bolero / 8ft',    tp: 7, cap: 2600,  caps: [2400, 2600, 2800],  dist: 400,  feas: ['RLH'], localSpeed: 22, nonLocalSpeed: 34, loadingTimeLocal: 15, loadingTimeNonLocal: 22 },
+      { name: 'TATA 407 / 10ft', tp: 7, cap: 3500,  caps: [3300, 3500, 3700],  dist: 600,  feas: ['NLH', 'RLH'], localSpeed: 24, nonLocalSpeed: 38, loadingTimeLocal: 18, loadingTimeNonLocal: 25 },
+      { name: '17ft / MCV',      tp: 6, cap: 5000,  caps: [4800, 5000, 5200],  dist: 700,  feas: ['NLH', 'RLH'], localSpeed: 25, nonLocalSpeed: 40, loadingTimeLocal: 22, loadingTimeNonLocal: 30 },
+      { name: '19ft / MCV',      tp: 5, cap: 6500,  caps: [6300, 6500, 6700],  dist: 800,  feas: ['NLH', 'RLH'], localSpeed: 26, nonLocalSpeed: 42, loadingTimeLocal: 25, loadingTimeNonLocal: 32 },
+      { name: '22ft / LCV',      tp: 4, cap: 8000,  caps: [7800, 8000, 8200],  dist: 900,  feas: ['NLH', 'RLH'], localSpeed: 27, nonLocalSpeed: 44, loadingTimeLocal: 28, loadingTimeNonLocal: 35 },
+      { name: '14ft Trailer',    tp: 7, cap: 4500,  caps: [4300, 4500, 4700],  dist: 800,  feas: ['NLH'], localSpeed: 24, nonLocalSpeed: 45, loadingTimeLocal: 25, loadingTimeNonLocal: 33 },
+      { name: '32ft XL Trailer', tp: 3, cap: 14000, caps: [13800, 14000, 14200], dist: 1200, feas: ['NLH'], localSpeed: 22, nonLocalSpeed: 48, loadingTimeLocal: 35, loadingTimeNonLocal: 45 },
     ];
     seedVehicleMasterLeg(this.engineStore, 'rlh', RLH_GENESIS_MONTH, VEH_SEED);
     // 2026-08-26 — NLH's own Vehicle Master: distinct linehaul-scale vehicle types (NLH runs
@@ -7274,7 +7344,7 @@ class NDCApp extends React.Component {
     const autodml = [
       { key: 'inactive', label: 'Link active but node is inactive', count: autodmlDetails.inactive.length, sev: 'warning' },
       { key: 'zerocap', label: 'Link active but LMDC has zero capacity', count: autodmlDetails.zerocap.length, sev: 'danger' },
-      { key: 'multi', label: 'LMDC mapped to more than one SC', count: autodmlDetails.multi.length, sev: 'warning' },
+      { key: 'multi', label: 'LMDC mapped to more than one SC', count: autodmlDetails.multi.length, sev: 'danger' },
     ];
     const volumeFiles = [
       { name: 'July 2026 \u00b7 30L Base', type: 'LMDC Landing', rows: 11432, vol: 3010000, date: '10 Jul \u00b7 09:12', by: 'Pranita Sapkal', validated: true, errorCount: 0, active: true },
@@ -7318,7 +7388,7 @@ class NDCApp extends React.Component {
     const autodmlNodes = [
       ...autodmlDetails.inactive.map(r => { const p = r.link.split(' → '); return { lmsc: p[0] || '', lmdc: p[1] || r.link, zone: r.zone, issue: 'Link active, node inactive', sev: 'danger', sevBg: '#FBEAEA', sevFg: '#D14B4B', sevLabel: 'Error' }; }),
       ...autodmlDetails.zerocap.map(r => { const p = r.link.split(' → '); return { lmsc: p[0] || '', lmdc: p[1] || r.link, zone: r.zone, issue: 'Zero capacity', sev: 'danger', sevBg: '#FBEAEA', sevFg: '#D14B4B', sevLabel: 'Error' }; }),
-      ...autodmlDetails.multi.map(r => { const p = r.link.split(' ↔ '); return { lmsc: (p[1] || '').trim(), lmdc: p[0] || r.link, zone: r.zone, issue: 'Multi-SC mapping', sev: 'warning', sevBg: '#FBF1DF', sevFg: '#C77B00', sevLabel: 'Warning' }; }),
+      ...autodmlDetails.multi.map(r => { const p = r.link.split(' ↔ '); return { lmsc: (p[1] || '').trim(), lmdc: p[0] || r.link, zone: r.zone, issue: 'Multi-SC mapping', sev: 'danger', sevBg: '#FBEAEA', sevFg: '#D14B4B', sevLabel: 'Error' }; }),
     ];
 
     // SC Vehicle Availability — one row per vehicle type per SC (real BLRS-style SCs).
@@ -7440,18 +7510,27 @@ class NDCApp extends React.Component {
       const suffix = String(1000 + ((idx * 37) % 9000)).padStart(4, '0');
       return [prefix + suffix];
     };
-    // scLmPocs (later session) — LMDC Master's own POC pool, per SC (shared across that SC's
-    // whole DC pool, matching the real-world fact that ~100-150 DCs under one SC only have 5-6
-    // LM points of contact, not one each). Feeds Route Scheduler's LM reviewer assignment
-    // (schedPersonaName) once a plan's DCs are aggregated — see that method's own comment.
-    const scLmPocs = {};
+    // 2026-09-12 fix (items 2/3) — scLmPocs (a shared list per SC) replaced: each LMDC now gets
+    // its OWN single named contact per role (LM ZH, LM CH, LM AM-1, LM AM-2 — ZH/CH/AM-1
+    // mandatory, AM-2 optional), not a list. ZH and CH stay constant across a SC's whole DC pool
+    // (matching the real hierarchy — one Zonal Head, one Cluster Head per SC); AM-1/AM-2 vary in
+    // small clusters within that pool, so the same "~5-10 distinct LM contacts across a SC's
+    // 150-200 DCs" real-world fact the old model captured is still true — it's just an emergent
+    // property of per-DC data now, not a stored list.
+    const scLmZh = {}, scLmCh = {};
     scs.forEach(sc => {
       const h = sc.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
-      const n = 5 + (h % 2); // 5 or 6
-      const names = [];
-      for (let i = 0; i < n; i++) names.push(NAMES[(h + i * 7) % NAMES.length]);
-      scLmPocs[sc.code] = names;
+      scLmZh[sc.code] = NAMES[h % NAMES.length];
+      scLmCh[sc.code] = NAMES[(h + 3) % NAMES.length];
     });
+    const lmAmFor = (dcCode, scCode) => {
+      const h = dcCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const scH = (scCode || '').split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+      const cluster = Math.floor(h / 97) % 3; // ~3 AM pairs spread across a SC's DC pool
+      const lmAm1 = NAMES[(scH + cluster * 11 + 5) % NAMES.length];
+      const lmAm2 = (h % 10) < 7 ? NAMES[(scH + cluster * 11 + 9) % NAMES.length] : null; // ~70% have an AM-2, rest leave it genuinely optional
+      return { lmAm1, lmAm2 };
+    };
     // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
     // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
     // and the actual routable pool can never disagree on which DCs are excluded.
@@ -7460,13 +7539,13 @@ class NDCApp extends React.Component {
       capacity: dc.capacity, active: dc.linkStatus !== 'inactive', pending: false,
       rlhMode: dc.rlhMode || 'Valmo RLH', mdcCode: dc.mdcCode || null, laneName: dc.laneName || null, cutoff: dc.cutoff || null, tat: dc.tat || null,
       isLocal: dc.isLocal !== undefined ? dc.isLocal : true, distFromSc: dc.distFromSc != null ? dc.distFromSc : 0,
-      pocs: scLmPocs[dc.scCode] || [],
-    }, lmdcDefaults, { pincodes: seedPincodesFor(idx) }));
+      lmZh: scLmZh[dc.scCode] || null, lmCh: scLmCh[dc.scCode] || null,
+    }, lmAmFor(dc.code, dc.scCode), lmdcDefaults, { pincodes: seedPincodesFor(idx) }));
     nodeAdditions.filter(a => a.mapped && a.sc).forEach((a, idx) => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: scLmPocs[a.sc] || [] }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, lmZh: scLmZh[a.sc] || null, lmCh: scLmCh[a.sc] || null }, lmAmFor(a.dc, a.sc), lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
     });
     nodeAdditions.filter(a => !a.mapped || !a.sc).forEach((a, idx) => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, pocs: [] }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, lmZh: null, lmCh: null, lmAm1: null, lmAm2: null }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
     });
     // Co-Loading lanes get stitched into their originating SC's own generated plan (2026-08-19) —
     // frozen at generation time, appended to plan.rows as lane-rows, right after `plans` exists.
@@ -7740,8 +7819,13 @@ class NDCApp extends React.Component {
       // 2026-09-07 fix — Hold Time On/Off removed from SC Master's edit form (now purely a
       // plan-level toggle, no SC-level default). Max Hold Local/Non-Local stay — genuinely
       // SC-level facts regardless of whether a given plan turns hold time on.
-      txt('maxHoldLocal', 'Max Hold Time \u2014 Local (min)', false, 'e.g. 30'),
-      txt('maxHoldNonLocal', 'Max Hold Time \u2014 Non-Local (min)', false, 'e.g. 120'),
+      // 2026-09-12 fix (item 1) — Max Hold Local/Non-Local converted from optional free-text to
+      // a required, 30-min-increment dropdown: mandatory by construction (a <select> always has
+      // a real value, can't be left blank the way opt(f.maxHoldLocal) used to allow) and
+      // grid-locked (only valid 30-min-multiple options exist, same reasoning as Operating
+      // Hours' own dropdown-only time pickers — a bad value can never be saved).
+      sel('maxHoldLocal', 'Max Hold Time \u2014 Local (min)', true, opt(['0', '30', '60', '90', '120', '150', '180', '210', '240'])),
+      sel('maxHoldNonLocal', 'Max Hold Time \u2014 Non-Local (min)', true, opt(['0', '30', '60', '90', '120', '150', '180', '210', '240'])),
     ];
     // 2026-08-26 fix — NLH Docks removed here entirely (see the two table/form JSX removals
     // above); addScNlh kept as an empty array rather than deleted outright, since addScRlh's
@@ -8452,6 +8536,13 @@ class NDCApp extends React.Component {
     const st = this.state; const f = st.addScForm || {};
     const code = (f.code || '').trim().toUpperCase();
     if (!code) { this.showToast('SC Code is required', '#C77B00'); return; }
+    // 2026-09-12 fix (item 1) — genuine enforcement: confirmed the existing req:true marker on
+    // form fields is decorative only (an asterisk, not a save-time block) for every other field
+    // on this form too, so mandatory has to be a real, explicit check here, not an assumption
+    // that switching the field to a <select> alone would be enough (a <select>'s own default
+    // value is cosmetic/display-only until the underlying form state is actually touched).
+    if (f.maxHoldLocal == null || f.maxHoldLocal === '') { this.showToast('Max Hold Time \u2014 Local is required', '#C77B00'); return; }
+    if (f.maxHoldNonLocal == null || f.maxHoldNonLocal === '') { this.showToast('Max Hold Time \u2014 Non-Local is required', '#C77B00'); return; }
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
     const opt = (v) => (v !== '' && v != null ? num(v) : null);
     // Latitude/Longitude (2026-08-05, new) — allow decimals and a leading minus, unlike num()'s
@@ -8616,6 +8707,17 @@ class NDCApp extends React.Component {
     // Dispatch Cutoff (landing's proposedValue is itself an implied cutoff, so this keeps the
     // comparison apples-to-apples); tat compares on that DC's current TAT minutes.
     const ri = info ? info.routeInfo.find(r => r.route.routeCode === route.routeCode) : null;
+    // 2026-09-12 fix (items 7.2.2 and 7.2.3) — both collected as warnings in the same pass that
+    // already computes originalValue, so no second pass over routeInfo is needed.
+    // 7.2.3, corrected understanding: Hold Time isn't a proposable field — it's a CALCULATED
+    // consequence (landing time − that DC's own opening time, via the same holdForArrival() the
+    // plan's own metrics already use). A Cutoff change shifts EVERY DC's landing time on the
+    // route (travel time per DC is unchanged); a TAT change shifts only that one DC's landing
+    // time (dispatch is unchanged). Either way, recompute the resulting hold and warn if it would
+    // exceed that SC's own Max Hold Local/Non-Local limit — never a block, since the proposal
+    // itself might still be worth accepting with eyes open.
+    const tatVarianceWarnings = [];
+    const parseHHMM = (s) => { const p = String(s || '').split(':'); const h = parseInt(p[0], 10), m = parseInt(p[1], 10); return (isNaN(h) ? 0 : h) * 60 + (isNaN(m) ? 0 : m); };
     keys.forEach(k => {
       const f = fields[k];
       const parts = k.split(':'); // 'cutoff' | 'tat:<dcCode>' | 'landing:<dcCode>'
@@ -8625,8 +8727,31 @@ class NDCApp extends React.Component {
         if (field === 'cutoff' || field === 'landing') originalValue = info.fmtTime(ri.dispatchMin);
         else if (field === 'tat') { const dcRow = ri.dcInfo.find(x => x.dc.code === dcCode); originalValue = dcRow ? String(Math.round(dcRow.breakdownTatHrs * 60)) : null; }
       }
+      if (field === 'tat' && originalValue != null) {
+        const provided = Number(resolved[k]), calculated = Number(originalValue);
+        if (calculated > 0 && provided > calculated * 1.25) tatVarianceWarnings.push(dcCode + ' (' + Math.round((provided / calculated - 1) * 100) + '% over calculated)');
+      }
+      if (field === 'cutoff' && ri) {
+        const newDispatchMin = parseHHMM(resolved[k]);
+        ri.dcInfo.forEach(dcRow => {
+          const newLandingMin = newDispatchMin + dcRow.breakdownTatHrs * 60;
+          const newHoldMin = info.holdForArrival(newLandingMin, dcRow.dc.code);
+          const limit = dcRow.isLocal ? info.maxHoldLocal : info.maxHoldNonLocal;
+          if (limit != null && newHoldMin > limit) tatVarianceWarnings.push(dcRow.dc.code + ' hold would be ' + Math.round(newHoldMin) + 'm, over the ' + limit + 'm limit');
+        });
+      }
+      if (field === 'tat' && dcCode && ri) {
+        const dcRow = ri.dcInfo.find(x => x.dc.code === dcCode);
+        if (dcRow) {
+          const newLandingMin = ri.dispatchMin + Number(resolved[k]);
+          const newHoldMin = info.holdForArrival(newLandingMin, dcCode);
+          const limit = dcRow.isLocal ? info.maxHoldLocal : info.maxHoldNonLocal;
+          if (limit != null && newHoldMin > limit) tatVarianceWarnings.push(dcCode + ' hold would be ' + Math.round(newHoldMin) + 'm, over the ' + limit + 'm limit');
+        }
+      }
       items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], originalValue, submittedAt: 'Today' });
     });
+    if (tatVarianceWarnings.length > 0) this.showToast('Flagged after review: ' + tatVarianceWarnings.join('; '), '#C77B00');
     bucket.items = items;
     store[route.planId][route.routeCode] = bucket;
     this.setState({ schedFeedback: store });
@@ -8791,19 +8916,22 @@ class NDCApp extends React.Component {
     return { ok: true, impliedDispatchMin, impliedLabel: info.fmtTime(impliedDispatchMin) };
   }
   // ===== Route Scheduler Ops Alignment — lifecycle gates (2026-08-18) =========================
-  // deriveLmPocs(sp) (later session) — LM's reviewer pool for a scheduler plan: the UNION of
-  // every POC across every DC the plan touches (deduped), not just the first DC's own list.
-  // A real SC typically has only 5-6 distinct LM POCs shared across its whole ~100-150 DC pool
-  // (seeded that way — see buildSeed()'s scLmPocs), so this union is small in practice even
-  // though it's scanning every DC on the plan.
+  // deriveLmPocs(sp) (later session; rebuilt 2026-09-12 for items 2/3) — LM's reviewer pool for a
+  // scheduler plan: the UNION of each DC's own 4 named roles (LM ZH, LM CH, LM AM-1, LM AM-2)
+  // across every DC the plan touches, deduped. ZH/CH are constant per SC (so they collapse to one
+  // entry each regardless of how many DCs are scanned); AM-1/AM-2 vary across the pool, which is
+  // what produces the real "~5-10 distinct LM contacts across a SC's 150-200 DCs" fact — now an
+  // emergent property of real per-DC data, not a stored list.
   deriveLmPocs(sp) {
     const parent = (this.state.data.plans || []).find(p => p.id === sp.parentPlanId);
     const dcCodes = ((parent && parent.rows) || []).reduce((a, r) => a.concat((r.dcs || [])), []);
     const lmdcByCode = {}; (this.state.data.lmdcs || []).forEach(l => { lmdcByCode[l.code] = l; });
     const seen = {}; const names = [];
+    const add = (n) => { if (n && !seen[n]) { seen[n] = true; names.push(n); } };
     dcCodes.forEach(code => {
       const l = lmdcByCode[code];
-      (l && l.pocs || []).forEach(n => { if (!seen[n]) { seen[n] = true; names.push(n); } });
+      if (!l) return;
+      add(l.lmZh); add(l.lmCh); add(l.lmAm1); add(l.lmAm2);
     });
     return names;
   }
@@ -8929,11 +9057,15 @@ class NDCApp extends React.Component {
       const slotOf = (m) => Math.round(m / 30) * 30;
       const counts = {}, laneCounts = {};
       info.routeInfo.forEach(ri => { const s = slotOf(ri.dispatchMin); counts[s] = (counts[s] || 0) + 1; if (ri.isCoLoadLane) laneCounts[s] = (laneCounts[s] || 0) + 1; });
+      // 2026-09-12 fix (item 1) — Dock Capacity demoted from a blocking error to a warning: it no
+      // longer stops Push-to-LM/Finalise (both only gate on v.clean, i.e. errors.length === 0),
+      // it's just surfaced for awareness now, same tier as every other "flagged, not stopped"
+      // check in this app.
       Object.keys(counts).forEach(s => {
         if (docks > 0 && counts[s] > docks) {
           const laneN = laneCounts[s] || 0;
           const laneNote = laneN > 0 ? (' (includes ' + laneN + ' Co-Loading lane' + (laneN === 1 ? '' : 's') + ')') : '';
-          errors.push({ t: 'Dock capacity exceeded at ' + info.fmtTime(Number(s)) + ': ' + counts[s] + ' against ' + docks + ' docks' + laneNote + '.' });
+          warnings.push({ t: 'Dock capacity exceeded at ' + info.fmtTime(Number(s)) + ': ' + counts[s] + ' against ' + docks + ' docks' + laneNote + '.' });
         }
       });
     }
@@ -9108,6 +9240,32 @@ class NDCApp extends React.Component {
   // its Cutoff to match whatever that Lane Name already uses elsewhere (first row to define a
   // lane wins), with a toast explaining the correction — never a hard block, since that would
   // strand the save entirely.
+  // LM Contacts modal (2026-09-12, items 2/3) — one popup per DC, same trigger/close pattern as
+  // Operating Hours: ZH, CH and AM-1 are mandatory (can't save without them); AM-2 stays
+  // genuinely optional. Plain name fields, matching this table's existing free-text convention
+  // (Pincodes, the old POCs field) rather than a full name+email reviewer picker — this is
+  // master data entry, not a push-time reviewer selection.
+  openLmContactsModal(code) {
+    const l = (this.state.data.lmdcs || []).find(x => x.code === code);
+    if (!l) return;
+    this.setState({ lmContactsModal: { open: true, code, zh: l.lmZh || '', ch: l.lmCh || '', am1: l.lmAm1 || '', am2: l.lmAm2 || '' } });
+  }
+  closeLmContactsModal() { this.setState({ lmContactsModal: { open: false } }); }
+  saveLmContactsModal() {
+    if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const m = this.state.lmContactsModal || {};
+    const zh = (m.zh || '').trim(), ch = (m.ch || '').trim(), am1 = (m.am1 || '').trim(), am2 = (m.am2 || '').trim();
+    if (!zh || !ch || !am1) { this.showToast('LM ZH, LM CH and AM-1 are required \u2014 only AM-2 is optional', '#C77B00'); return; }
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code) || {};
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmZh', zh, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmCh', ch, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm1', am1, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm2', am2 || null, existing);
+    this.refreshLmdcs();
+    this.setState({ lmContactsModal: { open: false } });
+    this.showToast('LM contacts saved for ' + m.code, '#128A3E');
+  }
   saveLmdcEdit(code) {
     if (this.isRlhCyclePast()) { this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const st = this.state;
@@ -9203,7 +9361,12 @@ class NDCApp extends React.Component {
         const idx = (name) => headers.indexOf(name);
         const codeIdx = idx('lmdc code');
         if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
-        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)'), pincodesIdx = idx('pincodes'), pocsIdx = idx('pocs');
+        const openIdx = idx('open time'), closeIdx = idx('close time'), d0Idx = idx('d0 cutoff'), vehIdx = idx('max vehicle size'), unloadIdx = idx('unloading time (min)'), pincodesIdx = idx('pincodes');
+        // 2026-09-12 fix (items 2/3) — POCs column replaced with 4 named role columns. ZH/CH/AM-1
+        // are mandatory: if any of those 3 columns exist in the file, a blank cell is a row
+        // error, same "flag it, apply nothing from this row" convention as every other column
+        // here — not silently skipped the way the old free-text POCs list allowed.
+        const zhIdx = idx('lm zh'), chIdx = idx('lm ch'), am1Idx = idx('lm am-1'), am2Idx = idx('lm am-2');
         const validCodes = {}; (this.state.data.lmdcs || []).forEach(l => { validCodes[l.code] = true; });
         // 2026-08-07 — all 4 editable fields are fixed dropdown option sets in the UI now, not free
         // text/number. An uploaded value that doesn't match one of those options flags the WHOLE
@@ -9233,7 +9396,10 @@ class NDCApp extends React.Component {
           if (vehIdx >= 0 && cols[vehIdx]) { if (VEH_SET[cols[vehIdx]]) patch.maxVehicle = cols[vehIdx]; else rowErrs.push('Max Vehicle Size "' + cols[vehIdx] + '" is not an RLH-feasible vehicle type'); }
           if (unloadIdx >= 0 && cols[unloadIdx] !== '') { if (cols[unloadIdx] === 'Default') { patch.unloadMin = 'Default'; } else { const n = parseInt(cols[unloadIdx], 10); if (!isNaN(n) && UNLOAD_SET[n]) patch.unloadMin = n; else rowErrs.push('Unloading Time "' + cols[unloadIdx] + '" is not "Default" or 15\u201360 in steps of 5'); } }
           if (pincodesIdx >= 0 && cols[pincodesIdx]) patch.pincodes = cols[pincodesIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
-          if (pocsIdx >= 0 && cols[pocsIdx]) patch.pocs = cols[pocsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          if (zhIdx >= 0) { if (!cols[zhIdx]) rowErrs.push('LM ZH is required'); else patch.lmZh = cols[zhIdx]; }
+          if (chIdx >= 0) { if (!cols[chIdx]) rowErrs.push('LM CH is required'); else patch.lmCh = cols[chIdx]; }
+          if (am1Idx >= 0) { if (!cols[am1Idx]) rowErrs.push('LM AM-1 is required'); else patch.lmAm1 = cols[am1Idx]; }
+          if (am2Idx >= 0 && cols[am2Idx]) patch.lmAm2 = cols[am2Idx];
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(patch).length === 0) { skipped++; continue; }
           const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
@@ -9317,8 +9483,11 @@ class NDCApp extends React.Component {
           // 2026-09-07 fix — Hold Time (On/Off) column parser removed: no longer part of the
           // SC Master template (purely plan-level now), so holdOnIdx will just be -1 for any
           // uploaded file going forward.
-          if (maxHoldLocalIdx >= 0 && cols[maxHoldLocalIdx] !== '') { const n = parseInt(cols[maxHoldLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldLocal = n; else rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); }
-          if (maxHoldNonLocalIdx >= 0 && cols[maxHoldNonLocalIdx] !== '') { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (!isNaN(n)) dPatch.maxHoldNonLocal = n; else rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); }
+          // 2026-09-12 fix (item 1) — Max Hold Local/Non-Local now mandatory and 30-min-grid
+          // only: an empty cell is a row error (was silently skipped before), and a non-multiple
+          // of 30 is rejected the same way a bad number already was.
+          if (maxHoldLocalIdx >= 0) { if (cols[maxHoldLocalIdx] === '') { rowErrs.push('Max Hold Time - Local is required'); } else { const n = parseInt(cols[maxHoldLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldLocal = n; } }
+          if (maxHoldNonLocalIdx >= 0) { if (cols[maxHoldNonLocalIdx] === '') { rowErrs.push('Max Hold Time - Non-Local is required'); } else { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldNonLocal = n; } }
           if (openIdx >= 0 && cols[openIdx]) { if (TIME_RE.test(cols[openIdx])) dPatch.openTime = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not HH:MM'); }
           if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_RE.test(cols[closeIdx])) dPatch.closeTime = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not HH:MM'); }
           if (opsLeadsIdx >= 0 && cols[opsLeadsIdx]) dPatch.pocs = cols[opsLeadsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
@@ -9422,7 +9591,12 @@ class NDCApp extends React.Component {
             newRows = (blob.rows || []).map(r => (r.vehicleType === vehType && (r.zoneFeas || 'Both') === (existingRow.zoneFeas || 'Both')) ? Object.assign({}, r, count != null ? { vehicleCount: count } : {}, zoneFeas ? { zoneFeas } : {}, loadingTime != null ? { loadingTime } : {}) : r);
           } else {
             const vm = (this.state.data.VEH || []).find(v => v.name === vehType) || {};
-            newRows = (blob.rows || []).concat([{ vehicleType: vehType, vehicleCount: count != null ? count : 1, tpLimit: vm.tp || 7, localSpeed: vm.localSpeed, nonLocalSpeed: vm.nonLocalSpeed, zoneFeas: zoneFeas || 'Both', loadingTime: loadingTime != null ? loadingTime : 15 }]);
+            // 2026-09-12 fix (item 4) — Loading Time's fallback is now zone-aware from Vehicle
+            // Master (loadingTimeLocal/loadingTimeNonLocal), same "SC row value if set, else the
+            // vehicle type's own Vehicle Master default" chain Speed already uses — replacing the
+            // flat hardcoded 15 that ignored zone and vehicle type entirely.
+            const vmLoadFallback = (zoneFeas || 'Both') === 'Non-Local' ? (vm.loadingTimeNonLocal != null ? vm.loadingTimeNonLocal : 15) : (vm.loadingTimeLocal != null ? vm.loadingTimeLocal : 15);
+            newRows = (blob.rows || []).concat([{ vehicleType: vehType, vehicleCount: count != null ? count : 1, tpLimit: vm.tp || 7, localSpeed: vm.localSpeed, nonLocalSpeed: vm.nonLocalSpeed, zoneFeas: zoneFeas || 'Both', loadingTime: loadingTime != null ? loadingTime : vmLoadFallback }]);
           }
           setClassDField(this.engineStore, 'rlh', 'scVehicleAvail', cycleMonth, code, 'rows', newRows, blob);
           matched++;
@@ -10222,20 +10396,24 @@ class NDCApp extends React.Component {
         // not a scalar; edited as a comma/semicolon-separated free-text field, same parsing
         // convention as pocs elsewhere in this app. Table cell shows a joined/truncated summary.
         pincodes: l.pincodes || [], pincodesLabel: (l.pincodes && l.pincodes.length) ? (l.pincodes.length > 3 ? l.pincodes.slice(0, 3).join(', ') + ' +' + (l.pincodes.length - 3) : l.pincodes.join(', ')) : '\u2014',
-        pocs: l.pocs || [], pocsLabel: (l.pocs && l.pocs.length) ? (l.pocs.length > 2 ? l.pocs.slice(0, 2).join(', ') + ' +' + (l.pocs.length - 2) : l.pocs.join(', ')) : '\u2014',
+        // LM Contacts (2026-09-12, items 2/3) — replaced the old shared pocs list with 4 named
+        // per-DC roles. lmContactsComplete checks the 3 mandatory ones (ZH/CH/AM-1); AM-2 is
+        // genuinely optional and never affects completeness.
+        lmZh: l.lmZh || null, lmCh: l.lmCh || null, lmAm1: l.lmAm1 || null, lmAm2: l.lmAm2 || null,
+        lmContactsComplete: !!(l.lmZh && l.lmCh && l.lmAm1),
+        lmContactsSummary: [l.lmZh ? 'ZH: ' + l.lmZh : 'ZH: missing', l.lmCh ? 'CH: ' + l.lmCh : 'CH: missing', l.lmAm1 ? 'AM-1: ' + l.lmAm1 : 'AM-1: missing', l.lmAm2 ? 'AM-2: ' + l.lmAm2 : 'AM-2: (optional)'].join(' \u00b7 '),
+        onOpenLmContacts: () => this.openLmContactsModal(l.code),
         rlhMode: l.rlhMode || 'Valmo RLH', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         mdcCode: l.mdcCode || '\u2014', laneName: l.laneName || '\u2014', cutoff: l.cutoff || '\u2014', tat: l.tat != null ? (this.minToHrsLabel(l.tat) + ' hrs') : '\u2014',
         editing, notEditing: !editing,
         draftOpen: lmdcDraft.open, draftClose: lmdcDraft.close, draftD0: lmdcDraft.d0Cutoff, draftVehicle: lmdcDraft.maxVehicle, draftUnload: lmdcDraft.unloadMin,
         draftRlhMode: lmdcDraft.rlhMode, draftMdcCode: lmdcDraft.mdcCode, draftLaneName: lmdcDraft.laneName, draftCutoff: lmdcDraft.cutoff, draftTat: lmdcDraft.tat,
         draftPincodes: lmdcDraft.pincodes,
-        draftPocs: lmdcDraft.pocs,
         draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
         onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
         onDraftPincodes: ldSet('pincodes'),
-        onDraftPocs: ldSet('pocs'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '', pincodes: (l.pincodes || []).join(', '), pocs: (l.pocs || []).join(', ') } }),
+        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Valmo RLH', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '', pincodes: (l.pincodes || []).join(', ') } }),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
@@ -10244,7 +10422,7 @@ class NDCApp extends React.Component {
     // Mode/MDC Code/Lane Name/Cutoff/TAT were added to the table but never added here — this is
     // exactly the "CSVs must match the tables" gap flagged this round). TAT exports in HOURS
     // (matching the table's own display unit), not the internal minute storage.
-    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),Pincodes,POCs';
+    const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),Pincodes,LM ZH,LM CH,LM AM-1,LM AM-2';
     const downloadLmdcCsv = () => {
       const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
@@ -10252,7 +10430,7 @@ class NDCApp extends React.Component {
         return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive',
           mode, mode === 'MDC' ? (l.mdcCode || '') : '', mode === 'Co-Loading' ? (l.laneName || '') : '',
           mode === 'Co-Loading' ? (l.cutoff || '') : '', mode === 'Co-Loading' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
-          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, (l.pincodes || []).join(';'), (l.pocs || []).join(';')].map(esc).join(','); });
+          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, (l.pincodes || []).join(';'), l.lmZh || '', l.lmCh || '', l.lmAm1 || '', l.lmAm2 || ''].map(esc).join(','); });
       this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
@@ -10359,7 +10537,7 @@ class NDCApp extends React.Component {
     const vehDistAvail = (name) => { const v = (VEHMA || []).find(x => x.name === name); return v ? v.dist : 600; };
     const availAdded = st.availAdded || {};
     const addingAvailSC = st.addingAvailSC || null;
-    const defAvailForm = () => ({ vehicleType: (VEHMA[0] || {}).name || 'TATA ACE / 7ft', count: 1, tp: (VEHMA[0] || {}).tp || 7, zoneFeas: 'Both', loadingTime: 15 });
+    const defAvailForm = () => ({ vehicleType: (VEHMA[0] || {}).name || 'TATA ACE / 7ft', count: 1, tp: (VEHMA[0] || {}).tp || 7, zoneFeas: 'Both', loadingTime: null });
     const availForm = st.availAddForm || defAvailForm();
     const availZfStyle = (zf) => ({ zfBg: zf === 'Both' ? '#EAEEFB' : zf === 'Local' ? '#E7F0F8' : '#FBEAF1', zfFg: zf === 'Both' ? '#2F4FC6' : zf === 'Local' ? '#1E6FB8' : '#C03977' });
     const availFormFor = (code) => {
@@ -10378,7 +10556,13 @@ class NDCApp extends React.Component {
         onCapChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { cap: e.target.value }) }),
         onZoneFeasChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { zoneFeas: e.target.value }) }),
         onLoadingTimeChange: (e) => this.setState({ availAddForm: Object.assign({}, this.state.availAddForm || defAvailForm(), { loadingTime: parseInt(e.target.value) || 15 }) }),
-        onAdd: () => { if (this.isRlhCyclePast()) { this.setState({ addingAvailSC: null, availAddForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 }; const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap); const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both', loadingTime: f.loadingTime == null ? 15 : f.loadingTime };
+        onAdd: () => { if (this.isRlhCyclePast()) { this.setState({ addingAvailSC: null, availAddForm: null }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } const f = this.state.availAddForm || defAvailForm(); const vm = VEHMA.find(x => x.name === f.vehicleType) || { cap: 2000 };
+          const capRaw = (f.cap === '' || f.cap == null) ? vm.cap : (parseInt(f.cap) || vm.cap);
+          // 2026-09-12 fix (item 4) — same zone-aware Vehicle Master fallback as the CSV path
+          // above; only used when the user never touched the Loading Time field (f.loadingTime
+          // still null), so an explicit override always wins.
+          const vmLoadFallbackAdd = (f.zoneFeas || 'Both') === 'Non-Local' ? (vm.loadingTimeNonLocal != null ? vm.loadingTimeNonLocal : 15) : (vm.loadingTimeLocal != null ? vm.loadingTimeLocal : 15);
+          const nr = { vehicleType: f.vehicleType, capacity: capRaw, distanceLimit: vehDistAvail(f.vehicleType) + ' km', vehicleCount: f.count || 1, tpLimit: f.tp, zoneFeas: f.zoneFeas || 'Both', loadingTime: f.loadingTime == null ? vmLoadFallbackAdd : f.loadingTime };
           // 2026-08-26 fix (#12) — writes straight through the engine instead of the old
           // availAdded session overlay.
           const cycleMonth = this.state.activeCycleMonth.rlh;
@@ -10626,6 +10810,8 @@ class NDCApp extends React.Component {
       speedProfileModal: this.buildSpeedProfileModal(),
       opHoursModal: this.buildOpHoursModal(),
       dockProfileModal: this.buildDockProfileModal(),
+      schedSimulate: this.buildSchedSimulate(),
+      lmContactsModal: (() => { const m = this.state.lmContactsModal || {}; if (!m.open) return { open: false }; return { open: true, code: m.code, zh: m.zh || '', ch: m.ch || '', am1: m.am1 || '', am2: m.am2 || '', onZh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { zh: e.target.value }) }), onCh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { ch: e.target.value }) }), onAm1: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am1: e.target.value }) }), onAm2: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am2: e.target.value }) }), onSave: () => this.saveLmContactsModal(), onClose: () => this.closeLmContactsModal() }; })(),
     };
   }
   // buildSpeedProfileModal() (2026-09-03, item 1; reworked 2026-09-07) — render-ready props for
@@ -10985,6 +11171,11 @@ class NDCApp extends React.Component {
         const zv = (s.zeroVolDc || 0) + (s.missVolDc || 0);
         flags.push({ t: zv + (zv === 1 ? ' LMDC has' : ' LMDCs have') + ' zero or missing volume \u2014 remove the node(s) from this run or update projections in the volume file.', sev: 'danger', dot: '#D14B4B', k: 'zeroval' });
       }
+      // 2026-09-12 fix (item 3.1) — multi-SC-mapped DC escalated from a pure-informational
+      // AutoDML gate warning (which never blocked anything — that gate is consumed only by its
+      // own banner) to a genuine blocking error here, same tier as zero/missing volume above.
+      const multiConflictCount = (d.autodmlDetails.multi || []).filter(m => m.scCode === s.code).length;
+      if (multiConflictCount > 0) flags.push({ t: multiConflictCount + (multiConflictCount === 1 ? ' LMDC is' : ' LMDCs are') + ' mapped to more than one SC \u2014 resolve the duplicate link in Design Inputs \u2192 Node Inputs \u2192 AutoDML gate before triggering this SC.', sev: 'danger', dot: '#D14B4B', k: 'multisc' });
       // 2.6 \u2014 coverage flag: high per-DC volume concentration warning.
       const avgVolPerDc = s.dcCount > 0 ? Math.round(s.volume / s.dcCount) : 0;
       if (avgVolPerDc > 380 && s.dcCount < 110) {
@@ -11576,12 +11767,55 @@ class NDCApp extends React.Component {
     // the button itself is only rendered in the Planner's own card template, not Ops Lead's.
     card.canFinaliseDirectStage1 = sp.schedStage === 'stage1' && sp.status !== 'Finalised';
     card.onFinaliseDirectStage1 = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
+    // 2026-09-12 (item 7.3) — Simulate impact, mirroring Route Planner's own button. Available
+    // any time (not gated by includeActions), same reasoning as the detail-open handlers above —
+    // viewing a comparison doesn't mutate anything.
+    card.onOpenSimulate = () => this.setState({ schedSimOpen: true, schedSimPlanId: sp.id });
     if (includeActions) {
       card.onPush = () => this.openSchedPush(sp.id);
       card.onFinaliseDirect = () => this.setState({ schedFinaliseDirectOpen: true, schedFinaliseDirectPlanId: sp.id });
       card.onDetail = card.onOpenReviewDetail;
     }
     return card;
+  }
+  closeSchedSimulate() { this.setState({ schedSimOpen: false, schedSimPlanId: null }); }
+  // buildSchedSimulate() (2026-09-12, item 7.3) — mirrors Route Planner's own "Simulate impact"
+  // (Original vs. Suggested cards), applied to Route Scheduler's 5 named metrics. "Pre" is the
+  // real preAlignmentMetrics snapshot captured at trigger time; "post" is a live
+  // computeSchedulerMetricsFor(sp) call, which naturally reflects whatever's been accepted since.
+  // Pre-existing seeded plans (built before this feature existed) have no snapshot — falls back
+  // to the live value for "pre" too, so those show a clean "no change" rather than a crash or a
+  // misleading fabricated baseline.
+  buildSchedSimulate() {
+    const st = this.state;
+    if (!st.schedSimOpen) return { open: false };
+    const sp = (st.data.schedulerPlans || []).find(x => x.id === st.schedSimPlanId);
+    if (!sp) return { open: false };
+    const post = this.computeSchedulerMetricsFor(sp) || {};
+    const pre = sp.preAlignmentMetrics || post;
+    const fmtDelta = (a, b, suffix, higherIsBetter) => {
+      if (a == null || b == null) return { label: '', color: '#5A5E66' };
+      const d = +(b - a).toFixed(1);
+      if (d === 0) return { label: 'No change', color: '#8E96A3' };
+      const good = higherIsBetter ? d > 0 : d < 0;
+      return { label: (d > 0 ? '\u25b2 +' : '\u25bc ') + Math.abs(d) + (suffix || ''), color: good ? '#128A3E' : '#D14B4B' };
+    };
+    const card = (label, a, b, suffix, higherIsBetter) => {
+      const delta = fmtDelta(a, b, suffix, higherIsBetter);
+      return { label, origVal: (a != null ? a : '\u2014') + (suffix || ''), propVal: (b != null ? b : '\u2014') + (suffix || ''), deltaLabel: delta.label, deltaColor: delta.color };
+    };
+    return {
+      open: true, scName: sp.scCode + ' \u00b7 ' + sp.scName,
+      hasSnapshot: !!sp.preAlignmentMetrics,
+      cards: [
+        card('D0 Landing %', pre.d0LandingPct, post.d0LandingPct, '%', true),
+        card('Rollover %', pre.rolloverPct, post.rolloverPct, '%', false),
+        card('LMSC-in \u2192 LMDC-out (days)', pre.lmscInOutDays, post.lmscInOutDays, '', false),
+        card('Avg Hold (hrs)', pre.avgHoldHours, post.avgHoldHours, 'h', false),
+        card('Dock Utilisation %', pre.dockUtilPct, post.dockUtilPct, '%', true),
+      ],
+      onClose: () => this.closeSchedSimulate(),
+    };
   }
   // Directly. Simpler than RLH's doPush: a schedulerPlans row is already fully formed at Trigger
   // time (no separate run-vs-plan promotion needed), so this just flips status + reviewer fields.
@@ -11870,7 +12104,7 @@ class NDCApp extends React.Component {
     const newRows = parents.map(parent => {
       n++;
       const params = this.resolveSchedulerParamsFor(parent.scCode);
-      return {
+      const spDraft = {
         id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
         scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
         status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
@@ -11880,7 +12114,26 @@ class NDCApp extends React.Component {
         localSpeed: params.localSpeed, nonLocalSpeed: params.nonLocalSpeed,
         holdOn: params.holdOn, maxHoldLocal: params.maxHoldLocal, maxHoldNonLocal: params.maxHoldNonLocal,
         cutoffs: null,
+        // 2026-09-12 (item 5) — needsConfirm marks this plan as requiring an explicit Connection
+        // Start Time confirm on Run Queue before it reaches Design Review. Only ever set here, at
+        // real trigger time — every pre-existing seeded scheduler plan simply never has this
+        // field, so seed/demo data is completely unaffected by this gate.
+        needsConfirm: true,
       };
+      // 2026-09-12 (item 7.3) — preAlignmentMetrics: a real snapshot taken right now, before any
+      // Ops Alignment feedback exists to accept, so it's a genuine "before" baseline rather than
+      // a live recompute that could already reflect accepted changes. Stored ON the plan itself
+      // (per direct instruction — "stays on the plan card"), so it survives cycle switches the
+      // same way every other plan field does. The Simulate modal diffs this against a live
+      // computeSchedulerMetricsFor(sp) call, which naturally reflects whatever's been accepted
+      // since — no separate "post" snapshot needed, since "post" is just "right now."
+      const m0 = this.computeSchedulerMetricsFor(spDraft) || {};
+      spDraft.preAlignmentMetrics = {
+        d0LandingPct: m0.d0LandingPct, rolloverPct: m0.rolloverPct, lmscInOutDays: m0.lmscInOutDays,
+        avgHoldHours: m0.avgHoldHours, maxHoldHours: m0.maxHoldHours, lanesWithHold: m0.lanesWithHold, totalLanes: m0.totalLanes,
+        dockUtilPct: m0.dockUtilPct,
+      };
+      return spDraft;
     });
     const schedulerPlans = (d.schedulerPlans || []).concat(newRows);
     const CONCURRENCY = (typeof NDC_CONCURRENCY !== 'undefined') ? NDC_CONCURRENCY : 3;
@@ -12279,17 +12532,34 @@ class NDCApp extends React.Component {
       const shiftMap = st.schedulerConnStartShiftByRunId || {};
       const shiftMin = shiftMap[sp.id] || 0;
       const m = this.computeSchedulerMetricsFor(sp) || {};
-      const setShift = (v) => { const mm = Object.assign({}, st.schedulerConnStartShiftByRunId || {}); if (v === 0) delete mm[sp.id]; else mm[sp.id] = v; this.setState({ schedulerConnStartShiftByRunId: mm }); };
+      // 2026-09-12 fix (item 5) — Run Queue's own Confirm gate: a run only reaches Design Review
+      // once its Connection Start Time has been explicitly accepted here, not automatically the
+      // moment the DS-suggested run completes. Changing the shift after confirming clears the
+      // confirmation again (setShift/onResetShift both do), since a changed time is a genuinely
+      // different schedule that needs its own explicit accept, not a stale one carried over.
+      const confirmedMap = st.schedRunConfirmed || {};
+      const isConfirmed = !!confirmedMap[sp.id];
+      const setShift = (v) => {
+        const mm = Object.assign({}, st.schedulerConnStartShiftByRunId || {});
+        if (v === 0) delete mm[sp.id]; else mm[sp.id] = v;
+        const cc = Object.assign({}, this.state.schedRunConfirmed || {});
+        delete cc[sp.id];
+        this.setState({ schedulerConnStartShiftByRunId: mm, schedRunConfirmed: cc });
+      };
       return Object.assign({}, base, {
         connectionStartTime: m.connectionStartTime || '\u2014', d0LandingPct: m.d0LandingPct != null ? m.d0LandingPct : '\u2014',
-        isDsDefault: shiftMin === 0,
+        isDsDefault: shiftMin === 0, isConfirmed,
         onShiftDec: () => setShift(shiftMin - 30), onShiftInc: () => setShift(shiftMin + 30),
         onResetShift: () => setShift(0),
         onOpenCurve: () => this.setState({ schedConnCurveRunId: sp.id }),
+        onConfirm: () => { const cc = Object.assign({}, this.state.schedRunConfirmed || {}); cc[sp.id] = true; this.setState({ schedRunConfirmed: cc }); },
       });
     });
     const schedQueueActive = schedRunQueue.some(r => r.status !== 'Completed');
-    const schedQueueAllDone = schedRunQueue.length > 0 && !schedQueueActive;
+    // 2026-09-12 fix (item 5) — "all done" now also requires every completed run to be Confirmed,
+    // not just Completed, before Design Review becomes reachable from here.
+    const schedQueueAllConfirmed = schedulerQueueRows.every(r => !r.isCompleted || r.isConfirmed);
+    const schedQueueAllDone = schedRunQueue.length > 0 && !schedQueueActive && schedQueueAllConfirmed;
     const schedRunTotal = schedRunQueue.length;
 
     return {
@@ -12313,7 +12583,7 @@ class NDCApp extends React.Component {
       previewRows, step4NlhLabel, step4ErrorCount, step4WarningCount, step4Blocked, schedConnCurve, schedNcModal, schedReviewModal, laneFlagModal,
       onTriggerScheduler: () => this.triggerSchedulerRuns(),
       // Run Queue tab
-      schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedRunTotal,
+      schedulerQueueRows, schedQueueActive, schedQueueAllDone, schedQueueAllConfirmed, schedRunTotal,
       // nav
       schedulerBack: () => this.setState({ schedulerStep: Math.max(1, step - 1) }),
       schedulerNext: () => {
@@ -14464,7 +14734,8 @@ class NDCApp extends React.Component {
       confirmSchedFinalise: () => this.confirmSchedFinalise(), closeSchedFin2: () => this.closeSchedFin(),
       schedValidateOpen: st.schedValidateOpen, closeSchedValidate: () => this.setState({ schedValidateOpen: false }),
       schedValidateClean: schedValidateResult.clean, schedValidateErrors: schedValidateResult.errors, schedValidateErrorCount: schedValidateResult.errors.length,
-      schedValidateSummary: schedValidateResult.clean ? 'No errors found — clear to proceed.' : (schedValidateResult.errors.length + ' error' + (schedValidateResult.errors.length === 1 ? '' : 's') + ' found.'),
+      schedValidateWarnings: schedValidateResult.warnings, schedValidateWarningCount: schedValidateResult.warnings.length,
+      schedValidateSummary: schedValidateResult.clean ? (schedValidateResult.warnings.length > 0 ? (schedValidateResult.warnings.length + ' warning' + (schedValidateResult.warnings.length === 1 ? '' : 's') + ' \u2014 clear to proceed.') : 'No issues found — clear to proceed.') : (schedValidateResult.errors.length + ' error' + (schedValidateResult.errors.length === 1 ? '' : 's') + ' found.'),
       ackOpen: st.ackOpen, ackPlanName: ackPlan ? (ackPlan.scCode + ' \u00b7 ' + ackPlan.scName) : '', ackReviewers: ackPlan ? ackPlan.reviewerNames.join(', ') : '', ackPendingCount: ackPending, ackHasPending: ackPending > 0, ackPendingLabel: ackPending + ' row' + (ackPending === 1 ? '' : 's') + ' still pending \u2014 they will be frozen as-is', confirmAck: () => this.confirmAck(), closeAck: () => this.setState({ ackOpen: false }),
       unfreezeOpen: st.unfreezeOpen, unfreezePlanName: unfreezePlan ? (unfreezePlan.scCode + ' \u00b7 ' + unfreezePlan.scName) : '', unfreezeReviewers: unfreezePlan ? unfreezePlan.reviewerNames.join(', ') : '', confirmUnfreeze: () => this.confirmUnfreeze(), closeUnfreeze: () => this.setState({ unfreezeOpen: false, unfreezePlanId: null }),
       runSchedulerOpen: st.runSchedulerOpen, runSchedulerPlanName: runSchedulerPlan ? (runSchedulerPlan.scCode + ' \u00b7 ' + runSchedulerPlan.scName) : '', confirmRunScheduler: () => this.confirmRunScheduler(), closeRunScheduler: () => this.setState({ runSchedulerOpen: false, runSchedulerPlanId: null }),
@@ -16006,7 +16277,10 @@ class NDCApp extends React.Component {
     const schedZoneName = st.reviewSchedZone || 'All';
     const allSchedPlans = d.schedulerPlans || [];
     const SCHED_VERDICT = { Draft: ['Draft', '#F2F5FA', '#5A5E66'], Pushed: ['Pushed', '#EAF0FB', '#1E6FB8'], 'In Alignment': ['In Alignment', '#FBF1DF', '#C77B00'], Acknowledged: ['Acknowledged', '#EAEEFB', '#003F98'], Finalised: ['Finalised', '#E7F4EC', '#128A3E'] };
-    const schedRunsForSC = (code) => allSchedPlans.filter(sp => sp.scCode === code).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    // 2026-09-12 fix (item 5) — Design Review's own run list now excludes unconfirmed runs
+    // entirely (not just a disabled button on Run Queue): a run only shows up here once its
+    // Connection Start Time has been explicitly Confirmed there.
+    const schedRunsForSC = (code) => allSchedPlans.filter(sp => sp.scCode === code && (!sp.needsConfirm || !!(st.schedRunConfirmed || {})[sp.id])).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
     const schedSCsWithRuns = d.scs.filter(s => schedRunsForSC(s.code).length >= 1);
     const reviewSchedZoneChips = ['All'].concat(SCHED_ZONES).map(z => ({ label: z, active: schedZoneName === z,
       count: z === 'All' ? schedSCsWithRuns.length : schedSCsWithRuns.filter(s => s.zone === z).length,

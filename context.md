@@ -3068,3 +3068,190 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     SC-DC_Mapping.md` (now retired — SC-DC Mapping is built, see 2026-08-27/29 entries above) all
     rewritten this session to catch up from 2026-08-26 through today — a 12-session gap. See those
     files' own update logs for what changed in each.
+
+- **2026-09-10 — First-ever live browser click-through (SC Master, LMDC Master, Route Scheduler),
+  plus Operating Hours and Dock Profile built from nothing.**
+  - **QA pass fixes**: stale "Coming Soon" badges on Design Creation/Review's Node Mapping tier
+    tab (module was already fully built — the badge just never got updated); SC-DC Mapping's
+    Step 2→3 "Next" button silently doing nothing (`mapNext()`'s own internal guard checked
+    `mapDraft.dcCodes`, a field that stopped being populated once Step 2 became auto-computed via
+    `mapComputeEligibleDcs()` in an earlier session — the render-side disabled-state gate had been
+    correctly updated, this second, independent guard inside the click handler hadn't); a stale
+    Round Trip TAT caption claiming "not computed yet" when it had genuinely had a real formula
+    for a full session already; Route Planner's Step 2 blocking-validation gate not actually
+    blocking Step 2→3 navigation (the final Trigger-time gate was fine — confirmed by testing —
+    just the earlier one silently let you through); Route Planner's own Finalise Directly confirm
+    redirecting to a stale, unrelated screen afterward (`doPush()` set `view:'align'` but never
+    reset `alignTier`/`alignRlhMode`, so whatever sub-tab was last open, even in a different leg,
+    stayed showing).
+  - **Operating Hours** (SC Master): new Class D `scMaster` fields `nonOperating`/`breaks`
+    (arrays of `{start,end}` on the 30-min grid). OPEN/CLOSE columns removed entirely, replaced
+    with one icon opening a popup — grid-locked start/end dropdowns only (never free text), a
+    live-computed 30-min bar preview, shifts derived at read time from non-operating gaps only (a
+    break never splits a shift). Global CSV upload (long format: SC Code, Type, Start, End) added
+    beside SC Master's own upload card, only touching SCs actually present in the file. Fixed the
+    RLH-Docks-through-Max-Hold-Non-Local column-width inconsistency in the same pass (freed by
+    removing Open/Close). Real-execution-tested (not just code review) against 5 cases in an
+    actual JS engine before shipping — midnight-adjacent windows, multiple shift splits, breaks
+    not splitting shifts, full round-trip of the time↔slot conversion, the empty-config case —
+    all passed.
+  - **Dock Profile** (Route Scheduler): new per-SC, 30-min-slot dock-availability computation,
+    wired to a pre-existing placeholder icon in Design Creation Step 2's per-SC row (wired to a
+    no-op since it was added). Base = SC Master's own RLH Docks; non-operating hours force 0;
+    each NLH trailer landing (from the chosen scenario) and each distinct Co-Loading/MDC lane
+    (deduped by lane, using its real `cutoff` field) blocks one dock for a 1-hour window. New
+    modal: stacked colored unit squares per slot, cause-coded, hourly-grouped but showing both
+    real 30-min halves per hour. Real-execution-tested against a deliberately tricky sample (two
+    trailers landing in the same slot, a duplicated LMDC row for one lane, overlapping blocks
+    from different lanes in adjacent slots, non-operating hours) — confirmed correct stacking,
+    correct deduping of the duplicate lane row specifically (the risk flagged before building),
+    and free-dock count never going negative.
+  - **LMDC Master**: LMSC column restored (removed in an earlier session), sourced from
+    AutoDML's active link, with a red Conflict badge cross-referenced against AutoDML's own
+    pre-existing multi-SC detection — confirmed 9 real conflicts were already seeded, no seed
+    change needed there (a real self-caught false alarm: initially assumed this needed seeding
+    too, corrected before doing any wasted work).
+  - **SC Vehicle Availability**: upload cards compacted onto the search row, right-aligned.
+  - **Seed-data fixes**: Operating Hours seeded on DELS and SXVS (every other SC had nothing,
+    so the feature would have looked completely blank on first load); MDC lane cutoffs seeded
+    (confirmed previously always `null` — only Co-Loading lanes had ever gotten one, so Dock
+    Profile's "same rule applies to MDC slots" behavior had nothing to actually block).
+  - **Files changed**: `v3.0-rlh-design-base.jsx`, `engine.js` (Vehicle Master and SC Master seed
+    arrays only — Operating Hours/MDC-cutoff seed values and the new Class D field passthrough).
+  - **Verification**: Babel-compiled clean after each edit. Two self-caught bugs from ambiguous
+    `str_replace` edits (a dropped method-declaration line, twice across the session) — both
+    caught immediately by the syntax checker, both fixed before moving on.
+  - **Not yet verified live**: everything above except the QA-pass fixes themselves (which were
+    confirmed via real browser clicks, since that's what surfaced them) — Operating Hours and
+    Dock Profile are syntax-checked and execution-tested on sample data only, not click-tested in
+    a real deploy.
+
+- **2026-09-11 — SC Master's Speed columns retired; Design Review/Ops Alignment cards reworked;
+  Ops Alignment · Planner's Finalise Directly extended to Stage 1.**
+  - SC Master's Local/Non-Local Speed columns removed entirely — Speed Profile (SC × Vehicle Type
+    × Zone × Time) is now the only editable surface for speed, same staged-migration pattern this
+    codebase already used for RLH Docks before Dock Profile existed (UI moves off SC Master
+    first, `resolveScFields()`'s underlying flat resolution untouched for now).
+  - Speed Profile's 3 quick-action buttons renamed ("Apply All-day" / "Apply across zones" /
+    "Apply to all vehicles") — all 3 already existed under different labels, confirmed via code
+    before touching anything.
+  - New reconciliation check (`checkSpeedProfileGaps()`): after SC Vehicle Availability is set up
+    or changed (CSV upload or inline add), cross-checks each touched SC's vehicle types against
+    Speed Profile and surfaces a banner with a Configure action for anything missing. Wired into
+    both the CSV path and the inline add-vehicle path.
+  - Design Review / Ops Alignment cards (all 3 copies — Design Review, Ops Alignment Planner, Ops
+    Alignment Ops Lead): SC Docks and Local/Non-Local Speed removed as inline card values,
+    replaced with the same Speed Profile / Dock Profile icons Route Scheduler's own Step 2 uses.
+  - Dock Schedule (the detail-overlay tab) reworked to use Dock Profile's real per-slot free-dock
+    count as its capacity base, for both breach detection and its own Dock Utilisation % — was a
+    flat all-day `sp.rlhDocks` number before, ignoring non-operating hours and NLH/lane occupancy
+    entirely.
+  - **Real pre-existing bug found and fixed**: Route Scheduler Step 2's own Speed Profile opener
+    read `r.t`/`r.zf` (Vehicle Master's internal short field names) on SC Vehicle Availability
+    rows that actually store `vehicleType`/`zoneFeas` (full names) — had always passed
+    `undefined` for both, silently, since whenever it was written. Found while adding the new
+    Simulate/Dock Profile icons nearby and double-checking the existing pattern before copying
+    it — confirmed a second, correct usage of the same data shape elsewhere before concluding
+    this one specifically was wrong.
+  - Ops Alignment · Planner: confirmed two items already correctly built (card metrics parity
+    with Design Review; `canPushToLM` already gated on `schedStagePendingCount(sp) === 0`).
+    Built the one real gap: Finalise Directly from within Stage 1 (skips Stage 2/LM entirely),
+    available throughout Stage 1 regardless of Acknowledge state, reusing the exact same confirm
+    modal Design Review's own Finalise Directly uses — same state, same wording, per direct
+    instruction not to build a differently-worded variant. Confirmed the modal itself is rendered
+    in the single global top-level render tree (not scoped inside Design Review's own view), so
+    triggering it from Ops Alignment works correctly without any additional wiring.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: Babel-compiled clean after each edit.
+  - **Not yet verified live**: all of it — no browser access this session.
+
+- **2026-09-12 — Large round sourced from a manually-typed "User Stories" gap list; Dock Capacity
+  reversed to a warning; LM POCs restructured from a shared list to 4 per-DC roles.**
+  - **The "User Stories" doc this round was sourced from was never actually read.** Every
+    `web_fetch` attempt on the Google Doc link returned 401 (not publicly link-shared, retried
+    twice more at the person's request, same result each time). Everything below reflects the
+    person's own manually-typed summary of the doc in chat, not a verified line-by-line
+    comparison against the real document. **Flagging this plainly rather than letting it look
+    like a real audit happened** — a future session should get real doc access and actually
+    diff it if full coverage matters.
+  - **Max Hold Time** (SC Master, Local/Non-Local): converted from optional free-text to a
+    required, 30-min-grid-only dropdown, in both the edit form and CSV upload. Discovered along
+    the way that the `req:true` marker on this form's OTHER fields is also purely decorative
+    (checked several — none were actually blocked from saving empty except `code`, which has its
+    own separately-written check) — added a real, explicit save-time block for these two fields
+    specifically rather than trust the dropdown's own default value to enforce it (confirmed a
+    `<select>`'s default is display-only until the underlying form state is genuinely touched).
+  - **Multi-SC-mapped DC** escalated from a pure-display AutoDML gate warning (confirmed via code
+    that it never blocked anything — "consumed only by the in-context banner") to a real blocking
+    error in Route Planner's own per-SC trigger validation, same tier as the existing zero-volume
+    block. The AutoDML gate's own display severity was also updated for visual consistency, but
+    it remains purely informational — the new per-SC flag is what actually blocks.
+  - **Lane-name/cutoff consistency** — confirmed already effectively handled via silent
+    auto-correction on save (first row to define a lane wins, explanatory toast, deliberately
+    never a hard block per that function's own long-standing comment). Left as-is; flagged as an
+    open product question (auto-correct sufficient, or does this need a visible validation?).
+  - **Loading Time** (Vehicle Master): added real `loadingTimeLocal`/`loadingTimeNonLocal`
+    fallback fields — **corrected a wrong claim from an earlier session** that these already
+    existed on Vehicle Master (they never did; only SC Vehicle Availability's own rows had a flat
+    hardcoded 15-minute default). SC Vehicle Availability's own creation-time fallback is now
+    zone-aware (Local vs. Non-Local Vehicle Master default, per the row's own Zone Feasibility)
+    instead of the flat 15.
+  - **Run Queue Confirm gate**: a run's Connection Start Time now requires an explicit Confirm on
+    Run Queue before it reaches Design Review at all (previously automatic the moment a run
+    completed — the stepper/curve mechanism itself already existed and already propagated live,
+    confirmed via code before building anything new). Changing the shift again after confirming
+    clears the confirmation. Gated at the actual data level (`schedRunsForSC` filters on it), not
+    just a disabled button. **Real seed-safety issue caught before shipping**: the first version
+    of this filter would have made Design Review appear completely empty for every pre-existing
+    seeded scheduler plan, since none would ever have a confirmation entry — fixed by gating on a
+    `needsConfirm` flag set only at real trigger time, never on seed data, so every existing
+    seeded plan is unaffected.
+  - Confirmed already built (no changes needed): D0 Landing deviation-from-DS-suggested badge;
+    Speed/Dock Profile icons on Design Review's card; the POC selection modal on Push to
+    Alignment (both Route Planner's pre-existing one and Route Scheduler's own from the prior
+    session).
+  - **Three Ops Alignment validations**: Landing Time vs. that DC's own operating hours —
+    confirmed already built (`computeImpliedCutoffForLanding()` already checks this against
+    LMDC Master's own per-DC Open/Close fields, a separate, older, unreconciled concept from
+    SC-level Operating Hours). Provided TAT > Calculated TAT by 25% — new, warning. Max Hold
+    proposed > Max Hold limit — **corrected understanding mid-build**: Hold Time isn't a
+    user-proposable field at all, it's *calculated* from landing time; rebuilt as "recompute the
+    hold-time consequence of a Cutoff/TAT proposal via the same `holdForArrival()` the plan's own
+    metrics already use, warn if it would exceed that SC's own limit" — no new proposable field
+    needed, avoiding what would have been a much larger, riskier build.
+  - **Simulate impact modal, Route Scheduler** — mirrors Route Planner's own pre-existing one
+    (Original vs. Suggested cards). Covers D0 Landing %, Rollover %, LMSC-in→LMDC-out days, Avg
+    Hold, Dock Utilisation %. Per direct product instruction, "pre" is a real snapshot
+    (`preAlignmentMetrics`) captured once, at real trigger time, before any Ops Alignment
+    feedback exists — stored directly on the plan object; "post" is a live recompute, naturally
+    reflecting whatever's been accepted since. Pre-existing seeded plans have no snapshot and
+    fall back to showing "no change" rather than a fabricated baseline. One simplification stated
+    directly in the modal's own UI: Dock Utilisation is a single plan-wide percentage, not an
+    hour-by-hour dual chart.
+  - **Dock Capacity demoted from a hard block to a warning** — confirmed via code this was a
+    genuinely deliberate decision before ("both check silently before proceeding"), a real
+    product reversal, not a bug fix. A single change (`errors.push` → `warnings.push` in
+    `computeSchedValidation()`) automatically un-blocked both Push-to-LM and Finalise, since both
+    only gate on `v.clean`. **Caught a second real gap in the same pass**: the Validate modal had
+    only ever rendered the `errors` array — `warnings` had no render path at all, so moving dock
+    capacity there alone would have made it invisible, not just non-blocking. Added a proper
+    amber warnings section and updated the summary text in the same change.
+  - **LM POCs restructured**: the shared per-SC list (`scLmPocs`, one 5-6-name array duplicated
+    across every DC under a SC) replaced with 4 named per-DC fields — LM ZH, LM CH, LM AM-1 (all
+    mandatory), LM AM-2 (optional). ZH/CH seeded constant across a SC's whole DC pool (matching
+    the real hierarchy — one Zonal Head, one Cluster Head per SC); AM-1/AM-2 vary across ~3
+    clusters within the pool, so the "5-10 distinct LM contacts across 150-200 DCs" real-world
+    fact the old model captured is still true, now as an emergent property of real per-DC data
+    rather than a stored list. New icon+popup on LMDC Master (mandatory-field validation on
+    save), CSV template/parser updated to 4 columns, and `deriveLmPocs()` (Route Scheduler's own
+    LM reviewer pool) rewritten to union the 4 fields across a plan's DCs instead of the old
+    array. Confirmed no stray references to the old `pocs` field remained anywhere in the LMDC
+    context after the rewrite (SC Master's own, unrelated `pocs` field for SC/LH reviewers is
+    untouched).
+  - **Files changed**: `v3.0-rlh-design-base.jsx`, `engine.js` (Vehicle Master seed only —
+    Loading Time fallback fields).
+  - **Verification**: Babel-compiled clean after every single edit in this round, no exceptions —
+    given the volume of changes, syntax-checked far more granularly than usual rather than
+    batching multiple edits between checks.
+  - **Not yet verified live**: all of it. This was the largest single round of the whole session
+    and none of it has been exercised in a real browser — highest-value next step once deployed.

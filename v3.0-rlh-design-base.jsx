@@ -2853,103 +2853,149 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Minimum 2 needed to trigger a joint solve.</span>
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:26px 1.4fr 1fr 90px 90px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; align-items:center;`)}>
-<div /><div>SC</div><div>LOCATION</div><div style={css(`text-align:right;`)}>SORT CAP</div><div style={css(`text-align:right;`)}>VOL CAP</div>
+<div style={css(`display:grid; grid-template-columns:26px 1.3fr 1fr 80px 80px 70px 36px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; align-items:center;`)}>
+<div /><div>SC</div><div>LOCATION</div><div style={css(`text-align:right;`)}>SORT CAP</div><div style={css(`text-align:right;`)}>VOL CAP</div><div style={css(`text-align:right;`)}>DCs</div><div />
 </div>
-<div style={css(`max-height:340px; overflow-y:auto;`)}>
+<div style={css(`max-height:460px; overflow-y:auto;`)}>
 {(mapScList || []).map((s, __iMsc) => (<React.Fragment key={__iMsc}>
-<div onClick={s.onClick} style={css(`display:grid; grid-template-columns:26px 1.4fr 1fr 90px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)} onMouseEnter={(e) => hoverOn(e, `background:${s.selected ? '#EAF3EF' : '#F7F9FC'};`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:26px 1.4fr 1fr 90px 90px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center; cursor:pointer; background:${s.selected ? '#EAF3EF' : 'transparent'};`)}>
+<div style={css(`border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:flex; align-items:center; background:${s.selected ? '#EAF3EF' : '#fff'};`)}>
+<button onClick={s.onClick} style={css(`flex:1; display:grid; grid-template-columns:26px 1.3fr 1fr 80px 80px 70px; border:none; background:transparent; cursor:pointer; font-family:inherit; padding:9px 12px; text-align:left; align-items:center; min-width:0;`)}>
 <div style={css(`width:18px; height:18px; border-radius:5px; border:2px solid ${s.selected ? mapAccent : '#C3C9D4'}; background:${s.selected ? mapAccent : '#fff'}; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}>{(s.selected) ? (<><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#fff"} strokeWidth={"3"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}</div>
 <div style={css(`min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{s.code} — {s.name}</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>{s.zone}</div></div>
 <div style={css(`font-size:11.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{s.loc}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.sortCap}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.volCap}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.dcCount}</div>
+</button>
+<button onClick={s.onExpand} aria-label={s.expandAria} title={"Show DCs"} style={css(`width:36px; height:38px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `color:${mapAccent};`)} onMouseLeave={(e) => hoverOff(e, `width:36px; height:38px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`, `color:${mapAccent};`)}><svg aria-hidden={"true"} width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={s.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+{(s.expanded) ? (<>
+<div style={css(`background:#FAFBFD; border-top:1px solid #EEF1F6; padding:6px 12px 10px 40px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.5fr 0.9fr 0.9fr 0.9fr 0.9fr; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff; margin-top:6px;`)}>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>DC CODE</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>NAME</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>VOLUME</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>CAPACITY</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>VOL FLAG</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>SOURCE</div>
+{(s.lmdcRows || []).map((l, __iMl2) => (<React.Fragment key={__iMl2}>
+<div style={css(`padding:7px 11px; font-size:12px; font-weight:600; color:${mapAccent}; border-top:1px solid #F2F5FA;`)}>{l.code}</div>
+<div style={css(`padding:7px 11px; font-size:12px; color:#14171F; border-top:1px solid #F2F5FA; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{l.name}</div>
+<div style={css(`padding:7px 11px; font-size:12px; color:${l.volFg}; border-top:1px solid #F2F5FA; text-align:right; font-variant-numeric:tabular-nums; font-weight:${l.volWeight};`)}>{l.vol}</div>
+<div style={css(`padding:7px 11px; font-size:12px; color:#14171F; border-top:1px solid #F2F5FA; text-align:right; font-variant-numeric:tabular-nums;`)}>{l.cap}</div>
+<div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.volFlagBg}; color:${l.volFlagFg};`)}>{l.volFlag}</span></div>
+<div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.srcBg}; color:${l.srcFg};`)}>{l.src}</span></div>
+</React.Fragment>))}
+{((s.lmdcRows || []).length === 0) ? (<><div style={css(`grid-column:1 / -1; padding:14px; text-align:center; color:#8E96A3; font-size:11.5px;`)}>No DCs currently linked to this SC.</div></>) : null}
+</div>
+</div>
+</>) : null}
 </div>
 </React.Fragment>))}
 {((mapScList || []).length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No SCs match this search / zone.</div></>) : null}
 </div>
 </div>
-</>)}
-</>) : null}
-{/* ===== STEP 2 — DC Group ===== */}
-{(mapStep === 2) ? (<>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>DC Group</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Auto-computed from the SCs you picked — every DC with an active AutoDML link to one of them (this run's baseline mapping), plus any unmapped new additions, minus anything flagged for closure. Nothing here is manually edited; fix the source data in SC-DC Connections if something looks wrong.</div>
-<div style={css(`display:flex; gap:10px; margin-bottom:16px;`)}>
-<div style={css(`flex:1; padding:12px 14px; background:#EAF3EF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:${mapAccent};`)}>{mapDcLinkCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>active AutoDML links</div></div>
-<div style={css(`flex:1; padding:12px 14px; background:#FBF1DF; border-radius:8px;`)}><div style={css(`font-size:20px; font-weight:700; color:#C77B00;`)}>{mapDcAdditionCount}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>unmapped additions</div></div>
+{/* Unmapped DCs — dedicated list below the SC list (point 2). Not nested under any SC row,
+    since these have no current link at all. */}
+<div style={css(`margin-top:18px;`)}>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>UNMAPPED DCs — {mapUnmappedDcCount}</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.3fr 1fr 90px 100px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>DC CODE</div><div>NAME</div><div>ZONE</div><div style={css(`text-align:right;`)}>CAPACITY</div><div>VOL FLAG</div>
 </div>
-{/* Validation: every DC must have volume in the Step 1 volume plan. Blocks Trigger (Step 4), not
-    Next — same "surface early, block only at the end" convention Route Planner's own volume-gap
-    callout uses. */}
+{(mapUnmappedDcList || []).map((dc, __iMu) => (<React.Fragment key={__iMu}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.3fr 1fr 90px 100px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:${mapAccent};`)}>{dc.code}</div>
+<div style={css(`font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{dc.name}</div>
+<div style={css(`font-size:11.5px; color:#5A5E66;`)}>{dc.zone}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{dc.capacity}</div>
+<div><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${dc.volFlagBg}; color:${dc.volFlagFg};`)}>{dc.volFlag}</span></div>
+</div>
+</React.Fragment>))}
+{((mapUnmappedDcList || []).length === 0) ? (<><div style={css(`padding:16px; text-align:center; color:#8E96A3; font-size:12px;`)}>No unmapped DCs right now — nothing waiting on an initial SC assignment.</div></>) : null}
+</div>
+</div>
+{/* Validation: every DC in the run must have volume in the selected volume plan. Shown here as a
+    blocking-styled callout (matching Route Planner's own volume-gap banner) but doesn't stop the
+    wizard from moving forward on its own; it stops Trigger, on the final step. */}
 {(mapVolMissingCount > 0) ? (<>
-<div style={css(`display:flex; align-items:flex-start; gap:13px; padding:14px 16px; margin-bottom:16px; background:#FAFBFD; border:1px solid #E6EBF2; border-left:3px solid #D14B4B; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:flex-start; gap:13px; padding:14px 16px; margin-top:16px; background:#FAFBFD; border:1px solid #E6EBF2; border-left:3px solid #D14B4B; border-radius:8px;`)}>
 <svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.9"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <div style={css(`flex:1;`)}>
 <div style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>{mapVolMissingCount} DC{mapVolMissingCount === 1 ? '' : 's'} missing volume in "{mapVolFileName}"</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-top:3px; line-height:1.5;`)}>{mapVolMissingCodes.join(', ')} — update the volume plan (Step 1) or upload a corrected file from Volume Inputs. This run can't be triggered until every DC has volume.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:3px; line-height:1.5;`)}>{mapVolMissingCodes.join(', ')} — update the volume plan above or upload a corrected file from Volume Inputs. This run can't be triggered until every DC has volume.</div>
 </div>
 </div>
 </>) : null}
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>MAPPED TO SELECTED SCs — {mapDcLinkCount}</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 1fr 90px 100px 100px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
-<div>DC</div><div>LOCATION</div><div style={css(`text-align:right;`)}>CAPACITY</div><div style={css(`text-align:right;`)}>VOL. PLANNED</div><div>CURRENT SC</div>
-</div>
-{(mapLinkedDcList || []).map((dc, __iMl) => (<React.Fragment key={__iMl}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 1fr 90px 100px 100px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
-<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{dc.code}</div>
-<div style={css(`font-size:11.5px; color:#5A5E66;`)}>{dc.loc}</div>
-<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{dc.capacity}</div>
-<div style={css(`font-size:12px; text-align:right; font-weight:${dc.hasVolume ? '400' : '700'}; color:${dc.hasVolume ? '#14171F' : '#D14B4B'}; font-variant-numeric:tabular-nums;`)}>{dc.volumePlanned}</div>
-<div style={css(`font-size:11.5px; color:#5A5E66;`)}>{dc.currentSc}</div>
-</div>
-</React.Fragment>))}
-{((mapLinkedDcList || []).length === 0) ? (<><div style={css(`padding:16px; text-align:center; color:#8E96A3; font-size:12px;`)}>No existing AutoDML links for the selected SCs.</div></>) : null}
-</div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>UNMAPPED — {mapDcAdditionCount}</div>
-<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 1fr 90px 100px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
-<div>DC</div><div>LOCATION</div><div style={css(`text-align:right;`)}>CAPACITY</div><div style={css(`text-align:right;`)}>VOL. PLANNED</div>
-</div>
-{(mapUnmappedDcList || []).map((dc, __iMu) => (<React.Fragment key={__iMu}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 1fr 90px 100px; padding:9px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
-<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{dc.code}</div>
-<div style={css(`font-size:11.5px; color:#C77B00;`)}>{dc.loc}</div>
-<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{dc.capacity}</div>
-<div style={css(`font-size:12px; text-align:right; font-weight:${dc.hasVolume ? '400' : '700'}; color:${dc.hasVolume ? '#14171F' : '#D14B4B'}; font-variant-numeric:tabular-nums;`)}>{dc.volumePlanned}</div>
-</div>
-</React.Fragment>))}
-{((mapUnmappedDcList || []).length === 0) ? (<><div style={css(`padding:16px; text-align:center; color:#8E96A3; font-size:12px;`)}>No unmapped additions for the selected SCs.</div></>) : null}
-</div>
-{(mapDcCount === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px; margin-top:12px;`)}>No active links or unmapped additions found for the selected SCs.</div></>) : null}
+</>)}
 </>) : null}
-{/* ===== STEP 3 — Operating Parameters ===== */}
+{/* ===== STEP 2 — Operating Mode ===== */}
+{(mapStep === 2) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Operating Mode</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>Baseline is always the current SC-DC mapping per AutoDML — not a choice made here. Review the selected SCs, then set the solver's own parameters below.</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SELECTED SCs — {mapScCount}</div>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:22px;`)}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 1fr 80px 80px 70px; background:#F7F9FC; padding:7px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
+<div>SC</div><div>LOCATION</div><div style={css(`text-align:right;`)}>SORT CAP</div><div style={css(`text-align:right;`)}>VOL CAP</div><div style={css(`text-align:right;`)}>DCs</div>
+</div>
+{(mapSelectedScSummary || []).map((s, __iMss) => (<React.Fragment key={__iMss}>
+<div style={css(`display:grid; grid-template-columns:1.3fr 1fr 80px 80px 70px; padding:8px 12px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{s.code} — {s.name}</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{s.loc}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.sortCap}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.volCap}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.dcCount}</div>
+</div>
+</React.Fragment>))}
+</div>
+
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:10px;`)}>SOLVER PARAMETERS</div>
+<div style={css(`display:flex; flex-direction:column; gap:10px;`)}>
+
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
+<div style={css(`min-width:0;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Historical Weight (HW)</span><span style={css(`font-size:11px; color:#8E96A3; margin-left:8px;`)}>Blend in past Committed runs</span></div>
+<button onClick={onMapHwToggle} style={css(`width:34px; height:19px; border-radius:999px; border:none; background:${mapHwOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:14px; height:14px; border-radius:999px; background:#fff; position:absolute; top:2.5px; left:${mapHwOn ? '17px' : '3px'}; transition:left 120ms;`)} /></button>
+</div>
+
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
+<div style={css(`min-width:0; flex:1;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Cross-SC Migration Penalty (ρ)</span><span style={css(`font-size:11px; color:#8E96A3; margin-left:8px;`)}>Higher = fewer cross-SC moves suggested</span></div>
+<input type={"range"} min={"0"} max={"1"} step={"0.01"} value={mapRho} onInput={onMapRho} style={css(`width:120px; accent-color:${mapAccent}; flex-shrink:0;`)} />
+<span style={css(`font-size:12px; font-weight:600; color:#14171F; width:34px; text-align:right; flex-shrink:0;`)}>{mapRho.toFixed(2)}</span>
+</div>
+
+<div style={css(`padding:9px 12px; border:1px solid ${mapToleranceWarn ? '#EDD9AF' : '#E6EBF2'}; border-radius:7px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px;`)}>
+<div style={css(`min-width:0; flex:1;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Mapping Tolerance</span><span style={css(`font-size:11px; color:#8E96A3; margin-left:8px;`)}>Max delta vs. ideal SC when it's full, km</span></div>
+<input type={"number"} min={"0"} step={"5"} value={mapTolerance} onInput={onMapTolerance} style={css(`width:70px; height:28px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12.5px; box-sizing:border-box; flex-shrink:0;`)} />
+</div>
+{(mapToleranceWarn) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:6px;`)}>Above the recommended 50 km ceiling — not blocking, just flagged.</div></>) : null}
+</div>
+
+<div style={css(`padding:9px 12px; border:1px solid ${mapVolUtilOver100 ? '#EDD9AF' : '#E6EBF2'}; border-radius:7px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px;`)}>
+<div style={css(`min-width:0; flex:1;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Volume Utilisation — Min / Max %</span><span style={css(`font-size:11px; color:#8E96A3; margin-left:8px;`)}>Per SC, of Volume Capacity</span></div>
+<div style={css(`display:flex; align-items:center; gap:6px; flex-shrink:0;`)}>
+<input type={"number"} min={"0"} step={"5"} value={mapVolUtilMin} onInput={onMapVolUtilMin} style={css(`width:58px; height:28px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+<span style={css(`font-size:11px; color:#8E96A3;`)}>to</span>
+<input type={"number"} min={"0"} step={"5"} value={mapVolUtilMax} onInput={onMapVolUtilMax} style={css(`width:58px; height:28px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12.5px; box-sizing:border-box;`)} />
+</div>
+</div>
+{(mapVolUtilOver100) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:6px;`)}>Max above 100% — the model will be allowed to run this as an over-capacity simulation, not a hard constraint.</div></>) : null}
+</div>
+
+<div style={css(`padding:9px 12px; border:1px solid ${mapSortCapUtilOver100 ? '#EDD9AF' : '#E6EBF2'}; border-radius:7px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px;`)}>
+<div style={css(`min-width:0; flex:1;`)}><span style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Max Sort Capacity Utilisation %</span><span style={css(`font-size:11px; color:#8E96A3; margin-left:8px;`)}>Per SC, of Sort Capacity</span></div>
+<input type={"number"} min={"0"} step={"5"} value={mapSortCapUtilMax} onInput={onMapSortCapUtilMax} style={css(`width:58px; height:28px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:12.5px; box-sizing:border-box; flex-shrink:0;`)} />
+</div>
+{(mapSortCapUtilOver100) ? (<><div style={css(`font-size:11px; color:#C77B00; margin-top:6px;`)}>Above 100% — allowed for simulation; the solver won't treat sort capacity as a hard cap.</div></>) : null}
+</div>
+
+</div>
+</>) : null}
+{/* ===== STEP 3 — Preview & Trigger ===== */}
 {(mapStep === 3) ? (<>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Operating Parameters</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Baseline is always the current SC-DC mapping per AutoDML — already shown against each DC on Step 2, not a choice made here. Set the solver's own parameters below.</div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>CROSS-SC MIGRATION PENALTY (ρ) — {mapRho.toFixed(2)}</div>
-<input type={"range"} min={"0"} max={"1"} step={"0.01"} value={mapRho} onInput={onMapRho} style={css(`width:100%; margin-bottom:20px; accent-color:${mapAccent};`)} />
-<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px; margin-bottom:14px;`)}>
-<div><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>Historical Weight (HW)</div><div style={css(`font-size:11px; color:#8E96A3;`)}>Blend in this module's own past Committed runs, or solve fresh with no history.</div></div>
-<button onClick={onMapHwToggle} style={css(`width:42px; height:24px; border-radius:999px; border:none; background:${mapHwOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:18px; height:18px; border-radius:999px; background:#fff; position:absolute; top:3px; left:${mapHwOn ? '21px' : '3px'}; transition:left 120ms;`)} /></button>
-</div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>MAPPING TOLERANCE (KM)</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Max delta the solver will accept between a DC's ideal SC and the nearest SC actually chosen for it, when the ideal SC is full on sort or volume capacity.</div>
-<input type={"number"} min={"0"} step={"5"} value={mapTolerance} onInput={onMapTolerance} style={css(`width:140px; height:36px; border:1px solid ${mapToleranceWarn ? '#EDD9AF' : '#E6EBF2'}; border-radius:8px; padding:0 12px; font-family:inherit; font-size:13px; margin-bottom:${mapToleranceWarn ? '10px' : '20px'}; box-sizing:border-box;`)} />
-{(mapToleranceWarn) ? (<>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:20px;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:12px; color:#14171F;`)}>{mapTolerance} km is above the recommended 50 km ceiling — DCs may get reassigned a long way from their ideal SC. Not blocking, just flagged.</span>
-</div>
-</>) : null}
-<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid #E6EBF2; border-radius:8px;`)}>
-<div><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>D0 penalty / span-cost</div><div style={css(`font-size:11px; color:#8E96A3;`)}>On by default</div></div>
-<button onClick={onMapSpanCostToggle} style={css(`width:42px; height:24px; border-radius:999px; border:none; background:${mapSpanCostOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:18px; height:18px; border-radius:999px; background:#fff; position:absolute; top:3px; left:${mapSpanCostOn ? '21px' : '3px'}; transition:left 120ms;`)} /></button>
-</div>
-</>) : null}
-{/* ===== STEP 4 — Preview & Trigger ===== */}
-{(mapStep === 4) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Preview &amp; Trigger</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{mapScCount} SCs · {mapDcCount2} DCs in this run.</div>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
@@ -2977,7 +3023,8 @@ NLH cycle: {schedNlhMonthLabel}
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MIGRATION PENALTY (ρ)</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapRho.toFixed(2)}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>HISTORICAL WEIGHT</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapHwOn ? 'On' : 'Off'}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAPPING TOLERANCE</div><div style={css(`font-size:12.5px; color:${mapToleranceWarn ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapTolerance} km{mapToleranceWarn ? ' \u26a0' : ''}</div></div>
-<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>D0 PENALTY / SPAN-COST</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapSpanCostOn ? 'On' : 'Off'}</div></div>
+<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>VOLUME UTILISATION</div><div style={css(`font-size:12.5px; color:${mapVolUtilOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapVolUtilMin}{'\u2013'}{mapVolUtilMax}%{mapVolUtilOver100 ? ' \u26a0' : ''}</div></div>
+<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAX SORT CAP UTILISATION</div><div style={css(`font-size:12.5px; color:${mapSortCapUtilOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapSortCapUtilMax}%{mapSortCapUtilOver100 ? ' \u26a0' : ''}</div></div>
 </div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 <div style={css(`display:grid; grid-template-columns:1fr 100px 100px 90px; background:#F7F9FC; padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.03em;`)}>
@@ -2996,8 +3043,8 @@ NLH cycle: {schedNlhMonthLabel}
 {/* Wizard nav */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-top:28px; padding-top:20px; border-top:1px solid #E6EBF2;`)}>
 <button onClick={onMapBack} style={css(`height:38px; padding:0 18px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapStep > 1 ? 'pointer' : 'default'}; opacity:${mapStep > 1 ? '1' : '0.4'};`)} disabled={mapStep === 1}>Back</button>
-{(mapStep < 4) ? (<>
-<button onClick={onMapNext} disabled={(mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)} style={css(`height:38px; padding:0 22px; border:none; background:${((mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)) ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${((mapStep === 1 && !mapCanNext1) || (mapStep === 2 && !mapCanNext2)) ? 'not-allowed' : 'pointer'};`)}>Next</button>
+{(mapStep < 3) ? (<>
+<button onClick={onMapNext} disabled={mapStep === 1 && !mapCanNext1} style={css(`height:38px; padding:0 22px; border:none; background:${(mapStep === 1 && !mapCanNext1) ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${(mapStep === 1 && !mapCanNext1) ? 'not-allowed' : 'pointer'};`)}>Next</button>
 </>) : (<>
 <button onClick={onMapTrigger} disabled={mapTriggerBlocked} style={css(`height:38px; padding:0 22px; border:none; background:${mapTriggerBlocked ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapTriggerBlocked ? 'not-allowed' : 'pointer'};`)}>Trigger run</button>
 </>)}
@@ -6824,6 +6871,120 @@ function NDC_haversineKm(lat1, lng1, lat2, lng2) {
   // without needing a real road-network router. Replace this with a real distance service call
   // when one exists -- this is a stand-in, not a claim about real-world road distance.
 }
+
+// mapVolumeInfoForDcPure(dcCode, fileName, capacity) — 2026-09-16, extracted from the
+// NDCApp.prototype.mapVolumeInfoForDc method (which is now a thin wrapper around this) so seed
+// data can call it directly, before any component instance exists. Body/behavior unchanged.
+function mapVolumeInfoForDcPure(dcCode, fileName, capacity) {
+  const key = (dcCode || '') + '::' + (fileName || '');
+  let h = 0; for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0x7fffffff;
+  const hasVolume = (h % 7) !== 0;
+  const volumePlanned = hasVolume ? Math.round((capacity || 1000) * (0.55 + (h % 40) / 100)) : 0;
+  return { hasVolume, volumePlanned };
+}
+
+// computeMappingResultPure(data, run) — 2026-09-16, extracted from
+// NDCApp.prototype.computeMappingResult (now a thin wrapper: `computeMappingResult(run) { return
+// computeMappingResultPure(this.state.data, run); }`) so seed data can generate real, consistent
+// run results — same function, same output shape — before any component instance exists, instead
+// of hand-authoring fake result objects that could quietly drift from what a live-triggered run
+// actually produces. Body otherwise unchanged: still the deterministic hash/haversine simulated
+// solve, still enforces DCs sharing a pincode landing on the same suggested SC.
+function computeMappingResultPure(data, run) {
+  const scs = (data.scs || []).filter(s => run.scCodes.indexOf(s.code) >= 0);
+  const dcs = (data.lmdcs || []).filter(l => run.dcCodes.indexOf(l.code) >= 0);
+  const RATE = NDC_costPerKmFor('TATA 407 / 10ft');
+  const groups = groupDcsBySharedPincode(dcs.map(dc => ({ code: dc.code, pincodes: dc.pincodes || [] })));
+
+  const byGroup = {};
+  dcs.forEach(dc => { const g = groups.get(dc.code); byGroup[g] = byGroup[g] || []; byGroup[g].push(dc); });
+  const groupSuggestedSc = {};
+  Object.keys(byGroup).forEach(g => {
+    let best = null, bestSum = Infinity;
+    scs.forEach(sc => {
+      const sum = byGroup[g].reduce((a, dc) => a + NDC_haversineKm(dc.lat, dc.lng, sc.lat, sc.lng), 0);
+      if (sum < bestSum) { bestSum = sum; best = sc.code; }
+    });
+    groupSuggestedSc[g] = best || scs[0].code;
+  });
+
+  const dcRows = dcs.map(dc => {
+    const oldSc = dc.lmscCode && dc.lmscCode !== 'Pending' ? dc.lmscCode : null;
+    const isUnserved = dc.capacity === 0;
+    const newSc = isUnserved ? null : groupSuggestedSc[groups.get(dc.code)];
+    const isUnchanged = !isUnserved && oldSc === newSc;
+    const needsDecision = !isUnchanged && !(isUnserved && oldSc === null);
+    const volPlanned = run.volFileName ? mapVolumeInfoForDcPure(dc.code, run.volFileName, dc.capacity).volumePlanned : dc.capacity;
+    return { code: dc.code, oldSc, newSc, volume: dc.capacity > 0 ? (volPlanned || dc.capacity) : 0, isUnserved, isUnchanged, needsDecision };
+  });
+
+  const lanesMap = {};
+  let totalCost = 0, totalVolume = 0;
+  const perScAgg = {}; scs.forEach(sc => { perScAgg[sc.code] = { code: sc.code, dcsServed: 0, cost: 0, volume: 0 }; });
+
+  dcRows.filter(r => !r.isUnserved).forEach(r => {
+    const dc = dcs.find(x => x.code === r.code);
+    const targetScObj = scs.find(s => s.code === r.newSc);
+    const dist = targetScObj ? NDC_haversineKm(dc.lat, dc.lng, targetScObj.lat, targetScObj.lng) : 0;
+    const cost = +(dist * RATE).toFixed(2);
+    totalCost += cost; totalVolume += r.volume;
+    if (perScAgg[r.newSc]) { perScAgg[r.newSc].dcsServed++; perScAgg[r.newSc].cost += cost; perScAgg[r.newSc].volume += r.volume; }
+    if (r.isUnchanged) return;
+    const laneKey = (r.oldSc || '\u2014') + '\u2192' + r.newSc;
+    lanesMap[laneKey] = lanesMap[laneKey] || { laneKey, fromSc: r.oldSc || '\u2014', toSc: r.newSc, dcCodes: [], dcCount: 0, volume: 0, cost: 0, groupId: groups.get(r.code) };
+    lanesMap[laneKey].dcCodes.push(r.code); lanesMap[laneKey].dcCount++; lanesMap[laneKey].volume += r.volume; lanesMap[laneKey].cost += cost;
+  });
+
+  const unservedDcs = dcRows.filter(r => r.isUnserved).map(r => ({
+    code: r.code, priorSc: r.oldSc,
+    reason: r.oldSc ? 'Zero capacity \u2014 solver could not re-place this DC' : 'Zero capacity \u2014 solver could not place this new DC',
+  }));
+
+  let baselineCost = 0, baselineVolume = 0;
+  dcRows.filter(r => !r.isUnserved && r.oldSc).forEach(r => {
+    const dc = dcs.find(x => x.code === r.code);
+    const curScObj = (data.scs || []).find(s => s.code === r.oldSc);
+    if (!curScObj) return;
+    baselineCost += NDC_haversineKm(dc.lat, dc.lng, curScObj.lat, curScObj.lng) * RATE;
+    baselineVolume += r.volume;
+  });
+
+  const h = run.id.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
+  const lanes = Object.values(lanesMap).sort((a, b) => b.dcCount - a.dcCount);
+  const cps = totalVolume > 0 ? +(totalCost / totalVolume).toFixed(3) : 0;
+  const baselineCps = baselineVolume > 0 ? +(baselineCost / baselineVolume).toFixed(3) : 0;
+
+  return {
+    solveTimeSeconds: 4 + (h % 40),
+    totalCost: +totalCost.toFixed(2), totalVolume, cps, baselineCps,
+    cpsDeltaPct: baselineCps > 0 ? +(((cps - baselineCps) / baselineCps) * 100).toFixed(1) : 0,
+    perSc: Object.values(perScAgg).map(p => Object.assign({}, p, {
+      cost: +p.cost.toFixed(2), utilisationPct: Math.min(100, Math.round((p.volume / Math.max(1, ((data.scs || []).find(s => s.code === p.code) || {}).volCap || 1)) * 100)),
+      vehiclesUsed: Math.max(1, Math.ceil(p.volume / 2000)),
+    })),
+    lanes, unservedDcs, dcRows,
+  };
+}
+
+// deriveMigrationPipelineEntries(dcRows, decisions, runId, lmdcs) — 2026-09-16, extracted from
+// mapCommitRun's own forEach so seed data builds pipeline entries the exact same way a real
+// commit does (same status rules, same exclusion of at-risk-unserved KeepOldSc rows) — one place
+// that can't drift from the other.
+function deriveMigrationPipelineEntries(dcRows, decisions, runId, lmdcs) {
+  const out = [];
+  dcRows.filter(r => r.needsDecision && !r.isUnserved && r.newSc).forEach(r => {
+    const d0 = decisions[r.code];
+    if (!d0 || !d0.decision) return;
+    const dc = (lmdcs || []).find(l => l.code === r.code);
+    const isAccept = d0.decision === 'Accept';
+    out.push({
+      dc: r.code, name: dc ? dc.code : r.code, from: r.oldSc || null, to: r.newSc, zone: dc ? (dc.zone || '') : '',
+      status: isAccept ? 'PendingAlignment' : 'RejectedByPlanner',
+      runId, remark: d0.remark || '', decidedAt: new Date().toLocaleString(),
+    });
+  });
+  return out;
+}
 // =========================================================================
 // NDC MULTI-LEG DATA LAYER (Part 1 of the FM/NLH/RLH cycle+master rebuild)
 // -------------------------------------------------------------------------
@@ -6897,6 +7058,11 @@ class NDCApp extends React.Component {
     this.engineStore = makeEmptyStore();
     this.activeCycleMonth = { rlh: currentMonthKey(), nlh: currentMonthKey(), fm: currentMonthKey() };
     const _seedForNlh = this.buildSeed();
+    // seedMapDecisionsAll (2026-09-16) — mapDcDecisions is flat, top-level React state (not part
+    // of the per-cycle `data` bucket), so it can't be fixed up inside suffixRlhIdsForMonth the way
+    // mappingRuns/migrationPipeline are. Rebuilt here instead, across all 5 seeded months, keyed
+    // by each month's own newly-suffixed run ids (via the mappingRunIdMap each call returns).
+    const seedMapDecisionsAll = {};
     // 2026-08-26 fix — RLH's plans/runs/schedulerPlans/etc. are now genuinely per-cycle, not a
     // single flat array shared by every month. buildSeed() still runs ONCE (SC Master generation
     // there is genesis-seeded, not month-dependent) producing one full transactional dataset
@@ -6912,7 +7078,13 @@ class NDCApp extends React.Component {
     [['2026-05', 'May'], ['2026-06', 'Jun'], ['2026-07', 'Jul'], ['2026-08', 'Aug'], ['2026-09', 'Sep']].forEach(([month, abbr]) => {
       this.engineStore.rlhCycleData = this.engineStore.rlhCycleData || {};
       const retargeted = abbr === 'Jul' ? julTransactional : retargetMonthStrings(julTransactional, 'Jul', abbr, 'July', MONTH_ABBR_FULL[abbr]);
-      this.engineStore.rlhCycleData[month] = suffixRlhIdsForMonth(retargeted, month);
+      const suffixed = suffixRlhIdsForMonth(retargeted, month);
+      this.engineStore.rlhCycleData[month] = suffixed;
+      // Rebuild mapDcDecisions under this month's newly-suffixed run ids (see comment above).
+      Object.keys(suffixed._mappingRunIdMap || {}).forEach(oldId => {
+        const decisionsForRun = (_seedForNlh.seedMapDecisions || {})[oldId];
+        if (decisionsForRun) seedMapDecisionsAll[suffixed._mappingRunIdMap[oldId]] = decisionsForRun;
+      });
       createCycle(this.engineStore, 'rlh', month, { tables: [{ table: 'scMaster', defaults: {} }] });
     });
     // Seed two real NLH scenarios per month (later session — supersedes the earlier one-record-
@@ -6986,8 +7158,8 @@ class NDCApp extends React.Component {
       // tolerance (Step 3's Mapping Tolerance, km) are new. hw is now boolean (On/Off toggle,
       // was a 0/0.5/1 chooser). baselineSource/baselinePlanId are gone — baseline is now always
       // "current SC-DC mapping per AutoDML", shown read-only on Step 2, not a choosable source.
-      mapDraft: { name: '', volFileName: null, scCodes: [], dcCodes: [], params: { rho: 0.2, hw: false, refRunId: null, spanCostOn: true, tolerance: 50 } },
-      mapDcDecisions: {}, // { [runId]: { [dcCode]: { decision: 'Accept'|'Reject'|'KeepOldSc', remark } } } — per-DC, later session
+      mapDraft: { name: '', volFileName: null, scCodes: [], dcCodes: [], params: { rho: 0.2, hw: false, refRunId: null, tolerance: 50, volUtilMin: 0, volUtilMax: 100, sortCapUtilMax: 100 } },
+      mapDcDecisions: seedMapDecisionsAll, // { [runId]: { [dcCode]: { decision: 'Accept'|'Reject'|'KeepOldSc', remark } } } — per-DC; seeded runs pre-populate this too, see buildSeed() + the per-month loop above
       mapQueue: [],
       reviewMapRunId: null,
       // 2026-09-16 — generic expand/collapse bag for the SC-grouped Design Review views (keyed by
@@ -7791,7 +7963,57 @@ class NDCApp extends React.Component {
     // after every mutation above has settled, so the frozen copy matches what's returned below.
     seedLmdcEntities(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
 
-    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, mappingRuns: [],
+    // ===== Seed a couple of SC-DC Mapping runs (2026-09-16) — so Design Review has something
+    // real to look at without needing to trigger one by hand first. Built with the SAME
+    // computeMappingResultPure/deriveMigrationPipelineEntries the live app uses, not hand-authored
+    // fake data, so these behave identically to a real triggered-and-decided run. This produces
+    // ONE base set (like every other RLH transactional field here) that the per-month
+    // retarget/suffix loop below then replicates, with unique ids and the correct cycleMonth, into
+    // every seeded month (May through Sep) — so "past cycles" and the current one both end up with
+    // real runs without needing month-specific logic here. Two runs, two different lifecycle
+    // stages: one still fully undecided (fresh off the solver), one already decided and
+    // Committed with one SC already pushed to Alignment.
+    const seedMapDecisions = {};
+    let mappingRuns = [];
+    let migrationPipeline = [];
+    const seedEligibleScs = scs.filter(s => s.dispatchesRLH !== false && s.isActive !== false && s.sortCap && s.volCap && s.nodeKind !== 'MDC');
+    const seedVolFile = (volumeFiles.find(f => f.type === 'LMDC Landing' && f.validated) || volumeFiles[0] || {}).name || null;
+    const seedDecideAll = (run, acceptRatio) => {
+      const dec = {};
+      run.results.dcRows.filter(r => r.needsDecision).forEach(r => {
+        if (r.isUnserved) { dec[r.code] = { decision: 'KeepOldSc', remark: '' }; return; }
+        let h = 0; const key = r.code + run.id; for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0x7fffffff;
+        dec[r.code] = { decision: (h % 100) < acceptRatio * 100 ? 'Accept' : 'Reject', remark: '' };
+      });
+      return dec;
+    };
+    const seedRun = (idOffset, scCount, scOffset, status, acceptRatio, pushFirstSc) => {
+      const chosen = seedEligibleScs.slice(scOffset, scOffset + scCount);
+      if (chosen.length < 2) return; // not enough real SCs in this seed to build a meaningful run — skip rather than fake it
+      const scCodes = chosen.map(s => s.code);
+      const dcCodes = lmdcs.filter(l => scCodes.indexOf(l.lmscCode) >= 0).map(l => l.code);
+      if (dcCodes.length < 1) return;
+      const id = 'MAP-SEED-' + idOffset;
+      const run = {
+        id, name: 'Cluster: ' + scCodes.join(' + '), status: 'Running', scCodes, dcCodes, volFileName: seedVolFile,
+        params: { rho: 0.2, hw: false, refRunId: null, spanCostOn: true, tolerance: 50 },
+        createdAt: 'Seed', committedAt: null, results: null, pushedScs: {}, cycleMonth: this.activeCycleMonth.rlh, // cycleMonth is overwritten per-month by suffixRlhIdsForMonth below — this value is never actually read
+      };
+      run.results = computeMappingResultPure({ scs, lmdcs }, run);
+      run.status = status === 'Undecided' ? 'Completed' : 'Committed';
+      mappingRuns.push(run);
+      if (status === 'Undecided') return; // leave mapDcDecisions empty for this one — genuinely undecided
+      const dec = seedDecideAll(run, acceptRatio);
+      seedMapDecisions[id] = dec;
+      run.committedAt = 'Seed';
+      const entries = deriveMigrationPipelineEntries(run.results.dcRows, dec, id, lmdcs);
+      migrationPipeline = migrationPipeline.concat(entries);
+      if (pushFirstSc && scCodes[0]) run.pushedScs = { [scCodes[0]]: { pushedAt: 'Seed' } };
+    };
+    seedRun(1, 3, 0, 'Undecided', 0, false);
+    seedRun(2, 3, 3, 'Committed', 0.8, true);
+
+    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, mappingRuns, seedMapDecisions,
       // migrationPipeline (2026-09-16) — every Design-Review decision on a real proposed SC move
       // (existing DC reassignment OR a brand-new DC's first placement) lands here, keyed uniquely
       // by dc. status: 'PendingAlignment' (planner-accepted, awaiting Ops Alignment — not built
@@ -7800,7 +8022,7 @@ class NDCApp extends React.Component {
       // it never writes into LMDC master/AutoDML, which stay source of truth regardless of status
       // (see effectiveLmscFor()). At-risk-unserved "Keep on Old SC" decisions never appear here —
       // there's no suggested SC to record, so they're not a migration in this sense.
-      migrationPipeline: [],
+      migrationPipeline,
       totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
@@ -9868,7 +10090,7 @@ class NDCApp extends React.Component {
   goMapping() {
     this.setState({
       mapSection: 'wizard', mapStep: 1,
-      mapDraft: { name: '', volFileName: null, scCodes: [], params: { rho: 0.2, hw: false, refRunId: null, spanCostOn: true, tolerance: 50 } },
+      mapDraft: { name: '', volFileName: null, scCodes: [], params: { rho: 0.2, hw: false, refRunId: null, tolerance: 50, volUtilMin: 0, volUtilMax: 100, sortCapUtilMax: 100 } },
     });
   }
 
@@ -9953,12 +10175,9 @@ class NDCApp extends React.Component {
   // 1 models (missing-from-file vs. zero-volume). Shared by Step 2's preview and mapTriggerRun's
   // real blocking check, and by computeMappingResult so the solve uses the same volume the
   // planner actually reviewed — the two can't drift apart on "what volume did this DC have."
+  // mapVolumeInfoForDc — thin wrapper; see mapVolumeInfoForDcPure (top-level, seed data calls it directly).
   mapVolumeInfoForDc(dcCode, fileName, capacity) {
-    const key = (dcCode || '') + '::' + (fileName || '');
-    let h = 0; for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0x7fffffff;
-    const hasVolume = (h % 7) !== 0;
-    const volumePlanned = hasVolume ? Math.round((capacity || 1000) * (0.55 + (h % 40) / 100)) : 0;
-    return { hasVolume, volumePlanned };
+    return mapVolumeInfoForDcPure(dcCode, fileName, capacity);
   }
 
   mapToggleSc(code) {
@@ -9978,14 +10197,14 @@ class NDCApp extends React.Component {
 
   mapNext() {
     const step = this.state.mapStep;
-    if (step === 1 && !this.state.mapDraft.volFileName) { this.showToast('Pick a volume plan first \u2014 it\u2019s what Step 2 checks DC coverage against.', '#C77B00'); return; }
+    if (step === 1 && !this.state.mapDraft.volFileName) { this.showToast('Pick a volume plan first \u2014 it\u2019s what DC coverage gets checked against.', '#C77B00'); return; }
     if (step === 1 && (this.state.mapDraft.scCodes || []).length < 2) { this.showToast('Pick at least 2 SCs — a single-SC "cluster" isn\u2019t supported here, use RLH Route Planner instead.', '#C77B00'); return; }
-    if (step === 2 && this.mapComputeEligibleDcs(this.state.mapDraft.scCodes || []).length < 1) { this.showToast('No DCs are linked to the selected SC(s) yet — check SC-DC Connections.', '#C77B00'); return; }
-    this.setState({ mapStep: Math.min(4, step + 1) });
+    if (step === 1 && this.mapComputeEligibleDcs(this.state.mapDraft.scCodes || []).length < 1) { this.showToast('No DCs are linked to the selected SC(s) yet — check SC-DC Connections.', '#C77B00'); return; }
+    this.setState({ mapStep: Math.min(3, step + 1) });
   }
   mapBack() { this.setState({ mapStep: Math.max(1, this.state.mapStep - 1) }); }
 
-  // mapTriggerRun() — Step 4's real trigger. Blocking validation (not warning) on missing
+  // mapTriggerRun() — Step 3's real trigger. Blocking validation (not warning) on missing
   // Sort/Volume Capacity or HTP for any selected SC, per the build-spec's explicit call-out that
   // an unconstrained capacity would silently produce a wrong-but-plausible result — a deliberate
   // exception to this app's usual warn-don't-block convention.
@@ -10009,6 +10228,10 @@ class NDCApp extends React.Component {
       id, name: draft.name || ('Cluster: ' + draft.scCodes.join(' + ')), status: 'Running',
       scCodes: draft.scCodes.slice(), dcCodes: eligibleDcs.map(dc => dc.code), volFileName: draft.volFileName, params: Object.assign({}, draft.params),
       createdAt: new Date().toLocaleString(), committedAt: null, results: null, pushedScs: {},
+      // cycleMonth (2026-09-16) — which design cycle this run belongs to, same convention RLH's
+      // own plans use. Design Review's run list filters on this so switching cycles shows the
+      // right runs, same as everywhere else in the app.
+      cycleMonth: this.state.activeCycleMonth.rlh,
     };
     const mappingRuns = (this.state.data.mappingRuns || []).concat([run]);
     this.setState({
@@ -10036,100 +10259,10 @@ class NDCApp extends React.Component {
     }, 520);
   }
 
-  // computeMappingResult(run) — the simulated solve. Deterministic (hash/haversine-based, same
-  // family of technique as every other simulated computation in this app), not a real MILP.
-  // Enforces the one real structural constraint decided on: DCs sharing a pincode (via
-  // groupDcsBySharedPincode's Union-Find, transitively) always land on the SAME suggested SC.
+  // computeMappingResult(run) — thin wrapper; see computeMappingResultPure (top-level, seed data
+  // calls it directly to generate real, consistent seeded runs before any instance exists).
   computeMappingResult(run) {
-    const scs = (this.state.data.scs || []).filter(s => run.scCodes.indexOf(s.code) >= 0);
-    const dcs = (this.state.data.lmdcs || []).filter(l => run.dcCodes.indexOf(l.code) >= 0);
-    const RATE = NDC_costPerKmFor('TATA 407 / 10ft'); // flat representative rate — see method comment; refine per-vehicle later if needed
-    const groups = groupDcsBySharedPincode(dcs.map(dc => ({ code: dc.code, pincodes: dc.pincodes || [] })));
-
-    // Per-group nearest-SC choice: minimizes the SUM of distances across every DC in the group,
-    // so a pincode-chained group of DCs gets one consistent, sensible SC rather than an arbitrary
-    // member's own nearest pick winning for everyone.
-    const byGroup = {};
-    dcs.forEach(dc => { const g = groups.get(dc.code); byGroup[g] = byGroup[g] || []; byGroup[g].push(dc); });
-    const groupSuggestedSc = {};
-    Object.keys(byGroup).forEach(g => {
-      let best = null, bestSum = Infinity;
-      scs.forEach(sc => {
-        const sum = byGroup[g].reduce((a, dc) => a + NDC_haversineKm(dc.lat, dc.lng, sc.lat, sc.lng), 0);
-        if (sum < bestSum) { bestSum = sum; best = sc.code; }
-      });
-      groupSuggestedSc[g] = best || scs[0].code;
-    });
-
-    // dcRows — one row per DC, the real foundation for Design Review's DC-Level Changes and SC
-    // Pivot Summary views (later session — supersedes the earlier lane-first design). oldSc is
-    // null for a brand-new addition that never had a link; isUnserved uses the same zero-capacity
-    // heuristic the earlier build used (this is still a simulated solve, not a real one).
-    const dcRows = dcs.map(dc => {
-      const oldSc = dc.lmscCode && dc.lmscCode !== 'Pending' ? dc.lmscCode : null;
-      const isUnserved = dc.capacity === 0;
-      const newSc = isUnserved ? null : groupSuggestedSc[groups.get(dc.code)];
-      const isUnchanged = !isUnserved && oldSc === newSc;
-      // needsDecision: a real proposed move always needs one; an unserved DC needs one ONLY if it
-      // had a prior SC to fall back to ("Keep on Old SC") — a genuinely new unserved DC has
-      // nothing to decide, it's just flagged.
-      const needsDecision = !isUnchanged && !(isUnserved && oldSc === null);
-      // 2026-09-15 — volume now comes from the run's own volume plan (mapVolumeInfoForDc), not
-      // raw LMDC capacity. mapTriggerRun() already blocks any run whose DCs are missing volume
-      // in that file, so by the time a run reaches here every DC is guaranteed to have real
-      // volume; the `|| dc.capacity` fallback only protects older runs triggered before this
-      // field existed (no volFileName stored on them at all).
-      const volPlanned = run.volFileName ? this.mapVolumeInfoForDc(dc.code, run.volFileName, dc.capacity).volumePlanned : dc.capacity;
-      return { code: dc.code, oldSc, newSc, volume: dc.capacity > 0 ? (volPlanned || dc.capacity) : 0, isUnserved, isUnchanged, needsDecision };
-    });
-
-    const lanesMap = {};
-    let totalCost = 0, totalVolume = 0;
-    const perScAgg = {}; scs.forEach(sc => { perScAgg[sc.code] = { code: sc.code, dcsServed: 0, cost: 0, volume: 0 }; });
-
-    dcRows.filter(r => !r.isUnserved).forEach(r => {
-      const dc = dcs.find(x => x.code === r.code);
-      const targetScObj = scs.find(s => s.code === r.newSc);
-      const dist = targetScObj ? NDC_haversineKm(dc.lat, dc.lng, targetScObj.lat, targetScObj.lng) : 0;
-      const cost = +(dist * RATE).toFixed(2);
-      totalCost += cost; totalVolume += r.volume;
-      if (perScAgg[r.newSc]) { perScAgg[r.newSc].dcsServed++; perScAgg[r.newSc].cost += cost; perScAgg[r.newSc].volume += r.volume; }
-      if (r.isUnchanged) return; // unchanged DCs don't form a lane — nothing is actually moving
-      const laneKey = (r.oldSc || '\u2014') + '\u2192' + r.newSc;
-      lanesMap[laneKey] = lanesMap[laneKey] || { laneKey, fromSc: r.oldSc || '\u2014', toSc: r.newSc, dcCodes: [], dcCount: 0, volume: 0, cost: 0, groupId: groups.get(r.code) };
-      lanesMap[laneKey].dcCodes.push(r.code); lanesMap[laneKey].dcCount++; lanesMap[laneKey].volume += r.volume; lanesMap[laneKey].cost += cost;
-    });
-
-    const unservedDcs = dcRows.filter(r => r.isUnserved).map(r => ({
-      code: r.code, priorSc: r.oldSc,
-      reason: r.oldSc ? 'Zero capacity \u2014 solver could not re-place this DC' : 'Zero capacity \u2014 solver could not place this new DC',
-    }));
-
-    // Baseline (current, pre-run) cost — same DCs, their EXISTING owning SC, for the CPS delta.
-    let baselineCost = 0, baselineVolume = 0;
-    dcRows.filter(r => !r.isUnserved && r.oldSc).forEach(r => {
-      const dc = dcs.find(x => x.code === r.code);
-      const curScObj = (this.state.data.scs || []).find(s => s.code === r.oldSc);
-      if (!curScObj) return;
-      baselineCost += NDC_haversineKm(dc.lat, dc.lng, curScObj.lat, curScObj.lng) * RATE;
-      baselineVolume += r.volume;
-    });
-
-    const h = run.id.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
-    const lanes = Object.values(lanesMap).sort((a, b) => b.dcCount - a.dcCount);
-    const cps = totalVolume > 0 ? +(totalCost / totalVolume).toFixed(3) : 0;
-    const baselineCps = baselineVolume > 0 ? +(baselineCost / baselineVolume).toFixed(3) : 0;
-
-    return {
-      solveTimeSeconds: 4 + (h % 40),
-      totalCost: +totalCost.toFixed(2), totalVolume, cps, baselineCps,
-      cpsDeltaPct: baselineCps > 0 ? +(((cps - baselineCps) / baselineCps) * 100).toFixed(1) : 0,
-      perSc: Object.values(perScAgg).map(p => Object.assign({}, p, {
-        cost: +p.cost.toFixed(2), utilisationPct: Math.min(100, Math.round((p.volume / Math.max(1, ((this.state.data.scs || []).find(s => s.code === p.code) || {}).volCap || 1)) * 100)),
-        vehiclesUsed: Math.max(1, Math.ceil(p.volume / 2000)), // representative vehicle capacity, same simplification as RATE above
-      })),
-      lanes, unservedDcs, dcRows,
-    };
+    return computeMappingResultPure(this.state.data, run);
   }
 
   mapDecideDc(runId, dcCode, decision, remark) {
@@ -10177,22 +10310,11 @@ class NDCApp extends React.Component {
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 cannot commit a mapping run.', '#C77B00'); return; }
     const d = this.state.data;
     const dec = this.state.mapDcDecisions[run.id] || {};
-    let migrationPipeline = (d.migrationPipeline || []).slice();
-    let acceptedCount = 0, rejectedCount = 0;
-
-    run.results.dcRows.filter(r => r.needsDecision && !r.isUnserved && r.newSc).forEach(r => {
-      const d0 = dec[r.code];
-      if (!d0 || !d0.decision) return;
-      const dc = (d.lmdcs || []).find(l => l.code === r.code);
-      const isAccept = d0.decision === 'Accept';
-      const entry = {
-        dc: r.code, name: dc ? dc.code : r.code, from: r.oldSc || null, to: r.newSc, zone: dc ? (dc.zone || '') : '',
-        status: isAccept ? 'PendingAlignment' : 'RejectedByPlanner',
-        runId: run.id, remark: d0.remark || '', decidedAt: new Date().toLocaleString(),
-      };
-      migrationPipeline = migrationPipeline.filter(m => m.dc !== r.code).concat([entry]);
-      if (isAccept) acceptedCount++; else rejectedCount++;
-    });
+    const newEntries = deriveMigrationPipelineEntries(run.results.dcRows, dec, run.id, d.lmdcs);
+    const touchedCodes = {}; newEntries.forEach(e => { touchedCodes[e.dc] = true; });
+    const migrationPipeline = (d.migrationPipeline || []).filter(m => !touchedCodes[m.dc]).concat(newEntries);
+    const acceptedCount = newEntries.filter(e => e.status === 'PendingAlignment').length;
+    const rejectedCount = newEntries.filter(e => e.status === 'RejectedByPlanner').length;
 
     const mappingRuns = (d.mappingRuns || []).map(m => m.id === run.id ? Object.assign({}, m, { status: 'Committed', committedAt: new Date().toLocaleString() }) : m);
     this.setState({ data: Object.assign({}, this.state.data, { migrationPipeline, mappingRuns }), mapReviewStage: 'cards' });
@@ -16114,11 +16236,12 @@ class NDCApp extends React.Component {
     const draft = st.mapDraft || { scCodes: [], dcCodes: [], params: {} };
     const fmtInt = (n) => (n || 0).toLocaleString('en-IN');
 
-    // 2026-09-15 — stepper rebuilt to match Route Planner/Route Scheduler's own wizard stepper
-    // exactly (see creationVals' STEPS / stepper): circular numbered buttons with a shadow ring
-    // on the active step, an svg checkmark (not a text glyph) once done, and an uppercase
-    // sub-label under the step name — not this module's own earlier, simpler version.
-    const MAP_STEPS = [[1, 'Volume & SC Selection'], [2, 'DC Group'], [3, 'Operating Parameters'], [4, 'Preview & Trigger']];
+    // 2026-09-16 — merged into a 3-step wizard: what were Steps 1+2 (Volume & SC Selection, DC
+    // Group) are now one "Input Selection" step — matches RLH Route Planner's own step naming and
+    // structure exactly (pick a volume plan, then an expandable SC list with real per-SC DC
+    // detail, no separate DC-review step). What was Step 3 (Operating Parameters) is now Step 2
+    // ("Operating Mode"). Preview & Trigger is now Step 3.
+    const MAP_STEPS = [[1, 'Input Selection'], [2, 'Operating Mode'], [3, 'Preview & Trigger']];
     const mapStepper = MAP_STEPS.map((s, idx) => ({
       n: s[0], label: s[1], active: s[0] === step, isDone: s[0] < step, notDone: !(s[0] < step),
       numBg: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#D0D5DD'),
@@ -16129,11 +16252,14 @@ class NDCApp extends React.Component {
       onClick: () => { if (s[0] <= step) this.setState({ mapStep: s[0] }); },
     }));
 
-    // ===== Step 1 — Volume & SC Selection. Mirrors Route Planner's own Step 1 exactly: pick a
-    // volume plan first (progressive disclosure — SC list appears once one's chosen), then pick
-    // SCs from a searchable, zone-chip-filterable list. Each SC row now surfaces location/sort
-    // capacity/volume capacity straight from SC Master, same fields Route Planner's own SC rows
-    // show, instead of just a bare code+name+zone row.
+    // ===== Step 1 — Input Selection. Volume plan picker (unchanged), then an expandable SC list
+    // mirroring RLH Route Planner's own Step 1 exactly: each row shows DC count + volume, and
+    // expanding it reveals the real per-DC table (DC CODE / NAME / VOLUME / CAPACITY / VOL FLAG /
+    // SOURCE) — same columns, same volume-flag treatment (red "0 volume" vs. green "OK") as RLH's
+    // own screen, using this run's own volume plan via mapVolumeInfoForDc rather than RLH's
+    // synthetic per-DC generator, since Node Mapping's DC list is already real. Unmapped additions
+    // get their own dedicated section below the SC list (point 2) — they don't belong to any one
+    // SC, so nesting them under a row would misrepresent them.
     const mapVolSearchQ = (st.mapVolSearch || '').toLowerCase();
     const mapVolOptionsAll = (d.volumeFiles || []).filter(f => f.type === 'LMDC Landing').slice(-4);
     const mapVolOptions = mapVolOptionsAll.filter(f => !mapVolSearchQ || f.name.toLowerCase().indexOf(mapVolSearchQ) >= 0).map(f => {
@@ -16155,54 +16281,84 @@ class NDCApp extends React.Component {
       bd: mapScZone === z ? ACCENT : '#E6EBF2', bg: mapScZone === z ? '#EAF3EF' : '#fff', fg: mapScZone === z ? ACCENT : '#5A5E66',
       onClick: () => this.setState({ mapScZone: z }),
     }));
+    const mapExpandedSC = st.mapExpandedSC || null;
+    const mapClosedCodes = {}; (d.nodeClosures || []).forEach(c => { mapClosedCodes[c.dc] = true; });
+    const mapAdditionByCode = {}; (d.nodeAdditions || []).forEach(a => { mapAdditionByCode[a.dc] = a; });
     const mapScList = (d.scs || []).filter(s => s.isActive !== false)
       .filter(s => mapScZone === 'All' || s.zone === mapScZone)
       .filter(s => !mapScSearchQ || s.code.toLowerCase().indexOf(mapScSearchQ) >= 0 || s.name.toLowerCase().indexOf(mapScSearchQ) >= 0)
-      .map(s => ({
-        code: s.code, name: s.name, zone: s.zone,
-        loc: (s.lat != null && s.lng != null) ? (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2)) : '\u2014',
-        sortCap: s.sortCap ? fmtInt(s.sortCap) : '\u2014', volCap: s.volCap ? fmtInt(s.volCap) : '\u2014',
-        selected: (draft.scCodes || []).indexOf(s.code) >= 0,
-        onClick: () => this.mapToggleSc(s.code),
-      }));
+      .map(s => {
+        const scDcs = (d.lmdcs || []).filter(l => l.lmscCode === s.code && !mapClosedCodes[l.code]);
+        const expanded = mapExpandedSC === s.code;
+        const lmdcRows = expanded ? scDcs.map(l => {
+          const vi = this.mapVolumeInfoForDc(l.code, draft.volFileName, l.capacity);
+          const addition = mapAdditionByCode[l.code];
+          return {
+            code: l.code, name: addition ? addition.name : l.code,
+            vol: vi.hasVolume ? fmtInt(vi.volumePlanned) : '0', volFg: vi.hasVolume ? '#14171F' : '#D14B4B', volWeight: vi.hasVolume ? '400' : '700',
+            cap: fmtInt(l.capacity),
+            volFlag: vi.hasVolume ? 'OK' : '0 volume', volFlagBg: vi.hasVolume ? '#E7F4EC' : '#FBEAEA', volFlagFg: vi.hasVolume ? '#128A3E' : '#D14B4B',
+            src: addition ? 'Addition' : 'AutoDML', srcBg: addition ? '#EAEEFB' : '#F2F5FA', srcFg: addition ? '#2F4FC6' : '#5A5E66',
+          };
+        }) : [];
+        return {
+          code: s.code, name: s.name, zone: s.zone,
+          loc: (s.lat != null && s.lng != null) ? (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2)) : '\u2014',
+          sortCap: s.sortCap ? fmtInt(s.sortCap) : '\u2014', volCap: s.volCap ? fmtInt(s.volCap) : '\u2014',
+          dcCount: scDcs.length,
+          selected: (draft.scCodes || []).indexOf(s.code) >= 0,
+          onClick: () => this.mapToggleSc(s.code),
+          expanded, expandChev: expanded ? 'M6 9l6 6 6-6' : 'M9 6l6 6-6 6',
+          expandAria: (expanded ? 'Collapse DCs for ' : 'Show DCs for ') + s.code,
+          onExpand: () => this.setState({ mapExpandedSC: expanded ? null : s.code }),
+          lmdcRows,
+        };
+      });
     const mapScCount = (draft.scCodes || []).length;
-    const mapCanNext1 = mapScCount >= 2 && mapHasVolFile;
 
-    // ===== Step 2 — DC Group: two dedicated lists (mapped-to-selected-SCs vs. unmapped) instead
-    // of one merged list with a status badge, per the restructure ask. Each row now also shows
-    // location, volume planned (from the Step 1 volume plan — see mapVolumeInfoForDc), and
-    // capacity. mapComputeEligibleDcs() is still the single shared source of "what DCs are in
-    // this run" — Step 2's preview and mapTriggerRun's real trigger can't drift apart on it.
-    const mapEligibleDcs = (draft.scCodes || []).length >= 2 ? this.mapComputeEligibleDcs(draft.scCodes) : [];
-    const mapDcRow = (dc) => {
-      const vi = this.mapVolumeInfoForDc(dc.code, draft.volFileName, dc.capacity);
+    // Unmapped DCs — dedicated list below the SC list (point 2). Same eligibility rule
+    // mapComputeEligibleDcs already uses (unmapped, not closed, not already mid-flight in the
+    // migration pipeline) — global, not tied to whichever SCs happen to be checked right now.
+    const mapPendingPipelineCodes = {}; (d.migrationPipeline || []).forEach(m => { if (m.status === 'PendingAlignment') mapPendingPipelineCodes[m.dc] = true; });
+    const mapUnmappedDcList = (d.nodeAdditions || []).filter(a => !a.mapped && !mapClosedCodes[a.dc] && !mapPendingPipelineCodes[a.dc]).map(a => {
+      const vi = this.mapVolumeInfoForDc(a.dc, draft.volFileName, a.cap);
       return {
-        code: dc.code, currentSc: dc.currentSc || 'Unmapped', pending: dc.pending,
-        loc: (dc.lat != null && dc.lng != null) ? (dc.lat.toFixed(2) + ', ' + dc.lng.toFixed(2)) : ('Zone: ' + (dc.zone || '\u2014')),
-        capacity: dc.capacity ? fmtInt(dc.capacity) : '\u2014',
-        hasVolume: vi.hasVolume, volumePlanned: vi.hasVolume ? fmtInt(vi.volumePlanned) : '\u2014',
+        code: a.dc, name: a.name, zone: a.zone, capacity: fmtInt(a.cap),
+        vol: vi.hasVolume ? fmtInt(vi.volumePlanned) : '0', volFg: vi.hasVolume ? '#14171F' : '#D14B4B', volWeight: vi.hasVolume ? '400' : '700',
+        volFlag: vi.hasVolume ? 'OK' : '0 volume', volFlagBg: vi.hasVolume ? '#E7F4EC' : '#FBEAEA', volFlagFg: vi.hasVolume ? '#128A3E' : '#D14B4B',
       };
-    };
-    const mapLinkedDcList = mapEligibleDcs.filter(dc => !dc.pending).map(mapDcRow);
-    const mapUnmappedDcList = mapEligibleDcs.filter(dc => dc.pending).map(mapDcRow);
-    const mapDcCount = mapLinkedDcList.length + mapUnmappedDcList.length;
-    const mapDcLinkCount = mapLinkedDcList.length;
-    const mapDcAdditionCount = mapUnmappedDcList.length;
-    const mapCanNext2 = mapDcCount >= 1;
-    // Validation: every DC in the run must have volume in the selected volume plan. Shown here as
-    // a blocking-styled callout (matching Route Planner's own volume-gap banner) but — same as
-    // Route Planner — doesn't stop the wizard from moving forward; it stops Trigger, on Step 4.
-    const mapVolMissingCodes = mapLinkedDcList.concat(mapUnmappedDcList).filter(r => !r.hasVolume).map(r => r.code);
-    const mapVolMissingCount = mapVolMissingCodes.length;
+    });
 
-    // ===== Step 3 — Operating Parameters (renamed from "Baseline & Parameters" — the baseline
-    // mapping source picker is gone entirely; baseline is always "current SC-DC mapping per
-    // AutoDML", already shown per-DC, read-only, on Step 2 — nothing left to choose here).
+    const mapEligibleDcs = mapScCount >= 2 ? this.mapComputeEligibleDcs(draft.scCodes) : [];
+    const mapVolMissingCodes = mapEligibleDcs.map(dc => ({ code: dc.code, hasVolume: this.mapVolumeInfoForDc(dc.code, draft.volFileName, dc.capacity).hasVolume })).filter(r => !r.hasVolume).map(r => r.code);
+    const mapVolMissingCount = mapVolMissingCodes.length;
+    const mapCanNext1 = mapScCount >= 2 && mapHasVolFile && mapEligibleDcs.length >= 1;
+
+    // ===== Step 2 — Operating Mode (renamed from "Operating Parameters"). D0 penalty/span-cost is
+    // gone entirely. Selected-SC recap (count of DCs mapped + SC Master params) up top, then a
+    // compact solver-parameters panel — smaller controls throughout, no large icon/button-group
+    // selections — plus two new parameters: Volume Utilisation Min/Max % and Max Sort Capacity
+    // Utilisation %, both intentionally allowed above 100% so the model can be run as a deliberate
+    // over-capacity simulation, not just a hard constraint.
+    const mapSelectedScSummary = (draft.scCodes || []).map(code => {
+      const sc = (d.scs || []).find(s => s.code === code) || {};
+      const dcCount = (d.lmdcs || []).filter(l => l.lmscCode === code && !mapClosedCodes[l.code]).length;
+      return {
+        code, name: sc.name || '', dcCount,
+        sortCap: sc.sortCap ? fmtInt(sc.sortCap) : '\u2014', volCap: sc.volCap ? fmtInt(sc.volCap) : '\u2014',
+        loc: (sc.lat != null && sc.lng != null) ? (sc.lat.toFixed(2) + ', ' + sc.lng.toFixed(2)) : '\u2014',
+      };
+    });
     const mapHwOn = (draft.params || {}).hw === true;
     const mapTolerance = (draft.params || {}).tolerance != null ? draft.params.tolerance : 50;
     const mapToleranceWarn = mapTolerance > 50;
+    const mapVolUtilMin = (draft.params || {}).volUtilMin != null ? draft.params.volUtilMin : 0;
+    const mapVolUtilMax = (draft.params || {}).volUtilMax != null ? draft.params.volUtilMax : 100;
+    const mapVolUtilOver100 = mapVolUtilMax > 100;
+    const mapSortCapUtilMax = (draft.params || {}).sortCapUtilMax != null ? draft.params.sortCapUtilMax : 100;
+    const mapSortCapUtilOver100 = mapSortCapUtilMax > 100;
 
-    // ===== Step 4 — Preview & Trigger
+    // ===== Step 3 — Preview & Trigger
     const mapPreviewScs = (draft.scCodes || []).map(code => {
       const sc = (d.scs || []).find(s => s.code === code) || {};
       const missingCap = !sc.sortCap || !sc.volCap || !sc.htp;
@@ -16228,13 +16384,16 @@ class NDCApp extends React.Component {
       mapScSearch: st.mapScSearch || '', onMapScSearch: (e) => this.setState({ mapScSearch: e.target.value }),
       mapScZoneChips,
       mapScList, mapScCount, mapCanNext1,
-      mapLinkedDcList, mapUnmappedDcList, mapDcCount, mapDcLinkCount, mapDcAdditionCount, mapCanNext2,
+      mapUnmappedDcList, mapUnmappedDcCount: mapUnmappedDcList.length,
       mapVolMissingCodes, mapVolMissingCount,
+      mapSelectedScSummary,
       mapRho: (draft.params || {}).rho != null ? draft.params.rho : 0.2, onMapRho: (e) => this.mapSetParam('rho', +e.target.value),
       mapHwOn, onMapHwToggle: () => this.mapSetParam('hw', !mapHwOn),
       mapTolerance, onMapTolerance: (e) => this.mapSetParam('tolerance', Math.max(0, +e.target.value || 0)), mapToleranceWarn,
-      mapSpanCostOn: (draft.params || {}).spanCostOn !== false, onMapSpanCostToggle: () => this.mapSetParam('spanCostOn', !((draft.params || {}).spanCostOn !== false)),
-      mapPreviewScs, mapAnyMissingCap, mapTriggerBlocked, mapDcCount2: mapDcCount,
+      mapVolUtilMin, onMapVolUtilMin: (e) => this.mapSetParam('volUtilMin', Math.max(0, +e.target.value || 0)),
+      mapVolUtilMax, onMapVolUtilMax: (e) => this.mapSetParam('volUtilMax', Math.max(0, +e.target.value || 0)), mapVolUtilOver100,
+      mapSortCapUtilMax, onMapSortCapUtilMax: (e) => this.mapSetParam('sortCapUtilMax', Math.max(0, +e.target.value || 0)), mapSortCapUtilOver100,
+      mapPreviewScs, mapAnyMissingCap, mapTriggerBlocked, mapDcCount2: mapEligibleDcs.length,
       onMapBack: () => this.mapBack(), onMapNext: () => this.mapNext(),
       onMapTrigger: () => this.mapTriggerRun(),
       mapQueueRows, mapQueueAllDone,
@@ -16260,7 +16419,11 @@ class NDCApp extends React.Component {
     const ACCENT = '#1F6F5C';
     const fmtInt = (n) => (n || 0).toLocaleString('en-IN');
 
-    const runs = (d.mappingRuns || []).filter(r => r.status === 'Completed' || r.status === 'Committed');
+    // cycleMonth-scoped (2026-09-16), same convention as RLH's own plans — only show runs
+    // belonging to the currently active RLH design cycle. Older runs with no cycleMonth at all
+    // (none should exist, but defensive) fall back to showing under the current cycle rather than
+    // vanishing entirely.
+    const runs = (d.mappingRuns || []).filter(r => (r.status === 'Completed' || r.status === 'Committed') && (r.cycleMonth || st.activeCycleMonth.rlh) === st.activeCycleMonth.rlh);
     const selectedRunId = st.reviewMapRunId || (runs[0] && runs[0].id) || null;
     const run = runs.find(r => r.id === selectedRunId) || null;
     const results = run ? run.results : null;

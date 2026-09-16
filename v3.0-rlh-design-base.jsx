@@ -1570,8 +1570,9 @@ All modules
 </div>
 </>) : null}
 {(nstepMigrations) ? (<>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>Migrations upload through the same combined CSV as Additions &amp; Closures — use that tab to upload. This view is Migrations only.</div>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:18px;`)}>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>Migrations upload through the same combined CSV as Additions &amp; Closures — use that tab to upload. This view is Migrations only. Node Mapping's own proposed reassignments and new-DC placements flow in below once a planner decides on them in Design Review.</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>ALIGNED — REAL, EFFECTIVE ({(migAlignedRows || []).length})</div>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:22px;`)}>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMSC CODE</div>
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMDC CODE</div>
@@ -1579,16 +1580,37 @@ All modules
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LATITUDE</div>
 <div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>LMDC LONGITUDE</div>
 </div>
-{(nodeChangesMig || []).map((nc, __i33m) => (<React.Fragment key={__i33m}>
+{(migAlignedRows || []).map((nc, __i33m) => (<React.Fragment key={__i33m}>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
 <div style={css(`padding:10px 13px; font-size:12.5px; font-weight:700; color:#003F98;`)}>{nc.lmscCode}</div>
 <div style={css(`padding:10px 13px; font-size:12.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{nc.lmdcCode}</div>
 <div style={css(`padding:10px 13px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; background:${nc.flagBg}; color:${nc.flagFg};`)}>{nc.flag}</span></div>
-<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lat}</div>
-<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lng}</div>
+<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lat || '\u2014'}</div>
+<div style={css(`padding:10px 13px; font-size:12.5px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{nc.lng || '\u2014'}</div>
 </div>
 </React.Fragment>))}
-{(nodeChangesMig.length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No migrations recorded yet.</div></>) : null}
+{((migAlignedRows || []).length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No migrations recorded yet.</div></>) : null}
+</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PIPELINE — NOT YET ALIGNED ({migPipelineCount})</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Proposed from SC-DC Mapping's Design Review — either accepted by the planner and awaiting Ops Alignment, or rejected by the planner outright. Neither changes AutoDML/LMDC Master; nothing here is real until it's Aligned above.</div>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.3fr 1fr; background:#E6EBF2; position:sticky; top:0; z-index:4;`)}>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMDC CODE</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>SUGGESTED LMSC</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>FROM</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>REMARK</div>
+<div style={css(`padding:10px 13px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>STATUS</div>
+</div>
+{(migPipelineRows || []).map((m, __i33p) => (<React.Fragment key={__i33p}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.3fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:1fr 1fr 1fr 1.3fr 1fr; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
+<div style={css(`padding:10px 13px; font-size:12.5px; font-weight:600; color:#14171F; font-variant-numeric:tabular-nums;`)}>{m.lmdcCode}</div>
+<div style={css(`padding:10px 13px; font-size:12.5px; font-weight:700; color:#003F98;`)}>{m.lmscCode}</div>
+<div style={css(`padding:10px 13px; font-size:12px; color:#5A5E66;`)}>{m.fromSc}</div>
+<div style={css(`padding:10px 13px; font-size:11.5px; color:#5A5E66; font-style:italic; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{m.remark || '\u2014'}</div>
+<div style={css(`padding:10px 13px;`)}><span style={css(`display:inline-flex; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; background:${m.statusBg}; color:${m.statusFg}; white-space:nowrap;`)}>{m.statusLabel}</span></div>
+</div>
+</React.Fragment>))}
+{(migPipelineCount === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>Nothing in the pipeline — no undecided or rejected mapping proposals right now.</div></>) : null}
 </div>
 </>) : null}
 </>) : null}
@@ -1876,6 +1898,14 @@ All modules
 <span style={css(`display:inline-flex; align-items:center; gap:7px; padding:5px 12px; border-radius:999px; background:#EAEEFB; color:#003F98; font-size:12px; font-weight:700;`)}>{creationSelCount} LMSCs selected</span>
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing {creationShown} of {creationTotal} · grouped by zone · cap 80 per cycle</span>
 </div>
+{/* Point 5 — pipeline-inclusion toggle. Each SC's own DC count below already reflects AutoDML +
+    any Aligned migration overlay (real); this toggle additionally folds in not-yet-aligned
+    migration-pipeline DCs (Pending + Rejected) proposed to land at that SC, so a planner can see
+    the impact of in-flight mapping proposals before they're actually aligned. Off by default. */}
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px; margin-bottom:14px; background:#F7F8FB; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>Include pipeline DCs in this plan list</div><div style={css(`font-size:11px; color:#8E96A3;`)}>Pulls in SC-DC Mapping's not-yet-aligned proposals (pending or rejected) as provisional DCs, per SC below.</div></div>
+<button onClick={onRpIncludePipelineToggle} style={css(`width:42px; height:24px; border-radius:999px; border:none; background:${rpIncludePipeline ? '#003F98' : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:18px; height:18px; border-radius:999px; background:#fff; position:absolute; top:3px; left:${rpIncludePipeline ? '21px' : '3px'}; transition:left 120ms;`)} /></button>
+</div>
 {/* D. Overall missing / zero-volume callout — blocks Trigger downstream */}
 {(volGapHasGap) ? (<>
 <div style={css(`display:flex; align-items:flex-start; gap:13px; padding:14px 16px; margin-bottom:14px; background:#FAFBFD; border:1px solid #E6EBF2; border-left:3px solid #D14B4B; border-radius:8px;`)}>
@@ -1916,7 +1946,7 @@ All modules
 {(s.newSc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6; flex-shrink:0;`)}>NEW SC</span></>) : null}
 {/* D. per-SC volume gap flag */}
 {(s.volGap) ? (<><span style={css(`display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#FBEAEA; color:#D14B4B; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.volGapLabel}</span></>) : null}
-<span style={css(`font-size:12px; color:#5A5E66; width:84px; text-align:right; flex-shrink:0;`)}>{s.dcCount} DCs</span>
+<span style={css(`font-size:12px; color:#5A5E66; width:84px; text-align:right; flex-shrink:0;`)}>{s.dcCount} DCs{(s.dcPipelineCount > 0) ? (<><br /><span style={css(`font-size:9.5px; color:#8E96A3;`)}>({s.dcPipelineCount} pipeline)</span></>) : null}</span>
 <span style={css(`font-size:12px; color:#5A5E66; width:66px; text-align:right; flex-shrink:0;`)}>{s.volume}</span>
 </button>
 <button onClick={s.onExpand} aria-label={s.expandAria} title={"Show LMDCs"} style={css(`width:42px; height:42px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:42px; height:42px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`, `color:#003F98;`)}><svg aria-hidden={"true"} width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={s.expandChev} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -7761,7 +7791,17 @@ class NDCApp extends React.Component {
     // after every mutation above has settled, so the frozen copy matches what's returned below.
     seedLmdcEntities(this.engineStore, 'rlh', RLH_GENESIS_MONTH, lmdcs);
 
-    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, mappingRuns: [], totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
+    return { scs, runs, plans, schedulerPlans, autodml, autodmlDetails, autodmlNodes, volumeFiles, nodeAdditions, nodeClosures, migrations, nodeChangesUnified, scVehAvail, VEH, lmdcs, mappingRuns: [],
+      // migrationPipeline (2026-09-16) — every Design-Review decision on a real proposed SC move
+      // (existing DC reassignment OR a brand-new DC's first placement) lands here, keyed uniquely
+      // by dc. status: 'PendingAlignment' (planner-accepted, awaiting Ops Alignment — not built
+      // yet) | 'RejectedByPlanner' | 'Aligned' (reached Finalised in Ops Alignment — unreachable
+      // today, wired in for when that lifecycle exists). This is a permanent READ-TIME OVERLAY —
+      // it never writes into LMDC master/AutoDML, which stay source of truth regardless of status
+      // (see effectiveLmscFor()). At-risk-unserved "Keep on Old SC" decisions never appear here —
+      // there's no suggested SC to record, so they're not a migration in this sense.
+      migrationPipeline: [],
+      totals: { dcTotal: scs.reduce((a, b) => a + b.dcCount, 0), volTotal: scs.reduce((a, b) => a + b.volume, 0) } };
   }
 
   // componentDidMount → seedSchedDemoFeedback() (2026-08-18) — populates demo schedFeedback/
@@ -9832,6 +9872,52 @@ class NDCApp extends React.Component {
     });
   }
 
+  // effectiveLmscFor(dcCode) — 2026-09-16. The single shared "what SC does this DC really belong
+  // to for planning purposes" resolver. An Aligned migration (reached Finalised in Ops
+  // Alignment — not built yet, so this branch is currently unreachable in practice, but wired in
+  // for when it exists) overrides the raw AutoDML/LMDC-master value; LMDC master itself is never
+  // touched. PendingAlignment/RejectedByPlanner entries do NOT override — only Aligned does, per
+  // product decision. Returns null for a DC with no real master row and no aligned migration
+  // (e.g. a still-unresolved new addition).
+  effectiveLmscFor(dcCode) {
+    const d = this.state.data;
+    const aligned = (d.migrationPipeline || []).find(m => m.dc === dcCode && m.status === 'Aligned');
+    if (aligned) return aligned.to;
+    const dc = (d.lmdcs || []).find(l => l.code === dcCode);
+    return dc ? dc.lmscCode : null;
+  }
+
+  // buildScDcCounts(includePipeline) — Route Planner Step 1's real per-SC DC counts, computed in
+  // ONE pass over d.lmdcs rather than once per SC (a per-SC call into effectiveLmscFor() — which
+  // itself does an O(N) lmdcs.find — was O(numSCs × N²) and hung the app; caught by execution
+  // testing, not code review). Base = AutoDML value with the Aligned-migration overlay applied
+  // inline; already folds in "Additions" too, since a mapped addition graduates into a real LMDC
+  // master row (same pattern this app already uses elsewhere — see materializeLmdcEntities).
+  // includePipeline adds Pending/Rejected pipeline DCs proposed to land at each SC — the point-5
+  // toggle's job — kept as a separate count rather than folded silently in, since those aren't
+  // real yet.
+  buildScDcCounts(includePipeline) {
+    const d = this.state.data;
+    const closedCodes = {}; (d.nodeClosures || []).forEach(c => { closedCodes[c.dc] = true; });
+    const alignedMap = {}; (d.migrationPipeline || []).forEach(m => { if (m.status === 'Aligned') alignedMap[m.dc] = m.to; });
+    const counts = {};
+    (d.lmdcs || []).forEach(l => {
+      if (closedCodes[l.code]) return;
+      const eff = alignedMap[l.code] || l.lmscCode;
+      if (!eff) return;
+      counts[eff] = (counts[eff] || 0) + 1;
+    });
+    const pipelineCounts = {};
+    if (includePipeline) {
+      (d.migrationPipeline || []).forEach(m => {
+        if ((m.status === 'PendingAlignment' || m.status === 'RejectedByPlanner') && !closedCodes[m.dc]) {
+          pipelineCounts[m.to] = (pipelineCounts[m.to] || 0) + 1;
+        }
+      });
+    }
+    return { counts, pipelineCounts };
+  }
+
   // mapComputeEligibleDcs(scCodes) — later session, supersedes the earlier manual DC-picker
   // design. Input selection is no longer a free-text/manual entry — it's auto-derived: every DC
   // whose active AutoDML link (LMDC Master's own lmscCode) points at one of the selected SCs,
@@ -9843,13 +9929,18 @@ class NDCApp extends React.Component {
   // Needed now that Step 2 shows location/volume/capacity per DC instead of just a status label.
   // fromAdditions has no real lat/lng in this prototype's data model (nodeAdditions never carried
   // it) — left null rather than invented; the Step 2 row falls back to showing Zone instead.
+  // 2026-09-16 — fromAdditions now also excludes anything with an existing PendingAlignment
+  // pipeline entry: without this, a new DC already proposed (and planner-accepted) in an earlier
+  // run would keep reappearing as "unmapped" in every later run touching an overlapping SC set,
+  // since nodeAdditions.mapped deliberately stays false until the migration is genuinely Aligned.
   mapComputeEligibleDcs(scCodes) {
     const d = this.state.data;
     const closedCodes = {}; (d.nodeClosures || []).forEach(c => { closedCodes[c.dc] = true; });
+    const pendingCodes = {}; (d.migrationPipeline || []).forEach(m => { if (m.status === 'PendingAlignment') pendingCodes[m.dc] = true; });
     const fromLinks = (d.lmdcs || []).filter(l => scCodes.indexOf(l.lmscCode) >= 0 && !closedCodes[l.code])
       .map(l => ({ code: l.code, currentSc: l.lmscCode, pending: false, lat: l.lat, lng: l.lng, capacity: l.capacity, zone: l.zone }));
     const seen = {}; fromLinks.forEach(l => { seen[l.code] = true; });
-    const fromAdditions = (d.nodeAdditions || []).filter(a => !a.mapped && !closedCodes[a.dc] && !seen[a.dc])
+    const fromAdditions = (d.nodeAdditions || []).filter(a => !a.mapped && !closedCodes[a.dc] && !seen[a.dc] && !pendingCodes[a.dc])
       .map(a => ({ code: a.dc, currentSc: null, pending: true, lat: null, lng: null, capacity: a.cap, zone: a.zone }));
     return fromLinks.concat(fromAdditions);
   }
@@ -10069,45 +10160,43 @@ class NDCApp extends React.Component {
   }
   mapBackToDecide() { this.setState({ mapReviewStage: 'decide' }); }
 
-  // mapCommitRun(runId) — the real commit, reachable only from the Finalise stage. For each
-  // decided DC: 'Accept' applies the proposed new SC (real migrations entry, or resolves a
-  // pending nodeAdditions row — same distinction as before); 'Reject'/'KeepOldSc' writes nothing,
-  // the DC simply stays on its current SC. Rejected decisions remain recorded in
-  // mapDcDecisions — that's the data the Migrations tab's pending-pipeline view will read from
-  // once that's designed (explicitly deferred — see context.md).
+  // mapCommitRun(runId) — the real commit, reachable only from the Finalise stage. 2026-09-16 —
+  // REWRITTEN: no longer writes anything into LMDC master/AutoDML. Per product decision, planner
+  // acceptance alone isn't enough to treat a mapping as real — it also needs Ops Alignment (not
+  // built yet for Node Mapping), so "commit" now means "lock in the planner's decisions" — every
+  // row with a real proposed SC (movingOut + newArrivals; at-risk-unserved KeepOldSc decisions
+  // have no suggested SC, so they're not a migration and don't land here) becomes a
+  // migrationPipeline entry: 'PendingAlignment' if Accepted, 'RejectedByPlanner' if not. Neither
+  // status overrides anything — only 'Aligned' (reached Finalised in Ops Alignment, once that
+  // exists) does, via effectiveLmscFor(). Re-committing a DC already in the pipeline replaces its
+  // entry (most recent decision wins) rather than accumulating stale duplicates.
   mapCommitRun(runId) {
     const run = (this.state.data.mappingRuns || []).find(r => r.id === runId);
     if (!run || !run.results) return;
     if (!this.mapAllDecided(run)) { this.showToast('Every flagged DC needs a decision before committing.', '#C77B00'); return; }
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 cannot commit a mapping run.', '#C77B00'); return; }
-    const cycleMonth = this.state.activeCycleMonth.rlh;
     const d = this.state.data;
     const dec = this.state.mapDcDecisions[run.id] || {};
-    let migrations = (d.migrations || []).slice();
-    let nodeAdditions = (d.nodeAdditions || []).slice();
-    let nodeChangesUnified = (d.nodeChangesUnified || []).slice();
-    let committedCount = 0;
+    let migrationPipeline = (d.migrationPipeline || []).slice();
+    let acceptedCount = 0, rejectedCount = 0;
 
-    run.results.dcRows.filter(r => r.needsDecision && dec[r.code] && dec[r.code].decision === 'Accept').forEach(r => {
+    run.results.dcRows.filter(r => r.needsDecision && !r.isUnserved && r.newSc).forEach(r => {
+      const d0 = dec[r.code];
+      if (!d0 || !d0.decision) return;
       const dc = (d.lmdcs || []).find(l => l.code === r.code);
-      if (!dc) return;
-      const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, r.code) || {};
-      setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, r.code, 'lmscCode', r.newSc, existing);
-      const pendingAddition = nodeAdditions.find(a => a.dc === r.code && !a.mapped);
-      if (pendingAddition) {
-        nodeAdditions = nodeAdditions.map(a => a.dc === r.code ? Object.assign({}, a, { sc: r.newSc, mapped: true }) : a);
-        nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: r.newSc, lmdcCode: r.code, flag: 'Addition', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
-      } else if (r.oldSc && r.oldSc !== r.newSc) {
-        migrations = migrations.concat([{ dc: r.code, name: dc.code, from: r.oldSc, to: r.newSc, zone: dc.zone || '' }]);
-        nodeChangesUnified = nodeChangesUnified.concat([{ lmscCode: r.newSc, lmdcCode: r.code, flag: 'Migration', lat: String(dc.lat || ''), lng: String(dc.lng || '') }]);
-      }
-      committedCount++;
+      const isAccept = d0.decision === 'Accept';
+      const entry = {
+        dc: r.code, name: dc ? dc.code : r.code, from: r.oldSc || null, to: r.newSc, zone: dc ? (dc.zone || '') : '',
+        status: isAccept ? 'PendingAlignment' : 'RejectedByPlanner',
+        runId: run.id, remark: d0.remark || '', decidedAt: new Date().toLocaleString(),
+      };
+      migrationPipeline = migrationPipeline.filter(m => m.dc !== r.code).concat([entry]);
+      if (isAccept) acceptedCount++; else rejectedCount++;
     });
 
     const mappingRuns = (d.mappingRuns || []).map(m => m.id === run.id ? Object.assign({}, m, { status: 'Committed', committedAt: new Date().toLocaleString() }) : m);
-    this.refreshLmdcs();
-    this.setState({ data: Object.assign({}, this.state.data, { migrations, nodeAdditions, nodeChangesUnified, mappingRuns }), mapReviewStage: 'cards' });
-    this.showToast(committedCount + ' DC' + (committedCount === 1 ? '' : 's') + ' committed \u2014 reflected in LMDC Master and the node-changes gate', '#128A3E');
+    this.setState({ data: Object.assign({}, this.state.data, { migrationPipeline, mappingRuns }), mapReviewStage: 'cards' });
+    this.showToast(acceptedCount + ' DC' + (acceptedCount === 1 ? '' : 's') + ' accepted \u2014 pending Ops Alignment' + (rejectedCount > 0 ? '; ' + rejectedCount + ' rejected, tracked in the Migrations pipeline' : ''), '#128A3E');
   }
 
   // mapPushScToAlignment(runId, scCode) — Stage 2's per-SC push, independent per SC (mirrors
@@ -10418,11 +10507,11 @@ class NDCApp extends React.Component {
     const tf = scTypeSel.matches;
     const nstep = st.nodeStep || 'active';
     const nodeAdditionClosureCount = (d.nodeAdditions || []).length + (d.nodeClosures || []).length;
-    const nodeMigrationCount = (d.migrations || []).length;
+    const nodeMigrationCount = (d.migrations || []).length + (d.migrationPipeline || []).filter(m => m.status === 'PendingAlignment' || m.status === 'RejectedByPlanner').length;
     const nodeStepMeta = [
       ['active', 'AutoDML Actions', (d.autodmlNodes || []).length, remaining.length > 0, 'Flagged LMSC → LMDC links from AutoDML — resolve before planning.'],
       ['changes', 'Additions & Closures', nodeAdditionClosureCount, nodeAdditionClosureCount > 0, 'New DCs and closures this cycle vs. the last finalised network.'],
-      ['migrations', 'Migrations', nodeMigrationCount, nodeMigrationCount > 0, 'DCs reassigned from one SC to another — historical, plus any pending from SC-DC Mapping.'],
+      ['migrations', 'Migrations', nodeMigrationCount, nodeMigrationCount > 0, 'Aligned migrations (real) plus the not-yet-aligned pipeline from SC-DC Mapping.'],
     ];
     const nodeSteps = nodeStepMeta.map(s => ({ label: s[1], tip: s[4], attention: s[3], active: nstep === s[0], color: nstep === s[0] ? '#003F98' : '#5A5E66', weight: nstep === s[0] ? '700' : '500', bg: nstep === s[0] ? '#fff' : 'transparent', bd: nstep === s[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ nodeStep: s[0] }) }));
     const anFiltered = d.scs.filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
@@ -10520,6 +10609,23 @@ class NDCApp extends React.Component {
     });
     const nodeChangesAC = nodeChanges.filter(n => n.flag !== 'Migration');
     const nodeChangesMig = nodeChanges.filter(n => n.flag === 'Migration');
+    // 2026-09-16 — migration pipeline, from the SC-DC Mapping module's own Design Review commits.
+    // Section 1 ("Aligned") = today's historical/CSV-sourced migrations (nodeChangesMig, above)
+    // PLUS any migrationPipeline entries that reached 'Aligned' (Finalised in Ops Alignment) — that
+    // stage doesn't exist yet for Node Mapping, so this branch is currently always empty; wired in
+    // now so it lights up the moment that lifecycle is built, with no further plumbing needed.
+    // Section 2 ("Pipeline — not yet aligned") = everything else: PendingAlignment (planner
+    // accepted, awaiting ops) and RejectedByPlanner (planner said no) — grouped together per
+    // product decision, both genuinely "not aligned" from the network's point of view.
+    const migAlignedFromPipeline = (d.migrationPipeline || []).filter(m => m.status === 'Aligned').map(m => ({
+      lmscCode: m.to, lmdcCode: m.dc, flag: 'Migration', flagBg: NODE_FLAG_COLORS.Migration.bg, flagFg: NODE_FLAG_COLORS.Migration.fg, lat: '', lng: '',
+    }));
+    const migAlignedRows = nodeChangesMig.concat(migAlignedFromPipeline);
+    const MIG_STATUS_COLORS = { PendingAlignment: { bg: '#EAF1FB', fg: '#1E6FB8', label: 'Pending Alignment' }, RejectedByPlanner: { bg: '#FBEAEA', fg: '#D14B4B', label: 'Rejected by Planner' } };
+    const migPipelineRows = (d.migrationPipeline || []).filter(m => m.status === 'PendingAlignment' || m.status === 'RejectedByPlanner').map(m => {
+      const sc = MIG_STATUS_COLORS[m.status];
+      return { lmscCode: m.to, lmdcCode: m.dc, fromSc: m.from || '\u2014 (new DC)', statusLabel: sc.label, statusBg: sc.bg, statusFg: sc.fg, remark: m.remark || '', decidedAt: m.decidedAt };
+    }).sort((a, b) => (a.decidedAt < b.decidedAt ? 1 : -1));
     const volErrModalOpen = !!(st.volErrModal);
     const volErrModal = st.volErrModal || { name: '', rows: [] };
     const closeVolErrModal = () => this.setState({ volErrModal: null });
@@ -10962,6 +11068,7 @@ class NDCApp extends React.Component {
       nodeStats: nodeStats, autodmlFilterCards: autodmlFilterCards, nodeRows: autodmlPager.pageRows, autodmlPager: autodmlPager, nodeShown: nodeShown, nodeEmpty: nodeEmpty, nodeCountLabel: nodeCountLabel,
       nodeLmscSearch: st.nodeLmscSearch || '', onNodeLmscSearch: (e) => this.setState({ nodeLmscSearch: e.target.value, pgAutodml: 1 }), nodeFilterDirty: nodeFilterDirty, clearNodeFilters: clearNodeFilters, onDownloadNodeCsv: () => this.downloadNodeCsv(nodeRows),
       autodmlCards, nodeAdditions, nodeClosures: d.nodeClosures, migrations: d.migrations, nodeChanges, nodeChangesAC, nodeChangesMig,
+      migAlignedRows, migPipelineRows, migPipelineCount: migPipelineRows.length,
       volErrModalOpen, volErrModal, closeVolErrModal, volErrModalReplace,
       inputsZoneSel, scTypeSel, scSearch: st.inputsSearch || '', onInputsSearch: (e) => this.setState({ inputsSearch: e.target.value, pgScMaster: 1, pgAvail: 1 }),
       scRlhOpen: !!st.scRlhOpen, onToggleScRlh: () => this.setState({ scRlhOpen: !st.scRlhOpen }),
@@ -11208,6 +11315,13 @@ class NDCApp extends React.Component {
 
     const q = (st.creationSearch || '').toLowerCase();
     const zf = st.creationZone || 'All';
+    // rpIncludePipeline (2026-09-16) — Step 1's new toggle (point 5): when on, each SC's DC count
+    // below also includes not-yet-aligned migration-pipeline DCs (Pending + Rejected) proposed to
+    // land there, alongside the real AutoDML/Aligned-migration count. Off by default — these
+    // aren't real yet.
+    const rpIncludePipeline = !!st.rpIncludePipeline;
+    const onRpIncludePipelineToggle = () => this.setState({ rpIncludePipeline: !rpIncludePipeline });
+    const scDcCounts = this.buildScDcCounts(rpIncludePipeline);
     // 2026-08-26 fix (#5 cascade) — Route Planner's own SC selection now filters to
     // dispatchesRLH SCs (governing-rule cascade: changing an SC to FMSC removes it from RLH's
     // Design Creation pool entirely, per the worked example in the product decision).
@@ -11229,7 +11343,8 @@ class NDCApp extends React.Component {
           const scSortCapLabel = hasMissingMaster ? '—' : fmtInt(s.sortCap);
           const scDocksLabel = hasMissingMaster ? '—' : String(s.docks);
           const scLocLabel = hasMissingMaster ? '—' : (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2));
-          return { code: s.code, name: s.name, dcCount: s.dcCount, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code, isMdc: s.nodeKind === 'MDC',
+          const realDc = { count: (scDcCounts.counts[s.code] || 0) + (scDcCounts.pipelineCounts[s.code] || 0), pipelineCount: scDcCounts.pipelineCounts[s.code] || 0 };
+          return { code: s.code, name: s.name, dcCount: realDc.count, dcPipelineCount: realDc.pipelineCount, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code, isMdc: s.nodeKind === 'MDC',
           hasMissingMaster, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel,
           onFixMaster: () => { this.go('inputs'); this.setState({ inputsTab: 'masters', mastersTab: 'sc' }); this.showToast('Navigating to Sort Center Master — update ' + s.code + ' details', '#1E6FB8'); },
           // D. per-SC volume-gap flag (covers both zero-volume and missing-volume DCs)
@@ -11735,6 +11850,7 @@ class NDCApp extends React.Component {
       isSchedulerWizardView: (st.schedulerCreationView || 'wizard') === 'wizard', isSchedulerQueueView: (st.schedulerCreationView || 'wizard') === 'queue',
       stepper, planGroupName: planGroup.name, planGroupTriggered: planGroup.triggered, planGroupCap: planGroup.cap, planGroupPct: planGroup.pct + '%',
       scGroups, creationSelCount: sel.length, creationShown: filtered.length, creationTotal: d.scs.length, creationSearch: st.creationSearch || '',
+      rpIncludePipeline, onRpIncludePipelineToggle,
       onCreationSearch: (e) => this.setState({ creationSearch: e.target.value }),
       creationZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ creationZone: z }) })),
       // G8 — union with existing selection (never drop SCs picked under a different zone/search filter). Capped.

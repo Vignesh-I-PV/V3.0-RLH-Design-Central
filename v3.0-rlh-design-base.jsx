@@ -3803,10 +3803,47 @@ NLH cycle: {schedNlhMonthLabel}
 </>) : (<>
 <div style={css(`flex:1; overflow-y:auto; padding:24px 32px;`)}>
 <div style={css(`max-width:980px; margin:0 auto;`)}>
-{/* Run picker */}
-<div style={css(`display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;`)}>
-{(reviewMapRunList || []).map((r, __iRmr) => (<React.Fragment key={__iRmr}><button onClick={r.onClick} style={css(`height:32px; padding:0 14px; border:1px solid ${r.active ? reviewMapAccent : '#E6EBF2'}; background:${r.active ? '#EAF3EF' : '#fff'}; color:${r.active ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{r.name} · {r.statusLabel}</button></React.Fragment>))}
+{/* ===== Point 3.1/3.2 — bifurcated stages + plan cards. Shown when no run is open in Details. ===== */}
+{(!reviewMapDetailOpen) ? (<>
+<div style={css(`display:flex; gap:6px; margin-bottom:20px;`)}>
+<button onClick={() => onReviewMapStageFilter('toReview')} style={css(`height:36px; padding:0 16px; border:1px solid ${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'toReview' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>To Review ({reviewMapToReviewCount})</button>
+<button onClick={() => onReviewMapStageFilter('finalised')} style={css(`height:36px; padding:0 16px; border:1px solid ${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'finalised' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Finalised ({reviewMapFinalisedCount})</button>
 </div>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px;`)}>
+{(reviewMapPlanCards || []).map((c, __iRpc) => (<React.Fragment key={__iRpc}>
+<button onClick={c.onClick} style={css(`text-align:left; background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; cursor:pointer; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `border-color:${reviewMapAccent};`)} onMouseLeave={(e) => hoverOff(e, `text-align:left; background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; cursor:pointer; font-family:inherit;`, `border-color:${reviewMapAccent};`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;`)}>
+<span style={css(`font-size:13.5px; font-weight:700; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{c.name}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.statusBg}; color:${c.statusFg}; flex-shrink:0;`)}>{c.statusLabel}</span>
+</div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>INPUTS</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:6px 16px; margin-bottom:12px; font-size:11.5px; color:#14171F;`)}>
+<span>{c.scCount} SCs</span><span>{c.dcCount} DCs</span><span>{c.volume} vol</span><span>ρ {c.rho}</span><span>HW {c.hwLabel}</span><span>Tol {c.toleranceLabel}</span>
+</div>
+<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>OUTPUTS</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:6px 16px; font-size:11.5px;`)}>
+<span style={css(`color:${c.movements > 0 ? '#C77B00' : '#14171F'};`)}>{c.movements} movement{c.movements === 1 ? '' : 's'}</span>
+<span style={css(`color:${c.unmapped > 0 ? '#D14B4B' : '#14171F'};`)}>{c.unmapped} unmapped</span>
+</div>
+</button>
+</React.Fragment>))}
+{((reviewMapPlanCards || []).length === 0) ? (<><div style={css(`grid-column:1 / -1; padding:30px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Nothing here yet.</div></>) : null}
+</div>
+</>) : (<>
+{/* ===== Details view — plan-card recap at the top, then the existing Decide/Finalise/Cards flow. ===== */}
+<button onClick={onReviewMapBackToList} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; margin-bottom:16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Back to {reviewMapStageFilter === 'finalised' ? 'Finalised' : 'To Review'}</button>
+{(reviewMapOpenCard) ? (<>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; margin-bottom:20px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;`)}>
+<span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{reviewMapOpenCard.name}</span>
+<span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${reviewMapOpenCard.statusBg}; color:${reviewMapOpenCard.statusFg};`)}>{reviewMapOpenCard.statusLabel}</span>
+</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:16px 28px;`)}>
+<div><div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:4px;`)}>INPUTS</div><div style={css(`font-size:12px; color:#14171F;`)}>{reviewMapOpenCard.scCount} SCs · {reviewMapOpenCard.dcCount} DCs · {reviewMapOpenCard.volume} vol · ρ {reviewMapOpenCard.rho} · HW {reviewMapOpenCard.hwLabel} · Tol {reviewMapOpenCard.toleranceLabel}</div></div>
+<div><div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:4px;`)}>OUTPUTS</div><div style={css(`font-size:12px; color:#14171F;`)}>{reviewMapOpenCard.movements} movement{reviewMapOpenCard.movements === 1 ? '' : 's'} · {reviewMapOpenCard.unmapped} unmapped</div></div>
+</div>
+</div>
+</>) : null}
 {/* ===== STAGE 1 \u2014 decide ===== */}
 {(reviewMapStage === 'decide') ? (<>
 <div style={css(`display:flex; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:18px;`)}>
@@ -3823,6 +3860,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:10px 14px; background:#F7F9FC; border-bottom:1px solid #E6EBF2;`)}>
 <span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>{sec.code}</span>
+<span style={css(`font-size:10px; color:#5A5E66;`)}>Vol {sec.preVolPct == null ? '\u2014' : sec.preVolPct + '%'} {"\u2192"} {sec.postVolPct == null ? '\u2014' : sec.postVolPct + '%'} · Sort {sec.preSortPct == null ? '\u2014' : sec.preSortPct + '%'} {"\u2192"} {sec.postSortPct == null ? '\u2014' : sec.postSortPct + '%'}</span>
 {(sec.movingOut.length > 0) ? (<><span style={css(`font-size:11px; color:#D14B4B;`)}>Moving out {sec.movingOut.length}</span></>) : null}
 {(sec.newArrivals.length > 0) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>New arrivals {sec.newArrivals.length}</span></>) : null}
 {(sec.movingIn.length > 0) ? (<><span style={css(`font-size:11px; color:#128A3E;`)}>Moving in {sec.movingIn.length}</span></>) : null}
@@ -3832,14 +3870,16 @@ NLH cycle: {schedNlhMonthLabel}
 {(sec.movingOut.length === 0 && sec.movingIn.length === 0 && sec.atRisk.length === 0 && sec.newArrivals.length === 0) ? (<>
 <div style={css(`padding:14px; text-align:center; color:#8E96A3; font-size:12px;`)}>Nothing proposed to change for this SC.</div>
 </>) : (<>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:7px 14px; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
-<div>DC</div><div>DIRECTION</div><div>COUNTERPART SC</div><div>REMARK</div><div style={css(`text-align:center;`)}>DECISION</div>
+<div style={css(`display:grid; grid-template-columns:0.9fr 0.85fr 0.8fr 75px 75px 1.1fr 140px; padding:7px 14px; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
+<div>DC</div><div>DIRECTION</div><div>COUNTERPART SC</div><div style={css(`text-align:right;`)}>DIST OLD</div><div style={css(`text-align:right;`)}>DIST NEW</div><div>REMARK</div><div style={css(`text-align:center;`)}>DECISION</div>
 </div>
 {(sec.movingOut || []).map((r, __iRmo) => (<React.Fragment key={'o' + __iRmo}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`display:grid; grid-template-columns:0.9fr 0.85fr 0.8fr 75px 75px 1.1fr 140px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.code}</div>
 <div style={css(`font-size:11px; color:#D14B4B;`)}>Moving out</div>
 <div style={css(`font-size:12px; color:#14171F;`)}>{r.newSc}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.distOldLabel}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.distNewLabel}</div>
 <input value={r.remark} onInput={r.onRemark} placeholder={"Optional remark"} style={css(`height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 <div style={css(`display:flex; gap:4px; justify-content:center;`)}>
 <button onClick={r.onAccept} title={"Accept"} style={css(`width:26px; height:26px; border:1px solid ${r.decision === 'Accept' ? '#128A3E' : '#E6EBF2'}; background:${r.decision === 'Accept' ? '#E7F4EC' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -3848,10 +3888,12 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 {(sec.newArrivals || []).map((r, __iRmn) => (<React.Fragment key={'n' + __iRmn}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`display:grid; grid-template-columns:0.9fr 0.85fr 0.8fr 75px 75px 1.1fr 140px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.code}</div>
 <div style={css(`font-size:11px; color:#128A3E;`)}>New arrival</div>
 <div style={css(`font-size:12px; color:#8E96A3;`)}>{"\u2014 (new DC)"}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{r.distOldLabel}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.distNewLabel}</div>
 <input value={r.remark} onInput={r.onRemark} placeholder={"Optional remark"} style={css(`height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 <div style={css(`display:flex; gap:4px; justify-content:center;`)}>
 <button onClick={r.onAccept} title={"Accept"} style={css(`width:26px; height:26px; border:1px solid ${r.decision === 'Accept' ? '#128A3E' : '#E6EBF2'}; background:${r.decision === 'Accept' ? '#E7F4EC' : '#fff'}; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -3860,10 +3902,12 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 {(sec.atRisk || []).map((r, __iRma) => (<React.Fragment key={'a' + __iRma}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center; background:#FFFBF3;`)}>
+<div style={css(`display:grid; grid-template-columns:0.9fr 0.85fr 0.8fr 75px 75px 1.1fr 140px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center; background:#FFFBF3;`)}>
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.code}</div>
 <div style={css(`font-size:11px; color:#C77B00;`)}>At risk — unserved</div>
 <div style={css(`font-size:12px; color:#8E96A3;`)}>{"\u2014"}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#8E96A3;`)}>{"\u2014"}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#8E96A3;`)}>{"\u2014"}</div>
 <input value={r.remark} onInput={r.onRemark} placeholder={"Optional remark"} style={css(`height:26px; border:1px solid #E6EBF2; border-radius:6px; padding:0 8px; font-family:inherit; font-size:11.5px; box-sizing:border-box;`)} />
 <div style={css(`display:flex; justify-content:center;`)}>
 <button onClick={r.onKeepOldSc} style={css(`height:26px; padding:0 10px; border:1px solid ${r.decision === 'KeepOldSc' ? reviewMapAccent : '#E6EBF2'}; background:${r.decision === 'KeepOldSc' ? '#EAF3EF' : '#fff'}; color:${r.decision === 'KeepOldSc' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; border-radius:6px; cursor:pointer; white-space:nowrap;`)}>Keep on Old SC</button>
@@ -3871,10 +3915,12 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </React.Fragment>))}
 {(sec.movingIn || []).map((r, __iRmi) => (<React.Fragment key={'i' + __iRmi}>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1.4fr 150px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center; opacity:0.85;`)}>
+<div style={css(`display:grid; grid-template-columns:0.9fr 0.85fr 0.8fr 75px 75px 1.1fr 140px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center; opacity:0.85;`)}>
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.code}</div>
 <div style={css(`font-size:11px; color:#128A3E;`)}>Moving in</div>
 <div style={css(`font-size:12px; color:#14171F;`)}>{r.oldSc}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#8E96A3;`)}>{"\u2014"}</div>
+<div style={css(`font-size:11.5px; text-align:right; color:#8E96A3;`)}>{"\u2014"}</div>
 <div style={css(`font-size:11.5px; color:#8E96A3; font-style:italic;`)}>{r.remark || '\u2014'}</div>
 <div style={css(`text-align:center;`)}><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${r.decisionLabel === 'Accept' ? '#E7F4EC' : (r.decisionLabel === 'Reject' ? '#FBEAEA' : '#F7F9FC')}; color:${r.decisionLabel === 'Accept' ? '#128A3E' : (r.decisionLabel === 'Reject' ? '#D14B4B' : '#8E96A3')};`)}>{r.decisionLabel} (decided under {r.oldSc})</span></div>
 </div>
@@ -3886,7 +3932,7 @@ NLH cycle: {schedNlhMonthLabel}
 <svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"} style={css(`transform:rotate(${sec.expanded ? '90deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M9 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 {sec.unchangedCount} DC{sec.unchangedCount === 1 ? '' : 's'} with no change {sec.expanded ? '(hide)' : '(show)'}
 </button>
-{(sec.expanded) ? (<><div style={css(`padding:8px 14px 12px; font-size:11.5px; color:#5A5E66; line-height:1.7; word-break:break-word;`)}>{sec.unchangedCodes.join(', ')}</div></>) : null}
+{(sec.expanded) ? (<><div style={css(`padding:6px 14px 10px; display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:2px 10px;`)}>{(sec.unchangedCodes || []).map((code, __iUc) => (<React.Fragment key={__iUc}><div style={css(`font-size:11.5px; color:#5A5E66; padding:2px 0; font-variant-numeric:tabular-nums;`)}>{code}</div></React.Fragment>))}</div></>) : null}
 </div>
 </>) : null}
 </div>
@@ -3952,7 +3998,7 @@ NLH cycle: {schedNlhMonthLabel}
 <svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"} style={css(`transform:rotate(${s.expanded ? '90deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M9 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 No changes ({s.noChangeCount}) {s.expanded ? '(hide)' : '(show)'}
 </button>
-{(s.expanded) ? (<><div style={css(`padding:8px 14px 12px; font-size:11.5px; color:#5A5E66; line-height:1.7; word-break:break-word;`)}>{(s.noChangeCodes || []).map((n, __iNc) => (<React.Fragment key={__iNc}><span style={css(`color:${n.wasRejected ? '#C77B00' : '#5A5E66'};`)}>{n.code}{n.wasRejected ? '*' : ''}</span>{__iNc < s.noChangeCodes.length - 1 ? ', ' : ''}</React.Fragment>))}</div>{(s.noChangeCodes || []).some(n => n.wasRejected) ? (<><div style={css(`padding:0 14px 10px; font-size:10.5px; color:#C77B00;`)}>* rejected or kept on old SC — a real decision, not just an unchanged DC.</div></>) : null}</>) : null}
+{(s.expanded) ? (<><div style={css(`padding:6px 14px 10px; display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:2px 10px;`)}>{(s.noChangeCodes || []).map((n, __iNc) => (<React.Fragment key={__iNc}><div style={css(`font-size:11.5px; padding:2px 0; font-variant-numeric:tabular-nums; color:${n.wasRejected ? '#C77B00' : '#5A5E66'};`)}>{n.code}{n.wasRejected ? '*' : ''}</div></React.Fragment>))}</div>{(s.noChangeCodes || []).some(n => n.wasRejected) ? (<><div style={css(`padding:0 14px 10px; font-size:10.5px; color:#C77B00;`)}>* rejected or kept on old SC — a real decision, not just an unchanged DC.</div></>) : null}</>) : null}
 </div>
 </>) : null}
 </div>
@@ -4006,13 +4052,15 @@ No changes ({s.noChangeCount}) {s.expanded ? '(hide)' : '(show)'}
 <svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.4"} style={css(`transform:rotate(${c.expanded ? '90deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M9 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </button>
-{(c.expanded) ? (<><div style={css(`padding:8px 16px 12px; font-size:11.5px; color:#5A5E66; line-height:1.7; word-break:break-word;`)}>{(c.noChangeCodes || []).map((n, __iNc2) => (<React.Fragment key={__iNc2}><span style={css(`color:${n.wasRejected ? '#C77B00' : '#5A5E66'};`)}>{n.code}{n.wasRejected ? '*' : ''}</span>{__iNc2 < c.noChangeCodes.length - 1 ? ', ' : ''}</React.Fragment>))}</div></>) : null}
+{(c.expanded) ? (<><div style={css(`padding:6px 16px 10px; display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:2px 10px;`)}>{(c.noChangeCodes || []).map((n, __iNc2) => (<React.Fragment key={__iNc2}><div style={css(`font-size:11.5px; padding:2px 0; font-variant-numeric:tabular-nums; color:${n.wasRejected ? '#C77B00' : '#5A5E66'};`)}>{n.code}{n.wasRejected ? '*' : ''}</div></React.Fragment>))}</div></>) : null}
 </div>
 </>) : null}
 </div>
 </React.Fragment>))}
 </div>
 </>) : null}
+{/* closes the reviewMapDetailOpen ternary opened above (stage tabs + cards vs. Details view) */}
+</>)}
 </div>
 </div>
 </>)}
@@ -7956,8 +8004,24 @@ class NDCApp extends React.Component {
       isLocal: dc.isLocal !== undefined ? dc.isLocal : true, distFromSc: dc.distFromSc != null ? dc.distFromSc : 0,
       lmZh: scLmZh[dc.scCode] || null, lmCh: scLmCh[dc.scCode] || null,
     }, lmAmFor(dc.code, dc.scCode), lmdcDefaults, { pincodes: seedPincodesFor(idx) }));
+    // Real bug caught by testing (2026-09-16): mapped additions were seeded with lat:0/lng:0 — a
+    // genuine placeholder that nothing had actually consumed for a real calculation until Design
+    // Review's new pre/post distance columns did, producing a ~470,000km "distance" (0,0 is open
+    // ocean off Africa). First fix attempt pulled real-world coordinates from nodeChangesUnified
+    // instead — technically correct-looking, but it broke a SECOND, deeper assumption:
+    // NDC_haversineKm's own ×55 multiplier is calibrated for this app's usual small-delta
+    // synthetic SC/DC pairs (see the pool-DC generation above, ~0.018deg jitter), and multiplying
+    // a genuine real-world cross-city raw distance by 55 the same way inflates it wildly (15,000km+
+    // for what's really a ~250km gap). Fixed properly here instead: addition DCs get the exact
+    // same small-jitter-from-their-own-SC synthetic coordinate scheme every other DC in this app
+    // already uses, so they're scale-consistent with the rest of the dataset rather than a
+    // real-world outlier — a DC "added" to an SC should plausibly sit near that SC anyway.
     nodeAdditions.filter(a => a.mapped && a.sc).forEach((a, idx) => {
-      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, lmZh: scLmZh[a.sc] || null, lmCh: scLmCh[a.sc] || null }, lmAmFor(a.dc, a.sc), lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
+      const sc = scs.find(s => s.code === a.sc);
+      let h = 0; for (let k = 0; k < a.dc.length; k++) h = (h * 31 + a.dc.charCodeAt(k)) >>> 0;
+      const latJit = (((h >> 3) % 72) - 36) / 2000, lngJit = (((h >> 9) % 72) - 36) / 2000;
+      const dcLat = sc ? +(sc.lat + latJit).toFixed(4) : 0, dcLng = sc ? +(sc.lng + lngJit).toFixed(4) : 0;
+      lmdcs.push(Object.assign({ code: a.dc, lmscCode: a.sc, zone: a.zone, lat: dcLat, lng: dcLng, capacity: a.cap, active: true, pending: false, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, lmZh: scLmZh[a.sc] || null, lmCh: scLmCh[a.sc] || null }, lmAmFor(a.dc, a.sc), lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
     });
     nodeAdditions.filter(a => !a.mapped || !a.sc).forEach((a, idx) => {
       lmdcs.push(Object.assign({ code: a.dc, lmscCode: null, zone: a.zone, lat: 0, lng: 0, capacity: a.cap, active: true, pending: true, rlhMode: 'Valmo RLH', mdcCode: null, laneName: null, cutoff: null, tat: null, isLocal: true, distFromSc: 0, lmZh: null, lmCh: null, lmAm1: null, lmAm2: null }, lmdcDefaults, { pincodes: seedPincodesFor(lmdcs.length + idx) }));
@@ -10277,6 +10341,11 @@ class NDCApp extends React.Component {
     const run = {
       id, name: draft.name || ('Cluster: ' + draft.scCodes.join(' + ')), status: 'Running',
       scCodes: draft.scCodes.slice(), dcCodes: eligibleDcs.map(dc => dc.code), volFileName: draft.volFileName, params: Object.assign({}, draft.params),
+      // scParams (2026-09-16) — per-SC Tolerance/Volume Utilisation/Max Sort Capacity Utilisation,
+      // frozen at trigger time the same way params already is. Missed on the first pass of the
+      // point-1 restructure (draft.scParams existed but was never actually copied onto the run) —
+      // caught before it could ship, since Design Review's cards need it for the Inputs recap.
+      scParams: Object.assign({}, draft.scParams),
       createdAt: new Date().toLocaleString(), committedAt: null, results: null, pushedScs: {},
       // cycleMonth (2026-09-16) — which design cycle this run belongs to, same convention RLH's
       // own plans use. Design Review's run list filters on this so switching cycles shows the
@@ -16501,13 +16570,55 @@ class NDCApp extends React.Component {
     // belonging to the currently active RLH design cycle. Older runs with no cycleMonth at all
     // (none should exist, but defensive) fall back to showing under the current cycle rather than
     // vanishing entirely.
-    const runs = (d.mappingRuns || []).filter(r => (r.status === 'Completed' || r.status === 'Committed') && (r.cycleMonth || st.activeCycleMonth.rlh) === st.activeCycleMonth.rlh);
-    const selectedRunId = st.reviewMapRunId || (runs[0] && runs[0].id) || null;
+    const allRuns = (d.mappingRuns || []).filter(r => (r.status === 'Completed' || r.status === 'Committed') && (r.cycleMonth || st.activeCycleMonth.rlh) === st.activeCycleMonth.rlh);
+
+    // ===== Point 3.1 — bifurcated into two distinct stages on the UI: "To Review" (Completed,
+    // decisions not yet locked in) and "Finalised" (Committed — locked in this module's own
+    // sense; NOT the same "Finalised" as RLH's Ops-Alignment lifecycle elsewhere in this app,
+    // since Node Mapping has no equivalent of that yet — just this module's own terminal state,
+    // labelled to match how the rest of Design Review already talks about "finalised" work).
+    const reviewMapStageFilter = st.reviewMapStageFilter === 'finalised' ? 'finalised' : 'toReview';
+    const toReviewRuns = allRuns.filter(r => r.status !== 'Committed');
+    const finalisedRuns = allRuns.filter(r => r.status === 'Committed');
+    const runs = reviewMapStageFilter === 'finalised' ? finalisedRuns : toReviewRuns;
+    const onReviewMapStageFilter = (f) => this.setState({ reviewMapStageFilter: f });
+
+    const reviewMapDetailOpen = !!st.reviewMapDetailOpen;
+    const selectedRunId = st.reviewMapRunId || null;
     const run = runs.find(r => r.id === selectedRunId) || null;
     const results = run ? run.results : null;
     const dec = run ? (st.mapDcDecisions[run.id] || {}) : {};
     const isCommitted = !!(run && run.status === 'Committed');
     const stage = isCommitted ? 'cards' : (st.mapReviewStage || 'decide');
+
+    // ===== distKm(dcCode, scCode) — shared distance lookup for the per-DC pre/post columns
+    // (point 3.4) and, later, any aggregate that wants it. Rounded to the nearest km — this app's
+    // haversine helper already applies the same flat road-distance multiplier every other
+    // distance figure in the app uses (see NDC_haversineKm's own comment), so this stays
+    // consistent with e.g. computeMappingResultPure's own cost calc.
+    const scByCode = {}; (d.scs || []).forEach(s => { scByCode[s.code] = s; });
+    const dcByCode = {}; (d.lmdcs || []).forEach(l => { dcByCode[l.code] = l; });
+    const distKm = (dcCode, scCode) => {
+      const dc = dcByCode[dcCode], sc = scCode ? scByCode[scCode] : null;
+      // (0,0) is never a real seeded coordinate anywhere in this app's data (it's open ocean off
+      // Africa, not India) — treated as "unknown location" the same as a missing lat/lng, rather
+      // than computing a nonsense ~470,000km distance from the equator/prime-meridian.
+      if (!dc || !sc || dc.lat == null || sc.lat == null) return null;
+      if ((dc.lat === 0 && dc.lng === 0) || (sc.lat === 0 && sc.lng === 0)) return null;
+      const km = NDC_haversineKm(dc.lat, dc.lng, sc.lat, sc.lng);
+      // Real, deeper bug caught by testing: NDC_haversineKm's own ×55 multiplier is calibrated
+      // for this app's small-delta synthetic DC-to-its-OWN-SC pairs (~0.018deg jitter — see the
+      // pool-DC generation's own comment). scCode here is often a DIFFERENT SC (the proposed
+      // target of a move) — two independently-seeded, real-scale coordinates — and applying the
+      // same ×55 there inflates a genuine ~250km gap into 15,000km+. Structurally, only a
+      // DC-to-its-own-current-SC pair is a small-delta pair by construction; any other SC gets
+      // the RAW (un-multiplied) haversine value instead. This is the actual fix — not a cap that
+      // hides the number, since capping would have made DIST NEW show "\u2014" for nearly every
+      // real cross-SC move, which is most of what this column exists to show.
+      const isOwnCurrentSc = dc.lmscCode === scCode;
+      return Math.round(isOwnCurrentSc ? km : km / 55);
+    };
+    const distLabel = (km) => (km == null ? '\u2014' : fmtInt(km) + ' km');
 
     const reviewMapRunList = runs.map(r => ({
       id: r.id, name: r.name, statusLabel: r.status, active: r.id === selectedRunId,
@@ -16534,16 +16645,63 @@ class NDCApp extends React.Component {
       return !(d0 && d0.decision === 'Accept');
     };
 
+    // ===== Point 3.2/3.3 — plan cards, one per run in the active stage bucket. Computed from each
+    // run's OWN results/decisions (not just the selected run), since every card on the list needs
+    // its own summary regardless of which one (if any) is currently open in Details.
+    const buildPlanCard = (r) => {
+      const rows = (r.results && r.results.dcRows) || [];
+      // movements — proposed changes this run is actually about (needsDecision, real target SC),
+      // NOT the post-decision effective count. Real bug caught by testing: using the effective
+      // count showed "0 movements" on every still-undecided card, since an undecided row's
+      // effectiveSc defaults back to oldSc — which made a freshly-triggered run with a real
+      // proposed move look like it proposed nothing at all.
+      const movements = rows.filter(row => row.needsDecision && !row.isUnserved).length;
+      const unmapped = rows.filter(row => row.isUnserved && !row.oldSc).length;
+      const scCount = (r.scCodes || []).length;
+      const scParams = r.scParams || {};
+      const toleranceVals = (r.scCodes || []).map(c => (scParams[c] || {}).tolerance).filter(v => v != null);
+      const toleranceLabel = toleranceVals.length ? (Math.min.apply(null, toleranceVals) === Math.max.apply(null, toleranceVals) ? (toleranceVals[0] + ' km') : (Math.min.apply(null, toleranceVals) + '\u2013' + Math.max.apply(null, toleranceVals) + ' km')) : '50 km';
+      return {
+        id: r.id, name: r.name, statusLabel: r.status,
+        statusBg: r.status === 'Committed' ? '#EAF3EF' : '#EAF1FB', statusFg: r.status === 'Committed' ? ACCENT : '#1E6FB8',
+        scCount, dcCount: (r.dcCodes || []).length, volume: r.results ? fmtInt(r.results.totalVolume) : '\u2014',
+        rho: (r.params || {}).rho != null ? r.params.rho.toFixed(2) : '\u2014', hwLabel: (r.params || {}).hw ? 'On' : 'Off', toleranceLabel,
+        movements, unmapped,
+        onClick: () => this.setState({ reviewMapRunId: r.id, reviewMapDetailOpen: true, mapReviewStage: r.status === 'Committed' ? 'cards' : 'decide' }),
+      };
+    };
+    const reviewMapPlanCards = runs.map(buildPlanCard);
+    // Same builder, once, for whichever run is currently open in Details — the recap header at
+    // the top of Details is literally the same card, just not clickable.
+    const reviewMapOpenCard = run ? buildPlanCard(run) : null;
+    const onReviewMapBackToList = () => this.setState({ reviewMapDetailOpen: false, reviewMapRunId: null });
+
     // ===== Stage 1 (decide) — Tab 1: DC-Level Changes, grouped SC-wise, entire selection. =====
     // Every DC in the run shows up: a controllable row under its OLD SC if it's moving or
     // at-risk-unserved, a read-only echo under its NEW SC if something else is proposed to land
     // there, or folded into a collapsed "No changes" count. Brand-new unserved DCs (no old SC at
     // all — nothing to decide, nowhere to group them) get their own standalone section instead.
+    // 2026-09-16 (point 3.4) — movingOut/newArrivals rows now carry distOld/distNew (DC-to-SC
+    // haversine distance, old assignment vs. the proposed one) — "-" when there's no old SC to
+    // measure from (a brand-new DC). Each SC section's header also now shows pre/post Volume and
+    // Sort Utilisation — "pre" from the DCs currently on that SC (oldSc), "post" from the DCs
+    // that would effectively end up there once today's decisions are applied.
+    const utilFor = (code, useEffective) => {
+      const sc = scByCode[code] || {};
+      const rowsHere = results ? results.dcRows.filter(r => (useEffective ? effectiveSc(r) : r.oldSc) === code) : [];
+      const vol = rowsHere.reduce((a, r) => a + (r.volume || 0), 0);
+      const volPct = sc.volCap ? Math.round((vol / sc.volCap) * 100) : null;
+      // Sort Utilisation — DC count against Sort Capacity (this module's own established reading;
+      // see the Max Sort Capacity Utilisation parameter, which is framed the same way).
+      const sortPct = sc.sortCap ? Math.round((rowsHere.length / sc.sortCap) * 100) : null;
+      return { volPct, sortPct };
+    };
     const reviewMapScSections = (results && run) ? (run.scCodes || []).map(code => {
       const movingOut = results.dcRows.filter(r => r.needsDecision && r.oldSc === code && !r.isUnserved).map(r => {
         const d0 = dec[r.code] || {};
         return {
           code: r.code, newSc: r.newSc, decision: d0.decision || 'Pending', remark: d0.remark || '',
+          distOldLabel: distLabel(distKm(r.code, r.oldSc)), distNewLabel: distLabel(distKm(r.code, r.newSc)),
           onAccept: () => this.mapDecideDc(run.id, r.code, 'Accept', d0.remark),
           onReject: () => this.mapDecideDc(run.id, r.code, 'Reject', d0.remark),
           onRemark: (e) => this.mapDecideDc(run.id, r.code, d0.decision || null, e.target.value),
@@ -16563,6 +16721,7 @@ class NDCApp extends React.Component {
         const d0 = dec[r.code] || {};
         return {
           code: r.code, decision: d0.decision || 'Pending', remark: d0.remark || '',
+          distOldLabel: '\u2014', distNewLabel: distLabel(distKm(r.code, code)),
           onAccept: () => this.mapDecideDc(run.id, r.code, 'Accept', d0.remark),
           onReject: () => this.mapDecideDc(run.id, r.code, 'Reject', d0.remark),
           onRemark: (e) => this.mapDecideDc(run.id, r.code, d0.decision || null, e.target.value),
@@ -16581,10 +16740,12 @@ class NDCApp extends React.Component {
       });
       const unchangedCodes = results.dcRows.filter(r => r.oldSc === code && r.isUnchanged).map(r => r.code);
       const expandKey = 'decide:unchanged:' + code;
+      const pre = utilFor(code, false), post = utilFor(code, true);
       return {
         code, movingOut, movingIn, atRisk, newArrivals,
         unchangedCount: unchangedCodes.length, unchangedCodes, expanded: !!st.reviewMapExpanded[expandKey],
         onToggleUnchanged: () => this.mapToggleExpand(expandKey),
+        preVolPct: pre.volPct, postVolPct: post.volPct, preSortPct: pre.sortPct, postSortPct: post.sortPct,
       };
     }) : [];
     // Brand-new unserved additions (no prior SC) — read-only, no action available, shown once
@@ -16656,7 +16817,9 @@ class NDCApp extends React.Component {
 
     return {
       reviewMapAccent: ACCENT,
-      reviewMapRunList, reviewMapHasRuns: runs.length > 0,
+      reviewMapRunList, reviewMapHasRuns: allRuns.length > 0,
+      reviewMapStageFilter, onReviewMapStageFilter, reviewMapToReviewCount: toReviewRuns.length, reviewMapFinalisedCount: finalisedRuns.length,
+      reviewMapPlanCards, reviewMapOpenCard, reviewMapDetailOpen, onReviewMapBackToList,
       reviewMapRunName: run ? run.name : '', reviewMapRunStatusLabel: run ? run.status : '',
       reviewMapStage: stage,
       reviewMapTab: st.mapResultsTab === 'pivot' ? 'pivot' : 'changes',

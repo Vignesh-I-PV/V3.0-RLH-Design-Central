@@ -79,7 +79,7 @@ function retargetMonthStrings(obj, fromAbbr, toAbbr, fromFull, toFull) {
   return obj;
 }
 
-const RLH_TRANSACTIONAL_KEYS = ['runs', 'plans', 'schedulerPlans', 'autodml', 'autodmlDetails', 'autodmlNodes', 'volumeFiles', 'nodeAdditions', 'nodeClosures', 'migrations', 'nodeChangesUnified', 'mappingRuns'];
+const RLH_TRANSACTIONAL_KEYS = ['runs', 'plans', 'schedulerPlans', 'autodml', 'autodmlDetails', 'autodmlNodes', 'volumeFiles', 'nodeAdditions', 'nodeClosures', 'migrations', 'nodeChangesUnified', 'mappingRuns', 'migrationPipeline'];
 // 'mappingRuns' (later session) — SC-DC Mapping / Node Mapping module. Nested inside RLH's own
 // tier strip (not a peer leg the way NLH/FM are), so it rides the exact same per-cycle sync
 // mechanism every other RLH transactional field already uses -- componentDidUpdate() captures it
@@ -120,6 +120,13 @@ function extractRlhTransactional(data) {
 // across all 5 seeded months (and, worse, let auxiliary per-id state like schedFeedback bleed
 // between cycles the same way the original bug did). parentPlanId is remapped through an id map
 // so schedulerPlans still resolve to the correct (same-month) parent plan.
+// 2026-09-16 -- extended to mappingRuns/migrationPipeline (SC-DC Mapping module), same reasoning:
+// a mapping run's id needs the same per-month isolation, and its cycleMonth field needs a direct
+// overwrite here rather than string retargeting, since retargetMonthStrings only rewrites
+// "Jul"->"Aug"-style abbreviation/full-name substrings, which a numeric 'YYYY-MM' cycleMonth
+// value never contains. The returned mappingRunIdMap lets the caller also rebuild
+// mapDcDecisions (keyed by run id, but living in top-level React state, not this per-cycle
+// bucket, so it can't be fixed up in here) under the newly-suffixed ids.
 function suffixRlhIdsForMonth(bucket, month) {
   const suf = '-' + month;
   const idMap = {};
@@ -133,7 +140,20 @@ function suffixRlhIdsForMonth(bucket, month) {
     parentPlanId: sp.parentPlanId ? (idMap[sp.parentPlanId] || (sp.parentPlanId + suf)) : sp.parentPlanId,
   }));
   const runs = (bucket.runs || []).map(r => Object.assign({}, r, { runId: r.runId ? r.runId + suf : r.runId }));
-  return Object.assign({}, bucket, { plans, schedulerPlans, runs });
+
+  const mappingRunIdMap = {};
+  const mappingRuns = (bucket.mappingRuns || []).map(m => {
+    const nm = Object.assign({}, m, { id: m.id + suf, cycleMonth: month });
+    mappingRunIdMap[m.id] = nm.id;
+    return nm;
+  });
+  const migrationPipeline = (bucket.migrationPipeline || []).map(mp => Object.assign({}, mp, {
+    runId: mp.runId ? (mappingRunIdMap[mp.runId] || (mp.runId + suf)) : mp.runId,
+  }));
+
+  const out = Object.assign({}, bucket, { plans, schedulerPlans, runs, mappingRuns, migrationPipeline });
+  out._mappingRunIdMap = mappingRunIdMap; // read once by the constructor's seeding loop to rebuild mapDcDecisions; not real per-cycle data itself
+  return out;
 }
 
 // Field-appropriate empty defaults for a genuinely brand-new RLH cycle (e.g. October, or any
@@ -142,7 +162,7 @@ function suffixRlhIdsForMonth(bucket, month) {
 // generated until the user actually triggers Design Creation for it. Shapes checked against the
 // actual buildSeed() return (autodmlDetails is an object map, everything else is an array).
 function emptyRlhTransactional() {
-  return { runs: [], plans: [], schedulerPlans: [], autodml: [], autodmlDetails: {}, autodmlNodes: [], volumeFiles: [], nodeAdditions: [], nodeClosures: [], migrations: [], nodeChangesUnified: [], mappingRuns: [] };
+  return { runs: [], plans: [], schedulerPlans: [], autodml: [], autodmlDetails: {}, autodmlNodes: [], volumeFiles: [], nodeAdditions: [], nodeClosures: [], migrations: [], nodeChangesUnified: [], mappingRuns: [], migrationPipeline: [] };
 }
 
 const MONTH_ABBR_FULL = { Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April', May: 'May', Jun: 'June', Jul: 'July', Aug: 'August', Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December' };

@@ -882,6 +882,13 @@ All modules
 <button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
 <input ref={opHoursFileInputRef} type={"file"} accept={".csv"} onChange={onOpHoursFileChange} style={css(`display:none;`)} />
 </div>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
+<div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Rate Card</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>MG + shipment-volume slabs · one row per slab</div></div>
+<button onClick={rateCardTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
+<button onClick={triggerRateCardUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
+<input ref={rateCardFileInputRef} type={"file"} accept={".csv"} onChange={onRateCardFileChange} style={css(`display:none;`)} />
+</div>
 </div>
 {(hasScMasterUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -904,6 +911,18 @@ All modules
 <div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
 {(opHoursUploadErrors || []).slice(0, 20).map((er, __iOhMe) => (<React.Fragment key={__iOhMe}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
 {(opHoursUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {opHoursUploadErrors.length - 20} more</div></>) : null}
+</div>
+</div>
+</>) : null}
+{(hasRateCardUploadErrors) ? (<>
+<div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{rateCardUploadErrors.length} row{rateCardUploadErrors.length === 1 ? '' : 's'} flagged in Rate Card upload — nothing applied</span></div>
+<button onClick={closeRateCardUploadErrors} aria-label={"Dismiss"} style={css(`width:24px; height:24px; border:none; background:transparent; color:#8E96A3; cursor:pointer; display:flex; align-items:center; justify-content:center;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;`)}>
+{(rateCardUploadErrors || []).slice(0, 20).map((er, __iRcMe) => (<React.Fragment key={__iRcMe}><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Row {er.row} ({er.code || '\u2014'}): {er.msg}</div></React.Fragment>))}
+{(rateCardUploadErrors.length > 20) ? (<><div style={css(`font-size:11.5px; color:#8E96A3;`)}>+ {rateCardUploadErrors.length - 20} more</div></>) : null}
 </div>
 </div>
 </>) : null}
@@ -971,6 +990,7 @@ All modules
     above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OP HOURS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Minimum Guarantee + shipment-volume slab pricing for this SC"}>RATE CARD</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
@@ -1006,6 +1026,9 @@ All modules
 </div>
 <div style={css(`padding:10px 10px; text-align:center;`)}>
 <button onClick={s.onOpenOpHours} title={"Operating Hours" + (s.opHoursConfigured ? ' — configured' : ' — falls back to always-open default')} aria-label={"Open Operating Hours for " + s.code} style={css(`width:26px; height:26px; border:1px solid ${s.opHoursConfigured ? '#0D7377' : '#E6EBF2'}; background:${s.opHoursConfigured ? '#E9F5F5' : '#fff'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+<div style={css(`padding:10px 10px; text-align:center;`)}>
+<button onClick={s.onOpenRateCard} title={"Rate Card" + (s.rateCardConfigured ? ' — configured' : ' — nothing set yet')} aria-label={"Open Rate Card for " + s.code} style={css(`width:26px; height:26px; border:1px solid ${s.rateCardConfigured ? '#0D7377' : '#E6EBF2'}; background:${s.rateCardConfigured ? '#E9F5F5' : '#fff'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 <div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
 <button onClick={s.rowEdit} disabled={rlhCyclePast} aria-label={"Edit row"} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -1355,7 +1378,14 @@ All modules
 </>) : null}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 340px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`flex:1; min-height:0; overflow:auto;`)}>
-<div style={css(`min-width:1650px;`)}>
+<div style={css(`min-width:1810px;`)}>
+{/* Real bug fix (2026-09-16): this was min-width:1650px — 160px short of the row's actual
+    16-column total (sum of grid-template-columns below is 1810px). PINCODES/LM POCs (renamed
+    from LM Contacts) were added after this number was last set and nobody updated it, so the
+    header row's own #E6EBF2 background box was ~160px narrower than its own content — the last
+    column's cells rendered fine, just outside their parent's painted background, showing white/
+    transparent behind the tail end of the header text. Confirmed via live DOM inspection
+    (getBoundingClientRect), not guessed from the screenshot alone. */}
 <div style={css(`display:grid; grid-template-columns:110px 90px 150px 90px 100px 120px 80px 70px 100px 100px 110px 180px 160px 140px 140px 70px; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>LMDC CODE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Owning Sort Centre \u2014 sourced from AutoDML's active link for this DC"}>LMSC</div>
@@ -1376,7 +1406,7 @@ All modules
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Default \u2014 largest RLH-feasible vehicle in Vehicle Master (" + lmdcSysDefaults.maxVehicle + "). An explicit value here (even if the same) can't be overridden by a plan; Default can."}>MAX VEHICLE SIZE ({lmdcSysDefaults.maxVehicle})</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Default " + lmdcSysDefaults.unloadMin + " min \u2014 an explicit value here (even if numerically the same) can't be overridden by a plan; Default can."}>UNLOADING TIME ({lmdcSysDefaults.unloadMin} MIN)</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"Many-to-many with LMDCs \u2014 feeds SC-DC Mapping's same-pincode-same-SC constraint"}>PINCODES</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"LM contacts for this DC \u2014 ZH, CH and one AM required, second AM optional. Feeds Route Scheduler's LM reviewer assignment."}>LM CONTACTS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; border-left:1px solid #D0D5DD;`)} title={"LM POCs for this DC \u2014 ZH, CH and one AM required, second AM optional. Feeds Route Scheduler's LM reviewer assignment."}>LM POCS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(lmdcRows || []).map((l, __i42) => (<React.Fragment key={__i42}>
@@ -2872,21 +2902,23 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(s.expanded) ? (<>
 <div style={css(`background:#FAFBFD; border-top:1px solid #EEF1F6; padding:6px 12px 10px 40px;`)}>
-<div style={css(`display:grid; grid-template-columns:1fr 1.5fr 0.9fr 0.9fr 0.9fr 0.9fr 36px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff; margin-top:6px;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.5fr 0.9fr 0.9fr 0.9fr 0.9fr 1.1fr 36px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff; margin-top:6px;`)}>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>DC CODE</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>NAME</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>VOLUME</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>VOL FLAG</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>SOURCE</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} title={"Same-pincode DCs are grouped by the solver \u2014 see Single Pin \u2013 Single SC in Operating Mode"}>PINCODES</div>
 <div style={css(`padding:7px 11px; background:#F2F5FA;`)} />
 {(s.lmdcRows || []).map((l, __iMl2) => (<React.Fragment key={__iMl2}>
 <div style={css(`padding:7px 11px; font-size:12px; font-weight:600; color:${mapAccent}; border-top:1px solid #F2F5FA;`)}>{l.code}</div>
-<div style={css(`padding:7px 11px; font-size:12px; color:#14171F; border-top:1px solid #F2F5FA; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{l.name}</div>
+<div style={css(`padding:7px 11px; font-size:12px; color:${l.name ? '#14171F' : '#C3C9D4'}; border-top:1px solid #F2F5FA; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{l.name || '\u2014'}</div>
 <div style={css(`padding:7px 11px; font-size:12px; color:${l.volFg}; border-top:1px solid #F2F5FA; text-align:right; font-variant-numeric:tabular-nums; font-weight:${l.volWeight};`)}>{l.vol}</div>
 <div style={css(`padding:7px 11px; font-size:12px; color:#14171F; border-top:1px solid #F2F5FA; text-align:right; font-variant-numeric:tabular-nums;`)}>{l.cap}</div>
 <div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.volFlagBg}; color:${l.volFlagFg};`)}>{l.volFlag}</span></div>
 <div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.srcBg}; color:${l.srcFg};`)}>{l.src}</span></div>
+<div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)} title={l.pinsTitle}>{l.pinsLabel}</div>
 <div style={css(`padding:3px 6px; border-top:1px solid #F2F5FA; display:flex; align-items:center; justify-content:center;`)}>{(l.canDrop) ? (<><button onClick={l.onDrop} title={"Remove this zero-volume DC from the run"} aria-label={"Remove " + l.code + " from the run"} style={css(`width:24px; height:24px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:#C3C9D4;`)} onMouseEnter={(e) => hoverOn(e, `color:#D14B4B; background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:24px; height:24px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:#C3C9D4;`, `color:#D14B4B; background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></>) : null}</div>
 </React.Fragment>))}
 {((s.lmdcRows || []).length === 0) ? (<><div style={css(`grid-column:1 / -1; padding:14px; text-align:center; color:#8E96A3; font-size:11.5px;`)}>No DCs currently linked to this SC.</div></>) : null}
@@ -2938,49 +2970,69 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Operating Mode</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>Baseline is always the current SC-DC mapping per AutoDML — not a choice made here.</div>
 
-{/* HW + Cross-SC Migration Penalty — global, side by side, per point 1 */}
+{/* New Node Addition + Cross-SC Migration Penalty + Single Pin \u2013 Single SC — global, side by side */}
 <div style={css(`display:flex; gap:10px; margin-bottom:20px;`)}>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
-<div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Historical Weight (HW)</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Blend in past Committed runs</div></div>
-<button onClick={onMapHwToggle} style={css(`width:34px; height:19px; border-radius:999px; border:none; background:${mapHwOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:14px; height:14px; border-radius:999px; background:#fff; position:absolute; top:2.5px; left:${mapHwOn ? '17px' : '3px'}; transition:left 120ms;`)} /></button>
+<div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>New Node Addition</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Include brand-new unmapped DCs in this solve</div></div>
+<button onClick={onMapNewNodeAdditionToggle} style={css(`width:34px; height:19px; border-radius:999px; border:none; background:${mapNewNodeAdditionOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:14px; height:14px; border-radius:999px; background:#fff; position:absolute; top:2.5px; left:${mapNewNodeAdditionOn ? '17px' : '3px'}; transition:left 120ms;`)} /></button>
 </div>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
 <div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Cross-SC Migration Penalty (ρ)</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>Higher = fewer cross-SC moves</div></div>
 <input type={"range"} min={"0"} max={"1"} step={"0.01"} value={mapRho} onInput={onMapRho} style={css(`width:90px; accent-color:${mapAccent}; flex-shrink:0;`)} />
 <span style={css(`font-size:12px; font-weight:600; color:#14171F; width:32px; text-align:right; flex-shrink:0;`)}>{mapRho.toFixed(2)}</span>
 </div>
+<div style={css(`flex:1; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
+<div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Single Pin \u2013 Single SC</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>DCs sharing a pincode always land on one SC</div></div>
+<button onClick={onMapSinglePinSingleScToggle} style={css(`width:34px; height:19px; border-radius:999px; border:none; background:${mapSinglePinSingleScOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:14px; height:14px; border-radius:999px; background:#fff; position:absolute; top:2.5px; left:${mapSinglePinSingleScOn ? '17px' : '3px'}; transition:left 120ms;`)} /></button>
+</div>
 </div>
 
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SELECTED SCs — {mapScCount}</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Tolerance, Volume Utilisation and Max Sort Capacity Utilisation are set per SC below. Use a column header's own field + {"\u2193"} to apply that value to every selected SC at once.</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Tolerance, Volume Utilisation and Max Sort Capacity Utilisation are set per SC below. Use a column header's own {"\u2212"} / + to apply that value to every selected SC at once.</div>
 <div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow-x:auto; margin-bottom:10px;`)}>
 <div style={css(`min-width:920px;`)}>
 <div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 65px 75px 45px 100px 85px 85px 95px; background:#F7F9FC; padding:7px 10px; font-size:9.5px; font-weight:700; color:#5A5E66; letter-spacing:0.03em; align-items:end; gap:6px;`)}>
-<div style={css(`padding-bottom:6px;`)}>SC</div>
+<div style={css(`padding-bottom:6px; position:sticky; left:0; background:#F7F9FC;`)}>SC</div>
 <div style={css(`padding-bottom:6px;`)}>LOCATION</div>
 <div style={css(`text-align:right; padding-bottom:6px;`)}>SORT CAP</div>
 <div style={css(`text-align:right; padding-bottom:6px;`)}>VOL CAP</div>
 <div style={css(`text-align:right; padding-bottom:6px;`)}>DCs</div>
 <div>
-<div style={css(`margin-bottom:3px;`)}>TOLERANCE (KM)</div>
-<div style={css(`display:flex; align-items:center; gap:3px;`)}><input type={"number"} min={"0"} step={"5"} value={mapHeaderTolerance} onInput={onMapHeaderTolerance} style={css(`width:52px; height:22px; border:1px solid #C3C9D4; border-radius:5px; padding:0 5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /><button onClick={onMapApplyTolerance} title={"Apply to all selected SCs"} style={css(`width:20px; height:20px; border:1px solid #C3C9D4; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 5v14m0 0l-5-5m5 5l5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
+<div style={css(`margin-bottom:3px; white-space:nowrap;`)}>TOLERANCE (ALL)</div>
+<div style={css(`display:flex; align-items:center; gap:0; border:1px solid #C3C9D4; border-radius:5px; width:fit-content; background:#fff;`)}>
+<button onClick={onMapHeaderStepDown} title={"Apply -5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-right:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>{"\u2212"}</button>
+<span style={css(`width:34px; text-align:center; font-size:11px; font-variant-numeric:tabular-nums;`)}>{mapHeaderTolerance}</span>
+<button onClick={onMapHeaderStepUp} title={"Apply +5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-left:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>+</button>
+</div>
 </div>
 <div>
-<div style={css(`margin-bottom:3px;`)}>VOL UTIL MIN %</div>
-<div style={css(`display:flex; align-items:center; gap:3px;`)}><input type={"number"} min={"0"} step={"5"} value={mapHeaderVolUtilMin} onInput={onMapHeaderVolUtilMin} style={css(`width:42px; height:22px; border:1px solid #C3C9D4; border-radius:5px; padding:0 5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /><button onClick={onMapApplyVolUtilMin} title={"Apply to all selected SCs"} style={css(`width:20px; height:20px; border:1px solid #C3C9D4; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 5v14m0 0l-5-5m5 5l5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
+<div style={css(`margin-bottom:3px; white-space:nowrap;`)}>VOL MIN (ALL)</div>
+<div style={css(`display:flex; align-items:center; gap:0; border:1px solid #C3C9D4; border-radius:5px; width:fit-content; background:#fff;`)}>
+<button onClick={onMapHeaderVolUtilMinDown} title={"Apply -5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-right:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>{"\u2212"}</button>
+<span style={css(`width:28px; text-align:center; font-size:11px; font-variant-numeric:tabular-nums;`)}>{mapHeaderVolUtilMin}</span>
+<button onClick={onMapHeaderVolUtilMinUp} title={"Apply +5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-left:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>+</button>
+</div>
 </div>
 <div>
-<div style={css(`margin-bottom:3px;`)}>VOL UTIL MAX %</div>
-<div style={css(`display:flex; align-items:center; gap:3px;`)}><input type={"number"} min={"0"} step={"5"} value={mapHeaderVolUtilMax} onInput={onMapHeaderVolUtilMax} style={css(`width:42px; height:22px; border:1px solid #C3C9D4; border-radius:5px; padding:0 5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /><button onClick={onMapApplyVolUtilMax} title={"Apply to all selected SCs"} style={css(`width:20px; height:20px; border:1px solid #C3C9D4; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 5v14m0 0l-5-5m5 5l5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
+<div style={css(`margin-bottom:3px; white-space:nowrap;`)}>VOL MAX (ALL)</div>
+<div style={css(`display:flex; align-items:center; gap:0; border:1px solid #C3C9D4; border-radius:5px; width:fit-content; background:#fff;`)}>
+<button onClick={onMapHeaderVolUtilMaxDown} title={"Apply -5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-right:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>{"\u2212"}</button>
+<span style={css(`width:28px; text-align:center; font-size:11px; font-variant-numeric:tabular-nums;`)}>{mapHeaderVolUtilMax}</span>
+<button onClick={onMapHeaderVolUtilMaxUp} title={"Apply +5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-left:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>+</button>
+</div>
 </div>
 <div>
-<div style={css(`margin-bottom:3px;`)}>MAX SORT CAP %</div>
-<div style={css(`display:flex; align-items:center; gap:3px;`)}><input type={"number"} min={"0"} step={"5"} value={mapHeaderSortCapUtilMax} onInput={onMapHeaderSortCapUtilMax} style={css(`width:42px; height:22px; border:1px solid #C3C9D4; border-radius:5px; padding:0 5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /><button onClick={onMapApplySortCapUtilMax} title={"Apply to all selected SCs"} style={css(`width:20px; height:20px; border:1px solid #C3C9D4; background:#fff; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M12 5v14m0 0l-5-5m5 5l5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
+<div style={css(`margin-bottom:3px; white-space:nowrap;`)}>SORT CAP (ALL)</div>
+<div style={css(`display:flex; align-items:center; gap:0; border:1px solid #C3C9D4; border-radius:5px; width:fit-content; background:#fff;`)}>
+<button onClick={onMapHeaderSortCapUtilMaxDown} title={"Apply -5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-right:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>{"\u2212"}</button>
+<span style={css(`width:28px; text-align:center; font-size:11px; font-variant-numeric:tabular-nums;`)}>{mapHeaderSortCapUtilMax}</span>
+<button onClick={onMapHeaderSortCapUtilMaxUp} title={"Apply +5 to all selected SCs"} style={css(`width:20px; height:22px; border:none; border-left:1px solid #C3C9D4; background:transparent; cursor:pointer; font-size:13px; color:#5A5E66; display:flex; align-items:center; justify-content:center;`)}>+</button>
+</div>
 </div>
 </div>
 {(mapSelectedScSummary || []).map((s, __iMss) => (<React.Fragment key={__iMss}>
 <div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 65px 75px 45px 100px 85px 85px 95px; padding:7px 10px; border-top:1px solid #EEF1F6; align-items:center; gap:6px;`)}>
-<div style={css(`font-size:12px; font-weight:600; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.code} — {s.name}</div>
+<div style={css(`font-size:12px; font-weight:600; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; position:sticky; left:0; background:#fff;`)}>{s.code} — {s.name}</div>
 <div style={css(`font-size:11px; color:#5A5E66; font-variant-numeric:tabular-nums;`)}>{s.loc}</div>
 <div style={css(`font-size:11.5px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.sortCap}</div>
 <div style={css(`font-size:11.5px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.volCap}</div>
@@ -3001,8 +3053,40 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : null}
 </>) : null}
-{/* ===== STEP 3 — Preview & Trigger ===== */}
+{/* ===== STEP 3 — SC Vehicle Availability ===== */}
 {(mapStep === 3) ? (<>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>SC Vehicle Availability</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>Read-only reference from SC Vehicle Availability (Design Inputs) for each selected SC — Node Mapping's own solve doesn't consume vehicle data, this is here so gaps are visible before triggering. Configure vehicles via Design Inputs → Node & Vehicle Master.</div>
+{(mapVehicleAvailSections || []).map((v, __iMva) => (<React.Fragment key={__iMva}>
+<div style={css(`border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; margin-bottom:14px;`)}>
+<div style={css(`display:flex; align-items:center; gap:18px; padding:10px 14px; background:#F7F9FC; border-bottom:1px solid #E6EBF2;`)}>
+<span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>{v.code} — {v.name}</span>
+<span style={css(`font-size:11px; color:#5A5E66;`)}>SORT CAP <strong>{v.sortCap}</strong></span>
+<span style={css(`font-size:11px; color:#5A5E66;`)}>VEHICLES <strong>{v.vehicleCount}</strong></span>
+</div>
+{(v.rows.length > 0) ? (<>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; padding:7px 14px; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
+<div>VEHICLE TYPE</div><div style={css(`text-align:right;`)}>CAPACITY</div><div style={css(`text-align:right;`)}>DISTANCE LIMIT</div><div style={css(`text-align:right;`)}>VEHICLES</div><div style={css(`text-align:right;`)}>TP LIMIT</div><div>ZONE FEASIBILITY</div>
+</div>
+{v.rows.map((r, __iVr) => (<React.Fragment key={__iVr}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.vehicleType}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.capacity}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.distanceLimit}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.vehicleCount}</div>
+<div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.tpLimit}</div>
+<div><span style={css(`padding:1px 8px; border-radius:999px; font-size:10px; font-weight:600; background:${r.zfBg}; color:${r.zfFg};`)}>{r.zoneFeas}</span></div>
+</div>
+</React.Fragment>))}
+</>) : (<>
+<div style={css(`padding:14px; text-align:center; color:#D14B4B; font-size:11.5px; background:#FAFBFD;`)}>No vehicles configured for this SC — set these up in SC Vehicle Availability before triggering, or Route Planner/Scheduler work for it later will have nothing to schedule against.</div>
+</>)}
+</div>
+</React.Fragment>))}
+{((mapVehicleAvailSections || []).length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:12px;`)}>No SCs selected.</div></>) : null}
+</>) : null}
+{/* ===== STEP 4 — Preview & Trigger ===== */}
+{(mapStep === 4) ? (<>
 <div style={css(`font-size:15px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Preview &amp; Trigger</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-bottom:18px;`)}>{mapScCount} SCs · {mapDcCount2} DCs in this run.</div>
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
@@ -3028,7 +3112,8 @@ NLH cycle: {schedNlhMonthLabel}
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>SCs</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapScCount}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>DCs</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapDcCount2}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MIGRATION PENALTY (ρ)</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapRho.toFixed(2)}</div></div>
-<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>HISTORICAL WEIGHT</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapHwOn ? 'On' : 'Off'}</div></div>
+<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>NEW NODE ADDITION</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapNewNodeAdditionOn ? 'On' : 'Off'}</div></div>
+<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>SINGLE PIN \u2013 SINGLE SC</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapSinglePinSingleScOn ? 'On' : 'Off'}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAPPING TOLERANCE</div><div style={css(`font-size:12.5px; color:${mapToleranceAnyWarn ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapToleranceRangeLabel}{mapToleranceAnyWarn ? ' \u26a0' : ''}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>VOLUME UTILISATION</div><div style={css(`font-size:12.5px; color:${mapVolUtilAnyOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapVolUtilRangeLabel}{mapVolUtilAnyOver100 ? ' \u26a0' : ''}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAX SORT CAP UTILISATION</div><div style={css(`font-size:12.5px; color:${mapSortCapUtilAnyOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapSortCapUtilRangeLabel}{mapSortCapUtilAnyOver100 ? ' \u26a0' : ''}</div></div>
@@ -3050,7 +3135,7 @@ NLH cycle: {schedNlhMonthLabel}
 {/* Wizard nav */}
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-top:28px; padding-top:20px; border-top:1px solid #E6EBF2;`)}>
 <button onClick={onMapBack} style={css(`height:38px; padding:0 18px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapStep > 1 ? 'pointer' : 'default'}; opacity:${mapStep > 1 ? '1' : '0.4'};`)} disabled={mapStep === 1}>Back</button>
-{(mapStep < 3) ? (<>
+{(mapStep < 4) ? (<>
 <button onClick={onMapNext} disabled={mapStep === 1 && !mapCanNext1} style={css(`height:38px; padding:0 22px; border:none; background:${(mapStep === 1 && !mapCanNext1) ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${(mapStep === 1 && !mapCanNext1) ? 'not-allowed' : 'pointer'};`)}>Next</button>
 </>) : (<>
 <button onClick={onMapTrigger} disabled={mapTriggerBlocked} style={css(`height:38px; padding:0 22px; border:none; background:${mapTriggerBlocked ? '#C3C9D4' : mapAccent}; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${mapTriggerBlocked ? 'not-allowed' : 'pointer'};`)}>Trigger run</button>
@@ -3801,49 +3886,60 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`max-width:420px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>No completed mapping runs yet — trigger one from Design Creation's SC-DC Mapping module.</div>
 </div>
 </>) : (<>
-<div style={css(`flex:1; overflow-y:auto; padding:24px 32px;`)}>
-<div style={css(`max-width:980px; margin:0 auto;`)}>
-{/* ===== Point 3.1/3.2 — bifurcated stages + plan cards. Shown when no run is open in Details. ===== */}
-{(!reviewMapDetailOpen) ? (<>
-<div style={css(`display:flex; gap:6px; margin-bottom:20px;`)}>
-<button onClick={() => onReviewMapStageFilter('toReview')} style={css(`height:36px; padding:0 16px; border:1px solid ${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'toReview' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>To Review ({reviewMapToReviewCount})</button>
-<button onClick={() => onReviewMapStageFilter('finalised')} style={css(`height:36px; padding:0 16px; border:1px solid ${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'finalised' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:12.5px; font-weight:700; border-radius:8px; cursor:pointer;`)}>Finalised ({reviewMapFinalisedCount})</button>
+{/* 2026-09-16 — two-pane redesign (point 1): persistent left rail (stage tabs + run list) next
+    to a right detail panel, matching Route Planner/Scheduler's own SC-list-left / detail-right
+    layout instead of the earlier click-a-card-navigate-to-a-separate-screen pattern. Selecting a
+    run just updates the right panel in place — no round trip, no lost scroll position, better use
+    of the available width than a single centered 980px column ever was. */}
+<div style={css(`flex:1; display:flex; min-height:0;`)}>
+{/* LEFT RAIL */}
+<div style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#FAFBFD; overflow-y:auto;`)}>
+<div style={css(`padding:16px;`)}>
+<div style={css(`display:flex; gap:6px; margin-bottom:14px;`)}>
+<button onClick={() => onReviewMapStageFilter('toReview')} style={css(`flex:1; height:32px; padding:0 8px; border:1px solid ${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'toReview' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'toReview' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>To Review ({reviewMapToReviewCount})</button>
+<button onClick={() => onReviewMapStageFilter('finalised')} style={css(`flex:1; height:32px; padding:0 8px; border:1px solid ${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#E6EBF2'}; background:${reviewMapStageFilter === 'finalised' ? '#EAF3EF' : '#fff'}; color:${reviewMapStageFilter === 'finalised' ? reviewMapAccent : '#5A5E66'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:7px; cursor:pointer;`)}>Finalised ({reviewMapFinalisedCount})</button>
 </div>
-<div style={css(`display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px;`)}>
+<div style={css(`display:flex; flex-direction:column; gap:6px;`)}>
 {(reviewMapPlanCards || []).map((c, __iRpc) => (<React.Fragment key={__iRpc}>
-<button onClick={c.onClick} style={css(`text-align:left; background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; cursor:pointer; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `border-color:${reviewMapAccent};`)} onMouseLeave={(e) => hoverOff(e, `text-align:left; background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; cursor:pointer; font-family:inherit;`, `border-color:${reviewMapAccent};`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;`)}>
-<span style={css(`font-size:13.5px; font-weight:700; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{c.name}</span>
-<span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${c.statusBg}; color:${c.statusFg}; flex-shrink:0;`)}>{c.statusLabel}</span>
+<button onClick={c.onClick} style={css(`text-align:left; padding:11px 12px; border:1px solid ${c.selected ? reviewMapAccent : '#E6EBF2'}; background:${c.selected ? '#EAF3EF' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;`)}>
+<span style={css(`font-size:12.5px; font-weight:700; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{c.name}</span>
+<span style={css(`padding:2px 7px; border-radius:999px; font-size:9.5px; font-weight:600; background:${c.statusBg}; color:${c.statusFg}; flex-shrink:0;`)}>{c.statusLabel}</span>
 </div>
-<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>INPUTS</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px 16px; margin-bottom:12px; font-size:11.5px; color:#14171F;`)}>
-<span>{c.scCount} SCs</span><span>{c.dcCount} DCs</span><span>{c.volume} vol</span><span>ρ {c.rho}</span><span>HW {c.hwLabel}</span><span>Tol {c.toleranceLabel}</span>
-</div>
-<div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:5px;`)}>OUTPUTS</div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:6px 16px; font-size:11.5px;`)}>
-<span style={css(`color:${c.movements > 0 ? '#C77B00' : '#14171F'};`)}>{c.movements} movement{c.movements === 1 ? '' : 's'}</span>
-<span style={css(`color:${c.unmapped > 0 ? '#D14B4B' : '#14171F'};`)}>{c.unmapped} unmapped</span>
-</div>
+<div style={css(`font-size:10.5px; color:#8E96A3;`)}>{c.scCount} SCs · {c.dcCount} DCs {(c.movements > 0) ? (<><span style={css(`color:#C77B00; font-weight:600;`)}> · {c.movements} to review</span></>) : null}</div>
 </button>
 </React.Fragment>))}
-{((reviewMapPlanCards || []).length === 0) ? (<><div style={css(`grid-column:1 / -1; padding:30px; text-align:center; color:#8E96A3; font-size:12.5px;`)}>Nothing here yet.</div></>) : null}
+{((reviewMapPlanCards || []).length === 0) ? (<><div style={css(`padding:20px; text-align:center; color:#8E96A3; font-size:11.5px;`)}>Nothing here yet.</div></>) : null}
 </div>
-</>) : (<>
-{/* ===== Details view — plan-card recap at the top, then the existing Decide/Finalise/Cards flow. ===== */}
-<button onClick={onReviewMapBackToList} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; margin-bottom:16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Back to {reviewMapStageFilter === 'finalised' ? 'Finalised' : 'To Review'}</button>
+</div>
+</div>
+{/* RIGHT PANEL */}
+<div style={css(`flex:1; overflow-y:auto; padding:24px 32px; min-width:0;`)}>
 {(reviewMapOpenCard) ? (<>
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:16px; margin-bottom:20px;`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;`)}>
-<span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{reviewMapOpenCard.name}</span>
+<div style={css(`max-width:1000px;`)}>
+{/* Recap header — Route Planner's own big-number-tile convention, not the earlier small
+    INPUTS/OUTPUTS text-only summary. */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:18px 20px; margin-bottom:20px;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;`)}>
+<span style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{reviewMapOpenCard.name}</span>
 <span style={css(`padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:600; background:${reviewMapOpenCard.statusBg}; color:${reviewMapOpenCard.statusFg};`)}>{reviewMapOpenCard.statusLabel}</span>
 </div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:16px 28px;`)}>
-<div><div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:4px;`)}>INPUTS</div><div style={css(`font-size:12px; color:#14171F;`)}>{reviewMapOpenCard.scCount} SCs · {reviewMapOpenCard.dcCount} DCs · {reviewMapOpenCard.volume} vol · ρ {reviewMapOpenCard.rho} · HW {reviewMapOpenCard.hwLabel} · Tol {reviewMapOpenCard.toleranceLabel}</div></div>
-<div><div style={css(`font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em; margin-bottom:4px;`)}>OUTPUTS</div><div style={css(`font-size:12px; color:#14171F;`)}>{reviewMapOpenCard.movements} movement{reviewMapOpenCard.movements === 1 ? '' : 's'} · {reviewMapOpenCard.unmapped} unmapped</div></div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:16px;`)}>{reviewMapOpenCard.scCount} SCs · {reviewMapOpenCard.dcCount} DCs · {reviewMapOpenCard.volume} vol · ρ {reviewMapOpenCard.rho} · New Addition {reviewMapOpenCard.newAdditionLabel} · Tol {reviewMapOpenCard.toleranceLabel}</div>
+<div style={css(`display:grid; grid-template-columns:repeat(3,1fr); gap:14px; padding-top:14px; border-top:1px solid #EEF1F6;`)}>
+<div>
+<div style={css(`font-size:22px; font-weight:700; color:${reviewMapOpenCard.movements > 0 ? '#C77B00' : '#14171F'};`)}>{reviewMapOpenCard.movements}</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>Movement{reviewMapOpenCard.movements === 1 ? '' : 's'}</div>
+</div>
+<div>
+<div style={css(`font-size:22px; font-weight:700; color:${reviewMapOpenCard.unmapped > 0 ? '#D14B4B' : '#14171F'};`)}>{reviewMapOpenCard.unmapped}</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>Unmapped</div>
+</div>
+<div>
+<div style={css(`font-size:22px; font-weight:700; color:#14171F;`)}>{reviewMapOpenCard.pctChanged}%</div>
+<div style={css(`font-size:11px; color:#8E96A3;`)}>Of DCs changed</div>
 </div>
 </div>
-</>) : null}
+</div>
 {/* ===== STAGE 1 \u2014 decide ===== */}
 {(reviewMapStage === 'decide') ? (<>
 <div style={css(`display:flex; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:18px;`)}>
@@ -4059,19 +4155,35 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </React.Fragment>))}
 </div>
 </>) : null}
-{/* closes the reviewMapDetailOpen ternary opened above (stage tabs + cards vs. Details view) */}
+{/* closes {(reviewMapOpenCard) ? (<> ... two-pane right-panel content ... </>) : (<>empty
+    state</>)} opened in the recap-header block above, then the max-width wrapper, the right-panel
+    scroll container, and the two-pane flex row itself — all opened together when the two-pane
+    layout replaced the old click-a-card/navigate-to-Details pattern. */}
+</div>
+</>) : (<>
+<div style={css(`display:flex; align-items:center; justify-content:center; height:100%; min-height:300px; color:#8E96A3; font-size:12.5px;`)}>Nothing in this bucket yet.</div>
 </>)}
 </div>
 </div>
 </>)}
 </>) : null}
+{/* Real bug fix (2026-09-16): this "Coming Soon" fallback is for tiers with nothing built yet
+    (FM Carting, NLH) — it lived alongside Node Mapping's own real content with no gate keeping
+    the two apart, so it rendered unconditionally underneath Node Mapping's actual cards/Details
+    view on every screen. Caught via a live click-through of the deployed build — confirmed Route
+    Planner's own Design Review has no equivalent leak. Wrapped in place here, WITHOUT touching
+    the `}</>)}` right after it — that token closes an outer wrapper from further up the tree, not
+    anything belonging to this block; consuming it by mistake on the first attempt at this fix
+    broke the file's brace balance (caught immediately by the compile check, before it could ship). */}
+{(!isReviewTierNodeMapping) ? (<>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:center; padding:40px;`)}>
 <div style={css(`max-width:420px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;`)}>
 <div style={css(`width:48px; height:48px; border-radius:14px; background:#F2F5FA; display:flex; align-items:center; justify-content:center;`)}><svg width={"24"} height={"24"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{(isReviewTierNodeMapping) ? 'SC-DC Mapping' : reviewTierComingSoonLabel}</div>
+<div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{reviewTierComingSoonLabel}</div>
 <div style={css(`font-size:12.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>COMING SOON</div>
 </div>
 </div>
+</>) : null}
 </>)}
 </div>
 </>) : null}
@@ -6691,6 +6803,48 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </div>
 </div>
 </>) : null}
+{/* ===== RATE CARD POPUP (point 2, 2026-09-16) — MG + shipment-volume slab pricing table, same
+     trigger/close pattern as Operating Hours above. Unlike Operating Hours' fixed 30-min-grid
+     chips, slabs are free-form rows (each has its own Min/Max/Cost) since shipment-volume
+     boundaries aren't a fixed grid the way time-of-day is. ===== */}
+{(rateCardModal.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={rateCardModal.onClose}>
+<div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:640px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;`)}>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Rate Card — {rateCardModal.code}</div>
+<button onClick={rateCardModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+
+<label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>MINIMUM GUARANTEE (₹)</label>
+<input type={"number"} min={"0"} value={rateCardModal.mg} onInput={rateCardModal.onMgChange} placeholder={"e.g. 50000"} style={css(`width:200px; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none; margin-bottom:20px;`)} />
+
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SHIPMENT SLABS</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Each slab is a shipment-volume bucket with its own cost per shipment. Leave the top slab's Max blank for open-ended ("2,000,000 and above").</div>
+{((rateCardModal.slabs || []).length > 0) ? (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 32px; gap:8px; padding:0 0 6px; font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
+<div>MIN SHIPMENTS</div><div>MAX SHIPMENTS</div><div>COST / SHIPMENT (₹)</div><div />
+</div>
+</>) : null}
+<div style={css(`display:flex; flex-direction:column; gap:8px; margin-bottom:14px;`)}>
+{(rateCardModal.slabs || []).map((sl, __iRcs) => (<React.Fragment key={__iRcs}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 32px; gap:8px; align-items:center;`)}>
+<input type={"number"} min={"0"} value={sl.min} onInput={rateCardModal.onSlabField(__iRcs, 'min')} placeholder={"0"} style={css(`height:34px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; padding:0 10px; box-sizing:border-box;`)} />
+<input type={"number"} min={"0"} value={sl.max} onInput={rateCardModal.onSlabField(__iRcs, 'max')} placeholder={"open-ended"} style={css(`height:34px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; padding:0 10px; box-sizing:border-box;`)} />
+<input type={"number"} min={"0"} step={"0.5"} value={sl.cost} onInput={rateCardModal.onSlabField(__iRcs, 'cost')} placeholder={"e.g. 3"} style={css(`height:34px; border:1px solid #E6EBF2; border-radius:6px; font-family:inherit; font-size:12.5px; padding:0 10px; box-sizing:border-box;`)} />
+<button onClick={() => rateCardModal.onRemoveSlab(__iRcs)} aria-label={"Remove this slab"} style={css(`width:32px; height:34px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`)} onMouseEnter={(e) => hoverOn(e, `color:#D14B4B; background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:32px; height:34px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8E96A3; border-radius:6px;`, `color:#D14B4B; background:#FBEAEA;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+</React.Fragment>))}
+{((rateCardModal.slabs || []).length === 0) ? (<><div style={css(`padding:14px; text-align:center; color:#8E96A3; font-size:12px; border:1px dashed #E6EBF2; border-radius:8px;`)}>No slabs yet — add one below.</div></>) : null}
+</div>
+<button onClick={rateCardModal.onAddSlab} style={css(`display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:1px dashed #C3C9D4; border-radius:6px; background:#fff; font-family:inherit; font-size:12px; color:#5A5E66; cursor:pointer; margin-bottom:20px;`)}>+ Add slab</button>
+
+<div style={css(`display:flex; justify-content:flex-end; gap:8px;`)}>
+<button onClick={rateCardModal.onClose} style={css(`height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}>Cancel</button>
+<button onClick={rateCardModal.onSave} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer;`)}>Save</button>
+</div>
+</div>
+</div>
+</>) : null}
 {/* ===== DOCK PROFILE POPUP (2026-09-10) — SC-wise 30-min dock availability, opened from Route
      Scheduler's Step 2 per-SC icon. 24 hourly columns, each carrying its own two 30-min halves
      (product decision: hourly axis, but never lose the half-hour data underneath). Every used
@@ -6775,7 +6929,7 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <div style={css(`position:fixed; inset:0; z-index:95; background:rgba(11,20,48,0.5); display:flex; align-items:center; justify-content:center; padding:24px;`)} onClick={lmContactsModal.onClose}>
 <div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;`)}>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>LM Contacts — {lmContactsModal.code}</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>LM POCs — {lmContactsModal.code}</div>
 <button onClick={lmContactsModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`display:flex; flex-direction:column; gap:14px;`)}>
@@ -6944,12 +7098,19 @@ function mapVolumeInfoForDcPure(dcCode, fileName, capacity) {
 // run results — same function, same output shape — before any component instance exists, instead
 // of hand-authoring fake result objects that could quietly drift from what a live-triggered run
 // actually produces. Body otherwise unchanged: still the deterministic hash/haversine simulated
-// solve, still enforces DCs sharing a pincode landing on the same suggested SC.
+// solve, still enforces DCs sharing a pincode landing on the same suggested SC — UNLESS
+// run.params.singlePinSingleSc is explicitly false (new toggle, 2026-09-16, Operating Mode):
+// this constraint used to be a silent, hardcoded rule with no way to turn it off; now each DC is
+// its own one-DC "group" instead of being grouped by shared pincode, so DCs at the same pincode
+// can land on different SCs independently, based purely on each DC's own nearest-SC distance.
 function computeMappingResultPure(data, run) {
   const scs = (data.scs || []).filter(s => run.scCodes.indexOf(s.code) >= 0);
   const dcs = (data.lmdcs || []).filter(l => run.dcCodes.indexOf(l.code) >= 0);
   const RATE = NDC_costPerKmFor('TATA 407 / 10ft');
-  const groups = groupDcsBySharedPincode(dcs.map(dc => ({ code: dc.code, pincodes: dc.pincodes || [] })));
+  const singlePinSingleSc = !(run.params && run.params.singlePinSingleSc === false);
+  const groups = singlePinSingleSc
+    ? groupDcsBySharedPincode(dcs.map(dc => ({ code: dc.code, pincodes: dc.pincodes || [] })))
+    : new Map(dcs.map(dc => [dc.code, dc.code])); // toggle off — every DC is its own group
 
   const byGroup = {};
   dcs.forEach(dc => { const g = groups.get(dc.code); byGroup[g] = byGroup[g] || []; byGroup[g].push(dc); });
@@ -7213,7 +7374,7 @@ class NDCApp extends React.Component {
       // tolerance (Step 3's Mapping Tolerance, km) are new. hw is now boolean (On/Off toggle,
       // was a 0/0.5/1 chooser). baselineSource/baselinePlanId are gone — baseline is now always
       // "current SC-DC mapping per AutoDML", shown read-only on Step 2, not a choosable source.
-      mapDraft: { name: '', volFileName: null, scCodes: [], dcCodes: [], params: { rho: 0.2, hw: false, refRunId: null }, scParams: {} },
+      mapDraft: { name: '', volFileName: null, scCodes: [], dcCodes: [], params: { rho: 0.2, newNodeAddition: true, singlePinSingleSc: true, refRunId: null }, scParams: {} },
       mapDcDecisions: seedMapDecisionsAll, // { [runId]: { [dcCode]: { decision: 'Accept'|'Reject'|'KeepOldSc', remark } } } — per-DC; seeded runs pre-populate this too, see buildSeed() + the per-month loop above
       mapDroppedDcs: {}, // { [dcCode]: true } — Step 1's per-DC delete (zero-volume rows), this-run-only, see mapDropDc()
       mapQueue: [],
@@ -8068,7 +8229,7 @@ class NDCApp extends React.Component {
       const id = 'MAP-SEED-' + idOffset;
       const run = {
         id, name: 'Cluster: ' + scCodes.join(' + '), status: 'Running', scCodes, dcCodes, volFileName: seedVolFile,
-        params: { rho: 0.2, hw: false, refRunId: null, spanCostOn: true, tolerance: 50 },
+        params: { rho: 0.2, newNodeAddition: true, singlePinSingleSc: true, refRunId: null, spanCostOn: true, tolerance: 50 },
         createdAt: 'Seed', committedAt: null, results: null, pushedScs: {}, cycleMonth: this.activeCycleMonth.rlh, // cycleMonth is overwritten per-month by suffixRlhIdsForMonth below — this value is never actually read
       };
       run.results = computeMappingResultPure({ scs, lmdcs }, run);
@@ -8807,6 +8968,106 @@ class NDCApp extends React.Component {
     this.refreshScs();
     this.setState({ opHoursUploadErrors: [] });
     this.showToast('Operating Hours updated for ' + Object.keys(bySc).length + ' SC' + (Object.keys(bySc).length === 1 ? '' : 's'), '#128A3E');
+  }
+  // Rate Card (point 2, 2026-09-16) — a new SC Master section, same icon+popup+bulk-CSV pattern
+  // as Operating Hours: MG (Minimum Guarantee) plus a slab table (shipment-volume buckets, each
+  // with its own per-shipment cost — e.g. 1,500,000–2,000,000 shipments \u2192 \u20b93/shipment).
+  // Stored as a single Class D field ('rateCard', {mg, slabs}) on scMaster, same cycle-versioned
+  // mechanism every other SC Master field already uses — no engine-level changes needed.
+  openRateCardModal(scCode) {
+    const sc = (this.state.data.scs || []).find(s => s.code === scCode) || {};
+    const rc = sc.rateCard || {};
+    this.setState({
+      rateCardModal: {
+        open: true, code: scCode,
+        mg: rc.mg != null ? String(rc.mg) : '',
+        slabs: (rc.slabs || []).map(s => ({ min: s.min != null ? String(s.min) : '', max: s.max != null ? String(s.max) : '', cost: s.cost != null ? String(s.cost) : '' })),
+      },
+    });
+  }
+  closeRateCardModal() { this.setState({ rateCardModal: { open: false } }); }
+  rateCardSetMg(e) { this.setState({ rateCardModal: Object.assign({}, this.state.rateCardModal, { mg: e.target.value }) }); }
+  rateCardAddSlab() {
+    const m = this.state.rateCardModal;
+    const next = (m.slabs || []).concat([{ min: '', max: '', cost: '' }]);
+    this.setState({ rateCardModal: Object.assign({}, m, { slabs: next }) });
+  }
+  rateCardRemoveSlab(idx) {
+    const m = this.state.rateCardModal;
+    const next = (m.slabs || []).filter((_, i) => i !== idx);
+    this.setState({ rateCardModal: Object.assign({}, m, { slabs: next }) });
+  }
+  rateCardSetSlabField(idx, field) {
+    return (e) => {
+      const m = this.state.rateCardModal;
+      const next = (m.slabs || []).map((s, i) => i === idx ? Object.assign({}, s, { [field]: e.target.value }) : s);
+      this.setState({ rateCardModal: Object.assign({}, m, { slabs: next }) });
+    };
+  }
+  saveRateCardModal() {
+    if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
+    const m = this.state.rateCardModal;
+    const rawSlabs = (m.slabs || []).filter(s => s.min !== '' || s.cost !== '');
+    for (let i = 0; i < rawSlabs.length; i++) {
+      const s = rawSlabs[i];
+      if (s.min === '' || s.cost === '') { this.showToast('Every slab needs a Min Shipments value and a Cost per Shipment — leave Max blank only for the open-ended top slab.', '#C77B00'); return; }
+    }
+    const slabs = rawSlabs.map(s => ({ min: +s.min || 0, max: s.max === '' ? null : (+s.max || 0), cost: +s.cost || 0 })).sort((a, b) => a.min - b.min);
+    for (let i = 1; i < slabs.length; i++) {
+      if (slabs[i - 1].max == null || slabs[i].min < slabs[i - 1].max) { this.showToast('Slabs overlap or are out of order — each slab\u2019s Min should be \u2265 the previous slab\u2019s Max.', '#C77B00'); return; }
+    }
+    const mg = +m.mg || 0;
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code) || {};
+    setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code, 'rateCard', { mg, slabs }, dBase);
+    this.refreshScs();
+    this.setState({ rateCardModal: { open: false } });
+    this.showToast('Rate Card saved for ' + m.code, '#128A3E');
+  }
+  // Global Rate Card CSV — long format (SC Code, MG, Min Shipments, Max Shipments, Cost Per
+  // Shipment), one row per slab; MG is repeated on every row for a given SC (same value expected
+  // each time — the first row's MG wins if they ever disagree, same "first wins" convention this
+  // app already uses for lane-cutoff conflicts). Only SCs actually present in the file are
+  // touched — every other SC's own rate card is left exactly as it is.
+  rateCardTemplate() {
+    const head = 'SC Code,MG,Min Shipments,Max Shipments,Cost Per Shipment\n';
+    const sample = 'DELS,50000,0,1500000,5\nDELS,50000,1500000,2000000,3\nDELS,50000,2000000,,2\n';
+    this.downloadText('rate-card-template.csv', head + sample);
+  }
+  onRateCardFileChange(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => this.applyRateCardCsv(String(ev.target.result || ''));
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+  applyRateCardCsv(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const errors = [];
+    const bySc = {};
+    lines.slice(1).forEach((line, i) => {
+      const row = i + 2;
+      const cols = line.split(',').map(c => c.trim());
+      const [code, mg, min, max, cost] = cols;
+      if (!code || !this.engineStore.scRegistry[code]) { errors.push({ row, code, msg: 'Unknown SC Code' }); return; }
+      if (mg === '' || isNaN(+mg)) { errors.push({ row, code, msg: 'MG must be a number' }); return; }
+      if (min === '' || isNaN(+min)) { errors.push({ row, code, msg: 'Min Shipments must be a number' }); return; }
+      if (max !== '' && isNaN(+max)) { errors.push({ row, code, msg: 'Max Shipments must be a number or blank (open-ended top slab)' }); return; }
+      if (cost === '' || isNaN(+cost)) { errors.push({ row, code, msg: 'Cost Per Shipment must be a number' }); return; }
+      bySc[code] = bySc[code] || { mg: +mg, slabs: [] };
+      bySc[code].slabs.push({ min: +min, max: max === '' ? null : +max, cost: +cost });
+    });
+    if (errors.length) { this.setState({ rateCardUploadErrors: errors }); return; }
+    const cycleMonth = this.state.activeCycleMonth.rlh;
+    Object.keys(bySc).forEach(code => {
+      const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
+      const slabs = bySc[code].slabs.slice().sort((a, b) => a.min - b.min);
+      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'rateCard', { mg: bySc[code].mg, slabs }, dBase);
+    });
+    this.refreshScs();
+    this.setState({ rateCardUploadErrors: [] });
+    this.showToast('Rate Card updated for ' + Object.keys(bySc).length + ' SC' + (Object.keys(bySc).length === 1 ? '' : 's'), '#128A3E');
   }
   // Dock Profile (2026-09-10) — SC-wise hourly dock availability for Route Scheduler's Step 2.
   // Computed fresh each time the modal opens (not stored): base capacity = SC Master's own RLH
@@ -10162,7 +10423,7 @@ class NDCApp extends React.Component {
   goMapping() {
     this.setState({
       mapSection: 'wizard', mapStep: 1,
-      mapDraft: { name: '', volFileName: null, scCodes: [], params: { rho: 0.2, hw: false, refRunId: null }, scParams: {} },
+      mapDraft: { name: '', volFileName: null, scCodes: [], params: { rho: 0.2, newNodeAddition: true, singlePinSingleSc: true, refRunId: null }, scParams: {} },
     });
   }
 
@@ -10227,7 +10488,14 @@ class NDCApp extends React.Component {
   // pipeline entry: without this, a new DC already proposed (and planner-accepted) in an earlier
   // run would keep reappearing as "unmapped" in every later run touching an overlapping SC set,
   // since nodeAdditions.mapped deliberately stays false until the migration is genuinely Aligned.
-  mapComputeEligibleDcs(scCodes) {
+  // mapComputeEligibleDcs(scCodes, includeNewAdditions) — later session, supersedes the earlier
+  // manual DC-picker. includeNewAdditions (2026-09-16, replaces the old HW toggle here — see
+  // "New Node Addition" in Operating Mode) defaults true so nothing changes for existing callers
+  // that don't pass it; when explicitly false, brand-new unmapped DCs are excluded from the run
+  // entirely — the solver then only ever reassigns DCs that already have a real AutoDML link,
+  // never proposes a first placement for a new addition.
+  mapComputeEligibleDcs(scCodes, includeNewAdditions) {
+    const includeNew = includeNewAdditions !== false;
     const d = this.state.data;
     const closedCodes = {}; (d.nodeClosures || []).forEach(c => { closedCodes[c.dc] = true; });
     const pendingCodes = {}; (d.migrationPipeline || []).forEach(m => { if (m.status === 'PendingAlignment') pendingCodes[m.dc] = true; });
@@ -10237,6 +10505,7 @@ class NDCApp extends React.Component {
     const droppedCodes = this.state.mapDroppedDcs || {};
     const fromLinks = (d.lmdcs || []).filter(l => scCodes.indexOf(l.lmscCode) >= 0 && !closedCodes[l.code] && !droppedCodes[l.code])
       .map(l => ({ code: l.code, currentSc: l.lmscCode, pending: false, lat: l.lat, lng: l.lng, capacity: l.capacity, zone: l.zone }));
+    if (!includeNew) return fromLinks;
     const seen = {}; fromLinks.forEach(l => { seen[l.code] = true; });
     const fromAdditions = (d.nodeAdditions || []).filter(a => !a.mapped && !closedCodes[a.dc] && !seen[a.dc] && !pendingCodes[a.dc] && !droppedCodes[a.dc])
       .map(a => ({ code: a.dc, currentSc: null, pending: true, lat: null, lng: null, capacity: a.cap, zone: a.zone }));
@@ -10301,7 +10570,18 @@ class NDCApp extends React.Component {
       cur[code] = Object.assign({}, this.mapScParamDefaults(), cur[code], { [field]: value });
     });
     this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { scParams: cur } ) });
-    this.showToast('Applied to all ' + (this.state.mapDraft.scCodes || []).length + ' selected SCs', '#128A3E');
+  }
+
+  // mapHeaderStep(field, delta, headerStateKey) — 2026-09-16 redesign, matching Route Scheduler's
+  // own "D0 CUTOFF (ALL)" / "SET ALL HW" convention exactly: the header cell IS a live "\u2212 VALUE
+  // +" stepper, not a separate input box plus a detached apply button. Every click both moves the
+  // header's own staged value and immediately broadcasts it to every selected SC — no extra
+  // confirm step, since Route Scheduler's own reference never has one either.
+  mapHeaderStep(field, delta, headerStateKey) {
+    const cur = this.state[headerStateKey] != null ? this.state[headerStateKey] : this.mapScParamDefaults()[field];
+    const next = Math.max(0, cur + delta);
+    this.setState({ [headerStateKey]: next });
+    this.mapApplyScParamToAll(field, next);
   }
 
   mapSetName(name) { this.setState({ mapDraft: Object.assign({}, this.state.mapDraft, { name }) }); }
@@ -10313,12 +10593,12 @@ class NDCApp extends React.Component {
     const step = this.state.mapStep;
     if (step === 1 && !this.state.mapDraft.volFileName) { this.showToast('Pick a volume plan first \u2014 it\u2019s what DC coverage gets checked against.', '#C77B00'); return; }
     if (step === 1 && (this.state.mapDraft.scCodes || []).length < 2) { this.showToast('Pick at least 2 SCs — a single-SC "cluster" isn\u2019t supported here, use RLH Route Planner instead.', '#C77B00'); return; }
-    if (step === 1 && this.mapComputeEligibleDcs(this.state.mapDraft.scCodes || []).length < 1) { this.showToast('No DCs are linked to the selected SC(s) yet — check SC-DC Connections.', '#C77B00'); return; }
-    this.setState({ mapStep: Math.min(3, step + 1) });
+    if (step === 1 && this.mapComputeEligibleDcs(this.state.mapDraft.scCodes || [], (this.state.mapDraft.params || {}).newNodeAddition).length < 1) { this.showToast('No DCs are linked to the selected SC(s) yet — check SC-DC Connections.', '#C77B00'); return; }
+    this.setState({ mapStep: Math.min(4, step + 1) });
   }
   mapBack() { this.setState({ mapStep: Math.max(1, this.state.mapStep - 1) }); }
 
-  // mapTriggerRun() — Step 3's real trigger. Blocking validation (not warning) on missing
+  // mapTriggerRun() — Step 4's real trigger. Blocking validation (not warning) on missing
   // Sort/Volume Capacity or HTP for any selected SC, per the build-spec's explicit call-out that
   // an unconstrained capacity would silently produce a wrong-but-plausible result — a deliberate
   // exception to this app's usual warn-don't-block convention.
@@ -10326,7 +10606,7 @@ class NDCApp extends React.Component {
     const draft = this.state.mapDraft;
     if (!draft.volFileName) { this.showToast('No volume plan selected \u2014 go back to Step 1.', '#D14B4B'); return; }
     if ((draft.scCodes || []).length < 2) return;
-    const eligibleDcs = this.mapComputeEligibleDcs(draft.scCodes);
+    const eligibleDcs = this.mapComputeEligibleDcs(draft.scCodes, (draft.params || {}).newNodeAddition);
     if (eligibleDcs.length < 1) { this.showToast('No eligible DCs found for the selected SCs (no active links, no unmapped additions).', '#C77B00'); return; }
     const scs = this.state.data.scs || [];
     const missingCap = draft.scCodes.filter(code => { const sc = scs.find(s => s.code === code); return !sc || !sc.sortCap || !sc.volCap || !sc.htp; });
@@ -10898,6 +11178,8 @@ class NDCApp extends React.Component {
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
         opHoursConfigured: (rf.nonOperating.length > 0 || rf.breaks.length > 0),
         onOpenOpHours: () => this.openOpHoursModal(s.code),
+        rateCardConfigured: !!(s.rateCard && (s.rateCard.mg > 0 || (s.rateCard.slabs || []).length > 0)),
+        onOpenRateCard: () => this.openRateCardModal(s.code),
         togglePoc: (e) => { if (pocOpenRow === s.code) { this.setState({ pocOpenRow: null }); return; } const r = e.currentTarget.getBoundingClientRect(); this.setState({ pocOpenRow: s.code, pocOpenRect: { top: r.bottom + 4, left: Math.min(r.left, window.innerWidth - 270) } }); },
         // 2026-08-25 rewrite — delete/undo now go through the engine's effective-month existence
         // log (setSCStatus) instead of the old scRemoved session overlay. The undo toast re-adds
@@ -11319,7 +11601,7 @@ class NDCApp extends React.Component {
       // so the text overflowed and visually overlapped the next column's header (confirmed via
       // screen recording: "NON-LOCAL SPD"/"MAX HOLD LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS"
       // were rendering as garbled overlapping text). Widened each affected column.
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 140px 90px 80px',
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 140px 90px 90px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -11360,9 +11642,15 @@ class NDCApp extends React.Component {
       opHoursTemplate: () => this.opHoursTemplate(),
       triggerOpHoursUpload: () => { if (this.opHoursFileInputEl) this.opHoursFileInputEl.click(); },
       opHoursFileInputRef: (el) => { this.opHoursFileInputEl = el; },
+      rateCardTemplate: () => this.rateCardTemplate(),
+      triggerRateCardUpload: () => { if (this.rateCardFileInputEl) this.rateCardFileInputEl.click(); },
+      rateCardFileInputRef: (el) => { this.rateCardFileInputEl = el; },
+      onRateCardFileChange: (e) => this.onRateCardFileChange(e),
       onOpHoursFileChange: (e) => this.onOpHoursFileChange(e),
       opHoursUploadErrors: st.opHoursUploadErrors || [], hasOpHoursUploadErrors: (st.opHoursUploadErrors || []).length > 0,
       closeOpHoursUploadErrors: () => this.setState({ opHoursUploadErrors: [] }),
+      rateCardUploadErrors: st.rateCardUploadErrors || [], hasRateCardUploadErrors: (st.rateCardUploadErrors || []).length > 0,
+      closeRateCardUploadErrors: () => this.setState({ rateCardUploadErrors: [] }),
       triggerAvailUpload: () => { if (this.availFileInputEl) this.availFileInputEl.click(); },
       availFileInputRef: (el) => { this.availFileInputEl = el; },
       onAvailFileChange: (e) => this.handleAvailCsvUpload(e),
@@ -11403,6 +11691,7 @@ class NDCApp extends React.Component {
       confirmDelete: () => this.confirmDelete(),
       speedProfileModal: this.buildSpeedProfileModal(),
       opHoursModal: this.buildOpHoursModal(),
+      rateCardModal: this.buildRateCardModal(),
       dockProfileModal: this.buildDockProfileModal(),
       schedSimulate: this.buildSchedSimulate(),
       lmContactsModal: (() => { const m = this.state.lmContactsModal || {}; if (!m.open) return { open: false }; return { open: true, code: m.code, zh: m.zh || '', ch: m.ch || '', am1: m.am1 || '', am2: m.am2 || '', onZh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { zh: e.target.value }) }), onCh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { ch: e.target.value }) }), onAm1: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am1: e.target.value }) }), onAm2: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am2: e.target.value }) }), onSave: () => this.saveLmContactsModal(), onClose: () => this.closeLmContactsModal() }; })(),
@@ -11430,6 +11719,23 @@ class NDCApp extends React.Component {
       onCancelAdd: () => this.opHoursCancelAdd(),
       slots: slots.map(t => ({ bg: typeBg[t] })),
       onSave: () => this.saveOpHoursModal(), onClose: () => this.closeOpHoursModal(),
+    };
+  }
+  // buildRateCardModal() — same "build from raw state, return {open:false} if closed" pattern as
+  // buildOpHoursModal() above. onSlabField is curried (idx, field) => handler, same convention
+  // the LM Contacts/POCs modal already uses for its per-field setters.
+  buildRateCardModal() {
+    const m = this.state.rateCardModal || {};
+    if (!m.open) return { open: false };
+    return {
+      open: true, code: m.code,
+      mg: m.mg != null ? m.mg : '',
+      onMgChange: (e) => this.rateCardSetMg(e),
+      slabs: m.slabs || [],
+      onSlabField: (idx, field) => this.rateCardSetSlabField(idx, field),
+      onAddSlab: () => this.rateCardAddSlab(),
+      onRemoveSlab: (idx) => this.rateCardRemoveSlab(idx),
+      onSave: () => this.saveRateCardModal(), onClose: () => this.closeRateCardModal(),
     };
   }
   buildSpeedProfileModal() {
@@ -16360,7 +16666,7 @@ class NDCApp extends React.Component {
     // structure exactly (pick a volume plan, then an expandable SC list with real per-SC DC
     // detail, no separate DC-review step). What was Step 3 (Operating Parameters) is now Step 2
     // ("Operating Mode"). Preview & Trigger is now Step 3.
-    const MAP_STEPS = [[1, 'Input Selection'], [2, 'Operating Mode'], [3, 'Preview & Trigger']];
+    const MAP_STEPS = [[1, 'Input Selection'], [2, 'Operating Mode'], [3, 'SC Vehicle Availability'], [4, 'Preview & Trigger']];
     const mapStepper = MAP_STEPS.map((s, idx) => ({
       n: s[0], label: s[1], active: s[0] === step, isDone: s[0] < step, notDone: !(s[0] < step),
       numBg: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#FFFFFF'), numFg: s[0] <= step ? '#fff' : '#8E96A3', numBd: s[0] === step ? ACCENT : (s[0] < step ? '#128A3E' : '#D0D5DD'),
@@ -16413,12 +16719,23 @@ class NDCApp extends React.Component {
         const lmdcRows = expanded ? scDcs.map(l => {
           const vi = this.mapVolumeInfoForDc(l.code, draft.volFileName, l.capacity);
           const addition = mapAdditionByCode[l.code];
+          // pincodes (point 5, 2026-09-16) — LMDC Master already stores these per DC; passed
+          // through here so the same "which DCs share a pincode" signal the solver already reads
+          // (groupDcsBySharedPincode) is visible in this run's own inputs, not just silently
+          // consumed. Shown as the first 2 + a "+N more" overflow, full list in the title tooltip.
+          const pins = l.pincodes || [];
+          const pinsLabel = pins.length === 0 ? '\u2014' : (pins.length <= 2 ? pins.join(', ') : pins.slice(0, 2).join(', ') + ' +' + (pins.length - 2) + ' more');
           return {
-            code: l.code, name: addition ? addition.name : l.code,
+            // name (2026-09-16 fix) — real LMDC master rows have no separate name field beyond
+            // their code; showing the code twice (once as CODE, once as "NAME") read as a bug.
+            // Only Addition-sourced DCs carry a genuine distinct name — null here otherwise, shown
+            // as "\u2014" in the table rather than a duplicate.
+            code: l.code, name: addition ? addition.name : null,
             vol: vi.hasVolume ? fmtInt(vi.volumePlanned) : '0', volFg: vi.hasVolume ? '#14171F' : '#D14B4B', volWeight: vi.hasVolume ? '400' : '700',
             cap: fmtInt(l.capacity),
             volFlag: vi.hasVolume ? 'OK' : '0 volume', volFlagBg: vi.hasVolume ? '#E7F4EC' : '#FBEAEA', volFlagFg: vi.hasVolume ? '#128A3E' : '#D14B4B',
             src: addition ? 'Addition' : 'AutoDML', srcBg: addition ? '#EAEEFB' : '#F2F5FA', srcFg: addition ? '#2F4FC6' : '#5A5E66',
+            pinsLabel, pinsTitle: pins.length ? pins.join(', ') : 'No pincodes on file for this DC',
             // Point 2 — delete icon only on zero-volume rows, to pull an unusable DC out of this run.
             canDrop: !vi.hasVolume, onDrop: () => this.mapDropDc(l.code),
           };
@@ -16452,7 +16769,7 @@ class NDCApp extends React.Component {
       };
     });
 
-    const mapEligibleDcs = mapScCount >= 2 ? this.mapComputeEligibleDcs(draft.scCodes) : [];
+    const mapEligibleDcs = mapScCount >= 2 ? this.mapComputeEligibleDcs(draft.scCodes, (draft.params || {}).newNodeAddition) : [];
     const mapVolMissingCodes = mapEligibleDcs.map(dc => ({ code: dc.code, hasVolume: this.mapVolumeInfoForDc(dc.code, draft.volFileName, dc.capacity).hasVolume })).filter(r => !r.hasVolume).map(r => r.code);
     const mapVolMissingCount = mapVolMissingCodes.length;
     const mapCanNext1 = mapScCount >= 2 && mapHasVolFile && mapEligibleDcs.length >= 1;
@@ -16480,10 +16797,13 @@ class NDCApp extends React.Component {
         sortCapUtilMax: sp.sortCapUtilMax, onSortCapUtilMax: (e) => this.mapSetScParam(code, 'sortCapUtilMax', Math.max(0, +e.target.value || 0)), sortCapUtilOver100: sp.sortCapUtilMax > 100,
       };
     });
-    const mapHwOn = (draft.params || {}).hw === true;
+    const mapNewNodeAdditionOn = (draft.params || {}).newNodeAddition !== false;
+    const mapSinglePinSingleScOn = (draft.params || {}).singlePinSingleSc !== false;
 
-    // Column-header bulk-apply — transient input state (not written to the draft until the arrow
-    // button fires mapApplyScParamToAll).
+    // Column-header live steppers (2026-09-16 redesign) — matches Route Scheduler's own
+    // "D0 CUTOFF (ALL)" convention: the header IS a "\u2212 VALUE +" control, applying immediately on
+    // every click (mapHeaderStep, see class method). Transient display state only — the real,
+    // per-SC values live in draft.scParams once applied.
     const mapHeaderTolerance = st.mapHeaderTolerance != null ? st.mapHeaderTolerance : 50;
     const mapHeaderVolUtilMin = st.mapHeaderVolUtilMin != null ? st.mapHeaderVolUtilMin : 0;
     const mapHeaderVolUtilMax = st.mapHeaderVolUtilMax != null ? st.mapHeaderVolUtilMax : 100;
@@ -16504,11 +16824,41 @@ class NDCApp extends React.Component {
     const mapSortCapUtilRangeLabel = mapAggRange('sortCapUtilMax') + '%';
     const mapSortCapUtilAnyOver100 = mapSelectedScSummary.some(s => s.sortCapUtilOver100);
 
-    // ===== Step 3 — Preview & Trigger
+    // ===== Step 3 — SC Vehicle Availability (point 3, 2026-09-16). Read-only reference pulled
+    // straight from SC Vehicle Availability (Design Inputs) for each selected SC — same table
+    // shape as Route Planner's own Vehicle Configuration step (Vehicle Type / Capacity / Distance
+    // Limit / Vehicles / TP Limit / Zone Feasibility), grouped one section per SC since a Node
+    // Mapping run always spans 2+ SCs, unlike Route Planner's single-SC plan. Not editable here —
+    // Node Mapping's own solve doesn't consume vehicle data at all, this exists purely so a gap
+    // (an SC with nothing configured) is visible before triggering rather than discovered later
+    // in Route Planner/Scheduler.
+    const mapVehicleAvailSections = (draft.scCodes || []).map(code => {
+      const sc = (d.scs || []).find(s => s.code === code) || {};
+      const group = (d.scVehAvail || []).find(g => g.code === code);
+      const rawRows = group ? group.rows || [] : [];
+      const rows = rawRows.map(r => {
+        const zf = r.zoneFeas || 'Both';
+        return {
+          vehicleType: r.vehicleType, capacity: fmtInt(r.capacity), distanceLimit: r.distanceLimit,
+          vehicleCount: r.vehicleCount, tpLimit: r.tpLimit, zoneFeas: zf,
+          zfBg: zf === 'Both' ? '#EAEEFB' : zf === 'Local' ? '#E7F0F8' : '#FBEAF1',
+          zfFg: zf === 'Both' ? '#2F4FC6' : zf === 'Local' ? '#1E6FB8' : '#B8387A',
+        };
+      });
+      return {
+        code, name: sc.name || '', sortCap: sc.sortCap ? fmtInt(sc.sortCap) : '\u2014',
+        vehicleCount: rows.reduce((a, r) => a + (r.vehicleCount || 0), 0), rows,
+      };
+    });
+
+    // ===== Step 4 — Preview & Trigger
     const mapPreviewScs = (draft.scCodes || []).map(code => {
       const sc = (d.scs || []).find(s => s.code === code) || {};
       const missingCap = !sc.sortCap || !sc.volCap || !sc.htp;
-      return { code, name: sc.name, sortCap: sc.sortCap || 0, volCap: sc.volCap || 0, missingCap };
+      // fmtInt (2026-09-16 fix) — this table rendered raw unformatted numbers ("62000") while
+      // every other SC table in this wizard comma-formats them ("62,000"). Real inconsistency
+      // caught via a live click-through comparison, not a hypothetical.
+      return { code, name: sc.name, sortCap: sc.sortCap ? fmtInt(sc.sortCap) : 0, volCap: sc.volCap ? fmtInt(sc.volCap) : 0, missingCap };
     });
     const mapAnyMissingCap = mapPreviewScs.some(s => s.missingCap);
     const mapTriggerBlocked = mapAnyMissingCap || mapVolMissingCount > 0;
@@ -16534,12 +16884,14 @@ class NDCApp extends React.Component {
       mapVolMissingCodes, mapVolMissingCount,
       mapSelectedScSummary,
       mapRho: (draft.params || {}).rho != null ? draft.params.rho : 0.2, onMapRho: (e) => this.mapSetParam('rho', +e.target.value),
-      mapHwOn, onMapHwToggle: () => this.mapSetParam('hw', !mapHwOn),
-      mapHeaderTolerance, onMapHeaderTolerance: (e) => this.setState({ mapHeaderTolerance: Math.max(0, +e.target.value || 0) }), onMapApplyTolerance: () => this.mapApplyScParamToAll('tolerance', mapHeaderTolerance),
-      mapHeaderVolUtilMin, onMapHeaderVolUtilMin: (e) => this.setState({ mapHeaderVolUtilMin: Math.max(0, +e.target.value || 0) }), onMapApplyVolUtilMin: () => this.mapApplyScParamToAll('volUtilMin', mapHeaderVolUtilMin),
-      mapHeaderVolUtilMax, onMapHeaderVolUtilMax: (e) => this.setState({ mapHeaderVolUtilMax: Math.max(0, +e.target.value || 0) }), onMapApplyVolUtilMax: () => this.mapApplyScParamToAll('volUtilMax', mapHeaderVolUtilMax),
-      mapHeaderSortCapUtilMax, onMapHeaderSortCapUtilMax: (e) => this.setState({ mapHeaderSortCapUtilMax: Math.max(0, +e.target.value || 0) }), onMapApplySortCapUtilMax: () => this.mapApplyScParamToAll('sortCapUtilMax', mapHeaderSortCapUtilMax),
+      mapNewNodeAdditionOn, onMapNewNodeAdditionToggle: () => this.mapSetParam('newNodeAddition', !mapNewNodeAdditionOn),
+      mapSinglePinSingleScOn, onMapSinglePinSingleScToggle: () => this.mapSetParam('singlePinSingleSc', !mapSinglePinSingleScOn),
+      mapHeaderTolerance, onMapHeaderStepDown: () => this.mapHeaderStep('tolerance', -5, 'mapHeaderTolerance'), onMapHeaderStepUp: () => this.mapHeaderStep('tolerance', 5, 'mapHeaderTolerance'),
+      mapHeaderVolUtilMin, onMapHeaderVolUtilMinDown: () => this.mapHeaderStep('volUtilMin', -5, 'mapHeaderVolUtilMin'), onMapHeaderVolUtilMinUp: () => this.mapHeaderStep('volUtilMin', 5, 'mapHeaderVolUtilMin'),
+      mapHeaderVolUtilMax, onMapHeaderVolUtilMaxDown: () => this.mapHeaderStep('volUtilMax', -5, 'mapHeaderVolUtilMax'), onMapHeaderVolUtilMaxUp: () => this.mapHeaderStep('volUtilMax', 5, 'mapHeaderVolUtilMax'),
+      mapHeaderSortCapUtilMax, onMapHeaderSortCapUtilMaxDown: () => this.mapHeaderStep('sortCapUtilMax', -5, 'mapHeaderSortCapUtilMax'), onMapHeaderSortCapUtilMaxUp: () => this.mapHeaderStep('sortCapUtilMax', 5, 'mapHeaderSortCapUtilMax'),
       mapToleranceRangeLabel, mapToleranceAnyWarn, mapVolUtilRangeLabel, mapVolUtilAnyOver100, mapSortCapUtilRangeLabel, mapSortCapUtilAnyOver100,
+      mapVehicleAvailSections,
       mapPreviewScs, mapAnyMissingCap, mapTriggerBlocked, mapDcCount2: mapEligibleDcs.length,
       onMapBack: () => this.mapBack(), onMapNext: () => this.mapNext(),
       onMapTrigger: () => this.mapTriggerRun(),
@@ -16581,11 +16933,17 @@ class NDCApp extends React.Component {
     const toReviewRuns = allRuns.filter(r => r.status !== 'Committed');
     const finalisedRuns = allRuns.filter(r => r.status === 'Committed');
     const runs = reviewMapStageFilter === 'finalised' ? finalisedRuns : toReviewRuns;
-    const onReviewMapStageFilter = (f) => this.setState({ reviewMapStageFilter: f });
+    const onReviewMapStageFilter = (f) => this.setState({ reviewMapStageFilter: f, reviewMapRunId: null });
 
-    const reviewMapDetailOpen = !!st.reviewMapDetailOpen;
+    // 2026-09-16 — two-pane redesign (point 1): a persistent left rail (stage tabs + run list)
+    // next to a right detail panel, matching Route Planner/Scheduler's own SC-list-left /
+    // metrics-right layout, instead of the earlier "click a card, navigate to a separate full-
+    // width Details screen, click Back" pattern. No more reviewMapDetailOpen — selecting a run
+    // just updates the right panel in place. Auto-selects the first run in the active bucket so
+    // the right panel is never empty when runs exist, same as Route Planner defaulting to its
+    // first SC.
     const selectedRunId = st.reviewMapRunId || null;
-    const run = runs.find(r => r.id === selectedRunId) || null;
+    const run = runs.find(r => r.id === selectedRunId) || runs[0] || null;
     const results = run ? run.results : null;
     const dec = run ? (st.mapDcDecisions[run.id] || {}) : {};
     const isCommitted = !!(run && run.status === 'Committed');
@@ -16657,6 +17015,8 @@ class NDCApp extends React.Component {
       // proposed move look like it proposed nothing at all.
       const movements = rows.filter(row => row.needsDecision && !row.isUnserved).length;
       const unmapped = rows.filter(row => row.isUnserved && !row.oldSc).length;
+      const dcCount = (r.dcCodes || []).length;
+      const pctChanged = dcCount > 0 ? Math.round((movements / dcCount) * 100) : 0;
       const scCount = (r.scCodes || []).length;
       const scParams = r.scParams || {};
       const toleranceVals = (r.scCodes || []).map(c => (scParams[c] || {}).tolerance).filter(v => v != null);
@@ -16664,17 +17024,17 @@ class NDCApp extends React.Component {
       return {
         id: r.id, name: r.name, statusLabel: r.status,
         statusBg: r.status === 'Committed' ? '#EAF3EF' : '#EAF1FB', statusFg: r.status === 'Committed' ? ACCENT : '#1E6FB8',
-        scCount, dcCount: (r.dcCodes || []).length, volume: r.results ? fmtInt(r.results.totalVolume) : '\u2014',
-        rho: (r.params || {}).rho != null ? r.params.rho.toFixed(2) : '\u2014', hwLabel: (r.params || {}).hw ? 'On' : 'Off', toleranceLabel,
-        movements, unmapped,
-        onClick: () => this.setState({ reviewMapRunId: r.id, reviewMapDetailOpen: true, mapReviewStage: r.status === 'Committed' ? 'cards' : 'decide' }),
+        scCount, dcCount, volume: r.results ? fmtInt(r.results.totalVolume) : '\u2014',
+        rho: (r.params || {}).rho != null ? r.params.rho.toFixed(2) : '\u2014', newAdditionLabel: (r.params || {}).newNodeAddition !== false ? 'On' : 'Off', toleranceLabel,
+        movements, unmapped, pctChanged,
+        selected: r.id === (run ? run.id : null),
+        onClick: () => this.setState({ reviewMapRunId: r.id, mapReviewStage: r.status === 'Committed' ? 'cards' : 'decide' }),
       };
     };
     const reviewMapPlanCards = runs.map(buildPlanCard);
-    // Same builder, once, for whichever run is currently open in Details — the recap header at
-    // the top of Details is literally the same card, just not clickable.
+    // Same builder, once, for whichever run is currently selected — the recap header at the top
+    // of the right panel is literally the same card's data, just rendered bigger.
     const reviewMapOpenCard = run ? buildPlanCard(run) : null;
-    const onReviewMapBackToList = () => this.setState({ reviewMapDetailOpen: false, reviewMapRunId: null });
 
     // ===== Stage 1 (decide) — Tab 1: DC-Level Changes, grouped SC-wise, entire selection. =====
     // Every DC in the run shows up: a controllable row under its OLD SC if it's moving or
@@ -16819,7 +17179,7 @@ class NDCApp extends React.Component {
       reviewMapAccent: ACCENT,
       reviewMapRunList, reviewMapHasRuns: allRuns.length > 0,
       reviewMapStageFilter, onReviewMapStageFilter, reviewMapToReviewCount: toReviewRuns.length, reviewMapFinalisedCount: finalisedRuns.length,
-      reviewMapPlanCards, reviewMapOpenCard, reviewMapDetailOpen, onReviewMapBackToList,
+      reviewMapPlanCards, reviewMapOpenCard,
       reviewMapRunName: run ? run.name : '', reviewMapRunStatusLabel: run ? run.status : '',
       reviewMapStage: stage,
       reviewMapTab: st.mapResultsTab === 'pivot' ? 'pivot' : 'changes',
@@ -17371,7 +17731,7 @@ class NDCApp extends React.Component {
       cyclepick: [legStubTitle || 'Select a design cycle', 'Choose an existing cycle, or start a new one, to continue'],
       legstub: [legStubTitle, legStubSubtitle],
       inputs: ['Design Inputs', 'Volume files · masters · AutoDML gate · node changes'],
-      creation: ['Design Creation', 'RLH route planning · plan & centres → vehicles → trigger'],
+      creation: ['Design Creation', (st.creationTier === 'Node Mapping') ? 'SC-DC Mapping — joint multi-SC assignment planning' : 'RLH route planning · plan & centres → vehicles → trigger'],
       review: ['Design Review', 'Run metrics, validation flags & historical-weight comparison'],
       align: ['Ops Alignment', planner ? 'Planner ↔ Ops row-by-row review & freeze loop' : 'Review your assigned plans row-by-row'],
       map: ['Network Map', 'Route arcs · LMSC origins → LMDC deliveries'],

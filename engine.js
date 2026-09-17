@@ -685,6 +685,10 @@ function materializeRLHScs(store, cycleMonth) {
       // default behavior when nothing's been set). Shifts are derived from these at read time,
       // not stored — see computeShiftsFromWindows() in the main file.
       nonOperating: d.nonOperating || [], breaks: d.breaks || [],
+      // Rate Card (point 2, 2026-09-16) — MG (Minimum Guarantee) + shipment-volume slab table,
+      // same Class D mechanism as Operating Hours above. {mg:0, slabs:[]} default = nothing set
+      // yet, shown as a genuine empty state rather than invented numbers.
+      rateCard: d.rateCard || { mg: 0, slabs: [] },
       hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
       pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
       // 2026-08-26 — real dispatch-role facts, exposed for the SC Master screen's SC TYPE column

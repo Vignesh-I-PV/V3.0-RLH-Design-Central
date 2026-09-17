@@ -867,22 +867,28 @@ All modules
 <span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{rlhCycleLabel}</strong> is a past cycle — Design Inputs are read-only. New designs can still be created against this cycle, and Finalise Directly remains available from Design Review; Push to Alignment does not.</span>
 </div>
 </>) : null}
-<div style={css(`display:flex; align-items:stretch; gap:14px; margin-bottom:16px;`)}>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
+<div style={css(`display:flex; flex-wrap:wrap; align-items:stretch; gap:14px; margin-bottom:16px;`)}>
+{/* Real bug fix (2026-09-16) — caught via a live click-through of the deployed build: adding
+    the Rate Card upload as a 3rd flex:1 card in this row, with no flex-wrap and no min-width,
+    squeezed all three cards' text columns down to almost nothing, wrapping "Bulk Upload — Sort
+    Centre Master" into a vertical ladder of single words. flex-wrap + a min-width on each card
+    lets 2 sit comfortably per row (wrapping the 3rd down) at normal widths, or all 3 side by side
+    on wide screens, without ever cramping the text. */}
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
 <button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
 <input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
 </div>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Operating Hours</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Non-operating &amp; break windows · global, applies across all SCs</div></div>
 <button onClick={opHoursTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
 <button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
 <input ref={opHoursFileInputRef} type={"file"} accept={".csv"} onChange={onOpHoursFileChange} style={css(`display:none;`)} />
 </div>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1;`)}>
+<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
 <div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Rate Card</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>MG + shipment-volume slabs · one row per slab</div></div>
 <button onClick={rateCardTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
@@ -2982,7 +2988,7 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:12px; font-weight:600; color:#14171F; width:32px; text-align:right; flex-shrink:0;`)}>{mapRho.toFixed(2)}</span>
 </div>
 <div style={css(`flex:1; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid #E6EBF2; border-radius:7px;`)}>
-<div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Single Pin \u2013 Single SC</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>DCs sharing a pincode always land on one SC</div></div>
+<div style={css(`min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#14171F;`)}>Single Pin – Single SC</div><div style={css(`font-size:10.5px; color:#8E96A3;`)}>DCs sharing a pincode always land on one SC</div></div>
 <button onClick={onMapSinglePinSingleScToggle} style={css(`width:34px; height:19px; border-radius:999px; border:none; background:${mapSinglePinSingleScOn ? mapAccent : '#D0D5DD'}; position:relative; cursor:pointer; flex-shrink:0;`)}><div style={css(`width:14px; height:14px; border-radius:999px; background:#fff; position:absolute; top:2.5px; left:${mapSinglePinSingleScOn ? '17px' : '3px'}; transition:left 120ms;`)} /></button>
 </div>
 </div>
@@ -3065,11 +3071,11 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:11px; color:#5A5E66;`)}>VEHICLES <strong>{v.vehicleCount}</strong></span>
 </div>
 {(v.rows.length > 0) ? (<>
-<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; padding:7px 14px; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; gap:10px; padding:7px 14px; font-size:9.5px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
 <div>VEHICLE TYPE</div><div style={css(`text-align:right;`)}>CAPACITY</div><div style={css(`text-align:right;`)}>DISTANCE LIMIT</div><div style={css(`text-align:right;`)}>VEHICLES</div><div style={css(`text-align:right;`)}>TP LIMIT</div><div>ZONE FEASIBILITY</div>
 </div>
 {v.rows.map((r, __iVr) => (<React.Fragment key={__iVr}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 0.9fr 0.8fr 0.8fr 0.9fr; gap:10px; padding:8px 14px; border-top:1px solid #EEF1F6; align-items:center;`)}>
 <div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.vehicleType}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.capacity}</div>
 <div style={css(`font-size:12px; text-align:right; color:#14171F; font-variant-numeric:tabular-nums;`)}>{r.distanceLimit}</div>
@@ -3113,7 +3119,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>DCs</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapDcCount2}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MIGRATION PENALTY (ρ)</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapRho.toFixed(2)}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>NEW NODE ADDITION</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapNewNodeAdditionOn ? 'On' : 'Off'}</div></div>
-<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>SINGLE PIN \u2013 SINGLE SC</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapSinglePinSingleScOn ? 'On' : 'Off'}</div></div>
+<div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>SINGLE PIN – SINGLE SC</div><div style={css(`font-size:12.5px; color:#14171F; margin-top:2px;`)}>{mapSinglePinSingleScOn ? 'On' : 'Off'}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAPPING TOLERANCE</div><div style={css(`font-size:12.5px; color:${mapToleranceAnyWarn ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapToleranceRangeLabel}{mapToleranceAnyWarn ? ' \u26a0' : ''}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>VOLUME UTILISATION</div><div style={css(`font-size:12.5px; color:${mapVolUtilAnyOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapVolUtilRangeLabel}{mapVolUtilAnyOver100 ? ' \u26a0' : ''}</div></div>
 <div><div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>MAX SORT CAP UTILISATION</div><div style={css(`font-size:12.5px; color:${mapSortCapUtilAnyOver100 ? '#C77B00' : '#14171F'}; margin-top:2px;`)}>{mapSortCapUtilRangeLabel}{mapSortCapUtilAnyOver100 ? ' \u26a0' : ''}</div></div>
@@ -17050,10 +17056,18 @@ class NDCApp extends React.Component {
       const sc = scByCode[code] || {};
       const rowsHere = results ? results.dcRows.filter(r => (useEffective ? effectiveSc(r) : r.oldSc) === code) : [];
       const vol = rowsHere.reduce((a, r) => a + (r.volume || 0), 0);
-      const volPct = sc.volCap ? Math.round((vol / sc.volCap) * 100) : null;
+      // Real bug caught via a live click-through of the deployed build: showed "859%" for a
+      // normal-looking SC. Root cause: this app already has an established precedent for exactly
+      // this ratio (computeMappingResultPure's own perSc.utilisationPct, a few hundred lines up)
+      // — and it caps at 100 with Math.min(100, ...), because seeded DC volumes can genuinely sum
+      // well past a SC's own volCap in this simulated data. Matching that same cap here, which I'd
+      // missed when building this metric — an uncapped ratio isn't "more accurate", it's just
+      // misleading next to every other utilisation figure in the app, which is always ≤100%.
+      const volPct = sc.volCap ? Math.min(100, Math.round((vol / sc.volCap) * 100)) : null;
       // Sort Utilisation — DC count against Sort Capacity (this module's own established reading;
-      // see the Max Sort Capacity Utilisation parameter, which is framed the same way).
-      const sortPct = sc.sortCap ? Math.round((rowsHere.length / sc.sortCap) * 100) : null;
+      // see the Max Sort Capacity Utilisation parameter, which is framed the same way). Same cap
+      // applied for the same reason.
+      const sortPct = sc.sortCap ? Math.min(100, Math.round((rowsHere.length / sc.sortCap) * 100)) : null;
       return { volPct, sortPct };
     };
     const reviewMapScSections = (results && run) ? (run.scCodes || []).map(code => {

@@ -3255,3 +3255,219 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     batching multiple edits between checks.
   - **Not yet verified live**: all of it. This was the largest single round of the whole session
     and none of it has been exercised in a real browser — highest-value next step once deployed.
+
+- **2026-09-16 — SC-DC Mapping's Design Creation wizard restructured: Steps 1+2 merged, per-SC
+  operating parameters, zero-volume DC removal.**
+  - **Step 1 (was "Volume & SC Selection") and Step 2 (was "DC Group") merged into one "Input
+    Selection" step**, matching RLH Route Planner's own Step 1 pattern exactly: volume plan
+    picker, then an expandable SC list where each row shows real DC count + volume, and expanding
+    it reveals the full per-DC table (DC CODE / NAME / VOLUME / CAPACITY / VOL FLAG / SOURCE) —
+    same columns and red-"0 volume"/green-"OK" flag treatment as Route Planner's own screen, using
+    this run's own volume plan via `mapVolumeInfoForDc` rather than a synthetic generator, since
+    Node Mapping's DC list was already real. Unmapped additions moved to their own dedicated list
+    below the SC list — they don't belong to any one SC, nesting them under a row misrepresented
+    that.
+  - **NAME column real bug fix**: showed the DC code twice (once as DC CODE, once as "NAME") for
+    every AutoDML-sourced row, since real LMDC master rows have no separate name field — only
+    Addition-sourced DCs genuinely have one. Now shows "—" (muted) when there's no real name,
+    instead of a duplicate.
+  - **Delete icon on zero-volume DCs** (point 2) — a `mapDroppedDcs` state set, same
+    this-run-only-removal pattern as node closures already use, threaded through
+    `mapComputeEligibleDcs()` so a dropped DC is actually excluded from what gets triggered, not
+    just hidden. Undo via the same toast-with-callback pattern already used elsewhere in this
+    module.
+  - **Step 3 renamed "Operating Mode"** (was "Baseline & Parameters"). Tolerance, Volume
+    Utilisation Min/Max, and Max Sort Capacity Utilisation moved from one global value for the
+    whole run to **per-SC values**, each selected SC getting its own row — a column header's own
+    field can still push one value to every selected SC at once (`mapApplyScParamToAll`).
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: Babel-compiled clean after every edit. Live-simulated via jsdom+React
+    click-through (trigger flow, SC selection, expand/collapse, drop-DC undo) — not yet exercised
+    in a real deployed browser at this point in the session (see the 09-17 entry below for that).
+
+- **2026-09-16 — Design Review for SC-DC Mapping rebuilt from scratch: bifurcated stages, plan
+  cards, per-DC distance, pre/post SC utilisation. Two real, non-trivial bugs found underneath it.**
+  - **Bifurcated into "To Review" and "Finalised"** as two distinct top-level stage tabs (matching
+    the module's own Completed/Committed status split) instead of one flat run list. "Finalised"
+    here is this module's own terminal state (Committed) — **not** the same "Finalised" RLH's own
+    Ops-Alignment lifecycle uses elsewhere in this app, since Node Mapping has no equivalent of
+    that lifecycle yet.
+  - **Runs shown as plan cards** (Inputs: SC/DC counts, volume, ρ, HW/New Addition, Tolerance;
+    Outputs: movements, unmapped, % of DCs changed) instead of a bare pill-button run picker.
+  - **Per-DC distance columns** (DIST OLD / DIST NEW) added to the Decide-stage change rows — "—"
+    for a DC with no prior SC (a genuine new addition). New arrivals with unknown coordinates also
+    correctly show "—" for both, rather than a fabricated number.
+  - **"No changes" DC lists converted from comma-joined prose to a real list view** (one DC per
+    grid cell), in all three places that render them: the Decide stage, the Finalise stage, and
+    the post-commit Stage 2 cards.
+  - **Pre/post Volume & Sort Utilisation per SC** added to each SC section's header — "pre" from
+    DCs on that SC today (`oldSc`), "post" from DCs that would effectively end up there once
+    today's decisions are applied.
+  - **Real bug #1 — `mapTriggerRun` never actually copied `draft.scParams` onto the triggered run
+    object.** The per-SC restructure above (point 1) had built the field but missed wiring it into
+    the one place that freezes a run's params at trigger time — caught while building the plan
+    card's own Tolerance-range display, which needed to read it back.
+  - **Real bug #2 — plan cards showed "0 movements" on every still-undecided run.** The first cut
+    counted movements via the *post-decision effective* SC, which defaults back to a DC's old SC
+    when nothing's been decided yet — so a freshly-triggered run with a genuine proposed move
+    looked like it proposed nothing. Fixed to count `needsDecision` rows directly (the actual
+    proposal), not the outcome of a decision that hasn't happened yet.
+  - **Real bug #3, deeper — a hardcoded `lat:0, lng:0` on every "mapped Addition" DC** (DEL-913 and
+    others), never previously consumed by anything real, surfaced for the first time by the new
+    DIST OLD/DIST NEW columns as a ~470,000km "distance" (0,0 is open ocean off Africa). First fix
+    attempt pulled real-world coordinates from `nodeChangesUnified` instead — which then broke a
+    **second**, deeper assumption: `NDC_haversineKm()`'s own ×55 multiplier is calibrated for this
+    app's usual small-delta synthetic DC-to-its-own-SC coordinate pairs (~0.018° jitter), and
+    applying that same ×55 to a genuine real-world-scale coordinate pair inflated a real ~250km gap
+    into 15,000km+. **Fixed properly, not banded-aid**: addition DCs now get the exact same
+    small-jitter-from-their-own-SC synthetic scheme every other DC in this app already uses
+    (`buildSeed()`), and `distKm()` itself only applies the ×55 multiplier when a DC is measured
+    against its own *current* SC — any other SC gets the raw (un-multiplied) haversine value,
+    since crossing to a different SC is comparing two independently-seeded real-scale coordinates,
+    not a small delta. Verified directly against the solver, not just visually: a genuine cross-SC
+    move now shows `112 km` (own SC) / `402 km` (target SC) — both independently confirmed by
+    manual haversine calculation on the same coordinates.
+  - **Worth flagging for a future session**: that same ×55 multiplier is also used inside
+    `computeMappingResultPure`'s own cost/CPS calculation for cross-SC moves — likely similarly
+    distorted before now, just never visibly so since it feeds into a cost figure rather than a
+    displayed "km" number. Not touched this round (out of scope for the distance-display ask, and
+    it needs its own dedicated re-verification against RLH's own cost figures).
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only at this point in the session (`engine.js`
+    changed later the same day — see the Rate Card entry below).
+  - **Verification**: real execution-tested — a purpose-built jsdom harness that monkey-patches
+    `computeMappingResult` to force a guaranteed cross-SC move, then walks the full
+    trigger → decide → finalise → commit flow end to end, confirming the DC-level distance values
+    against independently hand-calculated haversine numbers at each step.
+
+- **2026-09-16 — UI pass on SC-DC Mapping: a stale "Coming Soon" bleed-through, LMDC Master's
+  color-seam bug, LM Contacts renamed to LM POCs, Operating Mode's header controls rebuilt to
+  match Route Scheduler, Design Review moved to a two-pane layout.**
+  - **"Coming Soon" fallback was rendering underneath Node Mapping's own real Design Review
+    content on every screen state.** Root cause: that fallback block exists for tiers with nothing
+    built yet (FM Carting, NLH) and lived in the same code branch as Node Mapping's own content,
+    with no gate excluding the two from each other — so it always rendered as a second, unwanted
+    section below whatever Node Mapping was actually showing. Confirmed via a live click-through
+    of Route Planner's own Design Review that it has no equivalent leak. The fix itself needed a
+    second attempt — the first one accidentally consumed a closing brace that belonged to an
+    unrelated outer wrapper and broke the file; caught immediately by the compile check, never
+    shipped.
+  - **LMDC Master's "LM CONTACTS" column header had a real background-width bug**, not a styling
+    quirk: confirmed via live DOM inspection (`getBoundingClientRect`) that the header row's shared
+    wrapper was hardcoded to `min-width:1650px`, while the row's own 16 columns actually sum to
+    `1810px` — a stale number from before PINCODES and LM Contacts were added to this table. The
+    last ~160px of every header row rendered outside its own parent's painted background, showing
+    white/transparent behind the tail of the header text. Fixed the number to the correct sum.
+  - **LM Contacts renamed to LM POCs** everywhere user-facing (column header, tooltip, modal
+    title). Internal field names (`lmZh`/`lmCh`/`lmAm1`/`lmAm2`, `lmContactsModal` state) left
+    untouched — not visible to a user, no reason to touch them.
+  - **Operating Mode's per-SC parameter table header rebuilt** to match Route Scheduler's own
+    "Per-SC operating mode" table exactly: each of Tolerance/Vol Util Min/Vol Util Max/Max Sort Cap
+    now has a compact inline `− VALUE +` stepper as its column header — clicking `+`/`−` updates
+    that header's own tracked value **and** applies it live to every selected SC's row, no separate
+    "apply" button, matching Route Scheduler's D0 Cutoff/HW header convention. Replaced the earlier
+    separate-input-plus-tiny-button design, which cramped "VOL UTIL MAX / %" onto two lines while
+    its neighbors stayed single-line. The SC identity column was also made sticky (`position:
+    sticky; left:0`) so it doesn't scroll out of view — same pattern already used elsewhere in this
+    app (the Loading Time table).
+  - **Design Review moved from "click a card → navigate to a full-width Details screen → click
+    Back" to a persistent two-pane layout** — a left rail (stage tabs + run list) next to a right
+    detail panel, matching Route Planner/Scheduler's own SC-list-left / detail-right structure.
+    Selecting a run or switching stage tabs updates the right panel in place; the first run in the
+    active bucket auto-selects so the panel is never empty on load. The recap header at the top of
+    the right panel was also upgraded to Route Planner's own big-number-tile convention (large
+    colored numbers for Movements/Unmapped/% Changed) instead of small inline text.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: Babel-compiled clean after every edit; jsdom+React click-through confirmed
+    the Coming Soon fix, the stepper's live-apply behavior, and the two-pane auto-select/stage-
+    switch behavior. The color-seam fix was verified computationally (grid math) at this point,
+    not yet visually — visual confirmation came the next day, see 09-17 below.
+
+- **2026-09-16 — New Node Addition toggle (replaces HW here), Single Pin – Single SC toggle,
+  pincodes surfaced in Step 1, SC Vehicle Availability added as Step 3, Rate Card built under SC
+  Master.**
+  - **Historical Weight (HW) removed from Node Mapping specifically and replaced with "New Node
+    Addition"** — an On/Off toggle (`draft.params.newNodeAddition`, default On) controlling whether
+    brand-new unmapped DCs are included in this run's solve at all. `mapComputeEligibleDcs()` now
+    takes an `includeNewAdditions` argument (default `true`, so existing callers are unaffected);
+    when explicitly `false`, unmapped additions are excluded from the run's DC list entirely — the
+    solver then only ever reassigns DCs that already have a real AutoDML link. **RLH's own,
+    separate HW feature in Route Planner/Scheduler is completely untouched** — confirmed via a
+    full audit of every `hwLabel`/`params.hw` reference in the file before touching anything, since
+    the two features share a name but are otherwise unrelated. Verified end to end: turning the
+    toggle off on a real run dropped the DC count from 287 to 285, exactly matching the 2 real
+    unmapped additions in that cluster.
+  - **Single Pin – Single SC toggle** (`draft.params.singlePinSingleSc`, default On) makes visible
+    and controllable a constraint that was previously silent and hardcoded: `groupDcsBySharedPincode()`
+    inside `computeMappingResultPure()` already forced every DC sharing a pincode onto the same
+    suggested SC; when the toggle is explicitly off, each DC is now evaluated as its own one-DC
+    "group" instead, landing independently. **Verified directly against the solver function**, not
+    just the UI: two DCs artificially given the same pincode landed on the same SC with the toggle
+    on, and on two different SCs (each its own nearest) with it off.
+  - **Pincodes surfaced in Step 1's per-SC DC table** (point 5) — LMDC Master already stored these
+    per DC and the solver already silently read them for the constraint above; now shown as a real
+    PINCODES column (first 2 + "+N more" overflow, full list in a tooltip) so the same signal
+    that's already shaping the solve is visible in the run's own inputs.
+  - **SC Vehicle Availability added as the wizard's new Step 3** (Preview & Trigger moved to Step
+    4) — read-only reference, one section per selected SC, same Vehicle Type / Capacity / Distance
+    Limit / Vehicles / TP Limit / Zone Feasibility columns as Route Planner's own Vehicle
+    Configuration step. Deliberately **not** editable here (Node Mapping's own solve doesn't
+    consume vehicle data at all) — this step exists purely so a gap (an SC with nothing configured)
+    is visible before triggering, rather than discovered later downstream in Route
+    Planner/Scheduler.
+  - **Rate Card — new SC Master section** (point 2): Minimum Guarantee (MG) plus a free-form
+    shipment-volume slab table (each slab its own Min/Max/Cost per shipment, open-ended top slab
+    supported), stored as a single new Class D field (`rateCard: {mg, slabs}`) on `scMaster` — same
+    cycle-versioned mechanism every other SC Master field already uses, no engine-level changes
+    needed beyond adding the one field to `materializeRLHScs()`'s own field list (this was the one
+    piece nearly missed — the popup and its class methods were fully built before realizing the
+    field was never actually being read back onto the SC objects the popup opens from). Same
+    icon+popup+bulk-CSV pattern as Operating Hours: a new RATE CARD column/icon on SC Master's
+    table, and a third "Bulk Upload — Rate Card" card alongside the existing two.
+  - **Files changed**: `v3.0-rlh-design-base.jsx`, `engine.js` (`rateCard` added to
+    `materializeRLHScs()`'s field list only).
+  - **Verification**: Babel-compiled clean after every edit. jsdom+React click-through confirmed
+    the New Node Addition DC-count change, the Single Pin solver-level behavior (both directly and
+    via the UI), the Step 3 vehicle table rendering real data, and a full Rate Card round trip
+    (open → set MG + 2 slabs including a genuinely open-ended one → save → close → reopen → every
+    value persisted exactly, icon correctly switched to "configured"). CSV upload path verified by
+    calling the parser directly against a real multi-SC file.
+
+- **2026-09-17 — Live click-test against the actual deployed build. Four more real bugs found —
+  three small, one a genuine calculation error.**
+  - This was the first time anything from the 09-16 round had been exercised in a real browser
+    against the real deployed page (everything above was jsdom+React-verified only). Confirms the
+    project's own long-standing pattern: static/jsdom testing catches most things, but visual
+    layout bugs and unit/scale mistakes tend to only show up on a real click-through.
+  - **Bulk-upload cards row broke when the 3rd (Rate Card) card was added** — no `flex-wrap`, no
+    `min-width` on any of the three cards, so all three squeezed down to almost nothing, wrapping
+    "Bulk Upload — Sort Centre Master" into a vertical single-word ladder. Fixed with `flex-wrap`
+    on the row and a `min-width:300px` on each card — 2 fit per row at normal widths (wrapping the
+    3rd down), or all 3 side by side on wide screens, never cramped.
+  - **"Single Pin – Single SC" rendered literally as `Single Pin \u2013 Single SC`** in three
+    places (the toggle's own label, and twice in Preview & Trigger's plan summary) — the same class
+    of bug as the project's own established `\u2014`-outside-a-string-literal issue: raw JSX text
+    content doesn't interpret escape sequences the way a real JS string does. Fixed by using the
+    literal en-dash character directly instead of the escape. A grep across the whole file for this
+    exact pattern (`>[text]\u[hex][text]<`, i.e. a raw escape sitting directly in JSX text rather
+    than inside quotes) found two more pre-existing instances elsewhere in the app (NLH library
+    text) — left those alone since they predate this session and touching unrelated code wasn't
+    asked for; flagging here for whoever picks that up.
+  - **SC Vehicle Availability's own table (new this session) had TP LIMIT and ZONE FEASIBILITY
+    headers running together** with no visible gap — the grid had no `gap` property at all. Added
+    `gap:10px` to both the header and data row grids.
+  - **Pre/post Volume Utilisation showed values like 859%** for a completely normal-looking SC —
+    genuinely wrong, not a display quirk. Root cause found by searching the codebase for existing
+    precedent rather than guessing at a fix: `computeMappingResultPure()` already computes this
+    exact ratio elsewhere (`perSc.utilisationPct`, used by an existing, older feature) and
+    deliberately caps it with `Math.min(100, ...)`, because this app's seeded DC volumes can
+    genuinely sum well past a SC's own `volCap` in the simulated data — an uncapped ratio isn't
+    "more accurate," it's just inconsistent with every other utilisation figure in the app, which
+    is always ≤100%. The new pre/post metric had missed this cap when it was built the day before;
+    fixed to match the established convention exactly rather than invent a new one.
+  - **Files changed**: `v3.0-rlh-design-base.jsx` only.
+  - **Verification**: all four found and fixed via an actual live click-through of the deployed
+    page (not jsdom) — Babel-compiled clean after each fix, then re-verified against the same live
+    page for the two that could be checked without a fresh deploy (the `\u2013` fix and the
+    utilisation cap were confirmed computationally/via the compiled output; the layout fixes and
+    the color-seam fix from the day before still need visual confirmation on the *next* deploy,
+    since this session's browser was pointed at the deploy that predated these specific fixes).

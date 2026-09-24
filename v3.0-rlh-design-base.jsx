@@ -1961,7 +1961,7 @@ All modules
 </div>
 <div style={css(`flex:1;`)} />
 {/* B. CSV download — validation aid (selected SCs + node-vs-volume coverage) */}
-<button onClick={downloadSelectionCsv} title={"Download selected SCs + volume-coverage as CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
+<button onClick={downloadZeroVolDcsCsv} title={"Download DCs with zero planned volume across all selected SCs, as CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Zero-Volume DCs</button>
 <button onClick={selectAllSCs} style={css(`height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#EAEEFB;`)}>Select all shown</button>
 <button onClick={clearAllSCs} style={css(`height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}>Clear</button>
 </div>
@@ -2029,6 +2029,7 @@ All modules
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>SORT CAP</span><span style={css(`font-size:12px; font-variant-numeric:tabular-nums; color:#14171F;`)}>{s.scSortCapLabel}</span></span>
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>RLH DOCKS</span><span style={css(`font-size:12px; color:#14171F;`)}>{s.scDocksLabel}</span></span>
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>LOCATION</span><span style={css(`font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.scLocLabel}</span></span>
+<span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>LARGEST VEHICLE</span><span style={css(`font-size:12px; color:#14171F;`)}>{s.scLargestVehLabel}</span></span>
 </div>
 </>) : null}
 {(s.hasMissingMaster) ? (<>
@@ -2045,13 +2046,16 @@ All modules
 <div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMDCs · AutoDML actives + additions − closures</div>
 {(s.dropCount) ? (<><button onClick={s.onRestoreDropped} style={css(`display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:7px; cursor:pointer;`, `background:#EAEEFB;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.dropCount} dropped · restore</button></>) : null}
 </div>
-<div style={css(`display:grid; grid-template-columns:1fr 1.6fr 0.9fr 0.9fr 0.9fr 0.9fr 40px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.5fr 0.8fr 0.8fr 0.8fr 0.8fr 0.75fr 0.6fr 0.6fr 40px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>DC CODE</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>NAME</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>VOLUME</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>CAPACITY</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>VOL FLAG</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>SOURCE</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} title={"Read-only preview \u2014 edit in LMDC Master / Step 2"}>D0 CUTOFF</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>OPEN</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>CLOSE</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} />
 {(s.lmdcs || []).map((l, __i43) => (<React.Fragment key={__i43}>
 <div style={css(`padding:7px 11px; font-size:12px; font-weight:600; color:#003F98; border-top:1px solid #F2F5FA;`)}>{l.code}</div>
@@ -2060,6 +2064,9 @@ All modules
 <div style={css(`padding:7px 11px; font-size:12px; color:#14171F; border-top:1px solid #F2F5FA; text-align:right; font-variant-numeric:tabular-nums;`)}>{l.cap}</div>
 <div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.volFlagBg}; color:${l.volFlagFg};`)}>{l.volFlag}</span></div>
 <div style={css(`padding:7px 11px; border-top:1px solid #F2F5FA;`)}><span style={css(`padding:1px 7px; border-radius:999px; font-size:10px; font-weight:600; background:${l.srcBg}; color:${l.srcFg};`)}>{l.src}</span></div>
+<div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.d0Cutoff}</div>
+<div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.open}</div>
+<div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.close}</div>
 <div style={css(`padding:4px 6px; border-top:1px solid #F2F5FA; display:flex; align-items:center; justify-content:center;`)}><button onClick={l.onDrop} title={l.dropTitle} aria-label={l.dropTitle} style={css(`width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:${l.dropColor};`)} onMouseEnter={(e) => hoverOn(e, `color:#D14B4B; background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:${l.dropColor};`, `color:#D14B4B; background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
 </React.Fragment>))}
 </div>
@@ -2103,6 +2110,15 @@ All modules
 </div>
 </div>
 <div style={css(`flex:1;`)} />
+{/* Speed Profile / Dock Profile, view-only (2026-09-25, item 3) — same icon pattern Route
+    Scheduler's own Design Review/Ops Alignment cards use, opened read-only here (readOnly=true
+    on Speed Profile; Dock Profile has no edit mode at all, it's always computed/read-only).
+    No NLH scenario is in play in Route Planner's own wizard, so Dock Profile is opened with no
+    scenario id — it still resolves base capacity, Operating Hours, and Co-Loading/MDC lane
+    occupancy correctly; it just won't show any NLH trailer landings blocking a dock, since
+    there's no NLH scenario here to read landings from. */}
+<button onClick={() => this.openSpeedProfileModal(vc.code, (d.scVehAvail.find(g => g.code === vc.code) || { rows: [] }).rows.map(r => ({ vehicleType: r.vehicleType, zoneFeas: r.zoneFeas })), true)} title={"Speed Profile (view only)"} aria-label={"View Speed Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`, `border-color:#0D7377;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={() => this.openDockProfileModal(vc.code, null)} title={"Dock Profile (view only)"} aria-label={"View Dock Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`, `border-color:#5A5E66;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {(vc.tpWarn) ? (<><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{vc.tpWarnLabel}</span></>) : null}
 {(vc.isAdding) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>Adding vehicle…</span></>) : null}
 {(vc.notAdding) ? (<><button onClick={vc.onAddVehicle} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#EAEEFB;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Add Vehicle</button></>) : null}
@@ -2233,6 +2249,13 @@ All modules
 </div>
 {/* Divider */}
 <div style={css(`width:1px; height:28px; background:#E6EBF2; flex-shrink:0;`)} />
+{/* Speed Mode global group (2026-09-25, item 2.2) — same batch-toolbar pattern as HW above */}
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 18px;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Off \u2014 falls back to a flat default speed instead of reading Speed Profile"}>SET ALL SPEED MODE</span>
+<button onClick={onSpeedModeGlobalToggle} style={css(`height:28px; padding:0 12px; border:1px solid ${speedModeGlobal ? '#128A3E' : '#E6EBF2'}; background:${speedModeGlobal ? '#E7F4EC' : '#fff'}; color:${speedModeGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:12px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{speedModeGlobalLabel}</button>
+</div>
+{/* Divider */}
+<div style={css(`width:1px; height:28px; background:#E6EBF2; flex-shrink:0;`)} />
 {/* Ref Plan global group */}
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 18px; flex:1;`)}>
 <span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>Reference plan</span>
@@ -2262,18 +2285,19 @@ All modules
 {/* L — per-row "select to trigger" checkbox removed; everything selected in Step 1 runs.
                        M — carry-forward totals: NODES + VOLUME + VEHICLES per SC. */}
 {/* Column headers */}
-<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 1.6fr 1.6fr; background:#E6EBF2;`)}>
+<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 0.9fr 1.6fr 1.6fr; background:#E6EBF2;`)}>
 <div style={css(`padding:10px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMSC</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>NODES</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>VOLUME</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLES</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>HIST. WEIGHT</div>
+<div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>SPEED MODE</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Reference plan</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VALIDATION</div>
 </div>
 {(previewCards || []).map((c, __i52) => (<React.Fragment key={__i52}>
 <div style={css(`border-top:1px solid #EEF1F6; border-left:${c.focusBd}; background:${c.focusBg};`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `border-top:1px solid #EEF1F6; border-left:${c.focusBd}; background:${c.focusBg};`, `background:#FAFBFD;`)}>
-<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 1.6fr 1.6fr; align-items:center;`)}>
+<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 0.9fr 1.6fr 1.6fr; align-items:center;`)}>
 <div style={css(`padding:10px 16px; min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px;`)}>
 <span style={css(`font-size:13px; font-weight:700; color:#003F98;`)}>{c.code}</span>
@@ -2290,6 +2314,10 @@ All modules
 <button onClick={c.onHw05} style={css(`height:26px; min-width:36px; padding:0 7px; border:1px solid ${c.hw05Bd}; background:${c.hw05Bg}; color:${c.hw05Fg}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>0.5</button>
 <button onClick={c.onHw1} style={css(`height:26px; min-width:30px; padding:0 7px; border:1px solid ${c.hw1Bd}; background:${c.hw1Bg}; color:${c.hw1Fg}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>1</button>
 </div>
+</div>
+{/* Speed Mode per-row toggle (2026-09-25, item 2.1) */}
+<div style={css(`padding:7px 14px;`)}>
+<button onClick={c.onToggleSpeedMode} style={css(`height:26px; padding:0 10px; border:1px solid ${c.speedMode ? '#128A3E' : '#E6EBF2'}; background:${c.speedMode ? '#E7F4EC' : '#fff'}; color:${c.speedMode ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{c.speedModeLabel}</button>
 </div>
 {/* I — per-row reference-plan picker; HW 0 = "—", HW 0.5/1 = dropdown select */}
 <div style={css(`padding:8px 14px;`)}>
@@ -2358,6 +2386,19 @@ All modules
 </React.Fragment>))}
 </div>
 </>) : null}
+{/* Feasibility & Convergence Check (2026-09-25, item 4.1) — Stage 1 of the new 2-stage
+    Preview & Trigger flow. Simulated stand-in for the real agent integration this is meant to
+    become — reuses the existing per-SC distance-vs-vehicle-range flags (the exact scenario in
+    the product's own example) rather than a separate metric, so it can never disagree with the
+    per-SC flags shown below. Trigger stays unreachable until this has been run at least once. */}
+<div style={css(`display:flex; align-items:center; gap:13px; padding:14px 18px; margin-bottom:14px; background:${step4PreValidated ? (feasibilityClean ? '#E7F4EC' : '#FBF1DF') : '#EAF0FB'}; border:1px solid ${step4PreValidated ? (feasibilityClean ? '#B6E0C6' : '#EDD9AF') : '#C5D4F0'}; border-radius:10px;`)}>
+<div style={css(`width:36px; height:36px; border-radius:9px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={step4PreValidated ? (feasibilityClean ? '#128A3E' : '#C77B00') : '#1E6FB8'} strokeWidth={"1.9"}><path d={"M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`flex:1; min-width:0;`)}>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Feasibility & Convergence Check <span style={css(`font-weight:600; color:#8E96A3; font-size:11px;`)}>(simulated — pending agent integration)</span></div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{(!step4PreValidated) ? 'Checks whether the selected vehicles, parameters and volumes can plausibly reach 100% coverage before you trigger — e.g. vehicles whose range doesn\u2019t reach some DCs.' : feasibilityClean ? ('Projected coverage ' + feasibilityCoveragePct + '% — no vehicle-range risk found across ' + batchScLabel + '.') : ('Projected coverage ' + feasibilityCoveragePct + '% — ' + feasibilityAtRiskCount + ' SC' + (feasibilityAtRiskCount === 1 ? '' : 's') + ' at risk (' + feasibilityAtRiskLabel + '). Add a longer-range vehicle or drop the far DC(s).')}</div>
+</div>
+<button onClick={onRunPreValidation} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0; white-space:nowrap;`)}>{step4PreValidated ? 'Re-run check' : 'Run Pre-Validation Check'}</button>
+</div>
 {/* A — readiness banner (single predicate: ready = green, blocked = red). ETA only when ready. */}
 {(triggerReady) ? (<>
 <div style={css(`display:flex; align-items:center; gap:13px; padding:14px 18px; margin-bottom:14px; background:#E7F4EC; border:1px solid #B6E0C6; border-radius:10px;`)}>
@@ -2379,6 +2420,15 @@ All modules
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:9px; padding:13px 15px;`)}><div style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.05em;`)}>DELIVERY CENTRES</div><div style={css(`font-size:19px; font-weight:700; color:#14171F; margin-top:3px; font-variant-numeric:tabular-nums;`)}>{batchDcTotal}</div></div>
 </div>
 {/* C — per-SC recap: not-ready first, clean behind an expander */}
+{/* Bulk accept for warned SCs (2026-09-25, item 4.2) — one click, no extra confirmation, per
+    direct instruction. Only ever touches warnOnly rows — a genuinely blocked (hasErrors) SC
+    can't be accepted away, it still needs a real fix. */}
+{(hasWarnedNotAcked) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; margin-bottom:10px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
+<span style={css(`font-size:12.5px; color:#14171F;`)}>{warnedNotAckedCount} SC{warnedNotAckedCount === 1 ? '' : 's'} have warnings only (not blocking) and can be accepted in bulk.</span>
+<button onClick={onBulkAcceptWarned} style={css(`height:30px; padding:0 13px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:12px; font-weight:700; border-radius:7px; cursor:pointer; white-space:nowrap;`)}>Accept all warned ({warnedNotAckedCount})</button>
+</div>
+</>) : null}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden;`)}>
 <div style={css(`display:grid; grid-template-columns:1.5fr 1.4fr 0.5fr 1.1fr 1fr 1.5fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
 <div style={css(`padding:9px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>SORT CENTRE</div>
@@ -7497,6 +7547,10 @@ class NDCApp extends React.Component {
       ingestionCounter: 0,
       resolved: {},
       creationStep: 1, creationView: 'wizard',
+      // 2026-09-25 addition (item 4) — Preview & Trigger's own 2-stage gate: Trigger stays
+      // unreachable until the pre-validation / feasibility check has been explicitly run once
+      // for the current selection, even if every existing check already reads clean.
+      step4PreValidated: false,
       fixReturnStep: null, focusSC: null,
       creationSearch: '',
       creationZone: 'All',
@@ -7507,6 +7561,11 @@ class NDCApp extends React.Component {
       creationVolSearch: '',
       hwGlobal: 0.5,
       hwBySC: {},
+      // 2026-09-25 addition (item 2.1) — Speed Mode On/Off, same global-default + per-SC-
+      // override pattern as HW above (global default read via speedModeGlobal, per-SC override
+      // in speedModeBySC, cleared whenever the global control is used).
+      speedModeGlobal: true,
+      speedModeBySC: {},
       refBySC: {},
       droppedDcBySC: {},
       newNodeMode: false,
@@ -10944,13 +11003,27 @@ class NDCApp extends React.Component {
   downloadCsvFile() { const d = this.state.data; const head = 'SC Code,Name,Zone,Sort Capacity,Volume Capacity,RLH Docks,LMDC Count\n'; const body = d.scs.map(s => [s.code, s.name, s.zone, s.sortCap, s.volCap, s.docks, s.dcCount].join(',')).join('\n'); this.downloadText('network-design-export.csv', head + body); this.showToast('CSV downloaded · ' + d.scs.length + ' rows', '#128A3E'); }
   // B. Design-Creation Step-1 CSV — selected SCs with node count, total volume, and the volume-gap
   // breakdown (zero / missing) so the planner can validate inputs offline before triggering.
-  downloadSelectionCsv() {
+  // downloadZeroVolDcsCsv() (2026-09-25 addition, item 1.1) — replaces the old SC-level
+  // "selection" CSV. DC-level export, one row per DC with zero planned volume, across every
+  // selected SC (not just the currently-expanded one). Reuses the exact same synthetic per-DC
+  // generation Step 1's own expandable table uses (this preview has always been synthetic, not
+  // real LMDC entities — see the D0 Cutoff/Open/Close comment on that table above) so the
+  // numbers on screen and in this download always agree with each other.
+  downloadZeroVolDcsCsv() {
     const st = this.state, d = st.data; const dropped = st.droppedDcBySC || {};
     const sel = (st.selectedSCs || []).map(c => d.scs.find(s => s.code === c)).filter(Boolean);
     if (!sel.length) { this.showToast('Select at least one SC to download', '#C77B00'); return; }
-    const head = 'SC Code,Name,Zone,LMDC Count,Total Volume,Zero-Volume DCs,Missing-Volume DCs,Dropped From Run\n';
-    const body = sel.map(s => { const drops = (dropped[s.code] || []); const dropsBelowZero = drops.filter(i => i < (s.zeroVolDc || 0)).length; const dropsBeyondZero = Math.max(0, drops.length - dropsBelowZero); const zero = Math.max(0, (s.zeroVolDc || 0) - dropsBelowZero); const miss = Math.max(0, (s.missVolDc || 0) - dropsBeyondZero); return [s.code, s.name, s.zone, s.dcCount, s.volume, zero, miss, drops.length].join(','); }).join('\n');
-    this.downloadText('design-creation-selection.csv', head + body + '\n'); this.showToast('CSV downloaded · ' + sel.length + ' SCs', '#128A3E');
+    const rows = [];
+    sel.forEach(s => {
+      const drops = dropped[s.code] || [];
+      [0, 1, 2, 3, 4, 5].filter(i => drops.indexOf(i) < 0 && i < (s.zeroVolDc || 0)).forEach(i => {
+        const capN = Math.round(Math.round((s.volume || 0) / Math.max(1, s.dcCount)) * (1.05 + (i % 4) * 0.18));
+        rows.push([s.code, s.name, s.cityCode + '-' + (210 + i * 7), 'DC ' + s.cityCode + ' ' + (i + 1), 0, capN, i === 4 ? 'Addition' : 'AutoDML'].join(','));
+      });
+    });
+    const head = 'SC Code,SC Name,DC Code,DC Name,Planned Volume,Capacity,Source\n';
+    this.downloadText('zero-volume-dcs.csv', head + rows.join('\n') + (rows.length ? '\n' : ''));
+    this.showToast('Zero-Volume DCs downloaded \u00b7 ' + rows.length + ' DC' + (rows.length === 1 ? '' : 's') + ' across ' + sel.length + ' SC' + (sel.length === 1 ? '' : 's'), '#128A3E');
   }
   // C2 — download a previously uploaded volume file (physical reference). Emits a representative
   // 2-column CSV (Code + Planned Volume) named after the stored file.
@@ -12068,6 +12141,20 @@ class NDCApp extends React.Component {
     // Design Creation pool entirely, per the worked example in the product decision).
     const filtered = d.scs.filter(s => s.dispatchesRLH !== false && s.isActive !== false && (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0));
     const ZONES = ['North', 'South', 'East', 'West'];
+    // 2026-09-25 addition (item 1.2) — Largest Vehicle per SC, for Step 1's SC summary row.
+    // Computed from SC Vehicle Availability's own real per-SC rows (Design Inputs master —
+    // d.scVehAvail) and Vehicle Master's own real capacity per type (d.VEH), deliberately NOT
+    // from vehiclesBySC (the per-run Vehicle Configuration draft, defined later in this
+    // function, Step 3's own concern) — "what's on file today" is the honest answer for a Step 1
+    // planning aid, and doesn't depend on Step 3 having been touched yet.
+    const vehCapByName = {}; (d.VEH || []).forEach(v => { vehCapByName[v.name] = v.cap; });
+    const scVehAvailByCode = {}; (d.scVehAvail || []).forEach(g => { scVehAvailByCode[g.code] = g; });
+    const largestVehFor = (code) => {
+      const rows = (scVehAvailByCode[code] && scVehAvailByCode[code].rows) || [];
+      let best = null;
+      rows.forEach(r => { const cap = r.cap != null ? Number(r.cap) : vehCapByName[r.type]; if (cap != null && (!best || cap > best.cap)) best = { type: r.type, cap }; });
+      return best;
+    };
     const scGroups = ZONES.map(z => {
       const list = filtered.filter(s => s.zone === z);
       const selN = list.filter(s => selSet[s.code]).length;
@@ -12084,9 +12171,11 @@ class NDCApp extends React.Component {
           const scSortCapLabel = hasMissingMaster ? '—' : fmtInt(s.sortCap);
           const scDocksLabel = hasMissingMaster ? '—' : String(s.docks);
           const scLocLabel = hasMissingMaster ? '—' : (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2));
+          const scLargestVeh = hasMissingMaster ? null : largestVehFor(s.code);
+          const scLargestVehLabel = scLargestVeh ? (scLargestVeh.type + ' (' + fmtInt(scLargestVeh.cap) + ')') : '—';
           const realDc = { count: (scDcCounts.counts[s.code] || 0) + (scDcCounts.pipelineCounts[s.code] || 0), pipelineCount: scDcCounts.pipelineCounts[s.code] || 0 };
           return { code: s.code, name: s.name, dcCount: realDc.count, dcPipelineCount: realDc.pipelineCount, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code, isMdc: s.nodeKind === 'MDC',
-          hasMissingMaster, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel,
+          hasMissingMaster, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel, scLargestVehLabel,
           onFixMaster: () => { this.go('inputs'); this.setState({ inputsTab: 'masters', mastersTab: 'sc' }); this.showToast('Navigating to Sort Center Master — update ' + s.code + ' details', '#1E6FB8'); },
           // D. per-SC volume-gap flag (covers both zero-volume and missing-volume DCs)
           volGap: gap.hasGap, volGapLabel: gap.total + (gap.total === 1 ? ' DC no vol' : ' DCs no vol'),
@@ -12103,7 +12192,23 @@ class NDCApp extends React.Component {
             const capN = Math.round((volN || Math.round(s.volume / s.dcCount)) * (1.05 + (i % 4) * 0.18));
             const zeroVol = isZero || (volN < (s.volume / s.dcCount) * 0.78); const overCap = !zeroVol && volN > capN;
             const flag = zeroVol ? { t: '0 volume', bg: '#FBEAEA', fg: '#D14B4B' } : overCap ? { t: 'Over capacity', bg: '#FBEAEA', fg: '#D14B4B' } : { t: 'OK', bg: '#E7F4EC', fg: '#128A3E' };
+            // 2026-09-25 addition (item 1.2) — DC-level D0 Cutoff + Operating Times, read-only
+            // here (Step 1 is a preview; actual overrides happen in LMDC Master / Step 2, same
+            // convention as everywhere else in this app). Synthesized the same deterministic-
+            // per-index way every other field in this row already is — this whole DC list is
+            // itself a per-SC synthetic preview (s.cityCode + a fixed offset), not a read from
+            // materializeLmdcEntities()'s real per-DC records, so a "real" D0 Cutoff/Open/Close
+            // pulled from LMDC Master would have nothing real underneath it to match against.
+            // Flagged as a real gap, not silently smoothed over: if this table is ever rewired to
+            // the real LMDC entity list, these 3 fields should switch to real reads at the same
+            // time (LMDC Master's own d0Cutoff/openTime/closeTime, same resolution
+            // computeImpliedCutoffForLanding() already uses), not stay synthetic on their own.
+            const d0Options = ['07:00', '08:00', '09:00', '10:00', '11:00'];
+            const dcD0Cutoff = d0Options[i % d0Options.length];
+            const dcOpen = ['05:00', '06:00', '00:00'][i % 3];
+            const dcClose = ['22:00', '23:00', '24:00'][i % 3];
             return { code: s.cityCode + '-' + (210 + i * 7), name: 'DC ' + s.cityCode + ' ' + (i + 1), vol: zeroVol ? '0' : fmtInt(volN), volFg: zeroVol ? '#D14B4B' : '#14171F', volWeight: zeroVol ? '700' : '400', cap: fmtInt(capN), volFlag: flag.t, volFlagBg: flag.bg, volFlagFg: flag.fg, src: i === 4 ? 'Addition' : 'AutoDML', srcBg: i === 4 ? '#EAEEFB' : '#F2F5FA', srcFg: i === 4 ? '#2F4FC6' : '#5A5E66',
+              d0Cutoff: dcD0Cutoff, open: dcOpen, close: dcClose,
               dropTitle: zeroVol ? 'Drop this zero-volume DC from the run' : 'Drop this DC from the run', dropColor: zeroVol ? '#D14B4B' : '#C3C9D4',
               onDrop: () => { const m = Object.assign({}, this.state.droppedDcBySC || {}); const arr = (m[s.code] || []).slice(); if (arr.indexOf(i) < 0) arr.push(i); m[s.code] = arr; this.setState({ droppedDcBySC: m }); this.showToast((s.cityCode + '-' + (210 + i * 7)) + ' dropped from this run', '#D14B4B', () => { const m2 = Object.assign({}, this.state.droppedDcBySC || {}); const a2 = (m2[s.code] || []).filter(x => x !== i); if (a2.length) m2[s.code] = a2; else delete m2[s.code]; this.setState({ droppedDcBySC: m2 }); }); } }; }) : [] }; }) };
     }).filter(g => g.count > 0);
@@ -12169,6 +12274,8 @@ class NDCApp extends React.Component {
     // Global HW selector (0, 0.5, 1) + per-SC override
     const hwGlobal = st.hwGlobal !== undefined ? st.hwGlobal : 0.5;
     const hwBySC = st.hwBySC || {};
+    const speedModeGlobal = st.speedModeGlobal !== undefined ? st.speedModeGlobal : true;
+    const speedModeBySC = st.speedModeBySC || {};
     const hwOptions = [0, 0.5, 1].map(v => ({ value: v, label: 'HW ' + v, active: hwGlobal === v, bg: hwGlobal === v ? '#003F98' : '#fff', fg: hwGlobal === v ? '#fff' : '#5A5E66', bd: hwGlobal === v ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ hwGlobal: v }) }));
     const gwBg = (v) => hwGlobal === v ? '#003F98' : '#fff';
     const gwFg = (v) => hwGlobal === v ? '#fff' : '#5A5E66';
@@ -12244,6 +12351,12 @@ class NDCApp extends React.Component {
     const previewCardsWithHw = selScs.map((s, i) => {
       const hasRef = s.hasRef || !!refSet[s.code];
       const scHw = hwBySC[s.code] !== undefined ? hwBySC[s.code] : hwGlobal;
+      // 2026-09-25 addition (item 2.1) — Speed Mode On/Off, same global-default + per-SC-
+      // override resolution as HW above. Off ⇒ the DS solve falls back to a flat/default speed
+      // constant instead of reading Speed Profile's SC × Vehicle Type × Zone × Time matrix — a
+      // deliberate simplification for this simulated run, not a real per-leg speed model change
+      // (Speed Profile itself, and every other module that reads it, is untouched).
+      const scSpeedMode = speedModeBySC[s.code] !== undefined ? speedModeBySC[s.code] : speedModeGlobal;
       // O.2 resolution — the distance-limit flag's own fix is "drop the far node". If the planner has
       // dropped ANY DC from this SC's run (droppedDcBySC), treat the offending farthest node as removed,
       // so the effective farthest distance is 0 and the distance-limit validation clears honestly.
@@ -12308,6 +12421,8 @@ class NDCApp extends React.Component {
       const refIsAuto = refRequired && hasRefRun && !pickedRef && !globalRefApplied; // carried-forward smart default
       const refChosen = refSet[s.code] || 'June 2026';
       return { code: s.code, name: s.name, zone: s.zone, dcCount: s.dcCount, hw: scHw, hwLabel: 'HW ' + scHw,
+        speedMode: scSpeedMode, speedModeLabel: scSpeedMode ? 'On' : 'Off',
+        onToggleSpeedMode: () => { const m = Object.assign({}, this.state.speedModeBySC || {}); m[s.code] = !scSpeedMode; this.setState({ speedModeBySC: m }); },
         volume: volL, totalVeh: vsum.totalVeh, vehDefault: vsum.usedDefault,
         vehLabel: vsum.usedDefault ? 'DS default set' : (vsum.totalVeh + (vsum.totalVeh === 1 ? ' vehicle' : ' vehicles')),
         vehFg: vsum.usedDefault ? '#8E96A3' : (vsum.totalVeh === 0 ? '#C77B00' : '#14171F'),
@@ -12320,7 +12435,7 @@ class NDCApp extends React.Component {
         onPickRefSel: (e) => { if (!e.target.value) return; const r = Object.assign({}, this.state.refBySC || {}); r[s.code] = e.target.value; this.setState({ refBySC: r }); this.showToast(e.target.value + ' set as reference plan for ' + s.code, '#128A3E'); },
         onClearRef: () => { const r = Object.assign({}, this.state.refBySC || {}); delete r[s.code]; this.setState({ refBySC: r }); },
         onOpenRef: () => this.showToast('Opening ' + refChosen + ' — reference plan (opens in a new tab)', '#1E6FB8'),
-        hasFlags: flags.length > 0, clean: flags.length === 0, flags: flags.map(f => ({ t: f.t, dot: f.dot, sevLabel: f.sev === 'danger' ? 'Error' : 'Warning', sevFg: f.sev === 'danger' ? '#D14B4B' : '#C77B00', sevBg: f.sev === 'danger' ? '#FAFBFD' : '#FBF1DF', sevAccent: f.sev === 'danger' ? '3px solid #D14B4B' : '0' })), flagLabel: flags.length + (flags.length === 1 ? ' flag' : ' flags'),
+        hasFlags: flags.length > 0, clean: flags.length === 0, flags: flags.map(f => ({ k: f.k, t: f.t, dot: f.dot, sevLabel: f.sev === 'danger' ? 'Error' : 'Warning', sevFg: f.sev === 'danger' ? '#D14B4B' : '#C77B00', sevBg: f.sev === 'danger' ? '#FAFBFD' : '#FBF1DF', sevAccent: f.sev === 'danger' ? '3px solid #D14B4B' : '0' })), flagLabel: flags.length + (flags.length === 1 ? ' flag' : ' flags'),
         hasErrors: flags.some(f => f.sev === 'danger'),
         // F3 — tri-state readiness: errors block; warn-only rows are non-blocking but must not read as clean.
         warnOnly: flags.length > 0 && !flags.some(f => f.sev === 'danger'),
@@ -12423,11 +12538,38 @@ class NDCApp extends React.Component {
     const estLabel = _estMin <= 0 ? '—' : _estMin < 60 ? (_estMin + ' min') : (_estMin % 60 === 0 ? (_estMin / 60 + ' h') : (Math.floor(_estMin / 60) + ' h ' + (_estMin % 60) + ' min'));
     // F2 — ONE block predicate: Step-4 banner + footer button styling + red jump-link + triggerAll all read this.
     const noSel = sel.length === 0;
-    const triggerBlocked = noSel || volGapBlock || step3ErrorCount > 0 || step3RefNeededCount > 0;
+    // 2026-09-25 addition (item 4.1) — Feasibility & Convergence Check. Per direct product
+    // framing, this is meant to become a real integrated agent (given vehicles, input
+    // parameters and volumes, predict whether the DS plan converges to 100% coverage — e.g. 3
+    // 10ft trailers covering ≤800km but 5 DCs sit beyond that range). No such agent exists in
+    // this prototype yet, so this is built as a clearly-labelled SIMULATED stand-in: it reuses
+    // the real distance-vs-vehicle-range signal already computed per SC (vsum.distViol, inside
+    // previewCardsWithHw above — the exact scenario in the product's own example), rolled up
+    // into a single coverage view, rather than fabricating a separate metric. This is the literal
+    // meaning of "the existing validations merge with this validation step" — not a second,
+    // parallel check that could disagree with the per-SC distance flags already shown below.
+    const feasibilityAtRiskScs = previewCardsWithHw.filter(c => (c.flags || []).some(f => f.k === 'dist'));
+    const feasibilityCoveragePct = trigSelCount > 0 ? Math.round(((trigSelCount - feasibilityAtRiskScs.length) / trigSelCount) * 100) : 100;
+    const feasibilityClean = feasibilityAtRiskScs.length === 0;
+    const step4PreValidated = !!st.step4PreValidated;
+    const onRunPreValidation = () => {
+      this.setState({ step4PreValidated: true });
+      this.showToast(feasibilityClean ? 'Feasibility check complete — ' + feasibilityCoveragePct + '% coverage, no vehicle-range risk found (simulated check)' : feasibilityAtRiskScs.length + ' SC' + (feasibilityAtRiskScs.length === 1 ? '' : 's') + ' at coverage risk — ' + feasibilityCoveragePct + '% projected (simulated check)', feasibilityClean ? '#128A3E' : '#C77B00');
+    };
+    // Bulk accept (item 4.2) — one click acks every currently-warned (not blocked) SC at once.
+    const warnedNotAcked = previewCardsWithHw.filter(c => c.warnOnly && !(st.ackedSCs || {})[c.code]);
+    const onBulkAcceptWarned = () => {
+      const a = Object.assign({}, st.ackedSCs || {});
+      warnedNotAcked.forEach(c => { a[c.code] = true; });
+      this.setState({ ackedSCs: a });
+      this.showToast('Accepted ' + warnedNotAcked.length + ' warned SC' + (warnedNotAcked.length === 1 ? '' : 's'), '#128A3E');
+    };
+    const triggerBlocked = noSel || volGapBlock || step3ErrorCount > 0 || step3RefNeededCount > 0 || !step4PreValidated;
     const triggerBlockReason = noSel ? 'No sort centres selected — go to Step 1'
       : volGapBlock ? (volGapDcTotal + ' DC' + (volGapDcTotal === 1 ? '' : 's') + ' missing volume — fix in Step 1')
       : step3ErrorCount > 0 ? (step3ErrorCount + ' SC' + (step3ErrorCount === 1 ? ' has' : 's have') + ' blocking validations')
-      : (step3RefNeededCount + ' SC' + (step3RefNeededCount === 1 ? ' needs' : 's need') + ' a reference plan');
+      : step3RefNeededCount > 0 ? (step3RefNeededCount + ' SC' + (step3RefNeededCount === 1 ? ' needs' : 's need') + ' a reference plan')
+      : 'Run the pre-validation / feasibility check below first';
     // B — Step-4 recap: not-ready first (rendered always), clean rows behind an expander.
     const recapNotReady = previewCardsWithHw.filter(c => c.readiness !== 'clean');
     const recapClean = previewCardsWithHw.filter(c => c.readiness === 'clean');
@@ -12604,7 +12746,7 @@ class NDCApp extends React.Component {
       volGapDetail: volGapZeroTotal + ' zero-volume · ' + volGapMissTotal + ' missing from the volume file.',
       volGapBlock,
       // B. CSV download (SC selection + volume coverage)
-      downloadSelectionCsv: () => this.downloadSelectionCsv(),
+      downloadZeroVolDcsCsv: () => this.downloadZeroVolDcsCsv(),
       scVehicleCards,
       globalRefApplied, onApplyGlobalRef: () => this.setState({ globalRefApplied: true }),
       step3RefNeededCount, step3RefAllCovered: step3RefNeededCount === 0,
@@ -12620,6 +12762,11 @@ class NDCApp extends React.Component {
       onGlobalHw0: () => this.setState({ hwGlobal: 0, hwBySC: {} }),
       onGlobalHw05: () => this.setState({ hwGlobal: 0.5, hwBySC: {} }),
       onGlobalHw1: () => this.setState({ hwGlobal: 1, hwBySC: {} }),
+      // 2026-09-25 addition (item 2.2) — Speed Mode's own global control, same header-cell
+      // pattern as HW's "SET ALL" group above: setting it clears every per-SC override so the
+      // header value is genuinely authoritative again, not just a stale suggestion.
+      speedModeGlobal, speedModeGlobalLabel: speedModeGlobal ? 'On' : 'Off',
+      onSpeedModeGlobalToggle: () => this.setState({ speedModeGlobal: !speedModeGlobal, speedModeBySC: {} }),
       scProps: scPropsWithHw, refNeeded, hasRefWarning: refNeeded > 0, hwGlobal, hwOptions,
       runName: st.runName || '', onRunNameChange: (e) => this.setState({ runName: e.target.value }),
       // K \u2014 "New Node Addition mode" (DS-algorithm mode toggle, not "include the new nodes")
@@ -12642,6 +12789,11 @@ class NDCApp extends React.Component {
       runPlannedN, runProgN, runDoneN,
       // F2 \u2014 unified block predicate (single source of truth for banner + button + link + triggerAll).
       triggerBlocked, triggerBlockReason,
+      // 2026-09-25 addition (item 4) — Feasibility Check + bulk accept bindings.
+      step4PreValidated, onRunPreValidation,
+      feasibilityCoveragePct, feasibilityClean, feasibilityAtRiskCount: feasibilityAtRiskScs.length,
+      feasibilityAtRiskLabel: feasibilityAtRiskScs.map(c => c.code).join(', '),
+      warnedNotAckedCount: warnedNotAcked.length, hasWarnedNotAcked: warnedNotAcked.length > 0, onBulkAcceptWarned,
       triggerReady: !triggerBlocked,
       // Step-4 commit-sheet banner + stat strip + ETA (F5).
       batchVolLabel, batchDcTotal, estLabel,
@@ -12662,11 +12814,11 @@ class NDCApp extends React.Component {
           // Land on Step 1 → Select sort centres, open the first blocked SC's LMDC list (un-collapse its zone) so the drop/trash controls are right there, and scroll it into view.
           const b = volGapScs[0] ? volGapScs[0].s : null;
           const cz = Object.assign({}, st.collapsedZones); if (b) delete cz[b.zone];
-          this.setState({ creationStep: 1, fixReturnStep: step, expandedSC: b ? b.code : st.expandedSC, collapsedZones: cz, focusSC: b ? b.code : null });
+          this.setState({ creationStep: 1, fixReturnStep: step, expandedSC: b ? b.code : st.expandedSC, collapsedZones: cz, focusSC: b ? b.code : null, step4PreValidated: false });
           if (b) setTimeout(() => { try { const rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; const el = Array.from(document.querySelectorAll('span')).find(n => (n.textContent || '').trim() === b.code); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' }); } catch (e) {} }, 260);
         } else {
           // Always route to Step 1 (Plan File & Sort Centres) so the planner can drop the SC with 0 volume.
-          this.setState({ view: 'creation', creationView: 'wizard', creationStep: 1, fixReturnStep: step, focusSC: null });
+          this.setState({ view: 'creation', creationView: 'wizard', creationStep: 1, fixReturnStep: step, focusSC: null, step4PreValidated: false });
         }
       },
       blockFixTitle: volGapBlock ? 'Go to Step 1 to fix the volume gaps' : 'Jump to the step that fixes the first blocked SC',
@@ -12680,13 +12832,16 @@ class NDCApp extends React.Component {
         if (volGapBlock) { this.showToast('Cannot trigger \u2014 ' + volGapDcTotal + ' DC' + (volGapDcTotal === 1 ? '' : 's') + ' still missing volume (Step 1)', '#D14B4B'); return; }
         if (step3ErrorCount > 0) { this.showToast('Cannot trigger \u2014 ' + step3ErrorCount + ' SC' + (step3ErrorCount === 1 ? ' has' : 's have') + ' TP / distance validations to fix', '#D14B4B'); return; }
         if (step3RefNeededCount > 0) { this.showToast(step3RefNeededCount + ' SC' + (step3RefNeededCount === 1 ? ' needs' : 's need') + ' a reference plan (HW above 0)', '#C77B00'); return; }
+        // 2026-09-25 addition (item 4.1) — Trigger is a genuinely separate stage now: even a
+        // fully-clean selection can't reach it until the pre-validation check has been run once.
+        if (!step4PreValidated) { this.showToast('Run the pre-validation / feasibility check first', '#C77B00'); return; }
         this.triggerRuns(sel.slice()); this.setState({ creationView: 'queue' });
       }, runsTotalLabel: trigSelCount + (trigSelCount === 1 ? ' SC \u00b7 ' : ' SCs \u00b7 ') + trigSelCount + (trigSelCount === 1 ? ' run' : ' runs'),
       triggerAllBg: triggerBlocked ? '#E6EBF2' : '#003F98', triggerAllFg: triggerBlocked ? '#5A5E66' : '#fff', triggerAllCursor: triggerBlocked ? 'not-allowed' : 'pointer',
       goReview: () => this.go('review'),
       // Returns wizard to Step 1 so the planner can queue more SCs without clearing the active runQueue.
-      goCreateMore: () => this.setState({ creationStep: 1, selectedSCs: [], creationVolume: null, fixReturnStep: null, focusSC: null, creationView: 'wizard', showCreationGuidelines: true }),
-      creBack: () => { const ns = Math.max(1, step - 1); this.setState({ creationStep: ns, fixReturnStep: ns === st.fixReturnStep ? null : st.fixReturnStep, focusSC: null }); }, creNext: () => { if (canNext) { const ns = Math.min(4, step + 1); this.setState({ creationStep: ns, fixReturnStep: ns === st.fixReturnStep ? null : st.fixReturnStep, focusSC: null }); } },
+      goCreateMore: () => this.setState({ creationStep: 1, selectedSCs: [], creationVolume: null, fixReturnStep: null, focusSC: null, creationView: 'wizard', showCreationGuidelines: true, step4PreValidated: false }),
+      creBack: () => { const ns = Math.max(1, step - 1); this.setState({ creationStep: ns, fixReturnStep: ns === st.fixReturnStep ? null : st.fixReturnStep, focusSC: null, step4PreValidated: false }); }, creNext: () => { if (canNext) { const ns = Math.min(4, step + 1); this.setState({ creationStep: ns, fixReturnStep: ns === st.fixReturnStep ? null : st.fixReturnStep, focusSC: null }); } },
       canNext, nextLabel, showBack: step > 1, showNext: step < 4, nextBg: canNext ? '#003F98' : '#E6EBF2', nextFg: canNext ? '#fff' : '#5A5E66', nextCursor: canNext ? 'pointer' : 'not-allowed',
     };
   }
@@ -18427,7 +18582,7 @@ class NDCApp extends React.Component {
       showRlhCycleSwitcher: st.activeLeg === 'rlh',
       legSidebarCycleLabel: st.activeLeg && st.activeLeg !== 'rlh' ? monthLabel(st.activeCycleMonth[st.activeLeg]) : '',
       toggleCycle: () => this.setState({ cycleOpen: !st.cycleOpen }), closeCycle: () => this.setState({ cycleOpen: false }),
-      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false }); this.go('creation'); },
+      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, speedModeBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false, step4PreValidated: false }); this.go('creation'); },
       isPastCycle,
       toggleCyclePicker: () => this.setState({ cyclePickerOpen: !st.cyclePickerOpen }),      cyclePickerOpen: !!st.cyclePickerOpen,
       cyclePickerChevron: st.cyclePickerOpen ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',

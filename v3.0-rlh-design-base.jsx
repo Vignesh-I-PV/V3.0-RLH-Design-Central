@@ -867,35 +867,59 @@ All modules
 <span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{rlhCycleLabel}</strong> is a past cycle — Design Inputs are read-only. New designs can still be created against this cycle, and Finalise Directly remains available from Design Review; Push to Alignment does not.</span>
 </div>
 </>) : null}
-<div style={css(`display:flex; flex-wrap:wrap; align-items:stretch; gap:14px; margin-bottom:16px;`)}>
-{/* Real bug fix (2026-09-16) — caught via a live click-through of the deployed build: adding
-    the Rate Card upload as a 3rd flex:1 card in this row, with no flex-wrap and no min-width,
-    squeezed all three cards' text columns down to almost nothing, wrapping "Bulk Upload — Sort
-    Centre Master" into a vertical ladder of single words. flex-wrap + a min-width on each card
-    lets 2 sit comfortably per row (wrapping the 3rd down) at normal widths, or all 3 side by side
-    on wide screens, without ever cramping the text. */}
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; margin-bottom:16px;`)}>
+{/* Rebuilt 2026-09-24 — the previous horizontal layout (icon + text + 2 buttons all in one row)
+    put title/description in a `flex:1; min-width:0` column competing for space against two
+    fixed-width buttons; once a real deploy was clicked through at a normal (not oversized)
+    browser width, that column lost the fight and "Bulk Upload — Sort Centre Master" wrapped one
+    or two words per line. A 2026-09-16 fix (flex-wrap + min-width:300px on each card) helped
+    cards reflow but never fixed the actual squeeze once 3 sat in a row — confirmed still broken
+    on a live deploy screenshot. Rebuilt as a vertical card instead: icon+title on their own row,
+    description below at full card width, action buttons in their own row at the bottom — text
+    can never be squeezed by buttons again regardless of card width. 3-column CSS grid (not
+    flex-wrap) so the 3 cards stay genuinely adjacent rather than reflowing to 2+1. Also adds the
+    "Download Current Data" action all 3 cards were missing. */}
+<div style={css(`display:flex; flex-direction:column; gap:12px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:12px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>One row per Sort Centre · upload replaces all prior records</div></div>
-<button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload CSV</button>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Sort Centre Master</div>
+</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; line-height:1.5;`)}>One row per Sort Centre · upload replaces all prior records</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
+<button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
+<button onClick={scMasterExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
+<button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload</button>
 <input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
 </div>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:12px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:12px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Operating Hours</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>Non-operating &amp; break windows · global, applies across all SCs</div></div>
-<button onClick={opHoursTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Operating Hours</div>
+</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; line-height:1.5;`)}>Non-operating &amp; break windows · global, applies across all SCs</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
+<button onClick={opHoursTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
+<button onClick={opHoursExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
+<button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
 <input ref={opHoursFileInputRef} type={"file"} accept={".csv"} onChange={onOpHoursFileChange} style={css(`display:none;`)} />
 </div>
-<div style={css(`display:flex; align-items:center; gap:14px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px; flex:1; min-width:300px;`)}>
+</div>
+<div style={css(`display:flex; flex-direction:column; gap:12px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:12px;`)}>
 <div style={css(`width:38px; height:38px; border-radius:8px; background:#E9F5F5; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.6"}><path d={"M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Rate Card</div><div style={css(`font-size:11.5px; color:#5A5E66;`)}>MG + shipment-volume slabs · one row per slab</div></div>
-<button onClick={rateCardTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Template</button>
-<button onClick={triggerRateCardUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload CSV</button>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — Rate Card</div>
+</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; line-height:1.5;`)}>MG + threshold + shipment-volume slabs · one row per slab</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
+<button onClick={rateCardTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
+<button onClick={rateCardExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
+<button onClick={triggerRateCardUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
 <input ref={rateCardFileInputRef} type={"file"} accept={".csv"} onChange={onRateCardFileChange} style={css(`display:none;`)} />
 </div>
 </div>
+</div>
+
 {(hasScMasterUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;`)}>
@@ -996,7 +1020,7 @@ All modules
     above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OP HOURS</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Minimum Guarantee + shipment-volume slab pricing for this SC"}>RATE CARD</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Minimum Guarantee (with its own volume threshold) + shipment-volume slab pricing for this SC"}>RATE CARD</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
@@ -1763,6 +1787,17 @@ All modules
 <div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>Contact fields are email IDs (ops contacts)</div>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
 {(addScContacts || []).map((c, __i38) => (<React.Fragment key={__i38}>
+<div>
+<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div>
+<input value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
+</div>
+</React.Fragment>))}
+</div>
+{/* Central POCs (2026-09-18, item 4) — people who look after ALL SCs, not this one SC's own
+    Ops/LH-Ops chain above. All 4 optional. */}
+<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>Central POCs (optional) — cover all SCs, not just this one</div>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
+{(addScCentralContacts || []).map((c, __i38c) => (<React.Fragment key={__i38c}>
 <div>
 <div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div>
 <input value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
@@ -6821,11 +6856,23 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <button onClick={rateCardModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 
-<label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>MINIMUM GUARANTEE (₹)</label>
-<input type={"number"} min={"0"} value={rateCardModal.mg} onInput={rateCardModal.onMgChange} placeholder={"e.g. 50000"} style={css(`width:200px; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none; margin-bottom:20px;`)} />
+{/* 2026-09-18 addition (item 1) — MG Threshold, alongside MG: at or below this monthly
+    shipment volume, CPS = MG ÷ that month's Total Actual Volume, instead of the slabs below.
+    Input model only — the CPS formula itself is deferred until Rate Card has a real consumer. */}
+<div style={css(`display:flex; gap:18px; margin-bottom:8px;`)}>
+<div>
+<label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>MINIMUM GUARANTEE (₹ / month)</label>
+<input type={"number"} min={"0"} value={rateCardModal.mg} onInput={rateCardModal.onMgChange} placeholder={"e.g. 50000"} style={css(`width:200px; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} />
+</div>
+<div>
+<label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>MG THRESHOLD (shipments / month)</label>
+<input type={"number"} min={"0"} value={rateCardModal.mgThreshold} onInput={rateCardModal.onMgThresholdChange} placeholder={"e.g. 1500000"} style={css(`width:200px; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} />
+</div>
+</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:20px; line-height:1.5;`)}>At or below this month's total actual volume, MG applies (CPS = MG ÷ Total Actual Volume) instead of the slabs below. Required whenever MG is set.</div>
 
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SHIPMENT SLABS</div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Each slab is a shipment-volume bucket with its own cost per shipment. Leave the top slab's Max blank for open-ended ("2,000,000 and above").</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>SHIPMENT SLABS — above MG Threshold</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-bottom:10px; line-height:1.5;`)}>Each slab is a shipment-volume bucket with its own cost per shipment, for volume above the MG Threshold. Leave the top slab's Max blank for open-ended ("2,000,000 and above").</div>
 {((rateCardModal.slabs || []).length > 0) ? (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 32px; gap:8px; padding:0 0 6px; font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.03em;`)}>
 <div>MIN SHIPMENTS</div><div>MAX SHIPMENTS</div><div>COST / SHIPMENT (₹)</div><div />
@@ -8513,15 +8560,24 @@ class NDCApp extends React.Component {
       txt('sortCap', 'Sort Capacity', true, 'DCs it can serve, e.g. 50\u2013250'),
       txt('lat', 'Latitude', false, 'e.g. 12.9716'),
       txt('lng', 'Longitude', false, 'e.g. 77.5946'),
-      tm('open', 'SC Opening Time', '06:00'),
-      tm('close', 'SC Closing Time', '22:00'),
+      // 2026-09-18 fix (item 2) — SC Opening/Closing Time removed from this form entirely: SC
+      // Master's own table moved to the Operating Hours model (nonOperating/breaks) back on
+      // 2026-09-10, but this add/edit form was never reconciled to match — it kept offering the
+      // old flat open/close pair as if it were still the real model. Note: computeImpliedCutoffFor
+      // Landing() (Route Scheduler, Layer 6 Rule 1) still reads sc.open/sc.close via
+      // resolveScFields()'s own fallback chain — with no UI left to set it, every SC will now
+      // permanently fall through to that function's hash-derived default window instead of a
+      // real value. Flagged, not fixed here — reconciling that check to read Operating Hours
+      // instead is a genuine follow-up, not part of this ask.
     ];
     const addScRlh = [
       txt('rlhDocks', 'RLH Docks', true, ''),
       txt('localTp', 'Local TP Limit', true, ''),
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
-      txt('localSpeed', 'Local Speed (km/h)', false, 'e.g. 25'),
-      txt('nonLocalSpeed', 'Non-Local Speed (km/h)', false, 'e.g. 38'),
+      // 2026-09-18 fix (item 3) — Local/Non-Local Speed (km/h) removed from this form entirely,
+      // completing the 2026-09-11 change that already removed the two columns from SC Master's
+      // own table but missed this add/edit form. Speed Profile (SC × Vehicle Type × Zone × Time)
+      // is the only editable surface for speed now — see NDC RLH Enhancement-2 §2.1.
       // 2026-09-07 fix — Hold Time On/Off removed from SC Master's edit form (now purely a
       // plan-level toggle, no SC-level default). Max Hold Local/Non-Local stay — genuinely
       // SC-level facts regardless of whether a given plan turns hold time on.
@@ -8539,8 +8595,21 @@ class NDCApp extends React.Component {
     const addScNlh = [];
     const contacts = [['opsZh', 'SC Ops ZH'], ['lhOpsZh', 'SC-LH Ops ZH'], ['opsCh', 'SC Ops CH'], ['lhOpsCh', 'SC-LH Ops CH'], ['opsAm1', 'SC Ops AM-1'], ['lhOpsAm1', 'SC-LH Ops AM-1'], ['opsAm2', 'SC Ops AM-2'], ['lhOpsAm2', 'SC-LH Ops AM-2']];
     const addScContacts = contacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
+    // 2026-09-18 addition (item 4) — Central POCs: 4 new optional per-SC contact fields for
+    // people who look after ALL SCs (not one SC's own Ops/LH-Ops chain above). Deliberately its
+    // own named object (centralPocs: {lhCt1, lhCt2, bizFinCt1, bizFinCt2}) on scMaster rather
+    // than extending the existing `pocs` array — that array is positional (index 0-3 = opsZh/
+    // opsCh/opsAm1/opsAm2, read back out by position in openScEdit()), which is exactly the
+    // fragile shape a 5th/6th/7th/8th slot would make worse. Also: while wiring this, confirmed
+    // the existing `lhOpsZh/lhOpsCh/lhOpsAm1/lhOpsAm2` fields defined just above in `contacts`
+    // are a real pre-existing dead end — submitAddSc() only ever persists opsZh/opsCh/opsAm1/
+    // opsAm2 into `pocs`, never the lhOps* ones, and openScEdit() never pre-fills them either.
+    // Flagged here, not fixed — out of scope for this ask, but worth a real look next time
+    // someone's in this form.
+    const centralContacts = [['lhCt1', 'LH CT-1'], ['lhCt2', 'LH CT-2'], ['bizFinCt1', 'Biz Fin CT-1'], ['bizFinCt2', 'Biz Fin CT-2']];
+    const addScCentralContacts = centralContacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
     const editing = !!st.addScEditCode;
-    return { addScOpen: !!st.addScOpen, addScCore: addScCore, addScRlh: addScRlh, addScNlh: addScNlh, addScContacts: addScContacts, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
+    return { addScOpen: !!st.addScOpen, addScCore: addScCore, addScRlh: addScRlh, addScNlh: addScNlh, addScContacts: addScContacts, addScCentralContacts: addScCentralContacts, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
   }
   // 2026-08-25 rewrite — data.scs is now ALWAYS the live materialization from the engine (see
   // refreshScs() below), so there's no more scEdits/addedScs overlay to merge here: every field
@@ -8807,11 +8876,18 @@ class NDCApp extends React.Component {
     const sc = (st.data.scs || []).find(s => s.code === code);
     if (!sc) { this.comingSoon('Edit SC'); return; }
     const pl = sc.pocs || [];
+    const cp = sc.centralPocs || {};
+    // 2026-09-18 fix (items 2/3) — open/close and localSpeed/nonLocalSpeed no longer pre-filled:
+    // both fields were removed from the form itself (see addScVals()), so carrying their old
+    // values into addScForm here would be dead state with nothing rendering it.
     const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: sc.dispatchRoleType || 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
       lat: sc.lat != null ? String(sc.lat) : '', lng: sc.lng != null ? String(sc.lng) : '',
-      nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp), localSpeed: String(sc.localSpeed), nonLocalSpeed: String(sc.nonLocalSpeed), open: sc.open, close: sc.close,
+      nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp),
       holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
-      opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '' };
+      opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '',
+      // 2026-09-18 addition (item 4) — Central POCs pre-fill, read from the named object (not
+      // positional, unlike `pl` above — see addScVals() for why).
+      lhCt1: cp.lhCt1 || '', lhCt2: cp.lhCt2 || '', bizFinCt1: cp.bizFinCt1 || '', bizFinCt2: cp.bizFinCt2 || '' };
     this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null });
   }
   // C12 — functional INLINE edit for SC Vehicle Availability: per-field overlay stored as
@@ -8941,6 +9017,20 @@ class NDCApp extends React.Component {
     const sample = 'DELS,Non-Operating,00:00,06:00\nDELS,Non-Operating,22:00,24:00\nDELS,Break,13:00,13:30\n';
     this.downloadText('operating-hours-template.csv', head + sample);
   }
+  // opHoursExportCsv() (2026-09-24 addition) — "Download Current Data": same long format as the
+  // template (SC Code, Type, Start, End), one row per currently-set window, across every SC that
+  // has at least one — an SC with none (fully operational, the default) contributes no rows,
+  // same as it would if freshly re-uploaded empty.
+  opHoursExportCsv() {
+    const header = 'SC Code,Type,Start,End';
+    const rows = [];
+    (this.state.data.scs || []).forEach(s => {
+      (s.nonOperating || []).forEach(w => rows.push([s.code, 'Non-Operating', w.start, w.end].map(v => this.csvField(v)).join(',')));
+      (s.breaks || []).forEach(w => rows.push([s.code, 'Break', w.start, w.end].map(v => this.csvField(v)).join(',')));
+    });
+    this.downloadText('operating-hours-current.csv', header + '\n' + rows.join('\n') + (rows.length ? '\n' : ''));
+    this.showToast('Operating Hours \u2014 current data downloaded \u00b7 ' + rows.length + ' window' + (rows.length === 1 ? '' : 's'), '#128A3E');
+  }
   onOpHoursFileChange(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
@@ -8987,12 +9077,18 @@ class NDCApp extends React.Component {
       rateCardModal: {
         open: true, code: scCode,
         mg: rc.mg != null ? String(rc.mg) : '',
+        // 2026-09-18 addition (item 1) — MG Threshold: the monthly shipment-volume ceiling at or
+        // below which MG applies (CPS = MG ÷ that month's total actual volume) instead of the
+        // slab table below. Per direct product clarification, both sides of this are monthly —
+        // no separate daily-volume check.
+        mgThreshold: rc.mgThreshold != null ? String(rc.mgThreshold) : '',
         slabs: (rc.slabs || []).map(s => ({ min: s.min != null ? String(s.min) : '', max: s.max != null ? String(s.max) : '', cost: s.cost != null ? String(s.cost) : '' })),
       },
     });
   }
   closeRateCardModal() { this.setState({ rateCardModal: { open: false } }); }
   rateCardSetMg(e) { this.setState({ rateCardModal: Object.assign({}, this.state.rateCardModal, { mg: e.target.value }) }); }
+  rateCardSetMgThreshold(e) { this.setState({ rateCardModal: Object.assign({}, this.state.rateCardModal, { mgThreshold: e.target.value }) }); }
   rateCardAddSlab() {
     const m = this.state.rateCardModal;
     const next = (m.slabs || []).concat([{ min: '', max: '', cost: '' }]);
@@ -9023,22 +9119,46 @@ class NDCApp extends React.Component {
       if (slabs[i - 1].max == null || slabs[i].min < slabs[i - 1].max) { this.showToast('Slabs overlap or are out of order — each slab\u2019s Min should be \u2265 the previous slab\u2019s Max.', '#C77B00'); return; }
     }
     const mg = +m.mg || 0;
+    // 2026-09-18 addition (item 1) — MG Threshold is required whenever a real MG is set: an MG
+    // with no threshold has no defined meaning under the new conditional model (there'd be
+    // nothing to compare "at or below" against), so this is a genuine data-integrity check, not
+    // computation logic — the actual CPS formula itself is still deferred to a real consumer.
+    if (mg > 0 && (m.mgThreshold === '' || m.mgThreshold == null)) { this.showToast('MG Threshold is required whenever MG is set \u2014 the volume at or below which MG applies.', '#C77B00'); return; }
+    const mgThreshold = m.mgThreshold === '' || m.mgThreshold == null ? null : (+m.mgThreshold || 0);
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code) || {};
-    setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code, 'rateCard', { mg, slabs }, dBase);
+    setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, m.code, 'rateCard', { mg, mgThreshold, slabs }, dBase);
     this.refreshScs();
     this.setState({ rateCardModal: { open: false } });
     this.showToast('Rate Card saved for ' + m.code, '#128A3E');
   }
-  // Global Rate Card CSV — long format (SC Code, MG, Min Shipments, Max Shipments, Cost Per
-  // Shipment), one row per slab; MG is repeated on every row for a given SC (same value expected
-  // each time — the first row's MG wins if they ever disagree, same "first wins" convention this
-  // app already uses for lane-cutoff conflicts). Only SCs actually present in the file are
-  // touched — every other SC's own rate card is left exactly as it is.
+  // Global Rate Card CSV — long format (SC Code, MG, MG Threshold, Min Shipments, Max Shipments,
+  // Cost Per Shipment), one row per slab; MG and MG Threshold are repeated on every row for a
+  // given SC (same value expected each time — the first row's values win if they ever disagree,
+  // same "first wins" convention this app already uses for lane-cutoff conflicts). Only SCs
+  // actually present in the file are touched — every other SC's own rate card is left exactly
+  // as it is. 2026-09-18 addition (item 1) — MG Threshold column added between MG and Min
+  // Shipments; required (same as the modal's own save-time check) whenever MG is non-zero.
   rateCardTemplate() {
-    const head = 'SC Code,MG,Min Shipments,Max Shipments,Cost Per Shipment\n';
-    const sample = 'DELS,50000,0,1500000,5\nDELS,50000,1500000,2000000,3\nDELS,50000,2000000,,2\n';
+    const head = 'SC Code,MG,MG Threshold,Min Shipments,Max Shipments,Cost Per Shipment\n';
+    const sample = 'DELS,50000,1500000,1500000,2000000,5\nDELS,50000,1500000,2000000,3000000,3\nDELS,50000,1500000,3000000,,2\n';
     this.downloadText('rate-card-template.csv', head + sample);
+  }
+  // rateCardExportCsv() (2026-09-24 addition) — "Download Current Data": same long format as the
+  // template (SC Code, MG, MG Threshold, Min Shipments, Max Shipments, Cost Per Shipment), one
+  // row per slab, MG/MG Threshold repeated on every row for a given SC (matching how the upload
+  // parser reads it back). An SC with no rateCard set at all (mg:0, no slabs) contributes no
+  // rows — nothing to round-trip.
+  rateCardExportCsv() {
+    const header = 'SC Code,MG,MG Threshold,Min Shipments,Max Shipments,Cost Per Shipment';
+    const rows = [];
+    (this.state.data.scs || []).forEach(s => {
+      const rc = s.rateCard || {};
+      if (!rc.mg && !(rc.slabs || []).length) return;
+      (rc.slabs || []).forEach(sl => rows.push([s.code, rc.mg || 0, rc.mgThreshold != null ? rc.mgThreshold : '', sl.min, sl.max != null ? sl.max : '', sl.cost].map(v => this.csvField(v)).join(',')));
+    });
+    this.downloadText('rate-card-current.csv', header + '\n' + rows.join('\n') + (rows.length ? '\n' : ''));
+    this.showToast('Rate Card \u2014 current data downloaded \u00b7 ' + rows.length + ' row' + (rows.length === 1 ? '' : 's'), '#128A3E');
   }
   onRateCardFileChange(e) {
     const file = e.target.files && e.target.files[0];
@@ -9055,13 +9175,14 @@ class NDCApp extends React.Component {
     lines.slice(1).forEach((line, i) => {
       const row = i + 2;
       const cols = line.split(',').map(c => c.trim());
-      const [code, mg, min, max, cost] = cols;
+      const [code, mg, mgThreshold, min, max, cost] = cols;
       if (!code || !this.engineStore.scRegistry[code]) { errors.push({ row, code, msg: 'Unknown SC Code' }); return; }
       if (mg === '' || isNaN(+mg)) { errors.push({ row, code, msg: 'MG must be a number' }); return; }
+      if (+mg > 0 && (mgThreshold === '' || isNaN(+mgThreshold))) { errors.push({ row, code, msg: 'MG Threshold must be a number whenever MG is set' }); return; }
       if (min === '' || isNaN(+min)) { errors.push({ row, code, msg: 'Min Shipments must be a number' }); return; }
       if (max !== '' && isNaN(+max)) { errors.push({ row, code, msg: 'Max Shipments must be a number or blank (open-ended top slab)' }); return; }
       if (cost === '' || isNaN(+cost)) { errors.push({ row, code, msg: 'Cost Per Shipment must be a number' }); return; }
-      bySc[code] = bySc[code] || { mg: +mg, slabs: [] };
+      bySc[code] = bySc[code] || { mg: +mg, mgThreshold: mgThreshold === '' ? null : +mgThreshold, slabs: [] };
       bySc[code].slabs.push({ min: +min, max: max === '' ? null : +max, cost: +cost });
     });
     if (errors.length) { this.setState({ rateCardUploadErrors: errors }); return; }
@@ -9069,7 +9190,7 @@ class NDCApp extends React.Component {
     Object.keys(bySc).forEach(code => {
       const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
       const slabs = bySc[code].slabs.slice().sort((a, b) => a.min - b.min);
-      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'rateCard', { mg: bySc[code].mg, slabs }, dBase);
+      setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'rateCard', { mg: bySc[code].mg, mgThreshold: bySc[code].mgThreshold, slabs }, dBase);
     });
     this.refreshScs();
     this.setState({ rateCardUploadErrors: [] });
@@ -9360,6 +9481,11 @@ class NDCApp extends React.Component {
       this.showToast('Coordinates look outside India\u2019s rough bounding box \u2014 saved anyway, double-check them', '#C77B00');
     }
     const pocs = ['opsZh', 'opsCh', 'opsAm1', 'opsAm2'].map(k => (f[k] || '').trim()).filter(Boolean);
+    // 2026-09-18 addition (item 4) — Central POCs, a named object (not the positional `pocs`
+    // array above) so each of the 4 slots keeps its own identity regardless of which are filled.
+    // Stored even if all 4 are blank (as an object of empty strings) rather than omitted, so an
+    // edit that clears every field genuinely clears them instead of leaving a stale prior value.
+    const centralPocs = { lhCt1: (f.lhCt1 || '').trim(), lhCt2: (f.lhCt2 || '').trim(), bizFinCt1: (f.bizFinCt1 || '').trim(), bizFinCt2: (f.bizFinCt2 || '').trim() };
     const rlhDocksN = opt(f.rlhDocks); // 2026-08-26 fix — nlhDocksN removed, form field no longer exists
     const name = (f.name || '').trim() || code;
     const zone = f.zone || 'South';
@@ -9398,12 +9524,20 @@ class NDCApp extends React.Component {
     }
 
     const dBase = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {};
+    // 2026-09-18 fix (items 2/3) — openTime/closeTime and localSpeed/nonLocalSpeed removed from
+    // this patch entirely. Leaving them in as `f.open || null` etc. would have been a real
+    // regression once the form fields themselves were removed above: `f.open`/`f.localSpeed`
+    // would always be undefined going forward, so every single edit-save through this modal
+    // would have silently overwritten any SC's already-set openTime/closeTime/localSpeed/
+    // nonLocalSpeed with null — not just "no longer editable here," but actively destructive on
+    // the very next save of any pre-existing field. Caught by tracing the actual write path, not
+    // just removing the visible inputs.
     const dPatch = {
       rlhDocks: rlhDocksN, docks: rlhDocksN || 0,
-      localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp), openTime: f.open || null, closeTime: f.close || null,
-      localSpeed: opt(f.localSpeed), nonLocalSpeed: opt(f.nonLocalSpeed),
+      localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp),
       holdTimeOn: f.holdTimeOn === 'Off' ? false : true, maxHoldLocal: opt(f.maxHoldLocal), maxHoldNonLocal: opt(f.maxHoldNonLocal),
       pocs: pocs.length ? pocs : ['\u2014'],
+      centralPocs: centralPocs,
     };
     if (!editing) {
       // Brand-new SC has no DC pool of its own yet -- seed the generation-time fields to sane
@@ -10221,6 +10355,32 @@ class NDCApp extends React.Component {
     };
     reader.readAsText(file);
   }
+  // scMasterExportCsv() (2026-09-24 addition) — "Download Current Data": same 18 columns as
+  // scMasterTemplate, one row per currently-displayable SC, so a planner can round-trip export →
+  // edit in Excel → re-upload. City/State aren't real stored fields (confirmed while building
+  // this — the +SC modal's own "SC City, State" field is never actually persisted anywhere, a
+  // separate pre-existing gap, not fixed here); derived the same way the SC Master table's own
+  // display already does (City = SC Name, State = a 4-zone lookup), for consistency, not because
+  // they're a real source of truth. MDC nodes are skipped — this export is for real SCs only,
+  // same population the +SC modal/upload path itself governs.
+  scMasterExportCsv() {
+    const ZSTATE = { North: 'Delhi NCR', West: 'Maharashtra', South: 'Karnataka', East: 'West Bengal' };
+    const header = 'SC Code,Name,City,State,SC Type,Zone,Volume Capacity,Sort Capacity,RLH Docks,Local TP Limit,Non-Local TP Limit,Max Hold Time - Local (min),Max Hold Time - Non-Local (min),Ops Leads,LH CT-1,LH CT-2,Biz Fin CT-1,Biz Fin CT-2';
+    const scs = (this.state.data.scs || []).filter(s => s.nodeKind !== 'MDC');
+    const rows = scs.map(s => {
+      const cp = s.centralPocs || {};
+      return [
+        s.code, s.name, s.name, ZSTATE[s.zone] || s.zone || '', s.dispatchRoleType || '', s.zone || '',
+        s.volCap != null ? s.volCap : '', s.sortCap != null ? s.sortCap : '', s.rlhDocks != null ? s.rlhDocks : '',
+        s.localTp != null ? s.localTp : '', s.nonLocalTp != null ? s.nonLocalTp : '',
+        s.maxHoldLocal != null ? s.maxHoldLocal : '', s.maxHoldNonLocal != null ? s.maxHoldNonLocal : '',
+        (s.pocs || []).filter(p => p && p !== '\u2014').join(';'),
+        cp.lhCt1 || '', cp.lhCt2 || '', cp.bizFinCt1 || '', cp.bizFinCt2 || '',
+      ].map(v => this.csvField(v)).join(',');
+    });
+    this.downloadText('sort-centre-master-current.csv', header + '\n' + rows.join('\n') + (rows.length ? '\n' : ''));
+    this.showToast('Sort Centre Master \u2014 current data downloaded \u00b7 ' + rows.length + ' SC' + (rows.length === 1 ? '' : 's'), '#128A3E');
+  }
   // handleScMasterCsvUpload(e) (later session — fixes the uploadFile naming collision) — SC
   // Master's "Upload CSV" button used to be wired to the same `uploadFile` binding as Design
   // Ingestion's simulated ingest, so clicking it silently fabricated a fake ingested-plan record
@@ -10257,13 +10417,16 @@ class NDCApp extends React.Component {
         if (codeIdx < 0) { this.showToast('Column "SC Code" not found in the uploaded file', '#D14B4B'); return; }
         const nameIdx = idx('name'), zoneIdx = idx('zone'), typeIdx = idx('sc type'), volCapIdx = idx('volume capacity'), sortCapIdx = idx('sort capacity'),
           rlhDocksIdx = idx('rlh docks'), localTpIdx = idx('local tp limit'), nonLocalTpIdx = idx('non-local tp limit'),
-          localSpeedIdx = idx('local speed (km/h)'), nonLocalSpeedIdx = idx('non-local speed (km/h)'),
           holdOnIdx = idx('hold time (on/off)'), maxHoldLocalIdx = idx('max hold time - local (min)'), maxHoldNonLocalIdx = idx('max hold time - non-local (min)'),
-          openIdx = idx('open time'), closeIdx = idx('close time'), opsLeadsIdx = idx('ops leads');
+          opsLeadsIdx = idx('ops leads'),
+          // 2026-09-18 fix (items 2/3) — localSpeedIdx/nonLocalSpeedIdx/openIdx/closeIdx removed:
+          // those 4 columns are gone from the template (see scMasterTemplate above), so parsing
+          // them here would only ever find -1 anyway. 2026-09-18 addition (item 4) — 4 new
+          // optional Central POC column lookups.
+          lhCt1Idx = idx('lh ct-1'), lhCt2Idx = idx('lh ct-2'), bizFinCt1Idx = idx('biz fin ct-1'), bizFinCt2Idx = idx('biz fin ct-2');
         const validCodes = {}; (this.state.data.scs || []).forEach(s => { validCodes[s.code] = true; });
         const ZONE_SET = { North: true, South: true, East: true, West: true };
         const TYPE_SET = { LMSC: true, FMSC: true, Hybrid: true };
-        const TIME_RE = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
         const ONOFF_SET = { On: true, Off: true };
         const cycleMonth = this.state.activeCycleMonth.rlh;
         const errorRows = [];
@@ -10284,8 +10447,6 @@ class NDCApp extends React.Component {
           if (rlhDocksIdx >= 0 && cols[rlhDocksIdx] !== '') { const n = parseInt(cols[rlhDocksIdx], 10); if (!isNaN(n)) { dPatch.rlhDocks = n; dPatch.docks = n; } else rowErrs.push('RLH Docks "' + cols[rlhDocksIdx] + '" is not a number'); }
           if (localTpIdx >= 0 && cols[localTpIdx] !== '') { const n = parseInt(cols[localTpIdx], 10); if (!isNaN(n)) dPatch.localTp = n; else rowErrs.push('Local TP Limit "' + cols[localTpIdx] + '" is not a number'); }
           if (nonLocalTpIdx >= 0 && cols[nonLocalTpIdx] !== '') { const n = parseInt(cols[nonLocalTpIdx], 10); if (!isNaN(n)) dPatch.nonLocalTp = n; else rowErrs.push('Non-Local TP Limit "' + cols[nonLocalTpIdx] + '" is not a number'); }
-          if (localSpeedIdx >= 0 && cols[localSpeedIdx] !== '') { const n = parseInt(cols[localSpeedIdx], 10); if (!isNaN(n)) dPatch.localSpeed = n; else rowErrs.push('Local Speed "' + cols[localSpeedIdx] + '" is not a number'); }
-          if (nonLocalSpeedIdx >= 0 && cols[nonLocalSpeedIdx] !== '') { const n = parseInt(cols[nonLocalSpeedIdx], 10); if (!isNaN(n)) dPatch.nonLocalSpeed = n; else rowErrs.push('Non-Local Speed "' + cols[nonLocalSpeedIdx] + '" is not a number'); }
           // 2026-09-07 fix — Hold Time (On/Off) column parser removed: no longer part of the
           // SC Master template (purely plan-level now), so holdOnIdx will just be -1 for any
           // uploaded file going forward.
@@ -10294,9 +10455,20 @@ class NDCApp extends React.Component {
           // of 30 is rejected the same way a bad number already was.
           if (maxHoldLocalIdx >= 0) { if (cols[maxHoldLocalIdx] === '') { rowErrs.push('Max Hold Time - Local is required'); } else { const n = parseInt(cols[maxHoldLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldLocal = n; } }
           if (maxHoldNonLocalIdx >= 0) { if (cols[maxHoldNonLocalIdx] === '') { rowErrs.push('Max Hold Time - Non-Local is required'); } else { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldNonLocal = n; } }
-          if (openIdx >= 0 && cols[openIdx]) { if (TIME_RE.test(cols[openIdx])) dPatch.openTime = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not HH:MM'); }
-          if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_RE.test(cols[closeIdx])) dPatch.closeTime = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not HH:MM'); }
           if (opsLeadsIdx >= 0 && cols[opsLeadsIdx]) dPatch.pocs = cols[opsLeadsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          // 2026-09-18 addition (item 4) — Central POCs: same named-object shape as the +SC
+          // modal writes (see submitAddSc()), built here only if at least one of the 4 columns
+          // is present and non-empty on this row, and merged onto whatever's already stored so a
+          // CSV row that only fills LH CT-1 doesn't blank out an existing Biz Fin CT-1/2.
+          if ((lhCt1Idx >= 0 && cols[lhCt1Idx]) || (lhCt2Idx >= 0 && cols[lhCt2Idx]) || (bizFinCt1Idx >= 0 && cols[bizFinCt1Idx]) || (bizFinCt2Idx >= 0 && cols[bizFinCt2Idx])) {
+            const existingCp = existingD.centralPocs || {};
+            dPatch.centralPocs = {
+              lhCt1: (lhCt1Idx >= 0 && cols[lhCt1Idx]) ? cols[lhCt1Idx] : (existingCp.lhCt1 || ''),
+              lhCt2: (lhCt2Idx >= 0 && cols[lhCt2Idx]) ? cols[lhCt2Idx] : (existingCp.lhCt2 || ''),
+              bizFinCt1: (bizFinCt1Idx >= 0 && cols[bizFinCt1Idx]) ? cols[bizFinCt1Idx] : (existingCp.bizFinCt1 || ''),
+              bizFinCt2: (bizFinCt2Idx >= 0 && cols[bizFinCt2Idx]) ? cols[bizFinCt2Idx] : (existingCp.bizFinCt2 || ''),
+            };
+          }
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(bPatch).length === 0 && Object.keys(dPatch).length === 0) { skipped++; continue; }
           // Class A (name/zone) — direct registry update, same as submitAddSc().
@@ -10763,6 +10935,12 @@ class NDCApp extends React.Component {
     this.showToast(name + ' added to vehicle master', '#128A3E');
   }
   downloadText(name, text) { try { const blob = new Blob([text], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); } catch (e) {} }
+  // csvField(v) (2026-09-24 addition) — minimal CSV quoting for "Download Current Data" exports:
+  // wraps a value in quotes (doubling any embedded quote) if it contains a comma, quote, or
+  // newline. None of these exports' own upload-side parsers actually support quoted fields
+  // themselves (they split on a bare comma), so this only matters if someone re-opens the
+  // download in Excel/Sheets rather than re-uploading it as-is — still worth doing correctly.
+  csvField(v) { const s = (v == null ? '' : String(v)); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
   downloadCsvFile() { const d = this.state.data; const head = 'SC Code,Name,Zone,Sort Capacity,Volume Capacity,RLH Docks,LMDC Count\n'; const body = d.scs.map(s => [s.code, s.name, s.zone, s.sortCap, s.volCap, s.docks, s.dcCount].join(',')).join('\n'); this.downloadText('network-design-export.csv', head + body); this.showToast('CSV downloaded · ' + d.scs.length + ' rows', '#128A3E'); }
   // B. Design-Creation Step-1 CSV — selected SCs with node count, total volume, and the volume-gap
   // breakdown (zero / missing) so the planner can validate inputs offline before triggering.
@@ -11628,7 +11806,15 @@ class NDCApp extends React.Component {
       addVehBtnBg: (addVehValid && !this.isRlhCyclePast()) ? '#003F98' : '#E6EBF2', addVehBtnFg: (addVehValid && !this.isRlhCyclePast()) ? '#fff' : '#8E96A3', addVehBtnCursor: (addVehValid && !this.isRlhCyclePast()) ? 'pointer' : 'not-allowed', addVehBtnDisabled: !addVehValid || this.isRlhCyclePast(),
       closeAddVeh: () => this.setState({ addVehOpen: false, addVehForm: {}, addVehEditName: null }),
       submitAddVeh: () => this.submitAddVeh(),      availTemplate: () => this.downloadTemplate('SC Vehicle Availability', [{ k: 'SC Code' }, { k: 'Vehicle Type' }, { k: 'Available Count' }, { k: 'Zone Feasibility' }, { k: 'Loading Time (min)' }]),
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Local Speed (km/h)' }, { k: 'Non-Local Speed (km/h)' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Open Time' }, { k: 'Close Time' }, { k: 'Ops Leads' }]),
+      // 2026-09-18 fix (items 2/3/4) — Local Speed / Non-Local Speed and Open Time / Close Time
+      // columns removed (same reasoning as the +SC modal: Speed Profile and Operating Hours are
+      // the real models now, this template shouldn't offer the old flat pair as if it still
+      // were). 4 new optional Central POC columns added at the end.
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Ops Leads' }, { k: 'LH CT-1' }, { k: 'LH CT-2' }, { k: 'Biz Fin CT-1' }, { k: 'Biz Fin CT-2' }]),
+      // 2026-09-24 addition — "Download Current Data" for all 3 bulk-upload cards.
+      scMasterExportCsv: () => this.scMasterExportCsv(),
+      opHoursExportCsv: () => this.opHoursExportCsv(),
+      rateCardExportCsv: () => this.rateCardExportCsv(),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS, lmdcSysDefaults: this.lmdcSystemDefaults(),
@@ -11737,6 +11923,8 @@ class NDCApp extends React.Component {
       open: true, code: m.code,
       mg: m.mg != null ? m.mg : '',
       onMgChange: (e) => this.rateCardSetMg(e),
+      mgThreshold: m.mgThreshold != null ? m.mgThreshold : '',
+      onMgThresholdChange: (e) => this.rateCardSetMgThreshold(e),
       slabs: m.slabs || [],
       onSlabField: (idx, field) => this.rateCardSetSlabField(idx, field),
       onAddSlab: () => this.rateCardAddSlab(),
@@ -18224,7 +18412,7 @@ class NDCApp extends React.Component {
       ...this.inputsVals(),
       // inputs action handlers not produced by inputsVals (kept here so they survive):
       ...this.addScVals(),
-      uploadFile: () => (this.state.ingestionTab === 'nlh' ? this.ingestNlhPlan() : this.ingestRlhPlan()), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3', open: '06:00', close: '22:00' } }),
+      uploadFile: () => (this.state.ingestionTab === 'nlh' ? this.ingestNlhPlan() : this.ingestRlhPlan()), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3' } }),
       startCreation: () => this.go('creation'), recheckAutodml: () => this.showToast('AutoDML re-check queued', '#2F4FC6'),
       moduleTitle: tt[0], moduleSubtitle: tt[1], stubIcon: STUBICON[st.view] || ICON.dash,
       navGroups, cycleName: monthLabel(st.activeCycleMonth.rlh), cycleOpen: !!st.cycleOpen,

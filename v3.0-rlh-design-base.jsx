@@ -2029,7 +2029,6 @@ All modules
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>SORT CAP</span><span style={css(`font-size:12px; font-variant-numeric:tabular-nums; color:#14171F;`)}>{s.scSortCapLabel}</span></span>
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>RLH DOCKS</span><span style={css(`font-size:12px; color:#14171F;`)}>{s.scDocksLabel}</span></span>
 <span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>LOCATION</span><span style={css(`font-size:12px; color:#14171F; font-variant-numeric:tabular-nums;`)}>{s.scLocLabel}</span></span>
-<span style={css(`display:inline-flex; align-items:center; gap:5px;`)}><span style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>LARGEST VEHICLE</span><span style={css(`font-size:12px; color:#14171F;`)}>{s.scLargestVehLabel}</span></span>
 </div>
 </>) : null}
 {(s.hasMissingMaster) ? (<>
@@ -2046,7 +2045,7 @@ All modules
 <div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMDCs · AutoDML actives + additions − closures</div>
 {(s.dropCount) ? (<><button onClick={s.onRestoreDropped} style={css(`display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 10px; border:1px solid #E6EBF2; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:7px; cursor:pointer;`, `background:#EAEEFB;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.dropCount} dropped · restore</button></>) : null}
 </div>
-<div style={css(`display:grid; grid-template-columns:1fr 1.5fr 0.8fr 0.8fr 0.8fr 0.8fr 0.75fr 0.6fr 0.6fr 40px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff;`)}>
+<div style={css(`display:grid; grid-template-columns:1fr 1.3fr 0.7fr 0.7fr 0.75fr 0.7fr 0.7fr 0.55fr 0.55fr 1.1fr 40px; border:1px solid #EEF1F6; border-radius:8px; overflow:hidden; background:#fff;`)}>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>DC CODE</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>NAME</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA; text-align:right;`)}>VOLUME</div>
@@ -2056,6 +2055,7 @@ All modules
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} title={"Read-only preview \u2014 edit in LMDC Master / Step 2"}>D0 CUTOFF</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>OPEN</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)}>CLOSE</div>
+<div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} title={"SC-wide value, shown per DC"}>LARGEST VEHICLE</div>
 <div style={css(`padding:7px 11px; font-size:10px; font-weight:700; color:#5A5E66; background:#F2F5FA;`)} />
 {(s.lmdcs || []).map((l, __i43) => (<React.Fragment key={__i43}>
 <div style={css(`padding:7px 11px; font-size:12px; font-weight:600; color:#003F98; border-top:1px solid #F2F5FA;`)}>{l.code}</div>
@@ -2067,6 +2067,7 @@ All modules
 <div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.d0Cutoff}</div>
 <div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.open}</div>
 <div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; font-variant-numeric:tabular-nums;`)}>{l.close}</div>
+<div style={css(`padding:7px 11px; font-size:11.5px; color:#5A5E66; border-top:1px solid #F2F5FA; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{l.largestVeh}</div>
 <div style={css(`padding:4px 6px; border-top:1px solid #F2F5FA; display:flex; align-items:center; justify-content:center;`)}><button onClick={l.onDrop} title={l.dropTitle} aria-label={l.dropTitle} style={css(`width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:${l.dropColor};`)} onMouseEnter={(e) => hoverOn(e, `color:#D14B4B; background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:6px; color:${l.dropColor};`, `color:#D14B4B; background:#FBEAEA;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button></div>
 </React.Fragment>))}
 </div>
@@ -2117,8 +2118,8 @@ All modules
     scenario id — it still resolves base capacity, Operating Hours, and Co-Loading/MDC lane
     occupancy correctly; it just won't show any NLH trailer landings blocking a dock, since
     there's no NLH scenario here to read landings from. */}
-<button onClick={() => this.openSpeedProfileModal(vc.code, (d.scVehAvail.find(g => g.code === vc.code) || { rows: [] }).rows.map(r => ({ vehicleType: r.vehicleType, zoneFeas: r.zoneFeas })), true)} title={"Speed Profile (view only)"} aria-label={"View Speed Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`, `border-color:#0D7377;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-<button onClick={() => this.openDockProfileModal(vc.code, null)} title={"Dock Profile (view only)"} aria-label={"View Dock Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`, `border-color:#5A5E66;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={vc.onOpenSpeedProfile} title={"Speed Profile (view only)"} aria-label={"View Speed Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#0D7377;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#0D7377; margin-right:6px;`, `border-color:#0D7377;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={vc.onOpenDockProfile} title={"Dock Profile (view only)"} aria-label={"View Dock Profile for " + vc.code} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `width:30px; height:30px; border:1px solid #E6EBF2; background:#fff; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; margin-right:10px;`, `border-color:#5A5E66;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {(vc.tpWarn) ? (<><span style={css(`display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; background:#FBF1DF; color:#C77B00;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinejoin={"round"} /><line x1={"12"} y1={"9"} x2={"12"} y2={"13"} /><line x1={"12"} y1={"17"} x2={"12.01"} y2={"17"} strokeWidth={"3"} strokeLinecap={"round"} /></svg>{vc.tpWarnLabel}</span></>) : null}
 {(vc.isAdding) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>Adding vehicle…</span></>) : null}
 {(vc.notAdding) ? (<><button onClick={vc.onAddVehicle} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1.5px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#EAEEFB;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Add Vehicle</button></>) : null}
@@ -2215,7 +2216,18 @@ All modules
 <div style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>Operating Mode & HW</div>
 <div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>Pick the operating mode and Historical Weight per SC, and a reference plan where required. Vehicles are configured next.</div>
 </div>
-{/* Algorithm Mode — New Node Addition toggle (Run Name moved to step 4) */}
+{/* 2026-09-27 fix (item 5) — Run Name moved back here from Step 4, matching production.
+    Target Month deliberately NOT added alongside it — that stays a global, panel-level
+    setting (the existing cycle picker), not a per-run field duplicated into this step. */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:18px 24px; margin-bottom:16px;`)}>
+<div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:12px;`)}>Run Configuration</div>
+<div style={css(`min-width:220px; max-width:400px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>RUN NAME <span style={css(`font-weight:400; color:#8E96A3; letter-spacing:0;`)}>(optional)</span></div>
+<input value={runName} onInput={onRunNameChange} placeholder={"e.g. July-South-Run1"} style={css(`width:100%; height:36px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:5px;`)}>Leave blank and each run is named after its Run ID.</div>
+</div>
+</div>
+{/* Algorithm Mode — New Node Addition toggle */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:18px 24px; margin-bottom:16px;`)}>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F; margin-bottom:12px;`)}>Algorithm Mode</div>
 <div style={css(`display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;`)}>
@@ -2249,13 +2261,10 @@ All modules
 </div>
 {/* Divider */}
 <div style={css(`width:1px; height:28px; background:#E6EBF2; flex-shrink:0;`)} />
-{/* Speed Mode global group (2026-09-25, item 2.2) — same batch-toolbar pattern as HW above */}
-<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 18px;`)}>
-<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Off \u2014 falls back to a flat default speed instead of reading Speed Profile"}>SET ALL SPEED MODE</span>
-<button onClick={onSpeedModeGlobalToggle} style={css(`height:28px; padding:0 12px; border:1px solid ${speedModeGlobal ? '#128A3E' : '#E6EBF2'}; background:${speedModeGlobal ? '#E7F4EC' : '#fff'}; color:${speedModeGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:12px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{speedModeGlobalLabel}</button>
-</div>
-{/* Divider */}
-<div style={css(`width:1px; height:28px; background:#E6EBF2; flex-shrink:0;`)} />
+{/* 2026-09-27 fix (item 3) — Speed Mode's global control moved OUT of this separate toolbar
+    strip and into the SPEED MODE column header cell itself, matching Route Scheduler's own
+    "D0 CUTOFF (ALL)" / "HW (ALL)" convention exactly (see the column header row below) rather
+    than the toolbar-row pattern this file's own pre-existing HW control happens to use. */}
 {/* Ref Plan global group */}
 <div style={css(`display:flex; align-items:center; gap:10px; padding:11px 18px; flex:1;`)}>
 <span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>Reference plan</span>
@@ -2291,7 +2300,10 @@ All modules
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>VOLUME</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VEHICLES</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>HIST. WEIGHT</div>
-<div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>SPEED MODE</div>
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)} title={"Off \u2014 falls back to a flat default speed instead of reading Speed Profile"}>SPEED MODE (ALL)</div>
+<button onClick={onSpeedModeGlobalToggle} style={css(`height:20px; padding:0 8px; border:1px solid ${speedModeGlobal ? '#128A3E' : '#E6EBF2'}; background:${speedModeGlobal ? '#E7F4EC' : '#fff'}; color:${speedModeGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{speedModeGlobalLabel}</button>
+</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Reference plan</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VALIDATION</div>
 </div>
@@ -2361,14 +2373,9 @@ All modules
 </div>
 </>) : null}
 {(step4HasScs) ? (<>
-{/* 2.4: Run Name input — moved here from step 2 so it's near the trigger action */}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:14px 18px; margin-bottom:14px; display:flex; align-items:flex-start; gap:28px; flex-wrap:wrap;`)}>
-<div style={css(`min-width:220px; flex:1; max-width:400px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>RUN NAME <span style={css(`font-weight:400; color:#8E96A3; letter-spacing:0;`)}>(optional)</span></div>
-<input value={runName} onInput={onRunNameChange} placeholder={"e.g. July-South-Run1"} style={css(`width:100%; height:36px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
-<div style={css(`font-size:11px; color:#8E96A3; margin-top:5px;`)}>Hint: [SC]–[Region]–[Date]</div>
-</div>
-</div>
+{/* 2026-09-27 fix (item 5) — Run Name moved back to Step 2, matching production (was moved
+    here from Step 2 in an earlier session; moving it back per direct instruction, keeping
+    Target Month out of it — that stays a global, panel-level setting, not a per-step field). */}
 {/* 2.6: Validation panel — flags aggregated across all selected SCs */}
 {(step4AnyFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; margin-bottom:14px;`)}>
@@ -2399,6 +2406,24 @@ All modules
 </div>
 <button onClick={onRunPreValidation} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0; white-space:nowrap;`)}>{step4PreValidated ? 'Re-run check' : 'Run Pre-Validation Check'}</button>
 </div>
+{/* 2026-09-27 addition (item 6) — recommended vehicles per at-risk SC, each addable to this
+    run's own Vehicle Configuration in one click (or all at once). */}
+{(step4PreValidated && !feasibilityClean) ? (<>
+<div style={css(`margin:-6px 0 14px; border:1px solid #EDD9AF; border-top:none; border-radius:0 0 10px 10px; background:#fff; overflow:hidden;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 18px; background:#FDF8EE; border-bottom:1px solid #F4E4BF;`)}>
+<span style={css(`font-size:11px; font-weight:700; color:#9A5E00; letter-spacing:0.03em;`)}>RECOMMENDED VEHICLES TO REACH 100% COVERAGE</span>
+{(feasibilityAddableCount > 1) ? (<><button onClick={onAddAllRecommended} style={css(`height:26px; padding:0 11px; border:1px solid #C77B00; background:#fff; color:#C77B00; font-family:inherit; font-size:11px; font-weight:700; border-radius:6px; cursor:pointer;`)}>Add all ({feasibilityAddableCount})</button></>) : null}
+</div>
+{(feasibilityRecs || []).map((fr, __iFr) => (<React.Fragment key={__iFr}>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:9px 18px; border-top:${__iFr === 0 ? 'none' : '1px solid #F2F5FA'};`)}>
+<span style={css(`font-size:12.5px; font-weight:700; color:#003F98; width:64px; flex-shrink:0;`)}>{fr.code}</span>
+{(fr.hasRec) ? (<><span style={css(`font-size:12px; color:#14171F; flex:1;`)}>Add {fr.recLabel}</span>
+<button onClick={fr.onAdd} style={css(`height:26px; padding:0 11px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; flex-shrink:0;`)}>Add to run</button></>) : null}
+{(fr.noCovering) ? (<><span style={css(`font-size:12px; color:#D14B4B; flex:1;`)}>No RLH-feasible vehicle in Vehicle Master covers the farthest DC — drop the far DC(s) in Step 1.</span></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
 {/* A — readiness banner (single predicate: ready = green, blocked = red). ETA only when ready. */}
 {(triggerReady) ? (<>
 <div style={css(`display:flex; align-items:center; gap:13px; padding:14px 18px; margin-bottom:14px; background:#E7F4EC; border:1px solid #B6E0C6; border-radius:10px;`)}>
@@ -3587,6 +3612,35 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={t.onClick} style={css(`position:relative; padding:0 0 12px; border:none; background:transparent; cursor:pointer; font-family:inherit; font-size:13px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}{(t.active) ? (<><span style={css(`position:absolute; left:0; right:0; bottom:0; height:3px; background:#003F98; border-radius:3px 3px 0 0;`)} /></>) : null}</button>
 </React.Fragment>))}
 </div>
+{/* 2026-09-26 addition (item 1) — Skipped DCs shown first — moved 2026-09-27 above BOTH tabs (was on Route View only, which
+    isn't the default tab, so the list never showed on first open). Only when
+    coverage < 100%. */}
+{(reviewDetail.hasSkippedDcs) ? (<>
+<div style={css(`margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>Skipped DCs \u2014 {reviewDetail.skippedDcCount} unserved</span>
+</div>
+<div style={css(`overflow-x:auto; margin-bottom:6px;`)}>
+<div style={css(`min-width:600px; border:1px solid #F0C9C9; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; background:#FBEAEA;`)}>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>DC CODE</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em; text-align:right;`)}>PLANNED VOLUME</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>REASON SKIPPED</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>COORDINATES</div>
+</div>
+{(reviewDetail.skippedDcRows || []).map((sk, __i67s) => (<React.Fragment key={__i67s}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; border-top:1px solid #F5DADA; background:#fff;`)}>
+<div style={css(`padding:9px 12px; font-size:12px; font-weight:600; color:#D14B4B;`)}>{sk.lmdc}</div>
+<div style={css(`padding:9px 12px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{sk.designVol}</div>
+<div style={css(`padding:9px 12px; font-size:12px; color:#5A5E66;`)}>{sk.reason}</div>
+<div style={css(`padding:9px 12px; font-size:11.5px; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{sk.lat}, {sk.lng}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</div>
+</>) : null}
 {(reviewDetail.secDetails) ? (<>
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:980px;`)}>
@@ -3618,35 +3672,6 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : null}
 {(reviewDetail.secRoute) ? (<>
-{/* 2026-09-26 addition (item 1) — Skipped DCs shown first, above the routes list, only when
-    coverage < 100%. */}
-{(reviewDetail.hasSkippedDcs) ? (<>
-<div style={css(`margin-bottom:16px;`)}>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
-<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>Skipped DCs \u2014 {reviewDetail.skippedDcCount} unserved</span>
-</div>
-<div style={css(`overflow-x:auto; margin-bottom:6px;`)}>
-<div style={css(`min-width:600px; border:1px solid #F0C9C9; border-radius:8px; overflow:hidden;`)}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; background:#FBEAEA;`)}>
-<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>DC CODE</div>
-<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em; text-align:right;`)}>PLANNED VOLUME</div>
-<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>REASON SKIPPED</div>
-<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>COORDINATES</div>
-</div>
-{(reviewDetail.skippedDcRows || []).map((sk, __i67s) => (<React.Fragment key={__i67s}>
-<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; border-top:1px solid #F5DADA; background:#fff;`)}>
-<div style={css(`padding:9px 12px; font-size:12px; font-weight:600; color:#D14B4B;`)}>{sk.lmdc}</div>
-<div style={css(`padding:9px 12px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{sk.designVol}</div>
-<div style={css(`padding:9px 12px; font-size:12px; color:#5A5E66;`)}>{sk.reason}</div>
-<div style={css(`padding:9px 12px; font-size:11.5px; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{sk.lat}, {sk.lng}</div>
-</div>
-</React.Fragment>))}
-</div>
-</div>
-</div>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Routes \u2014 {reviewDetail.skippedDcCount ? 'coverage achieved' : 'all routes'}</div>
-</>) : null}
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:820px;`)}>
 <div style={css(`display:grid; grid-template-columns:1.1fr 0.9fr 0.9fr 1fr 1.1fr 0.9fr 0.9fr; background:#E6EBF2;`)}>
@@ -12254,6 +12279,11 @@ class NDCApp extends React.Component {
           const scSortCapLabel = hasMissingMaster ? '—' : fmtInt(s.sortCap);
           const scDocksLabel = hasMissingMaster ? '—' : String(s.docks);
           const scLocLabel = hasMissingMaster ? '—' : (s.lat.toFixed(2) + ', ' + s.lng.toFixed(2));
+          // 2026-09-27 fix (item 2) — Largest Vehicle moved from the SC summary line to a real
+          // per-DC column (below, in the lmdcs row builder) per direct correction: the value
+          // itself is still SC-wide (vehicles aren't configured per DC in this app), but it's
+          // now shown once per DC row rather than once per SC, matching how the request was
+          // actually phrased.
           const scLargestVeh = hasMissingMaster ? null : largestVehFor(s.code);
           const scLargestVehLabel = scLargestVeh ? (scLargestVeh.type + ' (' + fmtInt(scLargestVeh.cap) + ')') : '—';
           const realDc = { count: (scDcCounts.counts[s.code] || 0) + (scDcCounts.pipelineCounts[s.code] || 0), pipelineCount: scDcCounts.pipelineCounts[s.code] || 0 };
@@ -12292,6 +12322,11 @@ class NDCApp extends React.Component {
             const dcClose = ['22:00', '23:00', '24:00'][i % 3];
             return { code: s.cityCode + '-' + (210 + i * 7), name: 'DC ' + s.cityCode + ' ' + (i + 1), vol: zeroVol ? '0' : fmtInt(volN), volFg: zeroVol ? '#D14B4B' : '#14171F', volWeight: zeroVol ? '700' : '400', cap: fmtInt(capN), volFlag: flag.t, volFlagBg: flag.bg, volFlagFg: flag.fg, src: i === 4 ? 'Addition' : 'AutoDML', srcBg: i === 4 ? '#EAEEFB' : '#F2F5FA', srcFg: i === 4 ? '#2F4FC6' : '#5A5E66',
               d0Cutoff: dcD0Cutoff, open: dcOpen, close: dcClose,
+              // 2026-09-27 fix (item 2) — Largest Vehicle, per DC row (moved from the SC summary
+              // line). Same SC-wide value repeated per row, same as D0 Cutoff/Open/Close above —
+              // vehicles aren't actually configured per DC in this app, but the request was
+              // explicit that this belongs on the DC table, not the SC header.
+              largestVeh: scLargestVehLabel,
               dropTitle: zeroVol ? 'Drop this zero-volume DC from the run' : 'Drop this DC from the run', dropColor: zeroVol ? '#D14B4B' : '#C3C9D4',
               onDrop: () => { const m = Object.assign({}, this.state.droppedDcBySC || {}); const arr = (m[s.code] || []).slice(); if (arr.indexOf(i) < 0) arr.push(i); m[s.code] = arr; this.setState({ droppedDcBySC: m }); this.showToast((s.cityCode + '-' + (210 + i * 7)) + ' dropped from this run', '#D14B4B', () => { const m2 = Object.assign({}, this.state.droppedDcBySC || {}); const a2 = (m2[s.code] || []).filter(x => x !== i); if (a2.length) m2[s.code] = a2; else delete m2[s.code]; this.setState({ droppedDcBySC: m2 }); }); } }; }) : [] }; }) };
     }).filter(g => g.count > 0);
@@ -12421,14 +12456,32 @@ class NDCApp extends React.Component {
       // O.1 TP validation \u2014 entered TP must not exceed the vehicle-master TP limit (error).
       const tpViol = rows.filter(v => { const m = vehMeta3(v.type); const tp = v.tp == null ? m.tp : v.tp; return (parseInt(v.count) || 0) > 0 && tp > m.tp; })
         .map(v => { const m = vehMeta3(v.type); return v.type + ' (TP ' + (v.tp == null ? m.tp : v.tp) + ' > limit ' + m.tp + ')'; });
-      // O.2 distance-limit \u2014 farthest DC must be within the distance limit of every active vehicle.
-      const distViol = rows.filter(v => (parseInt(v.count) || 0) > 0 && far > vehDist3(v.type))
-        .map(v => v.type + ' (limit ' + vehDist3(v.type) + ' km < farthest ' + far + ' km)');
-      // O.3 under-range — farthest DC under 40% of the largest active vehicle's range → oversized vehicle (warning).
+      // O.3 inputs first — largest active vehicle range (also feeds O.2 below).
       const activeV = rows.filter(v => (parseInt(v.count) || 0) > 0);
       const largestDist = activeV.length ? Math.max.apply(null, activeV.map(v => vehDist3(v.type))) : 0;
+      const largestVehName = activeV.length ? activeV.slice().sort((a, b) => vehDist3(b.type) - vehDist3(a.type))[0].type : '';
+      // O.2 distance-limit — 2026-09-27 fix (item 6): the farthest DC must be reachable by the
+      // LARGEST active vehicle in the mix, not by every vehicle. The old rule ("every active
+      // vehicle must reach the farthest DC") meant any mix containing a short-range vehicle
+      // (e.g. the default set's 250 km ACE) flagged forever, and adding a longer-range vehicle —
+      // this flag's own suggested fix — could never clear it. The product definition of this
+      // check (e.g. "3 × 10ft trailers cover 800 km+, but 5 DCs sit beyond 800 km → add more
+      // vehicles") is about whether ANY vehicle in the mix can serve the far DCs.
+      const distViol = (activeV.length && far > largestDist)
+        ? [largestVehName + ' (largest in mix, limit ' + largestDist + ' km < farthest ' + far + ' km)']
+        : [];
+      // 2026-09-27 addition (item 6) — a real recommended vehicle, not just "add a longer-range
+      // vehicle" as generic text: the RLH-feasible Vehicle Master type with the smallest range
+      // that still covers the farthest DC (cheapest real fix, not just any fix), only computed
+      // when there's actually a distance violation to fix.
+      let recommendedVeh = null;
+      if (distViol.length && far > 0) {
+        const covering = (VEHM3 || []).filter(v => (v.feas || ['RLH']).indexOf('RLH') >= 0 && v.dist >= far).sort((a, b) => a.dist - b.dist);
+        if (covering.length) recommendedVeh = covering[0];
+      }
+      // O.3 under-range — farthest DC under 40% of the largest active vehicle's range → oversized vehicle (warning).
       const underUtil = !usedDefault && largestDist > 0 && far > 0 && far < 0.4 * largestDist;
-      return { rows, usedDefault, totalVeh, tpViol, distViol, largestDist: largestDist, underUtil: underUtil };
+      return { rows, usedDefault, totalVeh, tpViol, distViol, recommendedVeh, largestDist: largestDist, underUtil: underUtil };
     };
     // Preview cards include per-SC HW
     const previewCardsWithHw = selScs.map((s, i) => {
@@ -12505,6 +12558,21 @@ class NDCApp extends React.Component {
       const refChosen = refSet[s.code] || 'June 2026';
       return { code: s.code, name: s.name, zone: s.zone, dcCount: s.dcCount, hw: scHw, hwLabel: 'HW ' + scHw,
         speedMode: scSpeedMode, speedModeLabel: scSpeedMode ? 'On' : 'Off',
+        // 2026-09-27 addition (item 6) — recommended vehicle for a vehicle-range failure, with a
+        // one-click "add to this run" that appends it to this SC's per-run Vehicle Configuration
+        // (vehiclesBySC — Step 3's own state, SC Vehicle Availability master is untouched), and
+        // clears step4PreValidated so the feasibility check has to be re-run on the new inputs.
+        hasRecommendedVeh: !!vsum.recommendedVeh,
+        recommendedVehLabel: vsum.recommendedVeh ? ('1\u00d7 ' + vsum.recommendedVeh.name + ' (' + vsum.recommendedVeh.dist + ' km range)') : '',
+        noCoveringVeh: vsum.distViol.length > 0 && !vsum.recommendedVeh,
+        onAddRecommendedVeh: () => {
+          if (!vsum.recommendedVeh) return;
+          const base = ((this.state.vehiclesBySC || {})[s.code] || DEFAULT_VEH3.map(v => Object.assign({ zoneFeas: 'Both' }, v))).slice();
+          base.push({ type: vsum.recommendedVeh.name, count: 1, tp: vsum.recommendedVeh.tp, zoneFeas: 'Both', added: true });
+          const vbs = Object.assign({}, this.state.vehiclesBySC || {}); vbs[s.code] = base;
+          this.setState({ vehiclesBySC: vbs, step4PreValidated: false });
+          this.showToast('Added 1\u00d7 ' + vsum.recommendedVeh.name + ' to ' + s.code + ' for this run \u2014 re-run the pre-validation check', '#128A3E');
+        },
         onToggleSpeedMode: () => { const m = Object.assign({}, this.state.speedModeBySC || {}); m[s.code] = !scSpeedMode; this.setState({ speedModeBySC: m }); },
         volume: volL, totalVeh: vsum.totalVeh, vehDefault: vsum.usedDefault,
         vehLabel: vsum.usedDefault ? 'DS default set' : (vsum.totalVeh + (vsum.totalVeh === 1 ? ' vehicle' : ' vehicles')),
@@ -12634,6 +12702,25 @@ class NDCApp extends React.Component {
     const feasibilityAtRiskScs = previewCardsWithHw.filter(c => (c.flags || []).some(f => f.k === 'dist'));
     const feasibilityCoveragePct = trigSelCount > 0 ? Math.round(((trigSelCount - feasibilityAtRiskScs.length) / trigSelCount) * 100) : 100;
     const feasibilityClean = feasibilityAtRiskScs.length === 0;
+    // 2026-09-27 addition (item 6) — per-SC recommended vehicle list for the feasibility banner.
+    const feasibilityRecs = feasibilityAtRiskScs.map(c => ({ code: c.code, hasRec: c.hasRecommendedVeh, recLabel: c.recommendedVehLabel, noCovering: c.noCoveringVeh, onAdd: c.onAddRecommendedVeh }));
+    const feasibilityAddableCount = feasibilityRecs.filter(r => r.hasRec).length;
+    const onAddAllRecommended = () => {
+      // Single setState for all SCs (not N separate calls reading stale this.state between them).
+      const vbs = Object.assign({}, this.state.vehiclesBySC || {});
+      let n = 0;
+      previewCardsWithHw.forEach(pc => {
+        if (!pc.hasRecommendedVeh) return;
+        const s = selScs.find(x => x.code === pc.code); if (!s) return;
+        const effFar = (droppedFor(s.code).length > 0) ? 0 : (s.farDist || 0);
+        const rv = vehSummaryFor(s.code, effFar).recommendedVeh; if (!rv) return;
+        const base = (vbs[s.code] || DEFAULT_VEH3.map(v => Object.assign({ zoneFeas: 'Both' }, v))).slice();
+        base.push({ type: rv.name, count: 1, tp: rv.tp, zoneFeas: 'Both', added: true });
+        vbs[s.code] = base; n++;
+      });
+      this.setState({ vehiclesBySC: vbs, step4PreValidated: false });
+      this.showToast('Added recommended vehicles to ' + n + ' SC' + (n === 1 ? '' : 's') + ' \u2014 re-run the pre-validation check', '#128A3E');
+    };
     const step4PreValidated = !!st.step4PreValidated;
     const onRunPreValidation = () => {
       this.setState({ step4PreValidated: true });
@@ -12761,6 +12848,17 @@ class NDCApp extends React.Component {
           };
         }),
         onAddVehicle: () => this.setState({ addingVehicleSC: s.code, addVehicleForm: defAddForm() }),
+        // 2026-09-27 fix (item 4) — real bug: these were previously written as inline arrow
+        // functions directly in the JSX (referencing `d.scVehAvail`), not as closures inside
+        // this function. `d` is a local variable of creationVals() itself, not a property on the
+        // merged render object exposed through the `with(B)` block JSX runs inside — so the
+        // inline version threw a silent ReferenceError the instant the icon was clicked, before
+        // this.setState ever ran. The icons rendered fine (nothing about rendering touches `d`),
+        // which is exactly why they "showed but didn't open." Fixed by building the handlers
+        // here, where `d` is genuinely in scope, matching the same pattern Route Scheduler's own
+        // onOpenSpeedProfile/onOpenDockProfile already use correctly.
+        onOpenSpeedProfile: () => this.openSpeedProfileModal(s.code, (d.scVehAvail.find(g => g.code === s.code) || { rows: [] }).rows.map(r => ({ vehicleType: r.vehicleType, zoneFeas: r.zoneFeas })), true),
+        onOpenDockProfile: () => this.openDockProfileModal(s.code, null),
       };
     });
 
@@ -12876,6 +12974,7 @@ class NDCApp extends React.Component {
       step4PreValidated, onRunPreValidation,
       feasibilityCoveragePct, feasibilityClean, feasibilityAtRiskCount: feasibilityAtRiskScs.length,
       feasibilityAtRiskLabel: feasibilityAtRiskScs.map(c => c.code).join(', '),
+      feasibilityRecs, feasibilityAddableCount, onAddAllRecommended,
       warnedNotAckedCount: warnedNotAcked.length, hasWarnedNotAcked: warnedNotAcked.length > 0, onBulkAcceptWarned,
       triggerReady: !triggerBlocked,
       // Step-4 commit-sheet banner + stat strip + ETA (F5).
@@ -17839,6 +17938,9 @@ class NDCApp extends React.Component {
     const fmtInt = (n) => n.toLocaleString('en-IN');
     const money = (n) => '\u20b9' + (n / 100000).toFixed(1) + 'L';
     const pct = (n) => Math.round(n * 100) + '%';
+    // 2026-09-27 fix (item 7) — coverage never rounds UP to 100% when any DC is actually unserved
+    // (99.6% used to display as "100%" next to its own coverage-gap flag).
+    const covPct = (n) => (n < 1 ? Math.min(99, Math.round(n * 100)) : 100) + '%';
     const HWTAG = { 0: 'Re-optimise', 0.5: 'Balanced', 1: 'Preserve routes' };
     const hwLabelOf = (hw) => hw === 0 ? 'HW 0' : hw === 0.5 ? 'HW 0.5' : 'HW 1';
     // §9 R1 — organise by RUN, not HW. An SC is reviewable once it has ≥1 completed run;
@@ -17935,7 +18037,10 @@ class NDCApp extends React.Component {
       // §P3.3 — coverage RED flag
       const coverageColor = r.coverage < 1 ? '#D14B4B' : '#14171F';
       const coverageGap = r.coverage < 1;
-      const coverageGapText = coverageGap ? 'Coverage gap — ' + Math.round((1 - r.coverage) * r.dcCount) + ' nodes skipped' : '';
+      // 2026-09-27 fix (item 7) — min 1 when coverage < 100%: a 99.4% run on a small SC used to
+      // round to "0 nodes skipped", contradicting its own coverage figure. Same formula as the
+      // Skipped DCs list (skipCount) so the card and the list always agree.
+      const coverageGapText = coverageGap ? 'Coverage gap — ' + Math.max(1, Math.round((1 - r.coverage) * r.dcCount)) + ' nodes skipped' : '';
       // §P3.4 — route utilisation chip: replicate the detail-view RNG to count over/under-util routes
       let _us = r.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0) * 31 + 7;
       const _uRNG = () => { _us = (_us * 1103515245 + 12345) & 0x7fffffff; return _us / 0x7fffffff; };
@@ -17948,7 +18053,7 @@ class NDCApp extends React.Component {
         pushed, pushedTag: pushed ? pushTagInfo[0] : '', pushedTagBg: pushed ? pushTagInfo[1] : '', pushedTagFg: pushed ? pushTagInfo[2] : '',
         nodes: fmtInt(r.dcCount), volume: fmtInt(r.volume), vehInput: (r.vehInput && r.vehInput.length ? r.vehInput.join(' · ') : '—'),
         scCoords: curSC ? (Number(curSC.lat).toFixed(4) + ', ' + Number(curSC.lng).toFixed(4)) : '—',
-        coverage: pct(r.coverage), util: pct(r.util), cps: '₹' + r.cps.toFixed(2), routes: String(r.routes), vehicles: String(r.vehicles), distance: fmtInt(r.distance) + ' km',
+        coverage: covPct(r.coverage), util: pct(r.util), cps: '₹' + r.cps.toFixed(2), routes: String(r.routes), vehicles: String(r.vehicles), distance: fmtInt(r.distance) + ' km',
         coverageColor, coverageGap, coverageGapText,
         utilColor: r.util > 0.9 ? '#D14B4B' : r.util < 0.4 ? '#C77B00' : '#14171F',
         hasUtilChip, utilChipLabel,
@@ -17973,7 +18078,7 @@ class NDCApp extends React.Component {
       const detailCpsDeltaLabel = !detailCpsRefOn ? '' : (detailCpsDeltaPct > 0 ? '▲ +' + detailCpsDeltaPct + '% vs ref' : detailCpsDeltaPct < 0 ? '▼ ' + detailCpsDeltaPct + '% vs ref' : '≈ in line w/ ref');
       const detailCpsDeltaColor = detailCpsDeltaPct > 0 ? '#C77B00' : detailCpsDeltaPct < 0 ? '#128A3E' : '#8E96A3';
       const dMetrics = [
-        { label: 'Coverage', value: pct(detailRun.coverage), sub: 'DCs served', hasDelta: false, valueColor: detailRun.coverage < 1 ? '#D14B4B' : '#14171F' },
+        { label: 'Coverage', value: covPct(detailRun.coverage), sub: 'DCs served', hasDelta: false, valueColor: detailRun.coverage < 1 ? '#D14B4B' : '#14171F' },
         { label: 'CPS', value: '₹' + detailRun.cps.toFixed(2), sub: 'cost / shipment', hasDelta: detailCpsRefOn, delta: detailCpsDeltaLabel, deltaColor: detailCpsDeltaColor, valueColor: '#14171F' },
         { label: 'Utilisation', value: pct(detailRun.util), sub: 'avg lane', hasDelta: false, valueColor: '#14171F' },
         { label: 'Routes', value: String(detailRun.routes), sub: 'total', hasDelta: false, valueColor: '#14171F' },
@@ -18049,14 +18154,37 @@ class NDCApp extends React.Component {
       // possibly-disagreeing number. Reasons are a plausible, deterministic pick from the same
       // kind of cause this app's real validations already use elsewhere (distance/capacity/TP),
       // since there's no real per-DC solver trace to read a reason from here.
-      const skipCount = detailRun.coverage < 1 ? Math.round((1 - detailRun.coverage) * detailRun.dcCount) : 0;
-      const SKIP_REASONS = ['Beyond configured vehicle range', 'No route capacity in this cycle', 'Excluded \u2014 touchpoint limit exceeded', 'Excluded \u2014 zero/missing planned volume'];
+      const skipCount = detailRun.coverage < 1 ? Math.max(1, Math.round((1 - detailRun.coverage) * detailRun.dcCount)) : 0;
+      // 2026-09-27 fix (item 7) — seeded reasons are now concrete and tied to this run's own
+      // numbers (the largest vehicle actually in its mix, its real range/TP limit, its avg TP),
+      // not four generic strings. Still simulated — no real per-DC solver trace exists here —
+      // but each reason now reads like something a planner could act on. The distance-based one
+      // is the dominant cause, matching the Feasibility Check's own vehicle-range logic.
+      const _vmix = (detailRun.vehByType || []).filter(v => v.n > 0);
+      const _bigVeh = _vmix.map(v => (d.VEH || []).find(x => x.name === v.name) || { name: v.name, dist: 400, tp: 7 }).sort((a, b) => (b.dist || 0) - (a.dist || 0))[0] || { name: 'Bolero / 8ft', dist: 400, tp: 7 };
+      const _bigRange = _bigVeh.dist || 400;
       const skippedDcRows = [];
       for (let _si = 0; _si < skipCount; _si++) {
+        const roll = RR();
+        let reason, detail;
+        if (roll < 0.5) {
+          const over = Math.round(_bigRange * (1.05 + RR() * 0.35));
+          reason = 'Beyond vehicle range';
+          detail = over + ' km round trip vs ' + _bigRange + ' km limit on ' + _bigVeh.name.split('/')[0].trim() + ' (largest in mix)';
+        } else if (roll < 0.75) {
+          reason = 'Route capacity exhausted';
+          detail = 'All ' + detailRun.vehicles + ' vehicles at ≥' + Math.round(Math.max(0.9, detailRun.util) * 100) + '% utilisation on nearby routes';
+        } else if (roll < 0.9) {
+          reason = 'Touchpoint limit exceeded';
+          detail = 'Nearest route already at ' + (_bigVeh.tp || 7) + ' TPs (vehicle limit)';
+        } else {
+          reason = 'D0 cutoff unreachable';
+          detail = 'Earliest feasible landing ' + ['11:30', '12:00', '13:30'][Math.floor(RR() * 3)] + ' vs DC D0 cutoff 10:00';
+        }
         skippedDcRows.push({
-          lmdc: cc + '-SKIP-' + String(301 + _si * 3),
+          lmdc: cc + '-DC-' + String(301 + _si * 3),
           designVol: fmtInt(Math.max(20, Math.round((detailRun.volume / Math.max(1, detailRun.dcCount)) * (0.5 + RR() * 0.7)))),
-          reason: SKIP_REASONS[Math.floor(RR() * SKIP_REASONS.length)],
+          reason: reason + ' \u2014 ' + detail,
           lat: (baseLat + (RR() - 0.5) * 0.6).toFixed(4), lng: (baseLng + (RR() - 0.5) * 0.6).toFixed(4),
         });
       }
@@ -18081,7 +18209,13 @@ class NDCApp extends React.Component {
     }
 
     const pushSC = st.pushSCcode ? d.scs.find(s => s.code === st.pushSCcode) : curSC;
-    const uniqPocs = pushSC ? [...new Set(pushSC.pocs)] : [];
+    // 2026-09-27 fix (item 1) — Central POCs (LH CT-1/-2, Biz Fin CT-1/-2) weren't surfaced
+    // anywhere after being added to SC Master; they belong in the same reviewer picker as the
+    // existing per-SC POC chain, filtered to only the ones actually filled in (an empty Central
+    // POC field shows nothing, not a blank chip).
+    const centralPocLabels = [['lhCt1', 'LH CT-1'], ['lhCt2', 'LH CT-2'], ['bizFinCt1', 'Biz Fin CT-1'], ['bizFinCt2', 'Biz Fin CT-2']];
+    const centralPocValues = (sc) => { const cp = (sc && sc.centralPocs) || {}; return centralPocLabels.filter(([k]) => cp[k]).map(([k]) => cp[k]); };
+    const uniqPocs = pushSC ? [...new Set((pushSC.pocs || []).concat(centralPocValues(pushSC)))] : [];
     const pushSelected = st.pushReviewers || [];
     const pocChips = uniqPocs.map(n => ({ name: n, selected: pushSelected.indexOf(n) >= 0, bg: pushSelected.indexOf(n) >= 0 ? '#003F98' : '#fff', fg: pushSelected.indexOf(n) >= 0 ? '#fff' : '#5A5E66', bd: pushSelected.indexOf(n) >= 0 ? '#003F98' : '#C3C9D4', onToggle: () => this.togglePushReviewer(n) }));
     const reviewersList = pushSelected.map(n => ({ name: n, initials: n.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase(), email: n.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '') + '@valmo.com', isPoc: uniqPocs.indexOf(n) >= 0, onRemove: () => this.removeReviewer(n) }));
@@ -18150,7 +18284,9 @@ class NDCApp extends React.Component {
     // own push), LM from LMDC Master via deriveLmPocs(). schedPushSelected is the live, editable
     // selection (st.schedPushReviewersSelected); schedPushReviewers (below) stays as the
     // Finalise-Directly-only auto-pick fallback, unchanged from before.
-    const schedUniqScPocs = schedPushPlan ? [...new Set((d.scs.find(s => s.code === schedPushPlan.scCode) || {}).pocs || [])] : [];
+    // 2026-09-27 fix (item 1) — same Central POC surfacing as Route Planner's push modal.
+    const schedPushPlanSc = schedPushPlan ? (d.scs.find(s => s.code === schedPushPlan.scCode) || {}) : null;
+    const schedUniqScPocs = schedPushPlanSc ? [...new Set((schedPushPlanSc.pocs || []).concat(centralPocValues(schedPushPlanSc)))] : [];
     const schedUniqLmPocs = schedPushPlan ? this.deriveLmPocs(schedPushPlan) : [];
     const schedPushSelected = st.schedPushReviewersSelected || [];
     const schedPocChips = schedUniqScPocs.map(n => ({ name: n, selected: schedPushSelected.indexOf(n) >= 0, bg: schedPushSelected.indexOf(n) >= 0 ? '#0D7377' : '#fff', fg: schedPushSelected.indexOf(n) >= 0 ? '#fff' : '#5A5E66', bd: schedPushSelected.indexOf(n) >= 0 ? '#0D7377' : '#C3C9D4', onToggle: () => this.toggleSchedPushReviewer(n) }));

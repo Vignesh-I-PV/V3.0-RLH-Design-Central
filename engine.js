@@ -597,6 +597,19 @@ function seedRLHMasterData(store, opts = {}) {
   }
 
   const MDC_NAMES = [['Panvel MDC', 'PNVL'], ['Sonipat MDC', 'SNPT'], ['Hosur MDC', 'HSUR']];
+  // 2026-09-27 addition (item 6) — deterministic vehicle-range failure seeds, so Route Planner's
+  // Feasibility Check always has real cases to show (the random farDist above only sometimes
+  // exceeds the default vehicle mix's largest range, 400 km on Bolero). One SC per shape:
+  //   North #1 → 480 km: fixable by the smallest covering type (TATA 407, 600 km)
+  //   South #1 → 690 km: fixable only by a large type (17ft / MCV, 700 km)
+  //   East  #1 → 950 km: beyond every RLH-feasible Vehicle Master type (max 900 km) — shows the
+  //            "no covering vehicle, drop the far DC" branch instead of an Add action.
+  // Volume gaps cleared on these three so the range failure is the thing on screen, not masked
+  // by an unrelated zero-volume block listed ahead of it.
+  [['North', 480], ['South', 690], ['East', 950]].forEach(([z, far]) => {
+    const s = generated.find(x => x.zone === z);
+    if (s) { s.farDist = far; s.zeroVolDc = 0; s.missVolDc = 0; }
+  });
   const MDC_ZONES = ['West', 'North', 'South'];
   MDC_NAMES.forEach((mn, mi) => {
     const zone = MDC_ZONES[mi];

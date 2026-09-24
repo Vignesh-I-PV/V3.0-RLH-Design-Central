@@ -3331,6 +3331,19 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </div>
 {(isReviewRoutePlanner) ? (<>
+{/* 2026-09-28 — search + filters as a slim full-width bar between the Planner/Scheduler row and
+    the SC rail / plan list (moved out of the left rail per UI feedback). Still global: the same
+    matchesReviewFilters predicate drives both the rail and the plan cards. */}
+<div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; width:260px;`)}>
+<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={reviewSearch} onInput={onReviewSearch} placeholder={"Search Run ID, Run Name, or SC\u2026"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
+</div>
+<span style={css(`width:1px; height:20px; background:#E6EBF2;`)} />
+<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>FILTER</span>
+{(reviewFilterChips || []).map((f, __iRfb) => (<React.Fragment key={__iRfb}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
+{(reviewFilterActive) ? (<><button onClick={onClearReviewFilters} style={css(`font-family:inherit; font-size:11px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
+</div>
 {/* Search SC moved into the Tier-2 tab row (right corner) — no separate search row. */}
 <div style={css(`flex:1; display:flex; min-height:0;`)}>
 {/* LEFT RAIL */}
@@ -3348,25 +3361,8 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:11px; color:#5A5E66;`)}>{reviewShown} of {reviewTotal}</span>
 </>) : null}
 </div>
-{/* 2026-09-26 addition (item 3) — a real search input: the binding (reviewSearch/
-    onReviewSearch) already existed and already matched Run ID + SC code/name, but was never
-    actually placed in the JSX — no search box rendered anywhere on this rail. Extended to also
-    match Run Name (see listSCs above) while adding the box itself. */}
-<div style={css(`padding:0 12px 9px;`)}>
-<div style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
-<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
-<input value={reviewSearch} onInput={onReviewSearch} placeholder={"Search Run ID, Run Name, or SC…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
-</div>
-</div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
 {(reviewZoneChips || []).map((z, __i57) => (<React.Fragment key={__i57}><button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
-</div>
-{/* 2026-09-26 addition (items 4/5) — global multi-select filter chips. Global means these ALSO
-    drive the SC rail above (an SC with no matching run disappears entirely, not just its runs)
-    — both reviewList and planCards already read the same matchesReviewFilters predicate. */}
-<div style={css(`padding:0 12px 10px; display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
-{(reviewFilterChips || []).map((f, __i57f) => (<React.Fragment key={__i57f}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
-{(reviewFilterActive) ? (<><button onClick={onClearReviewFilters} style={css(`font-family:inherit; font-size:10.5px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
 {/* In-flight section removed per product decision -- the rail now just lists completed runs. */}
@@ -3509,44 +3505,6 @@ NLH cycle: {schedNlhMonthLabel}
 </main>
 </div>
 {/* PUSH MODAL */}
-{(pushOpen) ? (<>
-<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
-<div style={css(`width:560px; max-width:100%; max-height:90vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
-<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{pushModalTitle}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{pushSCname}</div></div>
-<button onClick={closePush} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</div>
-<div style={css(`padding:20px 22px;`)}>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>SC POCs <span style={css(`font-weight:500; color:#5A5E66;`)}>— from SC Master</span></div>
-<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px;`)}>
-{(pocChips || []).map((p, __i62) => (<React.Fragment key={__i62}><button onClick={p.onToggle} style={css(`display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1px solid ${p.bd}; background:${p.bg}; color:${p.fg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{p.name}</button></React.Fragment>))}
-</div>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Add a reviewer manually</div>
-<div style={css(`display:flex; gap:8px; margin-bottom:20px;`)}>
-<input value={pushName} onInput={onPushName} placeholder={"Name"} style={css(`flex:1; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
-<input value={pushEmail} onInput={onPushEmail} placeholder={"email@valmo.com"} style={css(`flex:1.2; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
-<button onClick={addManualReviewer} style={css(`height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`, `background:#EAEEFB;`)}>Add</button>
-</div>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Reviewers <span style={css(`color:#003F98;`)}>({pushCount})</span></div>
-<div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
-{(reviewersList || []).map((r, __i63) => (<React.Fragment key={__i63}>
-<div style={css(`display:flex; align-items:center; gap:11px; padding:9px 13px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:8px;`)}>
-<div style={css(`width:30px; height:30px; border-radius:50%; background:#EAEEFB; color:#003F98; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; overflow:hidden;`)}>{r.initials}</div>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.name}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.email}</div></div>
-{(r.isPoc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6;`)}>SC POC</span></>) : null}
-<button onClick={r.onRemove} aria-label={"Remove reviewer"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
-</div>
-</React.Fragment>))}
-</div>
-</div>
-<div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
-<span style={css(`font-size:11.5px; color:#5A5E66; flex:1;`)}>Pushed plans are visible only to named reviewers.</span>
-<button onClick={closePush} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={doPush} style={css(`height:38px; padding:0 18px; border:none; background:${pushBtnBg}; color:${pushBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${pushCursor};`)}>{pushIsAddOnly ? pushConfirmLabel : ('Push to ' + pushCount + ' reviewers')}</button>
-</div>
-</div>
-</div>
-</>) : null}
 {/* §9 R4 — FULL-SCREEN PLAN DETAIL (opened by the detail icon on a run card) */}
 {(reviewDetail.open) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:90; background:#F4F5F8; display:flex; flex-direction:column;`)}>
@@ -4371,6 +4329,20 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </div>
 </div>
 </>) : null}
+{/* 2026-09-28 — search + filters as a slim full-width bar between the Planner/Scheduler row and
+    the plan-status sections (moved out of the left rail per UI feedback). */}
+{(isAlignTierRLH && isAlignRoutePlanner) ? (<>
+<div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 28px; background:#fff; border-bottom:1px solid #E6EBF2; flex-shrink:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:30px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; width:260px;`)}>
+<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={alignSearch} onInput={onAlignSearch} placeholder={"Search Run ID, Run Name, or SC\u2026"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
+</div>
+<span style={css(`width:1px; height:20px; background:#E6EBF2;`)} />
+<span style={css(`font-size:10.5px; font-weight:700; color:#8E96A3; letter-spacing:0.04em;`)}>FILTER</span>
+{(alignFilterChips || []).map((f, __iAfb) => (<React.Fragment key={__iAfb}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
+{(alignFilterActive) ? (<><button onClick={onClearAlignFilters} style={css(`font-family:inherit; font-size:11px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
+</div>
+</>) : null}
 {/* Coming Soon landing (2026-07-30) — shown for any tier other than RLH. Additive sibling, not a
     wrap, so the existing (riskier-to-touch) content div right below is completely untouched
     structurally — only its own style attribute gets a CSS display toggle. Node Mapping gets its
@@ -4555,18 +4527,6 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 {(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label}</span></button></React.Fragment>))}
 </div>
 </div>
-{/* 2026-09-26 addition (Ops Alignment item 3) — search box + filter chips, same shape as
-    Design Review's own rail. */}
-<div style={css(`padding:0 12px 9px; flex-shrink:0;`)}>
-<div style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
-<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
-<input value={alignSearch} onInput={onAlignSearch} placeholder={"Search Run ID, Run Name, or SC…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
-</div>
-</div>
-<div style={css(`padding:0 12px 9px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; flex-shrink:0;`)}>
-{(alignFilterChips || []).map((f, __i69c) => (<React.Fragment key={__i69c}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
-{(alignFilterActive) ? (<><button onClick={onClearAlignFilters} style={css(`font-family:inherit; font-size:10.5px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
-</div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0;`)}>
 {(alignZoneChips || []).map((z, __i69b) => (<React.Fragment key={__i69b}><button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
@@ -4657,6 +4617,15 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 {(aSel.isFinal) ? (<>
 <div style={css(`display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:12px;`)}>
 <button onClick={aSel.onRunScheduler} title={"Send this plan to Route Scheduler"} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 13px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `background:#003F98;`, `background:#00337D;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Run Scheduler</button>
+</div>
+</>) : null}
+{/* 2026-09-28 addition — +Add Reviewer / Revoke on the plan card itself (was detail page
+    only). Own row, since the existing action row above is gated to showFeedback && !isFinal and
+    would hide both on Pending Feedback plans — exactly where Add Reviewer matters most. */}
+{(aSel.canAddReviewer || aSel.canRevoke) ? (<>
+<div style={css(`display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:10px;`)}>
+{(aSel.canAddReviewer) ? (<><button onClick={aSel.onAddReviewer} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>+ Add Reviewer</button></>) : null}
+{(aSel.canRevoke) ? (<><button onClick={aSel.onRevoke} title={"Reset all feedback and lock the Ops Lead out of this plan"} style={css(`display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`, `background:#FBEAEA;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Revoke</button></>) : null}
 </div>
 </>) : null}
 </div>
@@ -7036,6 +7005,47 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <div style={css(`display:flex; justify-content:flex-end; gap:8px;`)}>
 <button onClick={rateCardModal.onClose} style={css(`height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}>Cancel</button>
 <button onClick={rateCardModal.onSave} style={css(`height:34px; padding:0 16px; border:none; background:#003F98; color:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer;`)}>Save</button>
+</div>
+</div>
+</div>
+</>) : null}
+{/* 2026-09-28 fix — Push to Alignment / Add Reviewer modal moved here, to the global level.
+    It used to live inside the Design Review block, so opening it from Ops Alignment's
+    "+ Add Reviewer" set pushOpen=true with no modal JSX on that screen to show. */}
+{(pushOpen) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:560px; max-width:100%; max-height:90vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{pushModalTitle}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{pushSCname}</div></div>
+<button onClick={closePush} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`padding:20px 22px;`)}>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>SC POCs <span style={css(`font-weight:500; color:#5A5E66;`)}>— from SC Master</span></div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px;`)}>
+{(pocChips || []).map((p, __i62) => (<React.Fragment key={__i62}><button onClick={p.onToggle} style={css(`display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1px solid ${p.bd}; background:${p.bg}; color:${p.fg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:999px; cursor:pointer;`)}>{p.name}</button></React.Fragment>))}
+</div>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Add a reviewer manually</div>
+<div style={css(`display:flex; gap:8px; margin-bottom:20px;`)}>
+<input value={pushName} onInput={onPushName} placeholder={"Name"} style={css(`flex:1; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
+<input value={pushEmail} onInput={onPushEmail} placeholder={"email@valmo.com"} style={css(`flex:1.2; height:38px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none;`)} />
+<button onClick={addManualReviewer} style={css(`height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `background:#EAEEFB;`)} onMouseLeave={(e) => hoverOff(e, `height:38px; padding:0 15px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer; flex-shrink:0;`, `background:#EAEEFB;`)}>Add</button>
+</div>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:9px;`)}>Reviewers <span style={css(`color:#003F98;`)}>({pushCount})</span></div>
+<div style={css(`display:flex; flex-direction:column; gap:7px;`)}>
+{(reviewersList || []).map((r, __i63) => (<React.Fragment key={__i63}>
+<div style={css(`display:flex; align-items:center; gap:11px; padding:9px 13px; background:#FAFBFD; border:1px solid #EEF1F6; border-radius:8px;`)}>
+<div style={css(`width:30px; height:30px; border-radius:50%; background:#EAEEFB; color:#003F98; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; overflow:hidden;`)}>{r.initials}</div>
+<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{r.name}</div><div style={css(`font-size:11px; color:#5A5E66;`)}>{r.email}</div></div>
+{(r.isPoc) ? (<><span style={css(`padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:#EAEEFB; color:#2F4FC6;`)}>SC POC</span></>) : null}
+<button onClick={r.onRemove} aria-label={"Remove reviewer"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+<div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
+<span style={css(`font-size:11.5px; color:#5A5E66; flex:1;`)}>Pushed plans are visible only to named reviewers.</span>
+<button onClick={closePush} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={doPush} style={css(`height:38px; padding:0 18px; border:none; background:${pushBtnBg}; color:${pushBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${pushCursor};`)}>{pushIsAddOnly ? pushConfirmLabel : ('Push to ' + pushCount + ' reviewers')}</button>
 </div>
 </div>
 </div>
@@ -13045,13 +13055,21 @@ class NDCApp extends React.Component {
     const planId = st.pushAddPlanId;
     const plans = d.plans.slice();
     const idx = plans.findIndex(p => p.id === planId);
-    if (idx < 0) { this.setState({ pushOpen: false }); return; }
+    if (idx < 0) { this.setState({ pushOpen: false, pushIsAddOnly: false, pushAddPlanId: null }); return; }
+    // 2026-09-28 fix — the saved list is exactly what the modal shows (was: merged back with the
+    // original list, so removing someone via the ✕ silently did nothing). At least one
+    // reviewer must remain — a pushed plan with nobody assigned has no one to review it.
+    const next = [...new Set(st.pushReviewers || [])];
+    if (next.length === 0) { this.showToast('Keep at least one reviewer on this plan', '#C77B00'); return; }
     const existing = plans[idx].reviewerNames || [];
-    const merged = [...new Set(existing.concat(st.pushReviewers || []))];
-    const added = merged.length - existing.length;
-    plans[idx] = Object.assign({}, plans[idx], { reviewerNames: merged });
+    const added = next.filter(n => existing.indexOf(n) < 0).length;
+    const removed = existing.filter(n => next.indexOf(n) < 0).length;
+    // A removed reviewer's own submission no longer counts toward N/M submitted.
+    const submittedReviewers = (plans[idx].submittedReviewers || []).filter(n => next.indexOf(n) >= 0);
+    plans[idx] = Object.assign({}, plans[idx], { reviewerNames: next, submittedReviewers });
     this.setState({ data: Object.assign({}, d, { plans }), pushOpen: false, pushIsAddOnly: false, pushAddPlanId: null });
-    this.showToast(added > 0 ? ('Added ' + added + ' reviewer' + (added === 1 ? '' : 's') + ' to ' + plans[idx].scCode) : 'No new reviewers to add', added > 0 ? '#128A3E' : '#C77B00');
+    const parts = []; if (added) parts.push(added + ' added'); if (removed) parts.push(removed + ' removed');
+    this.showToast(parts.length ? ('Reviewers updated on ' + plans[idx].scCode + ' \u2014 ' + parts.join(', ')) : 'No reviewer changes', parts.length ? '#128A3E' : '#8E96A3');
   }
   // revokePlan(planId) (2026-09-26 addition, Ops Alignment item 2) — per direct product
   // definition: resets all accumulated feedback and deactivates every Ops Lead action on this
@@ -13066,14 +13084,26 @@ class NDCApp extends React.Component {
     const plan = plans[idx];
     // Reset accumulated feedback: per-row Ops/Planner decisions and remarks, back to a clean
     // Pending state — mirrors the shape a freshly-pushed plan's rows already have.
-    const rows = (plan.rows || []).map(r => Object.assign({}, r, { ops: 'Pending', planner: null, fb: null }));
-    plans[idx] = Object.assign({}, plan, { rows, submittedReviewers: [] });
+    // 2026-09-28 fix — proposedBy is cleared too (it was left behind before, so a revoked plan
+    // still showed "N changes proposed by X" on the Ops Lead's rail card).
+    const rows = (plan.rows || []).map(r => Object.assign({}, r, { ops: 'Pending', planner: null, fb: null, proposedBy: null }));
+    // revokedFrom — the stage the plan was in when revoked, shown as "<Stage> · Revoked".
+    const prevStatus = st.alignStatus[planId] || plan.status;
+    const STAGE_LABEL = { 'Pushed': 'Pending Feedback', 'In Alignment': 'Feedback Received', 'Acknowledged': 'Acknowledged' };
+    plans[idx] = Object.assign({}, plan, { rows, submittedReviewers: [], revokedFrom: STAGE_LABEL[prevStatus] || prevStatus });
     const alignStatus = Object.assign({}, st.alignStatus);
     alignStatus[planId] = 'Revoked';
     // Clear any in-progress per-row Accept/Reject decisions the planner had queued for this plan.
     const alignDecisions = Object.assign({}, st.alignDecisions);
     delete alignDecisions[planId];
-    this.setState({ data: Object.assign({}, d, { plans }), alignStatus, alignDecisions, alignPlanId: null, alignDetailOpen: false, alignFilter: 'Revoked', alignPage: 0 });
+    // 2026-09-28 fix — also clear the Ops Lead side's own live feedback state, which lives
+    // outside plan.rows (per-row decisions, proposed-change payloads, submission record). The
+    // earlier version only reset plan.rows, so "reset all feedback" was only half true.
+    const opsRowDec = Object.assign({}, st.opsRowDec); delete opsRowDec[planId];
+    const opsRowFb = Object.assign({}, st.opsRowFb); delete opsRowFb[planId];
+    const opsSubmitted = Object.assign({}, st.opsSubmitted); delete opsSubmitted[planId];
+    if (this.clearLaneFlagsForPlan) this.clearLaneFlagsForPlan(planId);
+    this.setState({ data: Object.assign({}, d, { plans }), alignStatus, alignDecisions, opsRowDec, opsRowFb, opsSubmitted, alignPlanId: null, alignDetailOpen: false, alignFilter: 'Revoked', alignPage: 0 });
     this.showToast(plan.scCode + ' revoked \u2014 all feedback reset, Ops Lead can no longer act on this plan', '#D14B4B');
   }
   closePush() { this.setState({ pushOpen: false, pushIsAddOnly: false, pushAddPlanId: null }); }
@@ -13379,7 +13409,7 @@ class NDCApp extends React.Component {
         // but only ONE `plans[SC]` object exists at a time — this records WHICH run is the one
         // currently promoted, so each run's own card can show its own correct status instead of
         // every card for the SC showing the same blanket "Pushed" tag.
-        sourceRunId: run.id, finalisedDirect: !!finaliseDirect,
+        sourceRunId: run.id, finalisedDirect: !!finaliseDirect, revokedFrom: null,
         // A re-push restarts the alignment cycle — old submissions no longer apply. Finalise Directly
         // deliberately bypasses the alignment loop by product decision, so it's not a "gap", not a
         // missed submission — treat every assigned reviewer as covered rather than flagging it.
@@ -15335,7 +15365,7 @@ class NDCApp extends React.Component {
       // Finalised or already-Revoked).
       const canAddReviewer = s === 'Pushed' || s === 'In Alignment';
       const canRevoke = s === 'Pushed' || s === 'In Alignment' || s === 'Acknowledged';
-      return { id: p.id, code: p.scCode, name: p.scName, zone: p.zone, designType: 'RLH', submittedLabel: sub + '/' + tot + ' submitted', hasGap, pushedLabel: 'Pushed ' + p.sentDate, pushedBy: p.pushedBy || '—', statusLabel: pl.l, statusBg: pl.bg, statusFg: pl.fg, isLatest, active: p.id === curId, bg: p.id === curId ? '#EAEEFB' : '#fff', bd: p.id === curId ? '#003F98' : '#E6EBF2', showAwaitingAck, showReviewInProgress, showFinalisedDate, finalisedDate,
+      return { id: p.id, code: p.scCode, name: p.scName, zone: p.zone, designType: 'RLH', submittedLabel: sub + '/' + tot + ' submitted', hasGap, pushedLabel: 'Pushed ' + p.sentDate, pushedBy: p.pushedBy || '—', statusLabel: (s === 'Revoked' && p.revokedFrom) ? (p.revokedFrom + ' \u00b7 Revoked') : pl.l, statusBg: pl.bg, statusFg: pl.fg, isLatest, active: p.id === curId, bg: p.id === curId ? '#EAEEFB' : '#fff', bd: p.id === curId ? '#003F98' : '#E6EBF2', showAwaitingAck, showReviewInProgress, showFinalisedDate, finalisedDate,
         pending, canOpen: !pending, rowCursor: 'pointer',
         canAddReviewer, onAddReviewer: () => this.openAddReviewer(p.id),
         canRevoke, onRevoke: () => this.revokePlan(p.id),
@@ -15739,7 +15769,7 @@ class NDCApp extends React.Component {
         scCoords: plan.rows[0] ? (Number(plan.rows[0].oLat).toFixed(4) + ', ' + Number(plan.rows[0].oLng).toFixed(4)) : '—',
         inputNodes: fmtInt(inputNodes), inputVolume: fmtInt(inputVolume), inputScCoords, inputVehArr, inputVehTotal: plan.rows.length,
         hwLabel: hwLabelOfA(plan.hw), hwTag: HWTAG_A[plan.hw],
-        statusLabel: STPILL[ps].l, statusBg: STPILL[ps].bg, statusFg: STPILL[ps].fg,
+        statusLabel: (ps === 'Revoked' && plan.revokedFrom) ? (plan.revokedFrom + ' \u00b7 Revoked') : STPILL[ps].l, statusBg: STPILL[ps].bg, statusFg: STPILL[ps].fg,
         hasDistanceVariance: distanceVarianceEntries.length > 0, distanceVarianceCount: distanceVariancePendingCount, distanceVarianceEntries,
         planFlags, hasPlanFlags: planFlags.length > 0, noPlanFlags: planFlags.length === 0,
         finalWarnings: finalWarningsMsgs, finalWarningsCount: finalWarningsMsgs.length,
@@ -16505,7 +16535,7 @@ class NDCApp extends React.Component {
       const status = opsStatusOf(p);
       const isLatest = p.id === latestOpsId && !curId;
       const reminded = !!((st.remindedPlans || {})[p.id]) && !sub;
-      return { id: p.id, code: p.scCode, name: p.scName, zone: p.zone, status, isLatest, active: p.id === curId, bg: p.id === curId ? '#EAEEFB' : '#fff', bd: p.id === curId ? '#003F98' : '#E6EBF2', progress: Math.round(done / p.rows.length * 100) + '%', statusLabel: status, statusBg: SP[status].bg, statusFg: SP[status].fg, hasProp: propN > 0 && !sub, propLabel: propN + ' change' + (propN === 1 ? '' : 's') + ' proposed' + (coRev ? ' by ' + coRev.split(' ')[0] : ''), submitted: sub, submittedRecord: sub ? ('Submitted by ' + subBy + (subAt ? ' · ' + subAt : '')) : '', reminded, onClick: () => this.setState({ opsPlanId: p.id, opsDetailOpen: false }) };
+      return { id: p.id, code: p.scCode, name: p.scName, zone: p.zone, status, isLatest, active: p.id === curId, bg: p.id === curId ? '#EAEEFB' : '#fff', bd: p.id === curId ? '#003F98' : '#E6EBF2', progress: Math.round(done / p.rows.length * 100) + '%', statusLabel: (status === 'Revoked' && p.revokedFrom) ? (p.revokedFrom + ' \u00b7 Revoked') : status, statusBg: SP[status].bg, statusFg: SP[status].fg, hasProp: propN > 0 && !sub && status !== 'Revoked', propLabel: propN + ' change' + (propN === 1 ? '' : 's') + ' proposed' + (coRev ? ' by ' + coRev.split(' ')[0] : ''), submitted: sub, submittedRecord: sub ? ('Submitted by ' + subBy + (subAt ? ' · ' + subAt : '')) : '', reminded, onClick: () => this.setState({ opsPlanId: p.id, opsDetailOpen: false }) };
     });
     // Reviewer states — To Review / Submitted / Acknowledged / Finalised (plan-lifecycle-tied, see opsStatusOf).
     const opsCnt = (s) => allOpsPlans.filter(p => p.status === s).length;
@@ -16698,7 +16728,7 @@ class NDCApp extends React.Component {
         onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, (r.isCoLoadLane ? '\u2014' : r.rtDist), (r.isCoLoadLane ? '\u2014' : r.breakdownTat), r.outCutoff, r.volume, (r.isCoLoadLane ? '\u2014' : (Math.round(r.util * 100) + '%')), (r.isCoLoadLane ? '\u2014' : r.cps.toFixed(2))].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
         onDownloadCsv: () => { const head = 'Route,Vehicle,Touch Points,Round-Trip Dist (km),Breakdown TAT (h),Out Cutoff,Volume,Utilisation,CPS\n'; const body = plan.rows.map(r => [r.routeCode, r.veh, r.tp, (r.isCoLoadLane ? '\u2014' : r.rtDist), (r.isCoLoadLane ? '\u2014' : r.breakdownTat), r.outCutoff, r.volume, (r.isCoLoadLane ? '\u2014' : (Math.round(r.util * 100) + '%')), (r.isCoLoadLane ? '\u2014' : r.cps.toFixed(2))].join(',')).join('\n'); this.downloadText(plan.scCode + '-plan.csv', head + body); this.showToast('CSV downloaded \u00b7 ' + plan.rows.length + ' routes', '#128A3E'); },
         rows, alignedN, ncN, pendN, rowCount: rows.length, allReviewed: pendN === 0, reviewLabel: (rows.length - pendN) + ' / ' + rows.length + ' reviewed',
-        hasProp: oProp > 0 && !submitted, propN: oProp, propSummary: (propByNames.join(' & ') || 'A co-reviewer') + ' proposed ' + oProp + ' change' + (oProp === 1 ? '' : 's') + ' on this plan', coReviewerLabel, hasCoReviewers: coReviewerLabel.length > 0,
+        hasProp: oProp > 0 && !submitted && planStatus !== 'Revoked', propN: oProp, propSummary: (propByNames.join(' & ') || 'A co-reviewer') + ' proposed ' + oProp + ' change' + (oProp === 1 ? '' : 's') + ' on this plan', coReviewerLabel, hasCoReviewers: coReviewerLabel.length > 0,
         submittedRecord: submitted ? ('Submitted by ' + subBySel + (subAtSel ? ' · ' + subAtSel : '')) : '',
         metrics: [{ label: 'Routes', value: plan.metrics.routes }, { label: 'Vehicles', value: plan.metrics.vehicles }, { label: 'CPS', value: '\u20b9' + plan.metrics.cps.toFixed(2) }, { label: 'Coverage', value: pct(plan.metrics.coverage) }, { label: 'Distance', value: plan.metrics.distance.toLocaleString('en-IN') + ' km' }, { label: 'Avg TAT', value: plan.metrics.avgTat + 'h' }],
         mixArr, routeViewRows: oRouteViewRows, dcViewRows: oDcViewRows, dcGroupHeaders: oDcGroupHeaders, secDetails: sec === 'details', secRoute: sec === 'route',

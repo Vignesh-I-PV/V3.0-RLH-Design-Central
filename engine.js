@@ -688,9 +688,17 @@ function materializeRLHScs(store, cycleMonth) {
       // Rate Card (point 2, 2026-09-16) — MG (Minimum Guarantee) + shipment-volume slab table,
       // same Class D mechanism as Operating Hours above. {mg:0, slabs:[]} default = nothing set
       // yet, shown as a genuine empty state rather than invented numbers.
-      rateCard: d.rateCard || { mg: 0, slabs: [] },
+      rateCard: d.rateCard || { mg: 0, mgThreshold: null, slabs: [] },
       hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
       pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
+      // Central POCs (2026-09-18, item 4) — LH CT-1/-2, Biz Fin CT-1/-2. People who look after
+      // ALL SCs, kept as a separate named object from `pocs` above (which is positional/SC-own-
+      // chain-specific) — same Class D mechanism, no schema declaration needed (see setClassD
+      // Field's own signature), but this materializer DOES explicitly whitelist exposed fields,
+      // so a new top-level Class D field has to be added here too, unlike a new key nested
+      // inside an already-whitelisted object like rateCard above. Caught by checking this
+      // function directly rather than assuming "no engine-level changes needed" held for both.
+      centralPocs: d.centralPocs || { lhCt1: '', lhCt2: '', bizFinCt1: '', bizFinCt2: '' },
       // 2026-08-26 — real dispatch-role facts, exposed for the SC Master screen's SC TYPE column
       // (now derived from these, not a dcCount-size guess) and for filtering RLH/NLH's own SC
       // Vehicle Availability screens to the SCs that actually dispatch that leg.

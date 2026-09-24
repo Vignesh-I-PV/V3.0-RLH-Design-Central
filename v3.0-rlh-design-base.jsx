@@ -3323,8 +3323,25 @@ NLH cycle: {schedNlhMonthLabel}
 <span style={css(`font-size:11px; color:#5A5E66;`)}>{reviewShown} of {reviewTotal}</span>
 </>) : null}
 </div>
+{/* 2026-09-26 addition (item 3) — a real search input: the binding (reviewSearch/
+    onReviewSearch) already existed and already matched Run ID + SC code/name, but was never
+    actually placed in the JSX — no search box rendered anywhere on this rail. Extended to also
+    match Run Name (see listSCs above) while adding the box itself. */}
+<div style={css(`padding:0 12px 9px;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
+<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={reviewSearch} onInput={onReviewSearch} placeholder={"Search Run ID, Run Name, or SC…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
+</div>
+</div>
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap;`)}>
 {(reviewZoneChips || []).map((z, __i57) => (<React.Fragment key={__i57}><button onClick={z.onClick} style={css(`border:1px solid ${z.bd}; background:${z.bg}; color:${z.fg}; font-family:inherit; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; cursor:pointer;`)}>{z.label}</button></React.Fragment>))}
+</div>
+{/* 2026-09-26 addition (items 4/5) — global multi-select filter chips. Global means these ALSO
+    drive the SC rail above (an SC with no matching run disappears entirely, not just its runs)
+    — both reviewList and planCards already read the same matchesReviewFilters predicate. */}
+<div style={css(`padding:0 12px 10px; display:flex; align-items:center; gap:5px; flex-wrap:wrap;`)}>
+{(reviewFilterChips || []).map((f, __i57f) => (<React.Fragment key={__i57f}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
+{(reviewFilterActive) ? (<><button onClick={onClearReviewFilters} style={css(`font-family:inherit; font-size:10.5px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
 </div>
 <div style={css(`flex:1; overflow-y:auto; padding:0 10px 12px;`)}>
 {/* In-flight section removed per product decision -- the rail now just lists completed runs. */}
@@ -3396,11 +3413,13 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:13.5px; font-weight:700; color:#003F98;`)}>{c.runId}</span>
+<span style={css(`font-size:13.5px; font-weight:700; color:#003F98;`)}>{c.runName || c.runId}</span>
 {(c.pushed) ? (<><span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.pushedTagBg}; color:${c.pushedTagFg};`)}>{c.pushedTag}</span></>) : null}
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#EAEEFB; color:#2F4FC6;`)}>{c.hwLabel} · {c.hwTag}</span>
 </div>
-<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>Triggered {c.triggeredAt} · {c.triggeredBy}</div>
+{/* 2026-09-26 addition (item 3) — Run ID (system-generated) shown as its own line, separate
+    from Run Name above — matches production's two-tag layout. */}
+<div style={css(`font-size:10.5px; color:#8E96A3; margin-top:3px;`)}>{c.runId} · Triggered {c.triggeredAt} · {c.triggeredBy}</div>
 </div>
 <div style={css(`display:flex; gap:6px; flex-shrink:0;`)}>
 <button onClick={c.onMap} aria-label={"Open this run on the map"} title={"View routes on map"} style={css(`display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:1px solid #E6EBF2; border-radius:7px; background:#fff; cursor:pointer; color:#5A5E66;`, `border-color:#003F98; color:#003F98; background:#F3F7FE;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -3469,7 +3488,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
 <div style={css(`width:560px; max-width:100%; max-height:90vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #E6EBF2;`)}>
-<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Push to Ops Alignment</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{pushSCname}</div></div>
+<div><div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>{pushModalTitle}</div><div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{pushSCname}</div></div>
 <button onClick={closePush} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`padding:20px 22px;`)}>
@@ -3498,7 +3517,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
 <span style={css(`font-size:11.5px; color:#5A5E66; flex:1;`)}>Pushed plans are visible only to named reviewers.</span>
 <button onClick={closePush} style={css(`height:38px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={doPush} style={css(`height:38px; padding:0 18px; border:none; background:${pushBtnBg}; color:${pushBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${pushCursor};`)}>Push to {pushCount} reviewers</button>
+<button onClick={doPush} style={css(`height:38px; padding:0 18px; border:none; background:${pushBtnBg}; color:${pushBtnFg}; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${pushCursor};`)}>{pushIsAddOnly ? pushConfirmLabel : ('Push to ' + pushCount + ' reviewers')}</button>
 </div>
 </div>
 </div>
@@ -3599,6 +3618,35 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 </>) : null}
 {(reviewDetail.secRoute) ? (<>
+{/* 2026-09-26 addition (item 1) — Skipped DCs shown first, above the routes list, only when
+    coverage < 100%. */}
+{(reviewDetail.hasSkippedDcs) ? (<>
+<div style={css(`margin-bottom:16px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
+<svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>Skipped DCs \u2014 {reviewDetail.skippedDcCount} unserved</span>
+</div>
+<div style={css(`overflow-x:auto; margin-bottom:6px;`)}>
+<div style={css(`min-width:600px; border:1px solid #F0C9C9; border-radius:8px; overflow:hidden;`)}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; background:#FBEAEA;`)}>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>DC CODE</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em; text-align:right;`)}>PLANNED VOLUME</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>REASON SKIPPED</div>
+<div style={css(`padding:9px 12px; font-size:10px; font-weight:700; color:#8A4B4B; letter-spacing:0.04em;`)}>COORDINATES</div>
+</div>
+{(reviewDetail.skippedDcRows || []).map((sk, __i67s) => (<React.Fragment key={__i67s}>
+<div style={css(`display:grid; grid-template-columns:1.2fr 0.9fr 1.6fr 1fr; border-top:1px solid #F5DADA; background:#fff;`)}>
+<div style={css(`padding:9px 12px; font-size:12px; font-weight:600; color:#D14B4B;`)}>{sk.lmdc}</div>
+<div style={css(`padding:9px 12px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums;`)}>{sk.designVol}</div>
+<div style={css(`padding:9px 12px; font-size:12px; color:#5A5E66;`)}>{sk.reason}</div>
+<div style={css(`padding:9px 12px; font-size:11.5px; color:#8E96A3; font-variant-numeric:tabular-nums;`)}>{sk.lat}, {sk.lng}</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+</div>
+<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-bottom:8px;`)}>Routes \u2014 {reviewDetail.skippedDcCount ? 'coverage achieved' : 'all routes'}</div>
+</>) : null}
 <div style={css(`overflow-x:auto;`)}>
 <div style={css(`min-width:820px;`)}>
 <div style={css(`display:grid; grid-template-columns:1.1fr 0.9fr 0.9fr 1fr 1.1fr 0.9fr 0.9fr; background:#E6EBF2;`)}>
@@ -4474,11 +4522,25 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 {(alignIsL1) ? (<>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
 {/* 2026-08-03 — 2x2 icon grid (Pending/Received top row, Acknowledged/Finalised bottom row)
-    replaces the old 1-row-of-4 flex:1 strip, which truncated every label. */}
+    replaces the old 1-row-of-4 flex:1 strip, which truncated every label. 2026-09-26 — switched
+    to auto-fit so a 5th tile (Revoked) sits cleanly rather than leaving 1 orphaned tile on a
+    3rd row of a hardcoded 2-column grid. */}
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
-<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
 {(alignFilterSeg || []).map((fs, __i69) => (<React.Fragment key={__i69}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label}</span></button></React.Fragment>))}
 </div>
+</div>
+{/* 2026-09-26 addition (Ops Alignment item 3) — search box + filter chips, same shape as
+    Design Review's own rail. */}
+<div style={css(`padding:0 12px 9px; flex-shrink:0;`)}>
+<div style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; background:#fff;`)}>
+<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
+<input value={alignSearch} onInput={onAlignSearch} placeholder={"Search Run ID, Run Name, or SC…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; flex:1; min-width:0;`)} />
+</div>
+</div>
+<div style={css(`padding:0 12px 9px; display:flex; align-items:center; gap:5px; flex-wrap:wrap; flex-shrink:0;`)}>
+{(alignFilterChips || []).map((f, __i69c) => (<React.Fragment key={__i69c}><button onClick={f.onClick} style={css(`border:1px solid ${f.active ? '#003F98' : '#E6EBF2'}; background:${f.active ? '#EAEEFB' : '#fff'}; color:${f.active ? '#003F98' : '#5A5E66'}; font-family:inherit; font-size:10.5px; font-weight:600; padding:4px 9px; border-radius:999px; cursor:pointer;`)}>{f.label}</button></React.Fragment>))}
+{(alignFilterActive) ? (<><button onClick={onClearAlignFilters} style={css(`font-family:inherit; font-size:10.5px; color:#8E96A3; background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:2px; padding:4px 2px;`)}>Clear</button></>) : null}
 </div>
 {/* zone-chip row — mirrors Design Review's zone filter */}
 <div style={css(`padding:0 12px 10px; display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0;`)}>
@@ -4589,6 +4651,11 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <div style={css(`flex:1;`)} />
 {(aSel.canPlanSim) ? (<><button onClick={aSel.onPlanSim} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #2F4FC6; background:${aSel.planSimBtnBg}; color:${aSel.planSimBtnFg}; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M13 2L3 14h9l-1 8 10-12h-9l1-8z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{aSel.planSimBtnLabel}</button></>) : null}
 <button onClick={aSel.onMapView} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Map view</button>
+{/* 2026-09-26 addition (Ops Alignment items 1/2) — +Add Reviewer (Pending Feedback / Feedback
+    Received only) and Revoke (any state short of Finalised/already-Revoked), placed alongside
+    the card's other actions rather than a separate menu. */}
+{(aSel.canAddReviewer) ? (<><button onClick={aSel.onAddReviewer} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>+ Add Reviewer</button></>) : null}
+{(aSel.canRevoke) ? (<><button onClick={aSel.onRevoke} title={"Reset all feedback and lock the Ops Lead out of this plan"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#FBEAEA;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#FBEAEA;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Revoke</button></>) : null}
 {(aSel.isFinal) ? (<><button onClick={aSel.onDownloadCsv} aria-label={"Download CSV"} title={"Download CSV"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#003F98; color:#003F98;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button><button onClick={aSel.onRunScheduler} title={"Send this plan to Route Scheduler"} style={css(`display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `background:#003F98;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Run Scheduler</button></>) : null}
 <button onClick={aSel.backToCards} aria-label={"Close detail"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; color:#5A5E66;`)}><svg width={"17"} height={"17"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
@@ -5539,7 +5606,7 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 {(opsIsL1) ? (<>
 <aside style={css(`width:300px; flex-shrink:0; border-right:1px solid #E6EBF2; background:#fff; display:flex; flex-direction:column; min-height:0;`)}>
 <div style={css(`padding:12px 12px 8px; flex-shrink:0;`)}>
-<div style={css(`display:grid; grid-template-columns:repeat(2,1fr); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
+<div style={css(`display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:4px; background:#F2F5FA; border-radius:8px; padding:3px;`)}>
 {(opsFilterSeg || []).map((fs, __i90) => (<React.Fragment key={__i90}><button onClick={fs.onClick} title={fs.label} style={css(`display:flex; align-items:center; justify-content:center; gap:5px; min-height:32px; padding:5px 4px; border:none; border-radius:6px; background:${fs.active ? '#003F98' : 'transparent'}; color:${fs.fg}; font-family:inherit; font-size:10.5px; line-height:1.2; font-weight:${fs.weight}; cursor:pointer; text-align:center;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={fs.icon} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span>{fs.label}</span></button></React.Fragment>))}
 </div>
 </div>
@@ -7899,7 +7966,17 @@ class NDCApp extends React.Component {
       // solver-chosen mix. Keep it to the types with a positive count for a tidy card line.
       const vehInput = vehByType.filter(v => v.n > 0).map(v => v.short + ' ×' + v.n);
       const triggeredBy = PLANNERS[runNo % PLANNERS.length];
-      return { id: sc.code + '-HW' + String(hw).replace('.', '_') + (suffix || ''), runId: 'RUN-' + sc.code + '-' + String(runNo).padStart(2, '0'),
+      // 2026-09-26 addition (item 3) — Run Name: a real, separate field from Run ID, matching
+      // production (Run ID system-generated, Run Name is what the planner typed into Design
+      // Creation's own Run Name field at trigger time — st.runName). Seed data needs a plausible
+      // name per run since these are pre-seeded, not live-triggered; a live session's own
+      // triggerRuns() now also captures st.runName onto new runQueue entries (see triggerRuns()),
+      // though note (flagged, not fixed) that a completed runQueue entry was already, and still
+      // is, never actually appended into d.runs — Design Review's own data source — so a run
+      // triggered live in this prototype won't show up here at all, seeded or not. That's a
+      // real, pre-existing gap independent of this addition.
+      const runName = sc.code + '_' + (suffix ? 'r' + runNo : ['test', 'batch', 'run', 'plan'][runNo % 4]) + '_' + PLANNERS[runNo % PLANNERS.length].split(' ')[0].slice(0, 4).toLowerCase();
+      return { id: sc.code + '-HW' + String(hw).replace('.', '_') + (suffix || ''), runId: 'RUN-' + sc.code + '-' + String(runNo).padStart(2, '0'), runName,
         runNo, triggeredAt: RUNDATES[(runNo - 1) % RUNDATES.length], triggeredBy, scCode: sc.code, scName: sc.name, zone: sc.zone, hw, status: 'Completed',
         coverage, cps, util, routes, vehicles, vehByType, vehInput, distance, cost: Math.round(sc.volume * cps), avgTat, avgTP: +avgTP.toFixed(1),
         routeMatch: ri(matchBand[0], matchBand[1]), flags, dcCount: sc.dcCount, volume: sc.volume };
@@ -11136,7 +11213,13 @@ class NDCApp extends React.Component {
     // Merge with the existing queue so parallel batches ACCUMULATE (a re-triggered SC resets its own entry).
     // In-Progress slots are (re)assigned across the whole merged set, capped at CONCURRENCY; the rest wait as Queued.
     const _kept = (this.state.runQueue || []).filter(r => codes.indexOf(r.scCode) < 0);
-    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0 })));
+    // 2026-09-26 addition (item 3) — captures the planner's own Run Name (Step 4's existing
+    // st.runName field) onto each queued run. Flagged: this only reaches runQueue, not d.runs
+    // (Design Review's real data source, still pre-seeded/static — see the mkRun() comment) —
+    // so a live-triggered run's name has nowhere to actually surface yet. Wired anyway so the
+    // field is captured correctly the moment that gap is closed, rather than adding a second gap.
+    const _runNameNow = this.state.runName || '';
+    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0, runName: _runNameNow })));
     let _active = _merged.filter(r => r.status === 'In Progress').length;
     for (let i = 0; i < _merged.length && _active < CONCURRENCY; i++) { if (_merged[i].status === 'Queued') { _merged[i].status = 'In Progress'; _merged[i].ticks = 0; _active++; } }
     this.setState({ runQueue: _merged, creationStep: 4 });
@@ -12846,8 +12929,55 @@ class NDCApp extends React.Component {
     };
   }
 
-  openPush(code, runId) { const sc = this.state.data.scs.find(s => s.code === code); this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [...new Set(sc.pocs)].slice(0, 2), pushName: '', pushEmail: '' }); }
-  closePush() { this.setState({ pushOpen: false }); }
+  openPush(code, runId) { const sc = this.state.data.scs.find(s => s.code === code); this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [...new Set(sc.pocs)].slice(0, 2), pushName: '', pushEmail: '', pushIsAddOnly: false }); }
+  // openAddReviewer(planId) (2026-09-26 addition, Ops Alignment item 1) — same modal UI as
+  // openPush() (pushOpen/pushReviewers/pushName/pushEmail — same input fields, same chip
+  // picker), but pre-seeds pushReviewers with the plan's OWN already-assigned reviewers (so
+  // adding one doesn't silently drop the others) and flags pushIsAddOnly so the confirm button
+  // calls addReviewersToPlan() below instead of the full doPush() — a +Add Reviewer action must
+  // never rebuild rows, reset submittedReviewers, or touch status the way a real re-push does.
+  openAddReviewer(planId) {
+    const plan = this.state.data.plans.find(p => p.id === planId);
+    if (!plan) return;
+    this.setState({ pushOpen: true, pushSCcode: plan.scCode, pushRunId: plan.sourceRunId || null, pushReviewers: (plan.reviewerNames || []).slice(), pushName: '', pushEmail: '', pushIsAddOnly: true, pushAddPlanId: planId });
+  }
+  addReviewersToPlan() {
+    const st = this.state, d = st.data;
+    const planId = st.pushAddPlanId;
+    const plans = d.plans.slice();
+    const idx = plans.findIndex(p => p.id === planId);
+    if (idx < 0) { this.setState({ pushOpen: false }); return; }
+    const existing = plans[idx].reviewerNames || [];
+    const merged = [...new Set(existing.concat(st.pushReviewers || []))];
+    const added = merged.length - existing.length;
+    plans[idx] = Object.assign({}, plans[idx], { reviewerNames: merged });
+    this.setState({ data: Object.assign({}, d, { plans }), pushOpen: false, pushIsAddOnly: false, pushAddPlanId: null });
+    this.showToast(added > 0 ? ('Added ' + added + ' reviewer' + (added === 1 ? '' : 's') + ' to ' + plans[idx].scCode) : 'No new reviewers to add', added > 0 ? '#128A3E' : '#C77B00');
+  }
+  // revokePlan(planId) (2026-09-26 addition, Ops Alignment item 2) — per direct product
+  // definition: resets all accumulated feedback and deactivates every Ops Lead action on this
+  // plan — the Ops Lead can no longer submit feedback or make any change here. Re-pushing (via
+  // Design Review's own Push to Alignment) is the only way out, which already works unmodified
+  // since doPush() doesn't gate on the plan's prior alignStatus before allowing a fresh push.
+  revokePlan(planId) {
+    const st = this.state, d = st.data;
+    const plans = d.plans.slice();
+    const idx = plans.findIndex(p => p.id === planId);
+    if (idx < 0) return;
+    const plan = plans[idx];
+    // Reset accumulated feedback: per-row Ops/Planner decisions and remarks, back to a clean
+    // Pending state — mirrors the shape a freshly-pushed plan's rows already have.
+    const rows = (plan.rows || []).map(r => Object.assign({}, r, { ops: 'Pending', planner: null, fb: null }));
+    plans[idx] = Object.assign({}, plan, { rows, submittedReviewers: [] });
+    const alignStatus = Object.assign({}, st.alignStatus);
+    alignStatus[planId] = 'Revoked';
+    // Clear any in-progress per-row Accept/Reject decisions the planner had queued for this plan.
+    const alignDecisions = Object.assign({}, st.alignDecisions);
+    delete alignDecisions[planId];
+    this.setState({ data: Object.assign({}, d, { plans }), alignStatus, alignDecisions, alignPlanId: null, alignDetailOpen: false, alignFilter: 'Revoked', alignPage: 0 });
+    this.showToast(plan.scCode + ' revoked \u2014 all feedback reset, Ops Lead can no longer act on this plan', '#D14B4B');
+  }
+  closePush() { this.setState({ pushOpen: false, pushIsAddOnly: false, pushAddPlanId: null }); }
   togglePushReviewer(n) { const cur = this.state.pushReviewers.slice(); const i = cur.indexOf(n); i >= 0 ? cur.splice(i, 1) : cur.push(n); this.setState({ pushReviewers: cur }); }
   addManualReviewer() { const n = (this.state.pushName || '').trim(); if (!n) return; const cur = this.state.pushReviewers.slice(); if (cur.indexOf(n) < 0) cur.push(n); this.setState({ pushReviewers: cur, pushName: '', pushEmail: '' }); }
   removeReviewer(n) { this.setState({ pushReviewers: this.state.pushReviewers.filter(x => x !== n) }); }
@@ -15050,12 +15180,36 @@ class NDCApp extends React.Component {
     // Finalised = terminal state only. This gives every plan exactly one home across the 4 tabs.
     // 2026-07-17 — Acknowledged split out of Feedback Received into its own tab, mirroring the
     // Ops Lead's own 4-stage rail (To Review / Submitted / Acknowledged / Finalised).
-    const FILTERS = ['Pending Feedback', 'Feedback Received', 'Acknowledged', 'Finalised'];
-    const fmap = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised' };
+    const FILTERS = ['Pending Feedback', 'Feedback Received', 'Acknowledged', 'Finalised', 'Revoked'];
+    const fmap = { 'Pending Feedback': 'Pushed', 'Feedback Received': 'In Alignment', 'Acknowledged': 'Acknowledged', 'Finalised': 'Finalised', 'Revoked': 'Revoked' };
     const af = st.alignFilter || 'Pending Feedback';
-    const STPILL = { 'Pushed': { l: 'Pending Feedback', bg: '#F2F5FA', fg: '#5A5E66' }, 'In Alignment': { l: 'Feedback Received', bg: '#FBF1DF', fg: '#C77B00' }, 'Acknowledged': { l: 'Acknowledged \u00b7 locked', bg: '#E7F0F8', fg: '#1E6FB8' }, 'Finalised': { l: 'Finalised', bg: '#E7F4EC', fg: '#128A3E' } };
-    const order = { 'In Alignment': 0, 'Acknowledged': 1, 'Pushed': 2, 'Finalised': 3 };
+    const STPILL = { 'Pushed': { l: 'Pending Feedback', bg: '#F2F5FA', fg: '#5A5E66' }, 'In Alignment': { l: 'Feedback Received', bg: '#FBF1DF', fg: '#C77B00' }, 'Acknowledged': { l: 'Acknowledged \u00b7 locked', bg: '#E7F0F8', fg: '#1E6FB8' }, 'Finalised': { l: 'Finalised', bg: '#E7F4EC', fg: '#128A3E' }, 'Revoked': { l: 'Revoked', bg: '#FBEAEA', fg: '#D14B4B' } };
+    const order = { 'In Alignment': 0, 'Acknowledged': 1, 'Pushed': 2, 'Finalised': 3, 'Revoked': 4 };
     let listPlans = plans.filter(p => eff(p) === fmap[af]).slice().sort((a, b) => order[eff(a)] - order[eff(b)]);
+    // 2026-09-26 addition (Ops Alignment item 3) — same filter view as Design Review: the
+    // Coverage=100%/HW multi-select chips + search by Run ID/Run Name, ported as-is (same
+    // predicate shape) rather than a differently-behaving lookalike. Run ID/Run Name aren't
+    // stored on the plan directly, so resolved via sourceRunId back into d.runs, same as
+    // everywhere else in this codebase that needs a plan's originating run.
+    const planRunInfo = (p) => (p.sourceRunId && d.runs.find(r => r.id === p.sourceRunId)) || d.runs.find(r => r.scCode === p.scCode) || {};
+    const ALIGN_FILTER_OPTS = [['cov100', 'Coverage = 100%'], ['hw0', 'HW = 0'], ['hw05', 'HW = 0.5'], ['hw1', 'HW = 1']];
+    const alignFilterSet = st.alignFilters || {};
+    const alignFilterActive = Object.keys(alignFilterSet).some(k => alignFilterSet[k]);
+    const matchesAlignFilters = (p) => {
+      if (!alignFilterActive) return true;
+      const hwKeys = [];
+      if (alignFilterSet.hw0) hwKeys.push(0);
+      if (alignFilterSet.hw05) hwKeys.push(0.5);
+      if (alignFilterSet.hw1) hwKeys.push(1);
+      const hwOk = hwKeys.length === 0 || hwKeys.indexOf(p.hw) >= 0;
+      const covOk = !alignFilterSet.cov100 || (p.metrics && p.metrics.coverage >= 0.999);
+      return hwOk && covOk;
+    };
+    listPlans = listPlans.filter(matchesAlignFilters);
+    const alignQ = (st.alignSearch || '').toLowerCase();
+    if (alignQ) {
+      listPlans = listPlans.filter(p => { const ri = planRunInfo(p); return p.scCode.toLowerCase().indexOf(alignQ) >= 0 || (p.scName || '').toLowerCase().indexOf(alignQ) >= 0 || (ri.runId || '').toLowerCase().indexOf(alignQ) >= 0 || (ri.runName || '').toLowerCase().indexOf(alignQ) >= 0; });
+    }
     // 2026-07-10 — zone filter, mirroring Design Review's zone-chip row, applied after the status filter.
     const alignZone = st.alignZone || 'All';
     listPlans = listPlans.filter(p => alignZone === 'All' || p.zone === alignZone);
@@ -15077,8 +15231,15 @@ class NDCApp extends React.Component {
       // A Pending-Feedback (Pushed) plan has no feedback yet, so its L2 detail is an empty "waiting" page —
       // make those rows non-navigable (no chevron, no drill-in) and offer Nudge inline instead.
       const pending = s === 'Pushed';
+      // 2026-09-26 addition (Ops Alignment items 1/2) — +Add Reviewer (Pending Feedback /
+      // Feedback Received only, per direct instruction) and Revoke (any state short of
+      // Finalised or already-Revoked).
+      const canAddReviewer = s === 'Pushed' || s === 'In Alignment';
+      const canRevoke = s === 'Pushed' || s === 'In Alignment' || s === 'Acknowledged';
       return { id: p.id, code: p.scCode, name: p.scName, zone: p.zone, designType: 'RLH', submittedLabel: sub + '/' + tot + ' submitted', hasGap, pushedLabel: 'Pushed ' + p.sentDate, pushedBy: p.pushedBy || '—', statusLabel: pl.l, statusBg: pl.bg, statusFg: pl.fg, isLatest, active: p.id === curId, bg: p.id === curId ? '#EAEEFB' : '#fff', bd: p.id === curId ? '#003F98' : '#E6EBF2', showAwaitingAck, showReviewInProgress, showFinalisedDate, finalisedDate,
         pending, canOpen: !pending, rowCursor: 'pointer',
+        canAddReviewer, onAddReviewer: () => this.openAddReviewer(p.id),
+        canRevoke, onRevoke: () => this.revokePlan(p.id),
         onClick: () => this.setState({ alignPlanId: p.id, pgRoutes: 1, alignDetailOpen: false }),
         onNudgeRow: () => { const rp = Object.assign({}, this.state.remindedPlans || {}); rp[p.id] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + ((p.reviewerNames || []).join(', ') || 'the reviewers'), '#1E6FB8'); } }; });
 
@@ -15088,13 +15249,16 @@ class NDCApp extends React.Component {
     const hasPlansInList = listPlans.length > 0;
     let aSel = { exists: false, empty: !hasPlansInList, unselected: hasPlansInList && !curId, routesPager: { showPager: false, pageButtons: [] } };
     // Rail filter segment (replaces the old top Tier-2 filter tab-strip for Ops Alignment).
-    const PSEG = [['Pending Feedback', 'Pending'], ['Feedback Received', 'Received'], ['Acknowledged', 'Acknowledged'], ['Finalised', 'Finalised']];
+    const PSEG = [['Pending Feedback', 'Pending'], ['Feedback Received', 'Received'], ['Acknowledged', 'Acknowledged'], ['Finalised', 'Finalised'], ['Revoked', 'Revoked']];
     const segCount = (label) => plans.filter(p => eff(p) === fmap[label]).length;
     // 2026-08-03 — ICON_FOR + the 2x2 grid layout (Pending/Received top row, Acknowledged/Finalised
     // bottom row) replace the old 1-row-of-4 flex:1 strip, which truncated every label ("Pendin...",
     // "Receive..." etc. per product feedback). Same icon set + layout now used on RLH's Ops Lead view
     // and both Route Scheduler personas, for cross-tab synchrony.
-    const ICON_FOR = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
+    // 2026-09-26 addition — Revoked icon added (a circular-arrow "undo" glyph), same 5th-tile
+    // pattern rather than reflowing the existing 2x2 grid into something the icon set wasn't
+    // designed for.
+    const ICON_FOR = { 'Pending Feedback': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Feedback Received': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5', 'Revoked': 'M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5' };
     const alignFilterSeg = PSEG.map(t => ({ label: t[0], short: t[1], count: segCount(t[0]), active: af === t[0], icon: ICON_FOR[t[0]],
       bg: af === t[0] ? '#003F98' : 'transparent', fg: af === t[0] ? '#fff' : '#5A5E66', weight: af === t[0] ? '700' : '600',
       onClick: () => this.setState({ alignFilter: t[0], alignPage: 0, pgRoutes: 1, alignPlanId: null, alignDetailOpen: false }) }));
@@ -15485,6 +15649,12 @@ class NDCApp extends React.Component {
         reviewProgress: opsLeads.filter(o => o.done).length + ' of ' + opsLeads.length + ' submitted', reminded: !!((st.remindedPlans || {})[plan.id]),
         onNudge: () => { const rp = Object.assign({}, this.state.remindedPlans || {}); rp[plan.id] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + (plan.reviewerNames.join(', ') || 'the reviewers'), '#1E6FB8'); },
         isPushed: ps === 'Pushed', showFeedback: ps !== 'Pushed', isAck: ps === 'Acknowledged', isFinal: ps === 'Finalised', locked, notLocked: !locked,
+        // 2026-09-26 addition (Ops Alignment items 1/2) — same eligibility as the rail's own
+        // planList rows (kept in sync deliberately: same condition, not a second copy that could
+        // drift), plus isRevoked for gating Ops Lead's own actions elsewhere.
+        isRevoked: ps === 'Revoked',
+        canAddReviewer: ps === 'Pushed' || ps === 'In Alignment', onAddReviewer: () => this.openAddReviewer(plan.id),
+        canRevoke: ps === 'Pushed' || ps === 'In Alignment' || ps === 'Acknowledged', onRevoke: () => this.revokePlan(plan.id),
         // L3 (plan card) <-> L4 (full plan details) toggle. Selecting a different SC in the rail
         // always drops back to L3 (see planList's onClick); the card's "view detail" icon is the
         // only way into L4, with a "Back to plans" link to return -- same pattern as Design Review's
@@ -15958,6 +16128,11 @@ class NDCApp extends React.Component {
       alignNextPage: () => this.setState({ alignPage: Math.min(alignTotalPages - 1, alignPageSafe + 1) }),
       alignBackToList: () => this.setState({ alignPlanId: null }),
       planList: planList, alignFilterSeg, alignZoneChips, planCount: listPlans.length, aSel, alignClearFilter: () => this.setState({ alignFilter: 'Pending Feedback', alignZone: 'All', alignPage: 0 }),
+      // 2026-09-26 addition (Ops Alignment item 3) — Coverage/HW filter chips + search bindings.
+      alignSearch: st.alignSearch || '', onAlignSearch: (e) => this.setState({ alignSearch: e.target.value, alignPage: 0 }),
+      alignFilterChips: ALIGN_FILTER_OPTS.map(([k, label]) => ({ key: k, label, active: !!alignFilterSet[k],
+        onClick: () => { const f = Object.assign({}, alignFilterSet); f[k] = !f[k]; this.setState({ alignFilters: f, alignPage: 0 }); } })),
+      alignFilterActive, onClearAlignFilters: () => this.setState({ alignFilters: {} }),
       alignTierSeg, alignRlhSubSeg, isAlignRoutePlanner, isAlignRouteScheduler, isAlignTierRLH, isAlignTierNodeMapping, alignTierComingSoonLabel,
       // 2026-07-30 — Ops Lead's tier strip only ever shows RLH and Node Mapping (per Vignesh),
       // unlike the Planner's full 4-tier strip. NLH/FM Carting aren't part of the Ops Lead's
@@ -16190,7 +16365,7 @@ class NDCApp extends React.Component {
     // Keep a plan visible after the Ops Lead submits (it flips Pushed → In Alignment) so the panel retains a
     // record — who submitted, when. D4 — also keep it after the planner acknowledges/finalises: instead of
     // vanishing, a frozen plan stays as a read-only "Locked" record so the POC sees which plans are closed.
-    const assigned = d.plans.filter(p => { const s = st.alignStatus[p.id] || p.status; return s === 'Pushed' || (p.submittedReviewers || []).length > 0 || s === 'Acknowledged' || s === 'Finalised'; });
+    const assigned = d.plans.filter(p => { const s = st.alignStatus[p.id] || p.status; return s === 'Pushed' || (p.submittedReviewers || []).length > 0 || s === 'Acknowledged' || s === 'Finalised' || s === 'Revoked'; });
     const selfName = this.opsPersonaName(); // current acting Ops-Lead persona; co-reviewers = everyone else on the plan
     // Ops-Lead status of a plan (drives the rail filter segment + the card pill).
     // Four states tied directly to plan lifecycle + this reviewer's own submission --
@@ -16198,6 +16373,9 @@ class NDCApp extends React.Component {
     const opsStatusOf = (p) => {
       const sub = (p.submittedReviewers || []).indexOf(selfName) >= 0;
       const eS = (st.alignStatus && st.alignStatus[p.id]) || p.status;
+      // 2026-09-26 addition (Ops Alignment item 2) — checked before Finalised/Acknowledged:
+      // once revoked, that's the plan's status for the Ops Lead regardless of what it was before.
+      if (eS === 'Revoked') return 'Revoked';
       if (eS === 'Finalised') return 'Finalised';
       if (eS === 'Acknowledged') return 'Acknowledged';
       return sub ? 'Submitted' : 'To Review';
@@ -16213,7 +16391,7 @@ class NDCApp extends React.Component {
     const curId = (st.opsPlanId && assigned.some(p => p.id === st.opsPlanId)) ? st.opsPlanId : (filteredAssigned.length > 0 ? filteredAssigned[0].id : null);
     // B — latest plan = first assigned plan (To review sorts to front via status ordering).
     const latestOpsId = assigned.length > 0 ? assigned[0].id : null;
-    const SP = { 'Finalised': { bg: '#E7F4EC', fg: '#128A3E' }, 'Acknowledged': { bg: '#E7F0F8', fg: '#1E6FB8' }, 'Submitted': { bg: '#E7F4EC', fg: '#128A3E' }, 'To Review': { bg: '#F2F5FA', fg: '#5A5E66' } };
+    const SP = { 'Finalised': { bg: '#E7F4EC', fg: '#128A3E' }, 'Acknowledged': { bg: '#E7F0F8', fg: '#1E6FB8' }, 'Submitted': { bg: '#E7F4EC', fg: '#128A3E' }, 'To Review': { bg: '#F2F5FA', fg: '#5A5E66' }, 'Revoked': { bg: '#FBEAEA', fg: '#D14B4B' } };
     const allOpsPlans = assigned.map(p => {
       const sub = (p.submittedReviewers || []).indexOf(selfName) >= 0;
       const subInfo = st.opsSubmitted[p.id];
@@ -16232,8 +16410,8 @@ class NDCApp extends React.Component {
     });
     // Reviewer states — To Review / Submitted / Acknowledged / Finalised (plan-lifecycle-tied, see opsStatusOf).
     const opsCnt = (s) => allOpsPlans.filter(p => p.status === s).length;
-    const OPSFILTERS = ['To Review', 'Submitted', 'Acknowledged', 'Finalised'];
-    const OPS_ICON_FOR = { 'To Review': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Submitted': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5' };
+    const OPSFILTERS = ['To Review', 'Submitted', 'Acknowledged', 'Finalised', 'Revoked'];
+    const OPS_ICON_FOR = { 'To Review': 'M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z', 'Submitted': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z', 'Acknowledged': 'M7 11V8a5 5 0 0110 0v3M5.5 11h13v9.5h-13z', 'Finalised': 'M20 6L9 17l-5-5', 'Revoked': 'M3 12a9 9 0 0115-6.7L21 8M21 3v5h-5' };
     const opsPlans = allOpsPlans.filter(p => p.status === opsFilter && (opsZone === 'All' || p.zone === opsZone));
 
     const plan = d.plans.find(p => p.id === curId);
@@ -16253,7 +16431,10 @@ class NDCApp extends React.Component {
       const subBySel = this.opsPersonaName(); const subAtSel = (subInfoSel && subInfoSel.by === this.opsPersonaName() && subInfoSel.at) || '';
       // KRD §11 — editing locks only when the planner acknowledges; submitted-but-not-acknowledged rows stay editable.
       const planStatus = st.alignStatus[plan.id] || plan.status;
-      const planLocked = planStatus === 'Acknowledged' || planStatus === 'Finalised';
+      // 2026-09-26 addition (Ops Alignment item 2) — Revoked locks editing the same way
+      // Acknowledged/Finalised already do (single planLocked gate feeds every row's editable/
+      // notEditable below, so this one change is enough to deactivate every Ops Lead action).
+      const planLocked = planStatus === 'Acknowledged' || planStatus === 'Finalised' || planStatus === 'Revoked';
       // 2026-07-10 — computed ONCE here, reused for Submit gating, Validate's inline results, and
       // Simulate below, so there's a single source of truth for "what does the current proposed
       // state look like" rather than several independent recomputations that could drift.
@@ -17664,10 +17845,29 @@ class NDCApp extends React.Component {
     // the detail pane lists ALL of that SC's runs in the cycle as separate plan cards (HW is one
     // parameter shown per card). completedRunsFor returns the SC's completed runs in trigger order.
     const completedRunsFor = (code) => d.runs.filter(r => r.scCode === code && r.status === 'Completed').sort((a, b) => (a.runNo || 0) - (b.runNo || 0));
-    const completedSCs = d.scs.filter(s => completedRunsFor(s.code).length >= 1);
+    // 2026-09-26 addition (items 4/5) — global multi-select filter: "Coverage = 100%" and/or
+    // "HW = 0/0.5/1", applied at the RUN level (matchesReviewFilters), then cascaded up to both
+    // the SC rail (an SC only shows if it has ≥1 matching run) and the plan-card list on the
+    // right (only matching runs render) — the same predicate feeds both, so they can never
+    // disagree, per the explicit "these search and filters will be global" instruction.
+    const REVIEW_FILTER_OPTS = [['cov100', 'Coverage = 100%'], ['hw0', 'HW = 0'], ['hw05', 'HW = 0.5'], ['hw1', 'HW = 1']];
+    const reviewFilterSet = st.reviewFilters || {};
+    const reviewFilterActive = Object.keys(reviewFilterSet).some(k => reviewFilterSet[k]);
+    const matchesReviewFilters = (r) => {
+      if (!reviewFilterActive) return true;
+      const hwKeys = [];
+      if (reviewFilterSet.hw0) hwKeys.push(0);
+      if (reviewFilterSet.hw05) hwKeys.push(0.5);
+      if (reviewFilterSet.hw1) hwKeys.push(1);
+      const hwOk = hwKeys.length === 0 || hwKeys.indexOf(r.hw) >= 0;
+      const covOk = !reviewFilterSet.cov100 || r.coverage >= 0.999;
+      return hwOk && covOk;
+    };
+    const completedRunsForFiltered = (code) => completedRunsFor(code).filter(matchesReviewFilters);
+    const completedSCs = d.scs.filter(s => completedRunsForFiltered(s.code).length >= 1);
     const q = (st.reviewSearch || '').toLowerCase();
     const zf = st.reviewZone || 'All';
-    const listSCs = completedSCs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0 || completedRunsFor(s.code).some(r => r.runId.toLowerCase().indexOf(q) >= 0)));
+    const listSCs = completedSCs.filter(s => (zf === 'All' || s.zone === zf) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || s.name.toLowerCase().indexOf(q) >= 0 || completedRunsForFiltered(s.code).some(r => r.runId.toLowerCase().indexOf(q) >= 0 || (r.runName || '').toLowerCase().indexOf(q) >= 0)));
     const curCode = (st.reviewSC && completedSCs.find(s => s.code === st.reviewSC)) ? st.reviewSC : (completedSCs[0] && completedSCs[0].code);
     const curSC = d.scs.find(s => s.code === curCode);
 
@@ -17680,7 +17880,7 @@ class NDCApp extends React.Component {
 
     // Left rail = one entry per SC; dot = worst flag across ALL the SC's runs; the cps slot carries the run count.
     const reviewList = listSCs.map(s => {
-      const rs = completedRunsFor(s.code);
+      const rs = completedRunsForFiltered(s.code);
       const pushed = !!st.pushedSCs[s.code];
       const allFlags = rs.reduce((a, r) => a.concat(r.flags || []), []);
       const hasErr = allFlags.some(f => f.sev === 'danger'), hasWarn = allFlags.some(f => f.sev === 'warning');
@@ -17698,7 +17898,7 @@ class NDCApp extends React.Component {
 
     // §9 R2 — one plan card per RUN: INPUTS (nodes, volume, vehicle types+count, HW) + OUTPUT
     // metrics (coverage, utilisation, CPS, routes, vehicles, distance). Vehicle type+count stays on the card.
-    const scRuns = curSC ? completedRunsFor(curCode) : [];
+    const scRuns = curSC ? completedRunsForFiltered(curCode) : [];
     const planCards = scRuns.map((r) => {
       const flErr = (r.flags || []).filter(f => f.sev === 'danger').length;
       const flWarn = (r.flags || []).filter(f => f.sev === 'warning').length;
@@ -17743,7 +17943,7 @@ class NDCApp extends React.Component {
       for (let _i = 0; _i < r.routes; _i++) { const _u = Math.max(0.3, Math.min(0.98, r.util * (0.8 + _uRNG() * 0.4))); if (_u > 0.9) _over++; else if (_u < 0.4) _under++; }
       const hasUtilChip = (_over + _under) > 0;
       const utilChipLabel = hasUtilChip ? (_over > 0 && _under > 0 ? _over + ' over + ' + _under + ' under-util route' + ((_over + _under) > 1 ? 's' : '') : _over > 0 ? _over + ' route' + (_over > 1 ? 's' : '') + ' over-utilised (>90%)' : _under + ' route' + (_under > 1 ? 's' : '') + ' under-utilised (<40%)') : '';
-      return { id: r.id, runId: r.runId, runNo: r.runNo, triggeredAt: r.triggeredAt, triggeredBy: r.triggeredBy || '',
+      return { id: r.id, runId: r.runId, runName: r.runName || '', runNo: r.runNo, triggeredAt: r.triggeredAt, triggeredBy: r.triggeredBy || '',
         hwLabel: hwLabelOf(r.hw), hwTag: HWTAG[r.hw],
         pushed, pushedTag: pushed ? pushTagInfo[0] : '', pushedTagBg: pushed ? pushTagInfo[1] : '', pushedTagFg: pushed ? pushTagInfo[2] : '',
         nodes: fmtInt(r.dcCount), volume: fmtInt(r.volume), vehInput: (r.vehInput && r.vehInput.length ? r.vehInput.join(' · ') : '—'),
@@ -17842,7 +18042,25 @@ class NDCApp extends React.Component {
         }
       }
       if (dcRows.length) dcRows[dcRows.length - 1].isLastInGroup = true;
-      reviewDetail = { open: true, runId: detailRun.runId, hwLabel: hwLabelOf(detailRun.hw), hwTag: HWTAG[detailRun.hw], triggeredAt: detailRun.triggeredAt, triggeredBy: detailRun.triggeredBy || '',
+      // 2026-09-26 addition (item 1) — Skipped DCs: when coverage < 100%, list the DCs that
+      // weren't served at all, shown first (above the routes list) on the Route View tab. Count
+      // matches the same (1 − coverage) × dcCount figure the plan's own "Coverage gap" flag
+      // already uses (mkRun() above) — this list is that same gap made concrete, not a second,
+      // possibly-disagreeing number. Reasons are a plausible, deterministic pick from the same
+      // kind of cause this app's real validations already use elsewhere (distance/capacity/TP),
+      // since there's no real per-DC solver trace to read a reason from here.
+      const skipCount = detailRun.coverage < 1 ? Math.round((1 - detailRun.coverage) * detailRun.dcCount) : 0;
+      const SKIP_REASONS = ['Beyond configured vehicle range', 'No route capacity in this cycle', 'Excluded \u2014 touchpoint limit exceeded', 'Excluded \u2014 zero/missing planned volume'];
+      const skippedDcRows = [];
+      for (let _si = 0; _si < skipCount; _si++) {
+        skippedDcRows.push({
+          lmdc: cc + '-SKIP-' + String(301 + _si * 3),
+          designVol: fmtInt(Math.max(20, Math.round((detailRun.volume / Math.max(1, detailRun.dcCount)) * (0.5 + RR() * 0.7)))),
+          reason: SKIP_REASONS[Math.floor(RR() * SKIP_REASONS.length)],
+          lat: (baseLat + (RR() - 0.5) * 0.6).toFixed(4), lng: (baseLng + (RR() - 0.5) * 0.6).toFixed(4),
+        });
+      }
+      reviewDetail = { open: true, runId: detailRun.runId, runName: detailRun.runName || '', hwLabel: hwLabelOf(detailRun.hw), hwTag: HWTAG[detailRun.hw], triggeredAt: detailRun.triggeredAt, triggeredBy: detailRun.triggeredBy || '',
         code: detailRun.scCode, name: detailRun.scName, zone: dSC ? dSC.zone : detailRun.zone, dcCount: detailRun.dcCount,
         nodes: fmtInt(detailRun.dcCount), volume: fmtInt(detailRun.volume), vehInput: (detailRun.vehInput && detailRun.vehInput.length ? detailRun.vehInput.join(' · ') : '—'),
         scCoords: dSC ? (Number(dSC.lat).toFixed(4) + ', ' + Number(dSC.lng).toFixed(4)) : '—',
@@ -17855,6 +18073,7 @@ class NDCApp extends React.Component {
         onRouteView: () => this.setState({ reviewDetailView: 'route' }),
         onDcView: () => this.setState({ reviewDetailView: 'dc' }),
         dcRows, hasDcRows: dcRows.length > 0,
+        skippedDcRows, hasSkippedDcs: skippedDcRows.length > 0, skippedDcCount: skippedDcRows.length,
         onDownloadCsv: () => { const head = 'Route Code,Count of Nodes,Total Volume,Total Distance (km),Vehicle Type,Utilisation,Capacity\n'; const body = dRouteRows.map(r => [r.segment, r.tps, r.vol, r.dist, r.veh, r.util, r.cap].join(',')).join('\n'); this.downloadText(detailRun.runId + '-routes.csv', head + body); this.showToast('Route breakdown downloaded · ' + dRouteRows.length + ' routes', '#128A3E'); },
         onMap: () => openRunMap(detailRun), close: () => this.setState({ reviewDetailRunId: null }),
         sections: [['details', 'Plan Details'], ['route', 'Route View']].map(t => ({ label: t[1], active: rdt === t[0], color: rdt === t[0] ? '#003F98' : '#5A5E66', weight: rdt === t[0] ? '700' : '600', onClick: () => this.setState({ reviewDetailTab: t[0] }) })),
@@ -17964,6 +18183,12 @@ class NDCApp extends React.Component {
       reviewList, reviewSearch: st.reviewSearch || '', onReviewSearch: (e) => this.setState({ reviewSearch: e.target.value }),
       reviewZoneChips: ['All', 'North', 'South', 'East', 'West'].map(z => ({ label: z, active: z === zf, bg: z === zf ? '#003F98' : '#fff', fg: z === zf ? '#fff' : '#5A5E66', bd: z === zf ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ reviewZone: z }) })),
       reviewShown: listSCs.length, reviewTotal: completedSCs.length,
+      // 2026-09-26 addition (items 4/5) — the multi-select filter itself. Each chip toggles
+      // independently; Coverage=100% and the 3 HW values can all be on at once (AND across
+      // groups, per matchesReviewFilters above).
+      reviewFilterChips: REVIEW_FILTER_OPTS.map(([k, label]) => ({ key: k, label, active: !!reviewFilterSet[k],
+        onClick: () => { const f = Object.assign({}, reviewFilterSet); f[k] = !f[k]; this.setState({ reviewFilters: f }); } })),
+      reviewFilterActive, onClearReviewFilters: () => this.setState({ reviewFilters: {} }),
       rqProgN, rqDoneN, rqHasQueue, rqNoQueue, rqShowProg,
       curCode, curName: curSC ? curSC.name : '', curZone: curSC ? curSC.zone : '', curDcCount: curSC ? curSC.dcCount : 0,
       planCards, runCountLabel: scRuns.length + ' run' + (scRuns.length === 1 ? '' : 's') + ' generated this cycle', hasPlanCards: planCards.length > 0,
@@ -17973,7 +18198,13 @@ class NDCApp extends React.Component {
       reviewPushed: !!st.pushedSCs[curCode],
       pushOpen: st.pushOpen, pushSCname: pushSC ? (pushSC.code + ' \u00b7 ' + pushSC.name) : '', pocChips, reviewersList, pushName: st.pushName || '', pushEmail: st.pushEmail || '',
       onPushName: (e) => this.setState({ pushName: e.target.value }), onPushEmail: (e) => this.setState({ pushEmail: e.target.value }),
-      addManualReviewer: () => this.addManualReviewer(), doPush: () => this.doPush(), closePush: () => this.closePush(),
+      addManualReviewer: () => this.addManualReviewer(),
+      // 2026-09-26 addition (Ops Alignment item 1) — same modal, routed to the lightweight
+      // add-only path when opened via +Add Reviewer instead of a real Push/Finalise Directly.
+      pushIsAddOnly: !!st.pushIsAddOnly,
+      pushModalTitle: st.pushIsAddOnly ? 'Add Reviewer(s)' : 'Push to Alignment',
+      pushConfirmLabel: st.pushIsAddOnly ? 'Add Reviewer(s)' : 'Push to alignment',
+      doPush: () => (st.pushIsAddOnly ? this.addReviewersToPlan() : this.doPush()), closePush: () => this.closePush(),
       pushCount: pushSelected.length, pushDisabled: pushSelected.length === 0, pushBtnBg: pushSelected.length === 0 ? '#E6EBF2' : '#003F98', pushBtnFg: pushSelected.length === 0 ? '#5A5E66' : '#fff', pushCursor: pushSelected.length === 0 ? 'not-allowed' : 'pointer',
     };
   }

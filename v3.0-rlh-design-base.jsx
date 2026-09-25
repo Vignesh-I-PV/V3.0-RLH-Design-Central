@@ -1006,6 +1006,7 @@ All modules
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25; border-left:1px solid #D0D5DD;`)}>RLH DOCKS</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>NON-LOCAL TP</div>
+<div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"DC-to-SC distance up to which a DC is Local; beyond it, Non-Local"}>LOCAL DIST THRESHOLD</div>
 {/* 2026-09-11 fix (point 1) — Local Speed / Non-Local Speed columns removed: Speed Profile
     (SC x Vehicle Type x Zone x Time) is now the only editable surface for speed, so a flat
     per-SC number here was redundant and could drift from what Speed Profile actually holds.
@@ -1041,6 +1042,7 @@ All modules
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localDistThreshold}</div>
 {/* 2026-09-11 fix (point 1) — localSpeed/nonLocalSpeed cells removed, see header comment above. */}
 {/* 2026-09-07 fix — Hold Time On/Off badge removed (now purely plan-level, no SC-level default
     to show); Max Hold Local/Non-Local no longer gated by a holdTimeOn that doesn't exist at this
@@ -2294,7 +2296,7 @@ All modules
 {/* L — per-row "select to trigger" checkbox removed; everything selected in Step 1 runs.
                        M — carry-forward totals: NODES + VOLUME + VEHICLES per SC. */}
 {/* Column headers */}
-<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 0.9fr 1.6fr 1.6fr; background:#E6EBF2;`)}>
+<div style={css(`display:grid; grid-template-columns:${step2Grid}; background:#E6EBF2;`)}>
 <div style={css(`padding:10px 16px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>LMSC</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center;`)}>NODES</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>VOLUME</div>
@@ -2304,12 +2306,32 @@ All modules
 <div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)} title={"Off \u2014 falls back to a flat default speed instead of reading Speed Profile"}>SPEED MODE (ALL)</div>
 <button onClick={onSpeedModeGlobalToggle} style={css(`height:20px; padding:0 8px; border:1px solid ${speedModeGlobal ? '#128A3E' : '#E6EBF2'}; background:${speedModeGlobal ? '#E7F4EC' : '#fff'}; color:${speedModeGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{speedModeGlobalLabel}</button>
 </div>
+{/* 2026-09-28 — Wave Stagger + Local Distance Threshold, (ALL) controls in the header cell */}
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>WAVE STAGGER (ALL)</div>
+<button onClick={onWaveGlobalToggle} style={css(`height:20px; padding:0 8px; border:1px solid ${waveGlobal ? '#128A3E' : '#E6EBF2'}; background:${waveGlobal ? '#E7F4EC' : '#fff'}; color:${waveGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{waveGlobalLabel}</button>
+</div>
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`display:flex; align-items:center; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>LOCAL DIST (ALL)<span title={"DC-to-SC distance up to which a DC counts as Local; beyond it, Non-Local. Defaults to each SC's own SC Master value."} style={css(`display:inline-flex; align-items:center; color:#8E96A3; cursor:help; margin-left:3px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span></div>
+<div style={css(`display:inline-flex; align-items:center; gap:3px;`)}><button onClick={onLocalDistGlobalDec} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:11px; font-weight:700; color:#14171F; min-width:30px; text-align:center; font-variant-numeric:tabular-nums;`)}>{localDistHeaderLabel}</span><button onClick={onLocalDistGlobalInc} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button>{(hasLocalDistOverride) ? (<><button onClick={onLocalDistReset} title={"Back to each SC's own SC Master value"} style={css(`margin-left:5px; border:none; background:none; color:#8E96A3; font-size:10px; text-decoration:underline; cursor:pointer; font-family:inherit; padding:0;`)}>Reset</button></>) : null}</div>
+</div>
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>Reference plan</div>
+{/* 2026-09-28 — K / J, only in New Node Addition mode, next to Reference plan */}
+{(nnOn) ? (<>
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`display:flex; align-items:center; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>K (ALL)<span title={nnKInfo} style={css(`display:inline-flex; align-items:center; color:#8E96A3; cursor:help; margin-left:3px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span></div>
+<div style={css(`display:inline-flex; align-items:center; gap:3px;`)}><button onClick={onKGlobalDec} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:11px; font-weight:700; color:#14171F; min-width:30px; text-align:center; font-variant-numeric:tabular-nums;`)}>{nnKGlobal}</span><button onClick={onKGlobalInc} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button></div>
+</div>
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`display:flex; align-items:center; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>J (ALL)<span title={nnJInfo} style={css(`display:inline-flex; align-items:center; color:#8E96A3; cursor:help; margin-left:3px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span></div>
+<div style={css(`display:inline-flex; align-items:center; gap:3px;`)}><button onClick={onJGlobalDec} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:11px; font-weight:700; color:#14171F; min-width:30px; text-align:center; font-variant-numeric:tabular-nums;`)}>{nnJGlobal}</span><button onClick={onJGlobalInc} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button></div>
+</div>
+</>) : null}
 <div style={css(`padding:10px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>VALIDATION</div>
 </div>
 {(previewCards || []).map((c, __i52) => (<React.Fragment key={__i52}>
 <div style={css(`border-top:1px solid #EEF1F6; border-left:${c.focusBd}; background:${c.focusBg};`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `border-top:1px solid #EEF1F6; border-left:${c.focusBd}; background:${c.focusBg};`, `background:#FAFBFD;`)}>
-<div style={css(`display:grid; grid-template-columns:2.2fr 0.7fr 0.8fr 1.1fr 1.2fr 0.9fr 1.6fr 1.6fr; align-items:center;`)}>
+<div style={css(`display:grid; grid-template-columns:${step2Grid}; align-items:center;`)}>
 <div style={css(`padding:10px 16px; min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px;`)}>
 <span style={css(`font-size:13px; font-weight:700; color:#003F98;`)}>{c.code}</span>
@@ -2331,11 +2353,29 @@ All modules
 <div style={css(`padding:7px 14px;`)}>
 <button onClick={c.onToggleSpeedMode} style={css(`height:26px; padding:0 10px; border:1px solid ${c.speedMode ? '#128A3E' : '#E6EBF2'}; background:${c.speedMode ? '#E7F4EC' : '#fff'}; color:${c.speedMode ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{c.speedModeLabel}</button>
 </div>
+{/* 2026-09-28 — Wave Stagger per-row toggle */}
+<div style={css(`padding:7px 14px;`)}>
+<button onClick={c.onToggleWave} style={css(`height:26px; padding:0 10px; border:1px solid ${c.wave ? '#128A3E' : '#E6EBF2'}; background:${c.wave ? '#E7F4EC' : '#fff'}; color:${c.wave ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{c.waveLabel}</button>
+</div>
+{/* 2026-09-28 — Local Distance Threshold per-row stepper (defaults to SC Master) */}
+<div style={css(`padding:7px 14px; min-width:0;`)}>
+<div style={css(`display:inline-flex; align-items:center; gap:4px;`)}><button onClick={c.onLocalDistDec} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:12px; font-weight:700; color:#14171F; min-width:36px; text-align:center; font-variant-numeric:tabular-nums;`)}>{c.localDistLabel}</span><button onClick={c.onLocalDistInc} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button></div>
+<div style={css(`font-size:9.5px; color:#8E96A3; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{c.localDistSourceLabel}</div>
+</div>
 {/* I — per-row reference-plan picker; HW 0 = "—", HW 0.5/1 = dropdown select */}
 <div style={css(`padding:8px 14px;`)}>
 {(c.refNotNeeded) ? (<><span style={css(`font-size:12px; color:#8E96A3;`)}>—</span></>) : null}
 {(c.refShowSelect) ? (<><select onChange={c.onPickRefSel} aria-label={"Pick a reference plan"} style={css(`height:28px; padding:0 8px; border:1px solid #C3C9D4; background:#fff; color:#14171F; font-family:inherit; font-size:11.5px; font-weight:500; border-radius:7px; cursor:pointer; outline:none;`)}><option value={""}>Pick reference plan…</option>{(c.refOptions || []).map((ro, __i50) => (<React.Fragment key={__i50}><option value={ro.value} selected={ro.value === c.refCurrentVal}>{ro.label}</option></React.Fragment>))}</select></>) : null}
 </div>
+{/* 2026-09-28 — K / J per-row steppers, New Node Addition mode only */}
+{(nnOn) ? (<>
+<div style={css(`padding:7px 14px; min-width:0;`)}>
+<div style={css(`display:inline-flex; align-items:center; gap:4px;`)}><button onClick={c.onKDec} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:12px; font-weight:700; color:#14171F; min-width:36px; text-align:center; font-variant-numeric:tabular-nums;`)}>{c.nnK}</span><button onClick={c.onKInc} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button></div>
+</div>
+<div style={css(`padding:7px 14px; min-width:0;`)}>
+<div style={css(`display:inline-flex; align-items:center; gap:4px;`)}><button onClick={c.onJDec} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:12px; font-weight:700; color:#14171F; min-width:36px; text-align:center; font-variant-numeric:tabular-nums;`)}>{c.nnJ}</span><button onClick={c.onJInc} style={css(`width:22px; height:24px; border:1px solid #E6EBF2; background:#fff; border-radius:5px; cursor:pointer; font-size:12px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button></div>
+</div>
+</>) : null}
 {/* VALIDATION */}
 <div style={css(`padding:10px 14px;`)}>
 {(c.clean) ? (<><div style={css(`display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#128A3E; font-weight:600;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.5"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Clean · ready</div></>) : null}
@@ -6115,7 +6155,22 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </React.Fragment>))}
 </div>
 </>) : null}
-<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required</span></div><textarea onInput={onNcRemark} placeholder={"Why this change is needed (ground reality, compliance, vendor)…"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical;`)} /></div>
+{/* 2026-09-28 — reason dropdown per change category present (Vehicle / TP / Route), same
+    pattern as Route Scheduler's flag modal. Remark is optional unless a reason is "Others". */}
+{(hasNcReasonGroups) ? (<>
+<div style={css(`display:flex; flex-direction:column; gap:10px; margin-bottom:14px;`)}>
+{(ncReasonGroups || []).map((g, __iNcR) => (<React.Fragment key={__iNcR}>
+<div>
+<div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>{g.label} <span style={css(`color:#D14B4B;`)}>*</span></div>
+<select value={g.value} onChange={g.onChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid ${g.missing ? '#EDD9AF' : '#E6EBF2'}; border-radius:8px; font-family:inherit; font-size:12.5px; color:${g.value ? '#14171F' : '#8E96A3'}; background:#fff; outline:none;`)}>
+<option value={""}>Select a reason…</option>
+{(g.options || []).map((o, __iNcO) => (<React.Fragment key={__iNcO}><option value={o}>{o}</option></React.Fragment>))}
+</select>
+</div>
+</React.Fragment>))}
+</div>
+</>) : null}
+<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark {(ncRemarkRequired) ? (<><span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required when the reason is "Others"</span></>) : (<><span style={css(`font-weight:400; color:#8E96A3;`)}>(optional)</span></>)}</div><textarea value={ncRemark} onInput={onNcRemark} placeholder={"Why this change is needed (ground reality, compliance, vendor)…"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical;`)} /></div>
 {(ncShowWarn) ? (<>
 {(hasNcWarn) ? (<>
 <div style={css(`display:flex; flex-direction:column; gap:7px; margin-bottom:4px;`)}>
@@ -6259,7 +6314,7 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </div>
 </React.Fragment>))}
 </div>
-<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark <span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required only if any flagged reason is "Others"</span></div><textarea value={schedNcModal.remark} onInput={schedNcModal.onRemark} placeholder={"Why this change is needed (ground reality, vendor, DC constraint)\u2026"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} /></div>
+<div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark {(schedNcModal.remarkRequired) ? (<><span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required when the reason is "Others"</span></>) : (<><span style={css(`font-weight:400; color:#8E96A3;`)}>(optional)</span></>)}</div><textarea value={schedNcModal.remark} onInput={schedNcModal.onRemark} placeholder={"Why this change is needed (ground reality, vendor, DC constraint)\u2026"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical; box-sizing:border-box;`)} /></div>
 </div>
 <div style={css(`display:flex; align-items:center; gap:12px; padding:16px 22px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
 <div style={css(`flex:1; min-width:0;`)}>{(schedNcModal.hasFlagged) ? (<><span style={css(`font-size:11.5px; color:#5A5E66;`)}>{(schedNcModal.fields || []).filter(f => f.flagged).length} field(s) flagged</span></>) : (<><span style={css(`font-size:11.5px; color:#8E96A3;`)}>Flag at least one field to submit</span></>)}</div>
@@ -7668,6 +7723,13 @@ class NDCApp extends React.Component {
       // in speedModeBySC, cleared whenever the global control is used).
       speedModeGlobal: true,
       speedModeBySC: {},
+      // 2026-09-28 — more Step 2 per-SC params, same global-default + per-SC-override pattern:
+      // Wave Staggering On/Off; Local Distance Threshold (global null = each SC's own SC Master
+      // value); New Node Addition's K (routes scanned for insertion) and J (reorder cascade
+      // spread), both default 1.
+      waveGlobal: false, waveBySC: {},
+      localDistGlobal: null, localDistBySC: {},
+      nnKGlobal: 1, nnKBySC: {}, nnJGlobal: 1, nnJBySC: {},
       refBySC: {},
       droppedDcBySC: {},
       newNodeMode: false,
@@ -7695,7 +7757,7 @@ class NDCApp extends React.Component {
       ackOpen: false, ackPlanId: null,
       unfreezeOpen: false, unfreezePlanId: null,
       finOpen: false, finPlanId: null, finDirectOpen: false, finDirectSCcode: null,
-      opsPlanId: null, opsPage: 0, opsSection: 'details', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', opsSubmitted: { 'PL-GGNS': { by: 'Rahul Sharma', at: '05 Jul' }, 'PL-NOIS': { by: 'Rahul Sharma', at: '06 Jul' }, 'PL-JAIS': { by: 'Rahul Sharma', at: '06 Jul' } },
+      opsPlanId: null, opsPage: 0, opsSection: 'details', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', ncReasons: {}, opsSubmitted: { 'PL-GGNS': { by: 'Rahul Sharma', at: '05 Jul' }, 'PL-NOIS': { by: 'Rahul Sharma', at: '06 Jul' }, 'PL-JAIS': { by: 'Rahul Sharma', at: '06 Jul' } },
       alignExpandedRow: {}, opsExpandedRow: {},
       alignAllOpen: false, alignAllPlanId: null, opsPartialOpen: false, opsPartialPlanId: null, delConfirm: null,
       acceptAllPlanOpen: false, acceptAllPlanId: null,
@@ -7885,7 +7947,9 @@ class NDCApp extends React.Component {
         // Ops Alignment feedback can freely move a DC into a route of the other locality afterward,
         // by design (this attribute never changes, only which route a DC sits on can).
         const distFromSc = NDC_haversineKm(sc.lat, sc.lng, dcLat, dcLng);
-        const isLocal = distFromSc <= 100;
+        // 2026-09-28 — threshold now comes from SC Master's Local Distance Threshold (default
+        // 100 km), not a hardcoded 100. dcIsLocal() re-derives it live from distFromSc later.
+        const isLocal = distFromSc <= (sc.localDistThreshold != null ? sc.localDistThreshold : 100);
         pool.push({ code, scCode: sc.code, zone: sc.zone, lat: dcLat, lng: dcLng, capacity: 3000 + (h % 9000), linkStatus: 'active', secondSc: null, isLocal, distFromSc });
       }
       dcPoolBySC[sc.code] = pool;
@@ -8745,6 +8809,8 @@ class NDCApp extends React.Component {
       txt('rlhDocks', 'RLH Docks', true, ''),
       txt('localTp', 'Local TP Limit', true, ''),
       txt('nonLocalTp', 'Non-Local TP Limit', true, ''),
+      // 2026-09-28 — Local Distance Threshold: DC-to-SC distance up to which a DC is Local.
+      txt('localDistThreshold', 'Local Distance Threshold (km)', false, 'Default 100'),
       // 2026-09-18 fix (item 3) — Local/Non-Local Speed (km/h) removed from this form entirely,
       // completing the 2026-09-11 change that already removed the two columns from SC Master's
       // own table but missed this add/edit form. Speed Profile (SC × Vehicle Type × Zone × Time)
@@ -9055,6 +9121,7 @@ class NDCApp extends React.Component {
       lat: sc.lat != null ? String(sc.lat) : '', lng: sc.lng != null ? String(sc.lng) : '',
       nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp),
       holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
+      localDistThreshold: sc.localDistThreshold != null ? String(sc.localDistThreshold) : '100',
       opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '',
       // 2026-09-18 addition (item 4) — Central POCs pre-fill, read from the named object (not
       // positional, unlike `pl` above — see addScVals() for why).
@@ -9640,6 +9707,7 @@ class NDCApp extends React.Component {
     // that switching the field to a <select> alone would be enough (a <select>'s own default
     // value is cosmetic/display-only until the underlying form state is actually touched).
     if (f.maxHoldLocal == null || f.maxHoldLocal === '') { this.showToast('Max Hold Time \u2014 Local is required', '#C77B00'); return; }
+    if (f.localDistThreshold != null && f.localDistThreshold !== '' && !(Number(f.localDistThreshold) > 0)) { this.showToast('Local Distance Threshold must be a positive number of km', '#C77B00'); return; }
     if (f.maxHoldNonLocal == null || f.maxHoldNonLocal === '') { this.showToast('Max Hold Time \u2014 Non-Local is required', '#C77B00'); return; }
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
     const opt = (v) => (v !== '' && v != null ? num(v) : null);
@@ -9709,6 +9777,8 @@ class NDCApp extends React.Component {
       holdTimeOn: f.holdTimeOn === 'Off' ? false : true, maxHoldLocal: opt(f.maxHoldLocal), maxHoldNonLocal: opt(f.maxHoldNonLocal),
       pocs: pocs.length ? pocs : ['\u2014'],
       centralPocs: centralPocs,
+      // Blank → 100 (the default), never null, so dcIsLocal() always has a real threshold.
+      localDistThreshold: (f.localDistThreshold === '' || f.localDistThreshold == null) ? 100 : Number(f.localDistThreshold),
     };
     if (!editing) {
       // Brand-new SC has no DC pool of its own yet -- seed the generation-time fields to sane
@@ -9725,6 +9795,39 @@ class NDCApp extends React.Component {
   }
   // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
   // fields into st.lmdcEdits, keyed by LMDC Code — never mutates d.lmdcs itself.
+  // localThresholdFor(scCode) / dcIsLocal(dc) (2026-09-28) — Local vs Non-Local used to be decided
+  // ONCE at seed time with a hardcoded 100 km and stored as dc.isLocal, so no setting could ever
+  // change it. Now it's re-derived live from the DC's own stored distance against its SC's Local
+  // Distance Threshold (SC Master, default 100 km). Falls back to the stored flag only when there's
+  // no real distance to judge (unmapped/pending DCs are stored with distFromSc 0).
+  localThresholdFor(scCode) {
+    const scs = (this.state && this.state.data && this.state.data.scs) || [];
+    const sc = scs.find(s => s.code === scCode);
+    return (sc && sc.localDistThreshold != null) ? sc.localDistThreshold : 100;
+  }
+  // step2ParamsFor(scCode) (2026-09-28) — the ONE resolver for Design Creation Step 2's per-SC
+  // operating params (per-SC override → global control → default/SC Master). Used by both the
+  // Step 2 table and triggerRuns(), so what's shown and what's triggered can't disagree.
+  step2ParamsFor(scCode) {
+    const st = this.state;
+    const pick = (bySc, glob, dflt) => ((bySc || {})[scCode] !== undefined ? bySc[scCode] : (glob != null ? glob : dflt));
+    const master = this.localThresholdFor(scCode);
+    const ldOverride = (st.localDistBySC || {})[scCode] !== undefined || st.localDistGlobal != null;
+    return {
+      speedMode: pick(st.speedModeBySC, st.speedModeGlobal, true),
+      wave: pick(st.waveBySC, st.waveGlobal, false),
+      localDist: pick(st.localDistBySC, st.localDistGlobal, master),
+      localDistMaster: master, localDistOverridden: ldOverride,
+      k: pick(st.nnKBySC, st.nnKGlobal, 1),
+      j: pick(st.nnJBySC, st.nnJGlobal, 1),
+    };
+  }
+  dcIsLocal(dc) {
+    if (!dc) return true;
+    const scCode = dc.scCode || dc.lmscCode;
+    if (typeof dc.distFromSc === 'number' && dc.distFromSc > 0 && scCode) return dc.distFromSc <= this.localThresholdFor(scCode);
+    return dc.isLocal !== undefined ? dc.isLocal : true;
+  }
   // schedFeedbackReasons(persona, field) (2026-08-14) — the fixed reason-bucket list per
   // (persona, field) pair, from the product's own defined table. "Others" is always last and
   // always Mandatory remarks; every named reason is Optional remarks.
@@ -10536,7 +10639,7 @@ class NDCApp extends React.Component {
   // same population the +SC modal/upload path itself governs.
   scMasterExportCsv() {
     const ZSTATE = { North: 'Delhi NCR', West: 'Maharashtra', South: 'Karnataka', East: 'West Bengal' };
-    const header = 'SC Code,Name,City,State,SC Type,Zone,Volume Capacity,Sort Capacity,RLH Docks,Local TP Limit,Non-Local TP Limit,Max Hold Time - Local (min),Max Hold Time - Non-Local (min),Ops Leads,LH CT-1,LH CT-2,Biz Fin CT-1,Biz Fin CT-2';
+    const header = 'SC Code,Name,City,State,SC Type,Zone,Volume Capacity,Sort Capacity,RLH Docks,Local TP Limit,Non-Local TP Limit,Max Hold Time - Local (min),Max Hold Time - Non-Local (min),Local Distance Threshold (km),Ops Leads,LH CT-1,LH CT-2,Biz Fin CT-1,Biz Fin CT-2';
     const scs = (this.state.data.scs || []).filter(s => s.nodeKind !== 'MDC');
     const rows = scs.map(s => {
       const cp = s.centralPocs || {};
@@ -10545,6 +10648,7 @@ class NDCApp extends React.Component {
         s.volCap != null ? s.volCap : '', s.sortCap != null ? s.sortCap : '', s.rlhDocks != null ? s.rlhDocks : '',
         s.localTp != null ? s.localTp : '', s.nonLocalTp != null ? s.nonLocalTp : '',
         s.maxHoldLocal != null ? s.maxHoldLocal : '', s.maxHoldNonLocal != null ? s.maxHoldNonLocal : '',
+        s.localDistThreshold != null ? s.localDistThreshold : 100,
         (s.pocs || []).filter(p => p && p !== '\u2014').join(';'),
         cp.lhCt1 || '', cp.lhCt2 || '', cp.bizFinCt1 || '', cp.bizFinCt2 || '',
       ].map(v => this.csvField(v)).join(',');
@@ -10589,7 +10693,7 @@ class NDCApp extends React.Component {
         const nameIdx = idx('name'), zoneIdx = idx('zone'), typeIdx = idx('sc type'), volCapIdx = idx('volume capacity'), sortCapIdx = idx('sort capacity'),
           rlhDocksIdx = idx('rlh docks'), localTpIdx = idx('local tp limit'), nonLocalTpIdx = idx('non-local tp limit'),
           holdOnIdx = idx('hold time (on/off)'), maxHoldLocalIdx = idx('max hold time - local (min)'), maxHoldNonLocalIdx = idx('max hold time - non-local (min)'),
-          opsLeadsIdx = idx('ops leads'),
+          opsLeadsIdx = idx('ops leads'), localDistIdx = idx('local distance threshold (km)'),
           // 2026-09-18 fix (items 2/3) — localSpeedIdx/nonLocalSpeedIdx/openIdx/closeIdx removed:
           // those 4 columns are gone from the template (see scMasterTemplate above), so parsing
           // them here would only ever find -1 anyway. 2026-09-18 addition (item 4) — 4 new
@@ -10627,6 +10731,8 @@ class NDCApp extends React.Component {
           if (maxHoldLocalIdx >= 0) { if (cols[maxHoldLocalIdx] === '') { rowErrs.push('Max Hold Time - Local is required'); } else { const n = parseInt(cols[maxHoldLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldLocal = n; } }
           if (maxHoldNonLocalIdx >= 0) { if (cols[maxHoldNonLocalIdx] === '') { rowErrs.push('Max Hold Time - Non-Local is required'); } else { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldNonLocal = n; } }
           if (opsLeadsIdx >= 0 && cols[opsLeadsIdx]) dPatch.pocs = cols[opsLeadsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
+          // 2026-09-28 — optional; blank leaves the SC's current threshold (default 100 km) untouched.
+          if (localDistIdx >= 0 && cols[localDistIdx] !== '' && cols[localDistIdx] != null) { const n = Number(cols[localDistIdx]); if (n > 0) dPatch.localDistThreshold = n; else rowErrs.push('Local Distance Threshold "' + cols[localDistIdx] + '" must be a positive number of km'); }
           // 2026-09-18 addition (item 4) — Central POCs: same named-object shape as the +SC
           // modal writes (see submitAddSc()), built here only if at least one of the 4 columns
           // is present and non-empty on this row, and merged onto whatever's already stored so a
@@ -11254,7 +11360,10 @@ class NDCApp extends React.Component {
     // so a live-triggered run's name has nowhere to actually surface yet. Wired anyway so the
     // field is captured correctly the moment that gap is closed, rather than adding a second gap.
     const _runNameNow = this.state.runName || '';
-    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0, runName: _runNameNow })));
+    // 2026-09-28 — each queued run also carries its SC's resolved Step 2 params (Speed Mode, Wave
+    // Staggering, Local Distance Threshold, K/J) via step2ParamsFor(), the same resolver the Step 2
+    // table shows. Same caveat as runName: runQueue only, d.runs is still static seed data.
+    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0, runName: _runNameNow, params: Object.assign({ newNodeMode: !!this.state.newNodeMode }, this.step2ParamsFor(c)) })));
     let _active = _merged.filter(r => r.status === 'In Progress').length;
     for (let i = 0; i < _merged.length && _active < CONCURRENCY; i++) { if (_merged[i].status === 'Queued') { _merged[i].status = 'In Progress'; _merged[i].ticks = 0; _active++; } }
     this.setState({ runQueue: _merged, creationStep: 4 });
@@ -11546,7 +11655,7 @@ class NDCApp extends React.Component {
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
       return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.nodeKind === 'MDC' ? 'MDC' : s.dispatchRoleType, isMdc: s.nodeKind === 'MDC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
         coords: rf.lat.toFixed(4) + ', ' + rf.lng.toFixed(4),
-        nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
+        nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localDistThreshold: (s.localDistThreshold != null ? s.localDistThreshold : 100) + ' km', localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
         holdTimeOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
         pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
         pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
@@ -11976,7 +12085,7 @@ class NDCApp extends React.Component {
       // so the text overflowed and visually overlapped the next column's header (confirmed via
       // screen recording: "NON-LOCAL SPD"/"MAX HOLD LOCAL" and "MAX HOLD NON-LOCAL"/"OPS LEADS"
       // were rendering as garbled overlapping text). Widened each affected column.
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 140px 90px 90px 80px',
+      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 100px 140px 90px 90px 80px',
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
@@ -12001,7 +12110,7 @@ class NDCApp extends React.Component {
       // columns removed (same reasoning as the +SC modal: Speed Profile and Operating Hours are
       // the real models now, this template shouldn't offer the old flat pair as if it still
       // were). 4 new optional Central POC columns added at the end.
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Ops Leads' }, { k: 'LH CT-1' }, { k: 'LH CT-2' }, { k: 'Biz Fin CT-1' }, { k: 'Biz Fin CT-2' }]),
+      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Local Distance Threshold (km)' }, { k: 'Ops Leads' }, { k: 'LH CT-1' }, { k: 'LH CT-2' }, { k: 'Biz Fin CT-1' }, { k: 'Biz Fin CT-2' }]),
       // 2026-09-24 addition — "Download Current Data" for all 3 bulk-upload cards.
       scMasterExportCsv: () => this.scMasterExportCsv(),
       opHoursExportCsv: () => this.opHoursExportCsv(),
@@ -12568,6 +12677,25 @@ class NDCApp extends React.Component {
       const refChosen = refSet[s.code] || 'June 2026';
       return { code: s.code, name: s.name, zone: s.zone, dcCount: s.dcCount, hw: scHw, hwLabel: 'HW ' + scHw,
         speedMode: scSpeedMode, speedModeLabel: scSpeedMode ? 'On' : 'Off',
+        // 2026-09-28 — Wave Staggering, Local Distance Threshold, New Node Addition K/J — all read
+        // through step2ParamsFor() (same resolver triggerRuns() uses).
+        ...(() => {
+          const sp2 = this.step2ParamsFor(s.code);
+          const setBy = (key, val) => { const m = Object.assign({}, this.state[key] || {}); m[s.code] = val; this.setState({ [key]: m }); };
+          const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+          return {
+            wave: sp2.wave, waveLabel: sp2.wave ? 'On' : 'Off',
+            onToggleWave: () => setBy('waveBySC', !sp2.wave),
+            localDist: sp2.localDist, localDistLabel: sp2.localDist + ' km',
+            localDistSourceLabel: sp2.localDistOverridden ? ('SC Master: ' + sp2.localDistMaster + ' km') : 'SC Master',
+            localDistOverridden: sp2.localDistOverridden,
+            onLocalDistDec: () => setBy('localDistBySC', clamp(sp2.localDist - 10, 10, 500)),
+            onLocalDistInc: () => setBy('localDistBySC', clamp(sp2.localDist + 10, 10, 500)),
+            nnK: sp2.k, nnJ: sp2.j,
+            onKDec: () => setBy('nnKBySC', clamp(sp2.k - 1, 1, 10)), onKInc: () => setBy('nnKBySC', clamp(sp2.k + 1, 1, 10)),
+            onJDec: () => setBy('nnJBySC', clamp(sp2.j - 1, 1, 10)), onJInc: () => setBy('nnJBySC', clamp(sp2.j + 1, 1, 10)),
+          };
+        })(),
         // 2026-09-27 addition (item 6) — recommended vehicle for a vehicle-range failure, with a
         // one-click "add to this run" that appends it to this SC's per-run Vehicle Configuration
         // (vehiclesBySC — Step 3's own state, SC Vehicle Availability master is untouched), and
@@ -12958,6 +13086,26 @@ class NDCApp extends React.Component {
       // header value is genuinely authoritative again, not just a stale suggestion.
       speedModeGlobal, speedModeGlobalLabel: speedModeGlobal ? 'On' : 'Off',
       onSpeedModeGlobalToggle: () => this.setState({ speedModeGlobal: !speedModeGlobal, speedModeBySC: {} }),
+      // 2026-09-28 — header-cell (ALL) controls for the new Step 2 params. Using any of them clears
+      // that param's per-SC overrides, same as HW/Speed Mode.
+      waveGlobal: !!st.waveGlobal, waveGlobalLabel: st.waveGlobal ? 'On' : 'Off',
+      onWaveGlobalToggle: () => this.setState({ waveGlobal: !st.waveGlobal, waveBySC: {} }),
+      localDistHeaderLabel: st.localDistGlobal != null ? (st.localDistGlobal + ' km') : 'SC Master',
+      onLocalDistGlobalDec: () => this.setState({ localDistGlobal: Math.max(10, (st.localDistGlobal != null ? st.localDistGlobal : 100) - 10), localDistBySC: {} }),
+      onLocalDistGlobalInc: () => this.setState({ localDistGlobal: Math.min(500, (st.localDistGlobal != null ? st.localDistGlobal : 100) + 10), localDistBySC: {} }),
+      hasLocalDistOverride: st.localDistGlobal != null || Object.keys(st.localDistBySC || {}).length > 0,
+      onLocalDistReset: () => this.setState({ localDistGlobal: null, localDistBySC: {} }),
+      nnKGlobal: st.nnKGlobal != null ? st.nnKGlobal : 1, nnJGlobal: st.nnJGlobal != null ? st.nnJGlobal : 1,
+      onKGlobalDec: () => this.setState({ nnKGlobal: Math.max(1, (st.nnKGlobal || 1) - 1), nnKBySC: {} }),
+      onKGlobalInc: () => this.setState({ nnKGlobal: Math.min(10, (st.nnKGlobal || 1) + 1), nnKBySC: {} }),
+      onJGlobalDec: () => this.setState({ nnJGlobal: Math.max(1, (st.nnJGlobal || 1) - 1), nnJBySC: {} }),
+      onJGlobalInc: () => this.setState({ nnJGlobal: Math.min(10, (st.nnJGlobal || 1) + 1), nnJBySC: {} }),
+      nnKInfo: 'How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.',
+      nnJInfo: 'How many other existing routes a historical node on a marginal route may move to (on top of its own route and all spares). Controls how far a reordering cascade can spread once a route is unlocked.',
+      nnOn: !!st.newNodeMode,
+      step2Grid: st.newNodeMode
+        ? '1.9fr 0.55fr 0.7fr 0.85fr 1.15fr 0.8fr 0.8fr 1.15fr 1.4fr 0.85fr 0.85fr 1.3fr'
+        : '2fr 0.6fr 0.7fr 0.9fr 1.2fr 0.8fr 0.8fr 1.15fr 1.5fr 1.4fr',
       scProps: scPropsWithHw, refNeeded, hasRefWarning: refNeeded > 0, hwGlobal, hwOptions,
       runName: st.runName || '', onRunNameChange: (e) => this.setState({ runName: e.target.value }),
       // K \u2014 "New Node Addition mode" (DS-algorithm mode toggle, not "include the new nodes")
@@ -13966,6 +14114,8 @@ class NDCApp extends React.Component {
           title: 'Flag changes', intro: (role === 'SC' || role === 'LH') ? 'Propose a new Dispatch Cutoff and/or TAT for this route\u2019s DCs.' : 'Propose a new Landing Time for this route\u2019s DCs \u2014 this implies a new Dispatch Cutoff once TAT is locked.',
           fields: ncFields, hasFlagged: anyFlagged,
           remark: st.schedNcRemark || '', onRemark: (e) => this.setState({ schedNcRemark: e.target.value }),
+          // 2026-09-28 — drives the remark label only; submitSchedNc() already enforced this rule.
+          remarkRequired: ncFields.some(f => f.flagged && f.reasonVal === 'Others'),
           close: () => this.closeSchedNc(), onSubmit: () => this.submitSchedNc(),
         };
       }
@@ -14219,7 +14369,7 @@ class NDCApp extends React.Component {
       const dist = Math.max(1, Math.round(legDistKm));
       prevLat = lat; prevLng = lng; // this stop becomes the origin for the NEXT leg
       const nameIdx = (charSum + i * 13) % DC_NAMES.length;
-      const isLocal = rec ? rec.isLocal : true;
+      const isLocal = rec ? this.dcIsLocal(rec) : true;
       return { code, name: DC_NAMES[nameIdx], vol, tpOrder: i + 1, lat, lng, dist: dist + ' km', isLocal };
     });
   }
@@ -16381,12 +16531,38 @@ class NDCApp extends React.Component {
         ncDcCells[code] = { lat: e.lat != null ? String(e.lat) : '', lng: e.lng != null ? String(e.lng) : '', tp: e.tp != null ? String(e.tp) : '', distance: e.distance != null ? String(e.distance) : '', routeCode: e.routeCode || '' };
         if (e.splitVehicle) { ncSplitCode = e.routeCode; ncSplitVehicle = e.splitVehicle; }
       });
-      this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells, ncFlags, ncDcCells, ncSplitCode, ncSplitVehicle, ncRemark: fb.remark || '' });
+      this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells, ncFlags, ncDcCells, ncSplitCode, ncSplitVehicle, ncRemark: fb.userRemark != null ? fb.userRemark : (fb.reasons ? '' : (fb.remark || '')), ncReasons: Object.assign({}, fb.reasons || {}) });
       return;
     }
-    this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells: { vehicleType: r.veh }, ncFlags: {}, ncDcCells: {}, ncSplitCode: null, ncSplitVehicle: '', ncRemark: '' });
+    this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells: { vehicleType: r.veh }, ncFlags: {}, ncDcCells: {}, ncSplitCode: null, ncSplitVehicle: '', ncRemark: '', ncReasons: {} });
   }
   closeNc() { this.setState({ ncOpen: false }); }
+  // rpFeedbackReasons(category) (2026-09-28) — Route Planner's own fixed reason list per change
+  // category, mirroring Route Scheduler's schedFeedbackReasons(): "Others" always last, and the
+  // only reason that makes the remark mandatory.
+  rpFeedbackReasons(category) {
+    const T = {
+      vehicle: ['Mapping of Local & Non-Local DCs in Same Lane'],
+      tp: ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance'],
+      route: ['Cross-State Route', 'Geo-Constraints (Road Closure/Block)', 'Vehicle Cannot Reach DC', 'Vehicle Not Available', 'Wrong DC Location'],
+    };
+    return (T[category] || []).concat(['Others']);
+  }
+  // rpNcCategories(flags, dcMap) — which change categories the in-progress flag submission
+  // actually contains. Per-DC flags start empty (toggleNcDc seeds {}), so only an edited value
+  // counts. Vehicle Change = route-level Vehicle Type; TP Change = any DC's TP; Route Change =
+  // any DC's Route Code (move / split), Lat/Lng or Distance — Lat/Lng and Distance aren't named
+  // in the product's 3 categories, so they're grouped under Route Change ("Wrong DC Location"
+  // is literally the lat/lng correction case).
+  rpNcCategories(flags, dcMap) {
+    const cats = [];
+    if ((flags || {}).vehicleType) cats.push('vehicle');
+    const vals = Object.keys(dcMap || {}).map(k => dcMap[k] || {});
+    const has = (v) => v !== '' && v != null;
+    if (vals.some(v => has(v.tp))) cats.push('tp');
+    if (vals.some(v => has(v.routeCode) || has(v.lat) || has(v.lng) || has(v.distance))) cats.push('route');
+    return cats;
+  }
   setNc(field, val) { const c = Object.assign({}, this.state.ncCells); c[field] = val; this.setState({ ncCells: c }); }
   // E2 \u2014 toggle whether a cell is flagged. Only flagged cells reveal their input + become feedback.
   toggleNcFlag(field) { const f = Object.assign({}, this.state.ncFlags || {}); if (f[field]) delete f[field]; else f[field] = true; this.setState({ ncFlags: f }); }
@@ -16451,7 +16627,22 @@ class NDCApp extends React.Component {
     // see "Change proposed by <name>". Ops Lead persona is now switchable (opsPersonaName()), not
     // hardcoded, so more-than-one-reviewer scenarios can be simulated on the same plan.
     const reviewerName = st.persona === 'planner' ? 'Pranita Sapkal' : this.opsPersonaName();
-    const fb = { cells, dcCells, dcCount, remark: (st.ncRemark || '').trim() || 'Needs change', by: reviewerName };
+    // 2026-09-28 — reason per change category present (Vehicle / TP / Route), chosen from a fixed
+    // dropdown like Route Scheduler. Remark is optional unless any chosen reason is "Others".
+    // Enforced here too, not only on the submit button, so nothing can bypass it.
+    const CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    const cats = this.rpNcCategories(flags, dcMap);
+    if (cats.length === 0) { this.showToast('Flag at least one change before submitting', '#C77B00'); return; }
+    const chosen = st.ncReasons || {};
+    const missing = cats.filter(k => !chosen[k]);
+    if (missing.length) { this.showToast('Pick a reason for ' + missing.map(k => CAT_LABEL[k]).join(' and '), '#C77B00'); return; }
+    const userRemark = (st.ncRemark || '').trim();
+    if (cats.some(k => chosen[k] === 'Others') && !userRemark) { this.showToast('Remarks are mandatory when "Others" is the reason', '#D14B4B'); return; }
+    const reasons = {}; cats.forEach(k => { reasons[k] = chosen[k]; });
+    // remark stays a readable one-liner for every existing downstream reader (planner row view,
+    // CSV export, etc.) — the user's own remark if given, otherwise the reason summary.
+    const reasonSummary = cats.map(k => CAT_LABEL[k] + ': ' + reasons[k]).join(' \u00b7 ');
+    const fb = { cells, dcCells, dcCount, reasons, userRemark, remark: userRemark ? (reasonSummary + ' \u2014 ' + userRemark) : reasonSummary, by: reviewerName };
     const a = Object.assign({}, st.opsRowFb); a[r.planId] = Object.assign({}, a[r.planId]); a[r.planId][r.idx] = fb;
     // mirror the attribution onto the live row so the Ops-Lead row indicator updates immediately
     const pl = st.data.plans.find(p => p.id === r.planId); if (pl) pl.rows[r.idx].proposedBy = reviewerName;
@@ -16842,7 +17033,20 @@ class NDCApp extends React.Component {
       if (ncDcsMissingTp.length) ncWarn.push({ lead: 'Error', text: ncDcsMissingTp.map(dc => dc.code).join(', ') + ' — touch-point # required before submitting (no established order in the new route yet).', fail: true, bg: '#FAFBFD', accentBd: '3px solid #D14B4B', fg: '#D14B4B', textFg: '#5A5E66' });
     }
     const ncHasFail = ncWarn.some(w => w.fail);
-    const ncRemarkFilled = !!(st.ncRemark || '').trim();  // §4 — remark is mandatory before an Ops-Lead can flag a change
+    // 2026-09-28 — remark is no longer always mandatory. Each change category present in this
+    // submission (Vehicle / TP / Route) needs a reason from its dropdown; the remark is required
+    // only when one of those reasons is "Others" (same rule as Route Scheduler's flag modal).
+    const NC_CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    const ncCats = this.rpNcCategories(ncFlags, st.ncDcCells || {});
+    const ncReasonsSel = st.ncReasons || {};
+    const ncReasonGroups = ncCats.map(k => ({ key: k, label: NC_CAT_LABEL[k] + ' reason', value: ncReasonsSel[k] || '',
+      options: this.rpFeedbackReasons(k), missing: !ncReasonsSel[k],
+      onChange: (e) => { const m = Object.assign({}, this.state.ncReasons || {}); m[k] = e.target.value; this.setState({ ncReasons: m }); } }));
+    const ncReasonsMissing = ncReasonGroups.filter(g => g.missing);
+    const ncRemarkRequired = ncCats.some(k => ncReasonsSel[k] === 'Others');
+    const ncRemarkFilled = !ncRemarkRequired || !!(st.ncRemark || '').trim();
+    const ncNothingFlagged = ncCats.length === 0;
+    const ncReady = !ncNothingFlagged && ncReasonsMissing.length === 0 && ncRemarkFilled;
     const ncRowCode = st.ncRow ? d.plans.find(p => p.id === st.ncRow.planId).rows[st.ncRow.idx].routeCode : '';
 
     // A3 — Ops Lead morning band: feedback-window countdown + health (SAME computed source as A1),
@@ -17064,12 +17268,16 @@ class NDCApp extends React.Component {
       ncRemark: st.ncRemark || '', onNcRemark: (e) => this.setState({ ncRemark: e.target.value }), ncWarn, hasNcWarn: ncWarn.length > 0, ncRowCode,
       // Warnings surface automatically (no Validate step required); hard-fails still block submit.
       ncShowWarn: ncWarn.length > 0,
-      ncSubmit: () => { if (ncHasFail) { this.showToast('Fix the flagged errors before submitting', '#C77B00'); return; } if (!ncRemarkFilled) { this.showToast('Add a remark explaining the change before submitting', '#C77B00'); return; } this.submitNc(); }, ncClose: () => this.closeNc(),
+      ncSubmit: () => { if (ncHasFail) { this.showToast('Fix the flagged errors before submitting', '#C77B00'); return; } this.submitNc(); }, ncClose: () => this.closeNc(),
+      ncReasonGroups, hasNcReasonGroups: ncReasonGroups.length > 0, ncRemarkRequired,
       ncSubmitLabel: 'Flag this change',
-      ncSubmitBg: (!ncHasFail && ncRemarkFilled) ? '#C77B00' : '#E6EBF2',
-      ncSubmitFg: (!ncHasFail && ncRemarkFilled) ? '#fff' : '#5A5E66',
-      ncSubmitCursor: (!ncHasFail && ncRemarkFilled) ? 'pointer' : 'not-allowed',
-      ncSubmitHelper: ncHasFail ? 'Fix errors above to continue' : (!ncRemarkFilled ? 'Add a remark to explain the change' : ''),
+      ncSubmitBg: (!ncHasFail && ncReady) ? '#C77B00' : '#E6EBF2',
+      ncSubmitFg: (!ncHasFail && ncReady) ? '#fff' : '#5A5E66',
+      ncSubmitCursor: (!ncHasFail && ncReady) ? 'pointer' : 'not-allowed',
+      ncSubmitHelper: ncHasFail ? 'Fix errors above to continue'
+        : ncNothingFlagged ? 'Flag at least one change'
+        : ncReasonsMissing.length ? ('Pick a reason for ' + ncReasonsMissing.map(g => NC_CAT_LABEL[g.key]).join(' and '))
+        : !ncRemarkFilled ? 'Remarks are mandatory when "Others" is the reason' : '',
       // Partial-submit confirm modal state
       opsPartialOpen: st.opsPartialOpen,
       opsPartialUndecided: (() => { const pp = st.opsPartialPlanId ? d.plans.find(p => p.id === st.opsPartialPlanId) : null; if (!pp) return 0; const dec = st.opsRowDec[pp.id] || {}; return pp.rows.filter((r, i) => !dec[i] || dec[i] === 'Pending').length; })(),
@@ -18979,7 +19187,7 @@ class NDCApp extends React.Component {
       showRlhCycleSwitcher: st.activeLeg === 'rlh',
       legSidebarCycleLabel: st.activeLeg && st.activeLeg !== 'rlh' ? monthLabel(st.activeCycleMonth[st.activeLeg]) : '',
       toggleCycle: () => this.setState({ cycleOpen: !st.cycleOpen }), closeCycle: () => this.setState({ cycleOpen: false }),
-      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, speedModeBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false, step4PreValidated: false }); this.go('creation'); },
+      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, speedModeBySC: {}, waveBySC: {}, localDistBySC: {}, nnKBySC: {}, nnJBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false, step4PreValidated: false }); this.go('creation'); },
       isPastCycle,
       toggleCyclePicker: () => this.setState({ cyclePickerOpen: !st.cyclePickerOpen }),      cyclePickerOpen: !!st.cyclePickerOpen,
       cyclePickerChevron: st.cyclePickerOpen ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',

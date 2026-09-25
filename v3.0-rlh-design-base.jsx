@@ -377,7 +377,7 @@ All modules
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden;`)}>
 <div style={css(`padding:16px 16px 12px;`)}>
 <div style={css(`font-size:14px; font-weight:700; color:#14171F; margin-bottom:4px;`)}>Volume file library</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:12px;`)}>NLH's own library \u2014 every FMSC Manifestation and LMSC Landing upload made this cycle, newest first.</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-bottom:12px;`)}>NLH's own library — every FMSC Manifestation and LMSC Landing upload made this cycle, newest first.</div>
 <div style={css(`display:flex; align-items:center; gap:8px; height:34px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; width:240px;`)}>
 <svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={legVolumeSearch} onInput={onLegVolumeSearch} placeholder={"Search file name…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12px; color:#14171F; background:transparent; width:100%;`)} />
@@ -535,7 +535,7 @@ All modules
 <div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB; font-size:12.5px; color:#8E96A3;`)}>Vehicle Master — not built for FM Carting yet.</div>
 </>) : (<>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;`)}>
-<div style={css(`font-size:11.5px; color:#8E96A3;`)}>NLH's own vehicle fleet \u2014 no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
+<div style={css(`font-size:11.5px; color:#8E96A3;`)}>NLH's own vehicle fleet — no LH Feasibility column, since each leg now owns its own Vehicle Master.</div>
 <button onClick={legVehAddOpenClick} disabled={legCycleIsPast} style={css(`height:32px; padding:0 12px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:${legCycleIsPast ? 'not-allowed' : 'pointer'}; opacity:${legCycleIsPast ? '0.45' : '1'}; flex-shrink:0;`)}>+ Add Vehicle Type</button>
 </div>
 {(legVehAddOpen) ? (<>
@@ -888,7 +888,7 @@ All modules
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
 <button onClick={scMasterExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
-<button onClick={triggerScMasterUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload</button>
+<button onClick={triggerScMasterUpload} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only" : "Upload CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload</button>
 <input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
 </div>
 </div>
@@ -901,7 +901,7 @@ All modules
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
 <button onClick={opHoursTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
 <button onClick={opHoursExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
-<button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
+<button onClick={triggerOpHoursUpload} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only" : "Upload CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
 <input ref={opHoursFileInputRef} type={"file"} accept={".csv"} onChange={onOpHoursFileChange} style={css(`display:none;`)} />
 </div>
 </div>
@@ -914,7 +914,7 @@ All modules
 <div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
 <button onClick={rateCardTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
 <button onClick={rateCardExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
-<button onClick={triggerRateCardUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
+<button onClick={triggerRateCardUpload} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only" : "Upload CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#095A5D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#095A5D;`)}>Upload</button>
 <input ref={rateCardFileInputRef} type={"file"} accept={".csv"} onChange={onRateCardFileChange} style={css(`display:none;`)} />
 </div>
 </div>
@@ -985,7 +985,7 @@ All modules
 </details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{scShown}</strong> of <strong style={css(`color:#14171F;`)}>{scTotal}</strong> SCs</span>
-<button onClick={addSc} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add SC</button>
+<button onClick={addSc} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to add." : "Add a Sort Centre"} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`, `background:#00337D;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M12 5v14M5 12h14"} strokeLinecap={"round"} /></svg>Add SC</button>
 </div>
 {/* 1.7 SC Master — full template columns; 1.8 freeze header via sticky; overflow-x:auto for wide table */}
 <div style={css(`display:flex; flex-direction:column; height:calc(100vh - 300px); min-height:360px; border:1px solid #E6EBF2; border-radius:8px; overflow:hidden; background:#fff;`)}>
@@ -1063,14 +1063,14 @@ All modules
 <button onClick={s.onOpenRateCard} title={"Rate Card" + (s.rateCardConfigured ? ' — configured' : ' — nothing set yet')} aria-label={"Open Rate Card for " + s.code} style={css(`width:26px; height:26px; border:1px solid ${s.rateCardConfigured ? '#0D7377' : '#E6EBF2'}; background:${s.rateCardConfigured ? '#E9F5F5' : '#fff'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 <div style={css(`padding:7px 10px; display:flex; gap:4px; justify-content:flex-end;`)}>
-<button onClick={s.rowEdit} disabled={rlhCyclePast} aria-label={"Edit row"} title={"Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={s.rowEdit} disabled={rlhCyclePast} aria-label={"Edit row"} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : "Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 {/* 2026-08-26 fix (#3) — SC Master's row action is Deactivate/Reactivate, not Delete. Active
     rows show a Deactivate button (still routes through the same confirm dialog, now fixed to
     deactivate through the engine); inactive rows show a direct Reactivate button instead. */}
 {(s.rowIsActive) ? (<>
-<button onClick={s.rowDeleteConfirm} disabled={rlhCyclePast} aria-label={"Deactivate row"} title={"Deactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#C77B00; color:#C77B00;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 2v10M18.4 6.6a9 9 0 11-12.8 0"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={s.rowDeleteConfirm} disabled={rlhCyclePast} aria-label={"Deactivate row"} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : "Deactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C77B00; color:#C77B00;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#C77B00; color:#C77B00;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 2v10M18.4 6.6a9 9 0 11-12.8 0"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </>) : (<>
-<button onClick={s.rowReactivate} disabled={rlhCyclePast} aria-label={"Reactivate row"} title={"Reactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#128A3E;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#128A3E; background:#E7F4EC;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`, `border-color:#128A3E; background:#E7F4EC;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={s.rowReactivate} disabled={rlhCyclePast} aria-label={"Reactivate row"} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : "Reactivate"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#128A3E;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#128A3E; background:#E7F4EC;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#128A3E;`, `border-color:#128A3E; background:#E7F4EC;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </>)}
 </div>
 </div>
@@ -1677,119 +1677,122 @@ All modules
 </>) : null}
 </>) : null}
 {/* DESIGN INGESTION */}
-{/* ===== DESIGN INPUTS → CONFIGURATIONS (2026-09-29) — RLH only. Reason buckets (L1 → L2) for
-    both Ops Alignment flag modals, plus Route Planner trigger defaults. Per cycle, inherited. ===== */}
+{/* ===== DESIGN INPUTS → CONFIGURATIONS (2026-09-29; table redesign 2026-09-30) — RLH only.
+    Reason buckets as flat L1 → L2 tables (in-line edit / hard delete, Add via a form), and Route
+    Planner trigger defaults as a two-column parameter list. Notes live in ⓘ hover tooltips. ===== */}
 {(isConfigTab) ? (<>
 <div style={css(`padding:18px 28px 40px; display:flex; flex-direction:column; gap:16px;`)}>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 16px; background:${cfgInherited ? '#EAF0FB' : '#E7F4EC'}; border:1px solid ${cfgInherited ? '#C5D4F0' : '#B6E0C6'}; border-radius:8px;`)}>
-<span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{cfgCycleLabel}</span>
-<span style={css(`font-size:12px; color:#5A5E66;`)}>{cfgSourceLabel}</span>
-</div>
-{(cfgReadOnly) ? (<><div style={css(`padding:10px 16px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; font-size:12px; color:#9A5E00;`)}>Past cycle \u2014 Configurations are read-only.</div></>) : null}
 {(cfgModules || []).map((cm, __iCm) => (<React.Fragment key={__iCm}>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden;`)}>
-<div style={css(`padding:14px 18px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>{cm.title}</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{cm.sub} L2 is mandatory when flagging; remarks are optional unless the L2 is \u201cOthers\u201d, which is added to every L1 automatically.</div>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:13px 18px; border-bottom:1px solid #E6EBF2;`)}>
+<span style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>{cm.title}</span>
+<span title={cm.info} style={css(`display:inline-flex; color:#8E96A3; cursor:help;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span>
+<span style={css(`flex:1;`)} />
+<button onClick={cm.onAdd} disabled={cm.readOnly} title={cm.readOnly ? 'Past cycle — read-only' : 'Add an L1 → L2 reason'} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; height:32px; padding:0 13px; border:none; background:#003F98; color:#fff; opacity:${cm.readOnly ? '0.45' : '1'}; cursor:${cm.readOnly ? 'not-allowed' : 'pointer'};`)}>+ Add reason</button>
 </div>
-{(!cm.hasL1s) ? (<><div style={css(`padding:14px 18px; font-size:12px; color:#8E96A3;`)}>No L1s yet. Until one is added, flag modals fall back to a single \u201cGeneral\u201d L1 with only \u201cOthers\u201d.</div></>) : null}
-{(cm.l1s || []).map((l1, __iL1c) => (<React.Fragment key={__iL1c}>
-<div style={css(`border-top:${__iL1c === 0 ? 'none' : '1px solid #EEF1F6'}; padding:12px 18px;`)}>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
-<span style={css(`font-size:9.5px; font-weight:700; color:#fff; background:#003F98; border-radius:4px; padding:2px 6px; letter-spacing:0.04em;`)}>L1</span>
-{(!l1.editing && !l1.confirmDel) ? (<>
-<span style={css(`flex:1; font-size:13px; font-weight:700; color:#14171F;`)}>{l1.name} <span style={css(`font-weight:500; color:#8E96A3; font-size:11.5px;`)}>\u00b7 {l1.l2Count} L2{l1.l2Count === 1 ? '' : 's'} + Others</span></span>
-{(!cm.readOnly) ? (<><button onClick={l1.onEditStart} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Rename</button><button onClick={l1.onDelAsk} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button></>) : null}
-</>) : null}
-{(l1.editing) ? (<>
-<input autoFocus value={l1.editValue} onInput={l1.onEditInput} onKeyDown={l1.onEditKey} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; min-width:0;`)} />
-<button onClick={l1.onEditSave} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Save</button>
-<button onClick={l1.onEditCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-</>) : (l1.confirmDel) ? (<>
-<span style={css(`flex:1; font-size:12px; color:#D14B4B; font-weight:600;`)}>Delete permanently? This removes the L1 and all its L2s.</span>
-<button onClick={l1.onDelConfirm} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#D14B4B; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button>
-<button onClick={l1.onDelCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-</>) : null}
+<datalist id={'cfg-l1-' + cm.m}>{(cm.l1List || []).map((n, __iDl) => (<React.Fragment key={__iDl}><option value={n} /></React.Fragment>))}</datalist>
+<div style={css(`display:grid; grid-template-columns:1fr 1.6fr 104px; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`padding:9px 18px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>L1</div>
+<div style={css(`padding:9px 14px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>L2</div>
+<div style={css(`padding:9px 18px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right;`)}>ACTIONS</div>
 </div>
-<div style={css(`margin-left:30px; display:flex; flex-direction:column; gap:4px;`)}>
-{(l1.l2s || []).map((l2, __iL2c) => (<React.Fragment key={__iL2c}>
-<div style={css(`display:flex; align-items:center; gap:8px; min-height:30px; padding:2px 0;`)}>
-<span style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; background:#F2F5FA; border-radius:4px; padding:2px 6px;`)}>L2</span>
-{(!l2.editing && !l2.confirmDel) ? (<>
-<span style={css(`flex:1; font-size:12.5px; color:#14171F;`)}>{l2.name}</span>
-{(!cm.readOnly) ? (<><button onClick={l2.onEditStart} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Rename</button><button onClick={l2.onDelAsk} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button></>) : null}
-</>) : null}
-{(l2.editing) ? (<>
-<input autoFocus value={l2.editValue} onInput={l2.onEditInput} onKeyDown={l2.onEditKey} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; min-width:0;`)} />
-<button onClick={l2.onEditSave} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Save</button>
-<button onClick={l2.onEditCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-</>) : (l2.confirmDel) ? (<>
-<span style={css(`flex:1; font-size:12px; color:#D14B4B; font-weight:600;`)}>Delete permanently?</span>
-<button onClick={l2.onDelConfirm} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#D14B4B; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button>
-<button onClick={l2.onDelCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
-</>) : null}
+{(!cm.hasRows) ? (<><div style={css(`padding:16px 18px; font-size:12px; color:#8E96A3;`)}>No reasons yet. Until one is added, flag modals show a single “General” L1 with only “Others”.</div></>) : null}
+{(cm.rows || []).map((r, __iCr) => (<React.Fragment key={__iCr}>
+{(r.confirmDel) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:9px 18px; border-top:${__iCr === 0 ? 'none' : '1px solid #EEF1F6'}; background:#FDF3F3;`)}>
+<span style={css(`flex:1; font-size:12.5px; color:#D14B4B; font-weight:600;`)}>Delete “{r.l1} → {r.l2}” permanently?</span>
+<button onClick={r.onDelConfirm} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; border:none; background:#D14B4B; color:#fff;`)}>Delete</button>
+<button onClick={r.onDelCancel} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; border:1px solid #E6EBF2; background:#fff; color:#5A5E66;`)}>Cancel</button>
+</div>
+</>) : (r.editing) ? (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1.6fr 104px; align-items:center; border-top:${__iCr === 0 ? 'none' : '1px solid #EEF1F6'}; background:#FAFBFD;`)}>
+<div style={css(`padding:7px 8px 7px 18px;`)}><input autoFocus list={'cfg-l1-' + cm.m} value={r.editL1} onInput={r.onEditL1} onKeyDown={r.onEditKey} title={"Pick an existing L1 to move this row there, or type a new one"} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%;`)} /></div>
+<div style={css(`padding:7px 8px;`)}><input value={r.editL2} onInput={r.onEditL2} onKeyDown={r.onEditKey} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%;`)} /></div>
+<div style={css(`padding:7px 18px 7px 4px; display:flex; gap:5px; justify-content:flex-end;`)}>
+<button onClick={r.onSave} title={"Save"} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; padding:0 9px; border:none; background:#003F98; color:#fff;`)}>Save</button>
+<button onClick={r.onCancel} title={"Cancel"} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; padding:0 7px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66;`)}>✕</button>
+</div>
+</div>
+</>) : (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1.6fr 104px; align-items:center; border-top:${__iCr === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
+<div style={css(`padding:10px 18px; font-size:12.5px; color:#14171F;`)}>{r.l1}</div>
+<div style={css(`padding:10px 14px; font-size:12.5px; color:#14171F;`)}>{r.l2}</div>
+<div style={css(`padding:6px 18px; display:flex; gap:5px; justify-content:flex-end;`)}>
+<button onClick={r.onEdit} disabled={cm.readOnly} title={cm.readOnly ? 'Past cycle — read-only' : 'Edit'} aria-label={"Edit reason"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; opacity:${cm.readOnly ? '0.4' : '1'}; cursor:${cm.readOnly ? 'not-allowed' : 'pointer'};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={r.onDelAsk} disabled={cm.readOnly} title={cm.readOnly ? 'Past cycle — read-only' : 'Delete'} aria-label={"Delete reason"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; opacity:${cm.readOnly ? '0.4' : '1'}; cursor:${cm.readOnly ? 'not-allowed' : 'pointer'};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+</div>
+</div>
+</>)}
+</React.Fragment>))}
 </div>
 </React.Fragment>))}
-<div style={css(`display:flex; align-items:center; gap:8px; min-height:30px;`)} title={"Always present and always last \u2014 remark becomes mandatory when chosen"}>
-<span style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; background:#F2F5FA; border-radius:4px; padding:2px 6px;`)}>L2</span>
-<span style={css(`flex:1; font-size:12.5px; color:#5A5E66;`)}>Others <span style={css(`font-size:11px; color:#8E96A3;`)}>\u2014 locked, remark mandatory</span></span>
-</div>
-{(!cm.readOnly) ? (<>
-<div style={css(`display:flex; align-items:center; gap:8px; margin-top:4px;`)}>
-<input value={l1.newL2} onInput={l1.onNewL2Input} onKeyDown={l1.onNewL2Key} placeholder={"New L2 under " + l1.name + "\u2026"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; max-width:380px;`)} />
-<button onClick={l1.onAddL2} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add L2</button>
-</div>
-</>) : null}
-</div>
-</div>
-</React.Fragment>))}
-{(!cm.readOnly) ? (<>
-<div style={css(`display:flex; align-items:center; gap:8px; padding:12px 18px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
-<input value={cm.newL1} onInput={cm.onNewL1Input} onKeyDown={cm.onNewL1Key} placeholder={"New L1 (reason category)\u2026"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; max-width:380px;`)} />
-<button onClick={cm.onAddL1} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add L1</button>
-</div>
-</>) : null}
-</div>
-</React.Fragment>))}
-{/* Route Planner trigger defaults */}
+{/* Route Planner Config Defaults — two-column parameter list */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden;`)}>
-<div style={css(`padding:14px 18px; border-bottom:1px solid #E6EBF2;`)}>
-<div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Route Planner Config Defaults</div>
-<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>Defaults for every Route Planner trigger in this cycle \u2014 each can still be overridden in Design Creation Step 2.</div>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:13px 18px; border-bottom:1px solid #E6EBF2;`)}>
+<span style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Route Planner Config Defaults</span>
+<span title={cfgDefaultsInfo} style={css(`display:inline-flex; color:#8E96A3; cursor:help;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span>
 </div>
-<div style={css(`padding:14px 18px; display:flex; gap:12px; flex-wrap:wrap;`)}>
-{(cfgToggles || []).map((t, __iCt) => (<React.Fragment key={__iCt}>
-<div title={t.info} style={css(`display:flex; align-items:center; justify-content:space-between; gap:14px; min-width:190px; padding:10px 14px; border:1px solid #E6EBF2; border-radius:8px;`)}>
-<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{t.label}</span>
-<button onClick={t.onToggle} disabled={cfgReadOnly} style={css(`height:26px; min-width:48px; padding:0 10px; border:1px solid ${t.on ? '#128A3E' : '#E6EBF2'}; background:${t.on ? '#E7F4EC' : '#fff'}; color:${t.on ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{t.on ? 'On' : 'Off'}</button>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr; background:#F2F5FA; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`padding:9px 18px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>PARAMETER</div>
+<div style={css(`padding:9px 18px; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>DEFAULT</div>
+</div>
+{(cfgParams || []).map((pr, __iCp) => (<React.Fragment key={__iCp}>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr; align-items:center; border-top:${__iCp === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
+<div style={css(`display:flex; align-items:center; gap:6px; padding:10px 18px;`)}>
+<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{pr.label}</span>
+<span title={pr.info} style={css(`display:inline-flex; color:#8E96A3; cursor:help;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span>
+{(pr.nnOnly) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#2F4FC6; background:#EAEEFB; border-radius:4px; padding:1px 6px;`)}>NEW NODE MODE</span></>) : null}
+</div>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:8px 18px;`)}>
+{(pr.isToggle) ? (<>
+<button onClick={pr.onToggle} disabled={cfgReadOnly} role={"switch"} aria-checked={pr.on} title={cfgReadOnly ? 'Past cycle — read-only' : (pr.on ? 'On — click to turn off' : 'Off — click to turn on')} style={css(`position:relative; width:40px; height:22px; border:none; border-radius:999px; background:${pr.on ? '#128A3E' : '#C3C9D4'}; cursor:${cfgReadOnly ? 'not-allowed' : 'pointer'}; opacity:${cfgReadOnly ? '0.5' : '1'}; padding:0; transition:background 150ms;`)}><span style={css(`position:absolute; top:3px; left:${pr.on ? '21px' : '3px'}; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,0.2); transition:left 150ms;`)} /></button>
+<span style={css(`font-size:12px; font-weight:600; color:${pr.on ? '#128A3E' : '#8E96A3'};`)}>{pr.on ? 'On' : 'Off'}</span>
+</>) : null}
+{(pr.isNumber) ? (<>
+<input type={"number"} min={"1"} step={"1"} value={pr.value} onInput={pr.onInput} disabled={cfgReadOnly} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%; width:96px; border-color:${pr.invalid ? '#D14B4B' : '#C3C9D4'};`)} />
+{(pr.unit) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>{pr.unit}</span></>) : null}
+{(pr.invalid) ? (<><span style={css(`font-size:11px; color:#D14B4B;`)}>Whole number, 1 or more</span></>) : null}
+</>) : null}
+</div>
 </div>
 </React.Fragment>))}
-</div>
-<div style={css(`padding:0 18px 14px; display:flex; gap:12px; flex-wrap:wrap;`)}>
-{(cfgNumbers || []).map((nf, __iCn) => (<React.Fragment key={__iCn}>
-<div style={css(`min-width:190px; padding:10px 14px; border:1px solid ${nf.invalid ? '#F0C9C9' : '#E6EBF2'}; border-radius:8px;`)}>
-<div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:6px;`)}>
-<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{nf.label}</span>
-<span title={nf.info} style={css(`display:inline-flex; color:#8E96A3; cursor:help;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span>
-{(nf.nnOnly) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#2F4FC6; background:#EAEEFB; border-radius:4px; padding:1px 6px;`)}>NEW NODE MODE</span></>) : null}
-</div>
-<div style={css(`display:flex; align-items:center; gap:6px;`)}>
-<input type={"number"} min={"1"} step={"1"} value={nf.value} onInput={nf.onInput} disabled={cfgReadOnly} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100px;`)} />
-{(nf.unit) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>{nf.unit}</span></>) : null}
-</div>
-{(nf.invalid) ? (<><div style={css(`font-size:11px; color:#D14B4B; margin-top:4px;`)}>Whole number, 1 or more</div></>) : null}
-</div>
-</React.Fragment>))}
-</div>
 {(cfgDefaultsDirty) ? (<>
 <div style={css(`display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:11px 18px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
 <span style={css(`flex:1; font-size:11.5px; color:#C77B00; font-weight:600;`)}>Unsaved changes</span>
-<button onClick={onCfgDefaultsDiscard} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; height:32px; padding:0 14px;`)}>Discard</button>
+<button onClick={onCfgDefaultsDiscard} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; height:32px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66;`)}>Discard</button>
 <button onClick={onCfgDefaultsSave} style={css(`height:32px; padding:0 16px; border:none; background:${cfgDefaultsInvalid ? '#E6EBF2' : '#003F98'}; color:${cfgDefaultsInvalid ? '#5A5E66' : '#fff'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:${cfgDefaultsInvalid ? 'not-allowed' : 'pointer'};`)}>Save defaults</button>
 </div>
 </>) : null}
 </div>
 </div>
+{/* Add reason form */}
+{(cfgAdd.open) ? (<>
+<div onClick={cfgAdd.onClose} style={css(`position:fixed; inset:0; background:rgba(11,20,48,0.45); z-index:600; display:flex; align-items:center; justify-content:center;`)}>
+<div onClick={(e) => e.stopPropagation()} style={css(`width:440px; max-width:calc(100vw - 32px); background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(11,20,48,0.3); overflow:hidden;`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #E6EBF2;`)}>
+<span style={css(`font-size:15px; font-weight:700; color:#14171F;`)}>{cfgAdd.title}</span>
+<button onClick={cfgAdd.onClose} aria-label={"Close"} style={css(`border:none; background:none; font-size:18px; color:#8E96A3; cursor:pointer;`)}>✕</button>
+</div>
+<div style={css(`padding:18px 20px; display:flex; flex-direction:column; gap:14px;`)}>
+<div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>L1 — REASON CATEGORY <span style={css(`color:#D14B4B;`)}>*</span></div>
+<input autoFocus list={"cfg-add-l1"} value={cfgAdd.l1} onInput={cfgAdd.onL1} onKeyDown={cfgAdd.onKey} placeholder={"Pick an existing L1 or type a new one"} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%; height:36px;`)} />
+<datalist id={"cfg-add-l1"}>{(cfgAdd.l1List || []).map((n, __iAdl) => (<React.Fragment key={__iAdl}><option value={n} /></React.Fragment>))}</datalist>
+{(cfgAdd.l1IsNew) ? (<><div style={css(`font-size:11px; color:#2F4FC6; margin-top:5px;`)}>New L1 — it will be created with this reason under it.</div></>) : null}
+</div>
+<div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>L2 — REASON <span style={css(`color:#D14B4B;`)}>*</span></div>
+<input value={cfgAdd.l2} onInput={cfgAdd.onL2} onKeyDown={cfgAdd.onKey} placeholder={"e.g. Vehicle Not Available"} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%; height:36px;`)} />
+<div style={css(`font-size:11px; color:#8E96A3; margin-top:5px;`)}>“Others” is added automatically under every L1.</div>
+</div>
+</div>
+<div style={css(`display:flex; justify-content:flex-end; gap:8px; padding:14px 20px; border-top:1px solid #E6EBF2; background:#FAFBFD;`)}>
+<button onClick={cfgAdd.onClose} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66;`)}>Cancel</button>
+<button onClick={cfgAdd.onSubmit} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; height:34px; padding:0 18px; border:none; background:#003F98; color:#fff;`)}>Add reason</button>
+</div>
+</div>
+</div>
+</>) : null}
 </>) : null}
 {(isIngestionTab) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:-22px -28px 20px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2;`)}>
@@ -3749,7 +3752,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`margin-bottom:16px;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>Skipped DCs \u2014 {reviewDetail.skippedDcCount} unserved</span>
+<span style={css(`font-size:13px; font-weight:700; color:#D14B4B;`)}>Skipped DCs — {reviewDetail.skippedDcCount} unserved</span>
 </div>
 <div style={css(`overflow-x:auto; margin-bottom:6px;`)}>
 <div style={css(`min-width:600px; border:1px solid #F0C9C9; border-radius:8px; overflow:hidden;`)}>
@@ -4909,7 +4912,7 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <div style={css(`display:flex; align-items:flex-start; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBF1DF; border:1px solid #F0DBA8; border-radius:8px;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"2"} style={css(`flex-shrink:0; margin-top:1px;`)}><path d={"M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <div style={css(`flex:1;`)}>
-<span style={css(`font-size:12px; font-weight:700; color:#9A5E00;`)}>{aSel.distanceVarianceCount} entered distance{aSel.distanceVarianceCount === 1 ? '' : 's'} still don\u2019t match the calculated leg by more than 25%. Decide each in its route's Review Changes.</span>
+<span style={css(`font-size:12px; font-weight:700; color:#9A5E00;`)}>{aSel.distanceVarianceCount} entered distance{aSel.distanceVarianceCount === 1 ? '' : 's'} still don’t match the calculated leg by more than 25%. Decide each in its route's Review Changes.</span>
 {(aSel.distanceVarianceEntries || []).map((e, __iDV) => (<React.Fragment key={__iDV}>
 <div style={css(`display:flex; align-items:center; gap:10px; margin-top:6px; padding-top:6px; border-top:1px solid #F0DBA8;`)}>
 <span style={css(`font-size:11.5px; color:#5A5E66;`)}>{e.text}</span>
@@ -7873,7 +7876,7 @@ class NDCApp extends React.Component {
       objectiveTimeOverride: null,
       localDistGlobal: null, localDistBySC: {},
       nnKGlobal: null, nnKBySC: {}, nnJGlobal: null, nnJBySC: {},
-      configByCycle: {}, cfgNewL1: { rp: '', rs: '' }, cfgNewL2: {}, cfgEdit: null, cfgConfirmDel: null, cfgDefaultsDraft: null,
+      configByCycle: {}, cfgRowEdit: null, cfgAddOpen: null, cfgConfirmDel: null, cfgDefaultsDraft: null,
       refBySC: {},
       droppedDcBySC: {},
       newNodeMode: false,
@@ -9954,58 +9957,58 @@ class NDCApp extends React.Component {
     const readOnly = cyc < currentMonthKey();
     const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const fmtCyc = (k) => { const p = String(k || '').split('-'); return p.length === 2 ? MON[Number(p[1]) - 1] + ' ' + p[0] : k; };
-    const cfgSourceLabel = src === cyc ? ('Saved for ' + fmtCyc(cyc))
-      : src ? ('Inherited from ' + fmtCyc(src) + ' \u2014 your first edit saves a copy for ' + fmtCyc(cyc))
-      : ('Built-in defaults \u2014 your first edit saves a copy for ' + fmtCyc(cyc));
-    const E = st.cfgEdit, D = st.cfgConfirmDel;
-    const editBind = (m, l1Id, l2Id, name) => ({
-      editing: !!(E && E.m === m && E.l1Id === l1Id && (E.l2Id || null) === (l2Id || null)),
-      editValue: E ? E.value : '',
-      onEditStart: () => this.setState({ cfgEdit: { m, l1Id, l2Id: l2Id || null, value: name }, cfgConfirmDel: null }),
-      onEditInput: (e) => this.setState({ cfgEdit: Object.assign({}, this.state.cfgEdit, { value: e.target.value }) }),
-      onEditKey: (e) => { if (e.key === 'Enter') this.cfgSaveEdit(); if (e.key === 'Escape') this.setState({ cfgEdit: null }); },
-      onEditSave: () => this.cfgSaveEdit(), onEditCancel: () => this.setState({ cfgEdit: null }),
-      confirmDel: !!(D && D.m === m && D.l1Id === l1Id && (D.l2Id || null) === (l2Id || null)),
-      onDelAsk: () => this.setState({ cfgConfirmDel: { m, l1Id, l2Id: l2Id || null }, cfgEdit: null }),
-      onDelConfirm: () => this.cfgDelete(m, l1Id, l2Id || null), onDelCancel: () => this.setState({ cfgConfirmDel: null }),
-    });
-    const mkModule = (m, title, sub) => ({
-      m, title, sub, readOnly, hasL1s: cfg.buckets[m].length > 0,
-      l1s: cfg.buckets[m].map(l1 => Object.assign({ id: l1.id, name: l1.name, l2Count: l1.l2.length, noL2: l1.l2.length === 0,
-        l2s: l1.l2.map(l2 => Object.assign({ id: l2.id, name: l2.name }, editBind(m, l1.id, l2.id, l2.name))),
-        newL2: (st.cfgNewL2 || {})[l1.id] || '',
-        onNewL2Input: (e) => this.setState({ cfgNewL2: Object.assign({}, this.state.cfgNewL2, { [l1.id]: e.target.value }) }),
-        onNewL2Key: (e) => { if (e.key === 'Enter') this.cfgAddL2(m, l1.id); },
-        onAddL2: () => this.cfgAddL2(m, l1.id),
-      }, editBind(m, l1.id, null, l1.name))),
-      newL1: (st.cfgNewL1 || {})[m] || '',
-      onNewL1Input: (e) => this.setState({ cfgNewL1: Object.assign({}, this.state.cfgNewL1, { [m]: e.target.value }) }),
-      onNewL1Key: (e) => { if (e.key === 'Enter') this.cfgAddL1(m); },
-      onAddL1: () => this.cfgAddL1(m),
-    });
-    // Route Planner trigger defaults — edited as a draft, applied on Save (whole numbers only).
+    // Cycle / inheritance / read-only notes now live in hover tooltips (no banners), per feedback.
+    const cycleNote = (src === cyc ? ('Saved for ' + fmtCyc(cyc) + '.')
+      : src ? ('Inherited from ' + fmtCyc(src) + '; your first change saves a copy for ' + fmtCyc(cyc) + '.')
+      : ('Using built-in defaults; your first change saves a copy for ' + fmtCyc(cyc) + '.'))
+      + ' Specific to this cycle; a new cycle inherits the latest earlier one.'
+      + (readOnly ? ' Past cycle \u2014 read-only.' : '');
+    const E = st.cfgRowEdit, D = st.cfgConfirmDel;
+    const mkModule = (m, title, info) => {
+      const bk = cfg.buckets[m];
+      const rows = [];
+      bk.forEach(g => g.l2.forEach(l2 => {
+        const editing = !!(E && E.m === m && E.l1Id === g.id && E.l2Id === l2.id);
+        rows.push({
+          l1: g.name, l2: l2.name, editing,
+          editL1: editing ? E.l1 : '', editL2: editing ? E.l2 : '',
+          confirmDel: !!(D && D.m === m && D.l1Id === g.id && D.l2Id === l2.id),
+          onEdit: () => this.setState({ cfgRowEdit: { m, l1Id: g.id, l2Id: l2.id, l1: g.name, l2: l2.name }, cfgConfirmDel: null }),
+          onEditL1: (ev) => this.setState({ cfgRowEdit: Object.assign({}, this.state.cfgRowEdit, { l1: ev.target.value }) }),
+          onEditL2: (ev) => this.setState({ cfgRowEdit: Object.assign({}, this.state.cfgRowEdit, { l2: ev.target.value }) }),
+          onEditKey: (ev) => { if (ev.key === 'Enter') this.cfgSaveRowEdit(); if (ev.key === 'Escape') this.setState({ cfgRowEdit: null }); },
+          onSave: () => this.cfgSaveRowEdit(), onCancel: () => this.setState({ cfgRowEdit: null }),
+          onDelAsk: () => this.setState({ cfgConfirmDel: { m, l1Id: g.id, l2Id: l2.id }, cfgRowEdit: null }),
+          onDelConfirm: () => this.cfgDeleteRow(m, g.id, l2.id), onDelCancel: () => this.setState({ cfgConfirmDel: null }),
+        });
+      }));
+      return { m, title, info: info + ' L2 is mandatory when flagging; remarks are optional unless the L2 is \u201cOthers\u201d, which is added automatically under every L1 (not listed here). ' + cycleNote,
+        readOnly, rows, hasRows: rows.length > 0, l1List: bk.map(g => g.name),
+        onAdd: () => this.setState({ cfgAddOpen: { m, l1: '', l2: '' }, cfgRowEdit: null, cfgConfirmDel: null }) };
+    };
+    const A = st.cfgAddOpen;
+    // Route Planner defaults — two-column parameter list, applied on Save (whole numbers only).
     const Dv = cfg.rpDefaults;
     const dr = st.cfgDefaultsDraft || { speedMode: Dv.speedMode, wave: Dv.wave, hold: Dv.hold, k: String(Dv.k), j: String(Dv.j), objectiveTime: String(Dv.objectiveTime) };
     const intOk = (v) => /^\d+$/.test(String(v)) && Number(v) >= 1;
     const setDr = (patch) => this.setState({ cfgDefaultsDraft: Object.assign({}, dr, patch) });
-    const numField = (key, label, unit, info, nnOnly) => ({ key, label, unit, info, nnOnly, value: dr[key], invalid: !intOk(dr[key]), onInput: (e) => setDr({ [key]: e.target.value }) });
-    const togField = (key, label, info) => ({ key, label, info, on: !!dr[key], onToggle: () => setDr({ [key]: !dr[key] }) });
+    const tog = (key, label, info) => ({ key, label, info, isToggle: true, on: !!dr[key], onToggle: () => setDr({ [key]: !dr[key] }) });
+    const num = (key, label, unit, info, nnOnly) => ({ key, label, info, isNumber: true, unit, nnOnly, value: dr[key], invalid: !intOk(dr[key]), onInput: (ev) => setDr({ [key]: ev.target.value }) });
     const cfgDefaultsInvalid = !intOk(dr.k) || !intOk(dr.j) || !intOk(dr.objectiveTime);
     return {
-      cfgCycleLabel: fmtCyc(cyc), cfgSourceLabel, cfgInherited: src !== cyc, cfgReadOnly: readOnly,
+      cfgReadOnly: readOnly,
       cfgModules: [
-        mkModule('rp', 'Reason Buckets \u2014 RLH Route Planner', 'Shown to Ops POCs when they flag a change in Route Planner Ops Alignment.'),
-        mkModule('rs', 'Reason Buckets \u2014 RLH Route Scheduler', 'Shown to SC / LH / LM users when they flag a change in Route Scheduler Ops Alignment.'),
+        mkModule('rp', 'Reason Buckets \u2014 RLH Route Planner', 'Reasons Ops POCs pick from when they flag a change in Route Planner Ops Alignment.'),
+        mkModule('rs', 'Reason Buckets \u2014 RLH Route Scheduler', 'Reasons SC / LH / LM users pick from when they flag a change in Route Scheduler Ops Alignment.'),
       ],
-      cfgToggles: [
-        togField('speedMode', 'Speed Mode', 'Off falls back to a flat default speed instead of reading Speed Profile.'),
-        togField('wave', 'Wave Staggering', 'Staggers dispatch into waves.'),
-        togField('hold', 'Hold Time', 'Allows holding at the SC within each SC\u2019s Max Hold limits.'),
-      ],
-      cfgNumbers: [
-        numField('objectiveTime', 'Objective Time', 'mins', 'Run-level; one value per trigger.', false),
-        numField('k', 'K', '', 'How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.', true),
-        numField('j', 'J', '', 'How many other existing routes a historical node on a marginal route may move to (on top of its own route and all spares). Controls how far a reordering cascade can spread once a route is unlocked.', true),
+      cfgDefaultsInfo: 'Defaults for every Route Planner trigger in this cycle; each can still be overridden in Design Creation Step 2. ' + cycleNote,
+      cfgParams: [
+        tog('speedMode', 'Speed Mode', 'Off falls back to a flat default speed instead of reading Speed Profile.'),
+        tog('wave', 'Wave Staggering', 'Staggers dispatch into waves.'),
+        tog('hold', 'Hold Time', 'Allows holding at the SC within each SC\u2019s Max Hold limits.'),
+        num('objectiveTime', 'Objective Time', 'mins', 'Run-level: one value per trigger. Whole minutes only.', false),
+        num('k', 'K', '', 'New Node Addition mode only. How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.', true),
+        num('j', 'J', '', 'New Node Addition mode only. How many other existing routes a historical node on a marginal route may move to (on top of its own route and all spares). Controls how far a reordering cascade can spread once a route is unlocked.', true),
       ],
       cfgDefaultsDirty: !!st.cfgDefaultsDraft, cfgDefaultsInvalid,
       onCfgDefaultsSave: () => {
@@ -10016,6 +10019,14 @@ class NDCApp extends React.Component {
         }
       },
       onCfgDefaultsDiscard: () => this.setState({ cfgDefaultsDraft: null }),
+      // Add reason form (modal)
+      cfgAdd: A ? { open: true, title: 'Add reason \u2014 ' + (A.m === 'rp' ? 'Route Planner' : 'Route Scheduler'), l1: A.l1, l2: A.l2,
+        l1List: cfg.buckets[A.m].map(g => g.name),
+        l1IsNew: !!String(A.l1 || '').trim() && !cfg.buckets[A.m].some(g => g.name.trim().toLowerCase() === String(A.l1).trim().toLowerCase()),
+        onL1: (ev) => this.setState({ cfgAddOpen: Object.assign({}, this.state.cfgAddOpen, { l1: ev.target.value }) }),
+        onL2: (ev) => this.setState({ cfgAddOpen: Object.assign({}, this.state.cfgAddOpen, { l2: ev.target.value }) }),
+        onKey: (ev) => { if (ev.key === 'Enter') this.cfgAddPair(); if (ev.key === 'Escape') this.setState({ cfgAddOpen: null }); },
+        onSubmit: () => this.cfgAddPair(), onClose: () => this.setState({ cfgAddOpen: null }) } : { open: false },
     };
   }
   defaultAppConfig() {
@@ -10067,44 +10078,69 @@ class NDCApp extends React.Component {
     return null;
   }
   cfgUid(pfx) { return pfx + '-' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36); }
-  cfgAddL1(m) {
-    const name = String(((this.state.cfgNewL1 || {})[m]) || '').trim();
-    const err = this.cfgNameError(name, this.activeConfig().buckets[m], null);
-    if (err) { this.showToast(err, '#C77B00'); return; }
-    if (this.updateConfig(cfg => { cfg.buckets[m].push({ id: this.cfgUid(m), key: null, name, l2: [] }); })) {
-      this.setState({ cfgNewL1: Object.assign({}, this.state.cfgNewL1, { [m]: '' }) });
-      this.showToast('L1 "' + name + '" added \u2014 add at least one L2 under it', '#128A3E');
-    }
+  // ---- Reason bucket CRUD (2026-09-30 redesign) — flat table model: one row per L1 → L2 pair,
+  // edited in place. The underlying store stays grouped (L1 → L2s), so an L1 that loses its last
+  // row disappears, and editing a row's L1 moves that row (existing L1) or creates the L1 (new).
+  // Editing the last row of an L1 to a new name RENAMES the group instead, which keeps its
+  // suggestion key (so flag modals still pre-select it for the matching change type).
+  cfgL1Error(name) {
+    const n = String(name || '').trim();
+    if (!n) return 'L1 can\u2019t be empty';
+    if (n.toLowerCase() === 'others') return '"Others" is reserved \u2014 it\u2019s added to every L1 automatically';
+    return null;
   }
-  cfgAddL2(m, l1Id) {
-    const name = String(((this.state.cfgNewL2 || {})[l1Id]) || '').trim();
-    const l1 = this.activeConfig().buckets[m].find(x => x.id === l1Id); if (!l1) return;
-    const err = this.cfgNameError(name, l1.l2, null);
-    if (err) { this.showToast(err, '#C77B00'); return; }
-    if (this.updateConfig(cfg => { cfg.buckets[m].find(x => x.id === l1Id).l2.push({ id: this.cfgUid(l1Id), name }); })) {
-      this.setState({ cfgNewL2: Object.assign({}, this.state.cfgNewL2, { [l1Id]: '' }) });
-    }
-  }
-  cfgSaveEdit() {
-    const e = this.state.cfgEdit; if (!e) return;
-    const bk = this.activeConfig().buckets[e.m];
-    const l1 = bk.find(x => x.id === e.l1Id); if (!l1) { this.setState({ cfgEdit: null }); return; }
-    const err = e.l2Id ? this.cfgNameError(e.value, l1.l2, e.l2Id) : this.cfgNameError(e.value, bk, e.l1Id);
-    if (err) { this.showToast(err, '#C77B00'); return; }
-    const name = String(e.value).trim();
+  cfgAddPair() {
+    const f = this.state.cfgAddOpen; if (!f) return;
+    const m = f.m, l1Name = String(f.l1 || '').trim(), l2Name = String(f.l2 || '').trim();
+    const e1 = this.cfgL1Error(l1Name); if (e1) { this.showToast(e1, '#C77B00'); return; }
+    const bk = this.activeConfig().buckets[m];
+    const target = bk.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
+    const e2 = this.cfgNameError(l2Name, target ? target.l2 : [], null); if (e2) { this.showToast(e2.replace('Name', 'L2'), '#C77B00'); return; }
     if (this.updateConfig(cfg => {
-      const t1 = cfg.buckets[e.m].find(x => x.id === e.l1Id);
-      if (e.l2Id) { const t2 = t1.l2.find(x => x.id === e.l2Id); if (t2) t2.name = name; } else { t1.name = name; }
-    })) this.setState({ cfgEdit: null });
+      const b = cfg.buckets[m];
+      let t = b.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
+      if (!t) { t = { id: this.cfgUid(m), key: null, name: l1Name, l2: [] }; b.push(t); }
+      t.l2.push({ id: this.cfgUid(t.id), name: l2Name });
+    })) {
+      this.setState({ cfgAddOpen: null });
+      this.showToast('Added ' + l1Name + ' \u2192 ' + l2Name, '#128A3E');
+    }
   }
-  // Hard delete, per product decision. Feedback already submitted keeps the reason text it was
-  // submitted with (stored as a snapshot, not a reference), so nothing already flagged breaks.
-  cfgDelete(m, l1Id, l2Id) {
-    const ok = this.updateConfig(cfg => {
-      if (l2Id) { const t1 = cfg.buckets[m].find(x => x.id === l1Id); if (t1) t1.l2 = t1.l2.filter(x => x.id !== l2Id); }
-      else cfg.buckets[m] = cfg.buckets[m].filter(x => x.id !== l1Id);
-    });
-    if (ok) { this.setState({ cfgConfirmDel: null }); this.showToast(l2Id ? 'L2 deleted' : 'L1 and all its L2s deleted', '#D14B4B'); }
+  cfgSaveRowEdit() {
+    const e = this.state.cfgRowEdit; if (!e) return;
+    const l1Name = String(e.l1 || '').trim(), l2Name = String(e.l2 || '').trim();
+    const e1 = this.cfgL1Error(l1Name); if (e1) { this.showToast(e1, '#C77B00'); return; }
+    const bk = this.activeConfig().buckets[e.m];
+    const from = bk.find(x => x.id === e.l1Id); if (!from) { this.setState({ cfgRowEdit: null }); return; }
+    const sameGroup = from.name.trim().toLowerCase() === l1Name.toLowerCase();
+    const existing = sameGroup ? from : bk.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
+    // L2 must be unique within the L1 it ends up under (ignoring this row itself).
+    const siblings = existing ? existing.l2 : (from.l2.length === 1 ? from.l2 : []);
+    const e2 = this.cfgNameError(l2Name, siblings, e.l2Id); if (e2) { this.showToast(e2.replace('Name', 'L2'), '#C77B00'); return; }
+    if (this.updateConfig(cfg => {
+      const b = cfg.buckets[e.m];
+      const src = b.find(x => x.id === e.l1Id); const item = src.l2.find(x => x.id === e.l2Id); if (!item) return false;
+      item.name = l2Name;
+      if (src.name.trim().toLowerCase() === l1Name.toLowerCase()) { src.name = l1Name; return; }
+      const tgt = b.find(x => x.id !== src.id && x.name.trim().toLowerCase() === l1Name.toLowerCase());
+      if (tgt) {
+        src.l2 = src.l2.filter(x => x.id !== item.id); tgt.l2.push(item);
+        if (!src.l2.length) cfg.buckets[e.m] = b.filter(x => x.id !== src.id);
+      } else if (src.l2.length === 1) {
+        src.name = l1Name; // last row → rename the L1 itself, keeping its suggestion key
+      } else {
+        src.l2 = src.l2.filter(x => x.id !== item.id);
+        b.splice(b.indexOf(src) + 1, 0, { id: this.cfgUid(e.m), key: null, name: l1Name, l2: [item] });
+      }
+    })) this.setState({ cfgRowEdit: null });
+  }
+  // Hard delete (per product decision). Submitted feedback keeps its reason text snapshot.
+  cfgDeleteRow(m, l1Id, l2Id) {
+    if (this.updateConfig(cfg => {
+      const b = cfg.buckets[m]; const g = b.find(x => x.id === l1Id); if (!g) return false;
+      g.l2 = g.l2.filter(x => x.id !== l2Id);
+      if (!g.l2.length) cfg.buckets[m] = b.filter(x => x.id !== l1Id);
+    })) { this.setState({ cfgConfirmDel: null }); this.showToast('Reason deleted', '#D14B4B'); }
   }
   // Reason picker data for a flag modal: L1 options (falls back to a single "General" L1 if a
   // planner has deleted every L1, so flagging never dead-ends), and the chosen L1's L2 list with
@@ -13434,6 +13470,14 @@ class NDCApp extends React.Component {
           },
           objectiveTimeInvalid: st.objectiveTimeDraft != null,
           onObjectiveTimeReset: () => this.setState({ objectiveTimeDraft: null, objectiveTimeOverride: null }),
+          // 2026-09-30 fix — Local Distance (ALL) bindings restored. The 09-29 Configurations change
+          // replaced a text range that also contained these, so the JSX referenced names that no
+          // longer existed and Step 2 threw "onLocalDistGlobalDec is not defined" on render.
+          localDistHeaderLabel: st.localDistGlobal != null ? (st.localDistGlobal + ' km') : 'SC Master',
+          onLocalDistGlobalDec: () => this.setState({ localDistGlobal: Math.max(10, (st.localDistGlobal != null ? st.localDistGlobal : 100) - 10), localDistBySC: {} }),
+          onLocalDistGlobalInc: () => this.setState({ localDistGlobal: Math.min(500, (st.localDistGlobal != null ? st.localDistGlobal : 100) + 10), localDistBySC: {} }),
+          hasLocalDistOverride: st.localDistGlobal != null || Object.keys(st.localDistBySC || {}).length > 0,
+          onLocalDistReset: () => this.setState({ localDistGlobal: null, localDistBySC: {} }),
         };
       })(),
       nnKInfo: 'How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.',

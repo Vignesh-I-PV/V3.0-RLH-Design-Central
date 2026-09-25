@@ -1677,6 +1677,120 @@ All modules
 </>) : null}
 </>) : null}
 {/* DESIGN INGESTION */}
+{/* ===== DESIGN INPUTS → CONFIGURATIONS (2026-09-29) — RLH only. Reason buckets (L1 → L2) for
+    both Ops Alignment flag modals, plus Route Planner trigger defaults. Per cycle, inherited. ===== */}
+{(isConfigTab) ? (<>
+<div style={css(`padding:18px 28px 40px; display:flex; flex-direction:column; gap:16px;`)}>
+<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 16px; background:${cfgInherited ? '#EAF0FB' : '#E7F4EC'}; border:1px solid ${cfgInherited ? '#C5D4F0' : '#B6E0C6'}; border-radius:8px;`)}>
+<span style={css(`font-size:12.5px; font-weight:700; color:#14171F;`)}>{cfgCycleLabel}</span>
+<span style={css(`font-size:12px; color:#5A5E66;`)}>{cfgSourceLabel}</span>
+</div>
+{(cfgReadOnly) ? (<><div style={css(`padding:10px 16px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; font-size:12px; color:#9A5E00;`)}>Past cycle \u2014 Configurations are read-only.</div></>) : null}
+{(cfgModules || []).map((cm, __iCm) => (<React.Fragment key={__iCm}>
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden;`)}>
+<div style={css(`padding:14px 18px; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>{cm.title}</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>{cm.sub} L2 is mandatory when flagging; remarks are optional unless the L2 is \u201cOthers\u201d, which is added to every L1 automatically.</div>
+</div>
+{(!cm.hasL1s) ? (<><div style={css(`padding:14px 18px; font-size:12px; color:#8E96A3;`)}>No L1s yet. Until one is added, flag modals fall back to a single \u201cGeneral\u201d L1 with only \u201cOthers\u201d.</div></>) : null}
+{(cm.l1s || []).map((l1, __iL1c) => (<React.Fragment key={__iL1c}>
+<div style={css(`border-top:${__iL1c === 0 ? 'none' : '1px solid #EEF1F6'}; padding:12px 18px;`)}>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-bottom:8px;`)}>
+<span style={css(`font-size:9.5px; font-weight:700; color:#fff; background:#003F98; border-radius:4px; padding:2px 6px; letter-spacing:0.04em;`)}>L1</span>
+{(!l1.editing && !l1.confirmDel) ? (<>
+<span style={css(`flex:1; font-size:13px; font-weight:700; color:#14171F;`)}>{l1.name} <span style={css(`font-weight:500; color:#8E96A3; font-size:11.5px;`)}>\u00b7 {l1.l2Count} L2{l1.l2Count === 1 ? '' : 's'} + Others</span></span>
+{(!cm.readOnly) ? (<><button onClick={l1.onEditStart} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Rename</button><button onClick={l1.onDelAsk} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button></>) : null}
+</>) : null}
+{(l1.editing) ? (<>
+<input autoFocus value={l1.editValue} onInput={l1.onEditInput} onKeyDown={l1.onEditKey} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; min-width:0;`)} />
+<button onClick={l1.onEditSave} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Save</button>
+<button onClick={l1.onEditCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+</>) : (l1.confirmDel) ? (<>
+<span style={css(`flex:1; font-size:12px; color:#D14B4B; font-weight:600;`)}>Delete permanently? This removes the L1 and all its L2s.</span>
+<button onClick={l1.onDelConfirm} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#D14B4B; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button>
+<button onClick={l1.onDelCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+</>) : null}
+</div>
+<div style={css(`margin-left:30px; display:flex; flex-direction:column; gap:4px;`)}>
+{(l1.l2s || []).map((l2, __iL2c) => (<React.Fragment key={__iL2c}>
+<div style={css(`display:flex; align-items:center; gap:8px; min-height:30px; padding:2px 0;`)}>
+<span style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; background:#F2F5FA; border-radius:4px; padding:2px 6px;`)}>L2</span>
+{(!l2.editing && !l2.confirmDel) ? (<>
+<span style={css(`flex:1; font-size:12.5px; color:#14171F;`)}>{l2.name}</span>
+{(!cm.readOnly) ? (<><button onClick={l2.onEditStart} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Rename</button><button onClick={l2.onDelAsk} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#fff; color:#D14B4B; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button></>) : null}
+</>) : null}
+{(l2.editing) ? (<>
+<input autoFocus value={l2.editValue} onInput={l2.onEditInput} onKeyDown={l2.onEditKey} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; min-width:0;`)} />
+<button onClick={l2.onEditSave} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#003F98; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Save</button>
+<button onClick={l2.onEditCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+</>) : (l2.confirmDel) ? (<>
+<span style={css(`flex:1; font-size:12px; color:#D14B4B; font-weight:600;`)}>Delete permanently?</span>
+<button onClick={l2.onDelConfirm} style={css(`height:26px; padding:0 9px; border:1px solid #F0C9C9; background:#D14B4B; color:#fff; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Delete</button>
+<button onClick={l2.onDelCancel} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>Cancel</button>
+</>) : null}
+</div>
+</React.Fragment>))}
+<div style={css(`display:flex; align-items:center; gap:8px; min-height:30px;`)} title={"Always present and always last \u2014 remark becomes mandatory when chosen"}>
+<span style={css(`font-size:9.5px; font-weight:700; color:#5A5E66; background:#F2F5FA; border-radius:4px; padding:2px 6px;`)}>L2</span>
+<span style={css(`flex:1; font-size:12.5px; color:#5A5E66;`)}>Others <span style={css(`font-size:11px; color:#8E96A3;`)}>\u2014 locked, remark mandatory</span></span>
+</div>
+{(!cm.readOnly) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; margin-top:4px;`)}>
+<input value={l1.newL2} onInput={l1.onNewL2Input} onKeyDown={l1.onNewL2Key} placeholder={"New L2 under " + l1.name + "\u2026"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; max-width:380px;`)} />
+<button onClick={l1.onAddL2} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add L2</button>
+</div>
+</>) : null}
+</div>
+</div>
+</React.Fragment>))}
+{(!cm.readOnly) ? (<>
+<div style={css(`display:flex; align-items:center; gap:8px; padding:12px 18px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
+<input value={cm.newL1} onInput={cm.onNewL1Input} onKeyDown={cm.onNewL1Key} placeholder={"New L1 (reason category)\u2026"} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; flex:1; max-width:380px;`)} />
+<button onClick={cm.onAddL1} style={css(`height:26px; padding:0 9px; border:1px solid #003F98; background:#fff; color:#003F98; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer;`)}>+ Add L1</button>
+</div>
+</>) : null}
+</div>
+</React.Fragment>))}
+{/* Route Planner trigger defaults */}
+<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden;`)}>
+<div style={css(`padding:14px 18px; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Route Planner Config Defaults</div>
+<div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>Defaults for every Route Planner trigger in this cycle \u2014 each can still be overridden in Design Creation Step 2.</div>
+</div>
+<div style={css(`padding:14px 18px; display:flex; gap:12px; flex-wrap:wrap;`)}>
+{(cfgToggles || []).map((t, __iCt) => (<React.Fragment key={__iCt}>
+<div title={t.info} style={css(`display:flex; align-items:center; justify-content:space-between; gap:14px; min-width:190px; padding:10px 14px; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{t.label}</span>
+<button onClick={t.onToggle} disabled={cfgReadOnly} style={css(`height:26px; min-width:48px; padding:0 10px; border:1px solid ${t.on ? '#128A3E' : '#E6EBF2'}; background:${t.on ? '#E7F4EC' : '#fff'}; color:${t.on ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{t.on ? 'On' : 'Off'}</button>
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`padding:0 18px 14px; display:flex; gap:12px; flex-wrap:wrap;`)}>
+{(cfgNumbers || []).map((nf, __iCn) => (<React.Fragment key={__iCn}>
+<div style={css(`min-width:190px; padding:10px 14px; border:1px solid ${nf.invalid ? '#F0C9C9' : '#E6EBF2'}; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:6px;`)}>
+<span style={css(`font-size:12.5px; font-weight:600; color:#14171F;`)}>{nf.label}</span>
+<span title={nf.info} style={css(`display:inline-flex; color:#8E96A3; cursor:help;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span>
+{(nf.nnOnly) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#2F4FC6; background:#EAEEFB; border-radius:4px; padding:1px 6px;`)}>NEW NODE MODE</span></>) : null}
+</div>
+<div style={css(`display:flex; align-items:center; gap:6px;`)}>
+<input type={"number"} min={"1"} step={"1"} value={nf.value} onInput={nf.onInput} disabled={cfgReadOnly} style={css(`height:30px; padding:0 10px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100px;`)} />
+{(nf.unit) ? (<><span style={css(`font-size:12px; color:#5A5E66;`)}>{nf.unit}</span></>) : null}
+</div>
+{(nf.invalid) ? (<><div style={css(`font-size:11px; color:#D14B4B; margin-top:4px;`)}>Whole number, 1 or more</div></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+{(cfgDefaultsDirty) ? (<>
+<div style={css(`display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:11px 18px; border-top:1px solid #EEF1F6; background:#FAFBFD;`)}>
+<span style={css(`flex:1; font-size:11.5px; color:#C77B00; font-weight:600;`)}>Unsaved changes</span>
+<button onClick={onCfgDefaultsDiscard} style={css(`height:26px; padding:0 9px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; height:32px; padding:0 14px;`)}>Discard</button>
+<button onClick={onCfgDefaultsSave} style={css(`height:32px; padding:0 16px; border:none; background:${cfgDefaultsInvalid ? '#E6EBF2' : '#003F98'}; color:${cfgDefaultsInvalid ? '#5A5E66' : '#fff'}; font-family:inherit; font-size:12px; font-weight:600; border-radius:6px; cursor:${cfgDefaultsInvalid ? 'not-allowed' : 'pointer'};`)}>Save defaults</button>
+</div>
+</>) : null}
+</div>
+</div>
+</>) : null}
 {(isIngestionTab) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:-22px -28px 20px; padding:11px 28px; background:#fff; border-bottom:1px solid #E6EBF2;`)}>
 {(ingTabs || []).map((t, __i34) => (<React.Fragment key={__i34}><button onClick={t.onClick} style={css(`display:flex; align-items:center; gap:7px; padding:6px 12px; border:1px solid ${t.bd}; background:${t.bg}; border-radius:8px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:${t.weight}; color:${t.color};`)}>{t.label}<span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; opacity:0.7;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>{t.tip}</span></span>{(t.soon) ? (<><span style={css(`padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EDEFF3; color:#5A5E66;`)}>SOON</span></>) : null}</button></React.Fragment>))}
@@ -2228,6 +2342,15 @@ All modules
 <input value={runName} onInput={onRunNameChange} placeholder={"e.g. July-South-Run1"} style={css(`width:100%; height:36px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
 <div style={css(`font-size:11px; color:#8E96A3; margin-top:5px;`)}>Leave blank and each run is named after its Run ID.</div>
 </div>
+{/* 2026-09-29 — Objective Time (run-level, whole minutes), default from Configurations */}
+<div style={css(`min-width:180px; margin-top:14px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>OBJECTIVE TIME <span style={css(`font-weight:400; color:#8E96A3; letter-spacing:0;`)}>(mins)</span></div>
+<div style={css(`display:flex; align-items:center; gap:8px;`)}>
+<input type={"number"} min={"1"} step={"1"} value={objectiveTimeVal} onInput={onObjectiveTimeInput} style={css(`width:110px; height:36px; padding:0 12px; border:1px solid ${objectiveTimeInvalid ? '#D14B4B' : '#E6EBF2'}; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
+{(objectiveTimeOverridden || objectiveTimeInvalid) ? (<><button onClick={onObjectiveTimeReset} style={css(`border:none; background:none; color:#8E96A3; font-size:11px; text-decoration:underline; cursor:pointer; font-family:inherit; padding:0;`)}>Reset to default</button></>) : null}
+</div>
+<div style={css(`font-size:11px; color:${objectiveTimeInvalid ? '#D14B4B' : '#8E96A3'}; margin-top:5px;`)}>{objectiveTimeInvalid ? 'Whole minutes only (1 or more)' : ('Default from Configurations: ' + objectiveTimeDefault + ' mins')}</div>
+</div>
 </div>
 {/* Algorithm Mode — New Node Addition toggle */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:18px 24px; margin-bottom:16px;`)}>
@@ -2311,6 +2434,11 @@ All modules
 <div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>WAVE STAGGER (ALL)</div>
 <button onClick={onWaveGlobalToggle} style={css(`height:20px; padding:0 8px; border:1px solid ${waveGlobal ? '#128A3E' : '#E6EBF2'}; background:${waveGlobal ? '#E7F4EC' : '#fff'}; color:${waveGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{waveGlobalLabel}</button>
 </div>
+{/* 2026-09-29 — Hold Time On/Off (ALL), default from Configurations */}
+<div style={css(`padding:8px 14px;`)}>
+<div style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>HOLD TIME (ALL)</div>
+<button onClick={onHoldGlobalToggle} style={css(`height:20px; padding:0 8px; border:1px solid ${holdGlobal ? '#128A3E' : '#E6EBF2'}; background:${holdGlobal ? '#E7F4EC' : '#fff'}; color:${holdGlobal ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:10px; font-weight:700; border-radius:4px; cursor:pointer;`)}>{holdGlobalLabel}</button>
+</div>
 <div style={css(`padding:8px 14px;`)}>
 <div style={css(`display:flex; align-items:center; font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:4px;`)}>LOCAL DIST (ALL)<span title={"DC-to-SC distance up to which a DC counts as Local; beyond it, Non-Local. Defaults to each SC's own SC Master value."} style={css(`display:inline-flex; align-items:center; color:#8E96A3; cursor:help; margin-left:3px;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><circle cx={"12"} cy={"12"} r={"9"} /><path d={"M12 11v5M12 8h.01"} strokeLinecap={"round"} /></svg></span></div>
 <div style={css(`display:inline-flex; align-items:center; gap:3px;`)}><button onClick={onLocalDistGlobalDec} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>−</button><span style={css(`font-size:11px; font-weight:700; color:#14171F; min-width:30px; text-align:center; font-variant-numeric:tabular-nums;`)}>{localDistHeaderLabel}</span><button onClick={onLocalDistGlobalInc} style={css(`width:18px; height:20px; border:1px solid #E6EBF2; background:#fff; border-radius:4px; cursor:pointer; font-size:11px; color:#5A5E66; padding:0; font-family:inherit;`)}>+</button>{(hasLocalDistOverride) ? (<><button onClick={onLocalDistReset} title={"Back to each SC's own SC Master value"} style={css(`margin-left:5px; border:none; background:none; color:#8E96A3; font-size:10px; text-decoration:underline; cursor:pointer; font-family:inherit; padding:0;`)}>Reset</button></>) : null}</div>
@@ -2356,6 +2484,10 @@ All modules
 {/* 2026-09-28 — Wave Stagger per-row toggle */}
 <div style={css(`padding:7px 14px;`)}>
 <button onClick={c.onToggleWave} style={css(`height:26px; padding:0 10px; border:1px solid ${c.wave ? '#128A3E' : '#E6EBF2'}; background:${c.wave ? '#E7F4EC' : '#fff'}; color:${c.wave ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{c.waveLabel}</button>
+</div>
+{/* 2026-09-29 — Hold Time per-row toggle */}
+<div style={css(`padding:7px 14px;`)}>
+<button onClick={c.onToggleHold} style={css(`height:26px; padding:0 10px; border:1px solid ${c.hold ? '#128A3E' : '#E6EBF2'}; background:${c.hold ? '#E7F4EC' : '#fff'}; color:${c.hold ? '#128A3E' : '#8E96A3'}; font-family:inherit; font-size:11.5px; font-weight:700; border-radius:5px; cursor:pointer;`)}>{c.holdLabel}</button>
 </div>
 {/* 2026-09-28 — Local Distance Threshold per-row stepper (defaults to SC Master) */}
 <div style={css(`padding:7px 14px; min-width:0;`)}>
@@ -6155,19 +6287,23 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 </React.Fragment>))}
 </div>
 </>) : null}
-{/* 2026-09-28 — reason dropdown per change category present (Vehicle / TP / Route), same
-    pattern as Route Scheduler's flag modal. Remark is optional unless a reason is "Others". */}
-{(hasNcReasonGroups) ? (<>
-<div style={css(`display:flex; flex-direction:column; gap:10px; margin-bottom:14px;`)}>
-{(ncReasonGroups || []).map((g, __iNcR) => (<React.Fragment key={__iNcR}>
+{/* 2026-09-29 — L1 → L2 reason picker, lists from Design Inputs → Configurations (this cycle).
+    L1 pre-selects from the change being flagged; L2 is mandatory, "Others" always last. */}
+{(ncShowReason) ? (<>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;`)}>
 <div>
-<div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>{g.label} <span style={css(`color:#D14B4B;`)}>*</span></div>
-<select value={g.value} onChange={g.onChange} style={css(`width:100%; height:36px; padding:0 10px; border:1px solid ${g.missing ? '#EDD9AF' : '#E6EBF2'}; border-radius:8px; font-family:inherit; font-size:12.5px; color:${g.value ? '#14171F' : '#8E96A3'}; background:#fff; outline:none;`)}>
-<option value={""}>Select a reason…</option>
-{(g.options || []).map((o, __iNcO) => (<React.Fragment key={__iNcO}><option value={o}>{o}</option></React.Fragment>))}
+<div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Reason category (L1)</div>
+<select value={ncL1Val} onChange={onNcL1} style={css(`width:100%; height:36px; padding:0 10px; border-radius:8px; font-family:inherit; font-size:12.5px; background:#fff; outline:none; border:1px solid #E6EBF2; color:#14171F;`)}>
+{(ncL1Options || []).map((o, __iL1) => (<React.Fragment key={__iL1}><option value={o.value}>{o.label}</option></React.Fragment>))}
 </select>
 </div>
-</React.Fragment>))}
+<div>
+<div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Reason (L2) <span style={css(`color:#D14B4B;`)}>*</span></div>
+<select value={ncL2Val} onChange={onNcL2} style={css(`width:100%; height:36px; padding:0 10px; border-radius:8px; font-family:inherit; font-size:12.5px; background:#fff; outline:none; border:1px solid ${ncL2Missing ? '#EDD9AF' : '#E6EBF2'}; color:${ncL2Val ? '#14171F' : '#8E96A3'};`)}>
+<option value={""}>Select a reason…</option>
+{(ncL2Options || []).map((o, __iL2) => (<React.Fragment key={__iL2}><option value={o}>{o}</option></React.Fragment>))}
+</select>
+</div>
 </div>
 </>) : null}
 <div style={css(`margin-bottom:16px;`)}><div style={css(`font-size:11px; font-weight:600; color:#5A5E66; margin-bottom:5px;`)}>Remark {(ncRemarkRequired) ? (<><span style={css(`color:#D14B4B;`)}>*</span> <span style={css(`font-weight:400; color:#8E96A3;`)}>— required when the reason is "Others"</span></>) : (<><span style={css(`font-weight:400; color:#8E96A3;`)}>(optional)</span></>)}</div><textarea value={ncRemark} onInput={onNcRemark} placeholder={"Why this change is needed (ground reality, compliance, vendor)…"} style={css(`width:100%; min-height:64px; padding:10px 11px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; resize:vertical;`)} /></div>
@@ -6298,14 +6434,18 @@ No changes ({c.noChangeCount}) {c.expanded ? '(hide)' : '(show)'}
 <button onClick={f.onToggleFlag} aria-label={"Flag this field"} style={css(`display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 9px; border:1px solid ${f.toggleBd}; background:${f.toggleBg}; color:${f.toggleFg}; font-family:inherit; font-size:10.5px; font-weight:700; border-radius:6px; cursor:pointer;`)}><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M5 21V4M5 4h11l-2 4 2 4H5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{f.toggleLabel}</button>
 </div>
 {(f.flagged) ? (<>
-<div style={css(`display:grid; grid-template-columns:1fr 1.3fr; gap:8px; margin-top:8px;`)}>
+<div style={css(`display:grid; grid-template-columns:0.9fr 1.1fr 1.3fr; gap:8px; margin-top:8px;`)}>
 {(f.isNumeric) ? (<><input type={"number"} step={"0.25"} min={"0.25"} value={f.value} onInput={f.onInput} placeholder={"hrs"} title={"Free numeric entry, in hours \u2014 rounds up to the nearest 15 min (0.25 hr) on submit"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; box-sizing:border-box;`)} /></>) : (<>
 <select value={f.value} onChange={f.onInput} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
 {(f.options || []).map((op, __iSNCo) => (<React.Fragment key={__iSNCo}><option value={op.value}>{op.label}</option></React.Fragment>))}
 </select>
 </>)}
-<select value={f.reasonVal} onChange={f.onReason} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
-<option value={""}>Select reason…</option>
+{/* 2026-09-29 — L1 (reason category) → L2 (reason), from Design Inputs → Configurations */}
+<select value={f.l1Val} onChange={f.onL1} title={"Reason category (L1)"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
+{(f.l1Options || []).map((o, __iSL1) => (<React.Fragment key={__iSL1}><option value={o.value}>{o.label}</option></React.Fragment>))}
+</select>
+<select value={f.reasonVal} onChange={f.onReason} title={"Reason (L2) \u2014 required"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:${f.reasonVal ? '#14171F' : '#8E96A3'}; outline:none; background:#fff; box-sizing:border-box;`)}>
+<option value={""}>Select reason (L2)…</option>
 {(f.reasons || []).map((rs, __iSNC2) => (<React.Fragment key={__iSNC2}><option value={rs}>{rs}</option></React.Fragment>))}
 </select>
 </div>
@@ -7721,15 +7861,19 @@ class NDCApp extends React.Component {
       // 2026-09-25 addition (item 2.1) — Speed Mode On/Off, same global-default + per-SC-
       // override pattern as HW above (global default read via speedModeGlobal, per-SC override
       // in speedModeBySC, cleared whenever the global control is used).
-      speedModeGlobal: true,
       speedModeBySC: {},
       // 2026-09-28 — more Step 2 per-SC params, same global-default + per-SC-override pattern:
       // Wave Staggering On/Off; Local Distance Threshold (global null = each SC's own SC Master
       // value); New Node Addition's K (routes scanned for insertion) and J (reorder cascade
       // spread), both default 1.
-      waveGlobal: false, waveBySC: {},
+      // 2026-09-29 — globals start null = "use the Configurations tab's default for this cycle".
+      speedModeGlobal: null,
+      waveGlobal: null, waveBySC: {},
+      holdGlobal: null, holdBySC: {},
+      objectiveTimeOverride: null,
       localDistGlobal: null, localDistBySC: {},
-      nnKGlobal: 1, nnKBySC: {}, nnJGlobal: 1, nnJBySC: {},
+      nnKGlobal: null, nnKBySC: {}, nnJGlobal: null, nnJBySC: {},
+      configByCycle: {}, cfgNewL1: { rp: '', rs: '' }, cfgNewL2: {}, cfgEdit: null, cfgConfirmDel: null, cfgDefaultsDraft: null,
       refBySC: {},
       droppedDcBySC: {},
       newNodeMode: false,
@@ -7757,7 +7901,7 @@ class NDCApp extends React.Component {
       ackOpen: false, ackPlanId: null,
       unfreezeOpen: false, unfreezePlanId: null,
       finOpen: false, finPlanId: null, finDirectOpen: false, finDirectSCcode: null,
-      opsPlanId: null, opsPage: 0, opsSection: 'details', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', ncReasons: {}, opsSubmitted: { 'PL-GGNS': { by: 'Rahul Sharma', at: '05 Jul' }, 'PL-NOIS': { by: 'Rahul Sharma', at: '06 Jul' }, 'PL-JAIS': { by: 'Rahul Sharma', at: '06 Jul' } },
+      opsPlanId: null, opsPage: 0, opsSection: 'details', opsRowDec: {}, opsRowFb: {}, opsTpOrder: {}, ncOpen: false, ncDecision: 'Needs Change', ncRow: null, ncCells: {}, ncFlags: {}, ncDcCells: {}, ncRemark: '', ncL1: '', ncL2: '', opsSubmitted: { 'PL-GGNS': { by: 'Rahul Sharma', at: '05 Jul' }, 'PL-NOIS': { by: 'Rahul Sharma', at: '06 Jul' }, 'PL-JAIS': { by: 'Rahul Sharma', at: '06 Jul' } },
       alignExpandedRow: {}, opsExpandedRow: {},
       alignAllOpen: false, alignAllPlanId: null, opsPartialOpen: false, opsPartialPlanId: null, delConfirm: null,
       acceptAllPlanOpen: false, acceptAllPlanId: null,
@@ -9795,6 +9939,183 @@ class NDCApp extends React.Component {
   }
   // saveLmdcEdit(code) (2026-08-06) — commits the inline-edit draft for one LMDC's 5 editable
   // fields into st.lmdcEdits, keyed by LMDC Code — never mutates d.lmdcs itself.
+  // ===== Configurations (2026-09-29) — Design Inputs → Configurations tab =====
+  // One config object per RLH cycle: reason buckets (L1 → L2) for Route Planner and Route
+  // Scheduler flag modals, plus Route Planner's per-trigger defaults. Cycle-specific but
+  // inherited: a cycle with no config of its own uses the nearest EARLIER cycle's (live — edits
+  // to that earlier cycle flow through until this cycle saves its own copy), else built-ins.
+  // Editing always writes a full copy onto the active cycle (copy-on-write), so an edit here
+  // never changes any earlier cycle.
+  configVals() {
+    const st = this.state;
+    const cyc = (st.activeCycleMonth || {}).rlh || currentMonthKey();
+    const cfg = this.activeConfig();
+    const src = this.configSourceFor(cyc);
+    const readOnly = cyc < currentMonthKey();
+    const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const fmtCyc = (k) => { const p = String(k || '').split('-'); return p.length === 2 ? MON[Number(p[1]) - 1] + ' ' + p[0] : k; };
+    const cfgSourceLabel = src === cyc ? ('Saved for ' + fmtCyc(cyc))
+      : src ? ('Inherited from ' + fmtCyc(src) + ' \u2014 your first edit saves a copy for ' + fmtCyc(cyc))
+      : ('Built-in defaults \u2014 your first edit saves a copy for ' + fmtCyc(cyc));
+    const E = st.cfgEdit, D = st.cfgConfirmDel;
+    const editBind = (m, l1Id, l2Id, name) => ({
+      editing: !!(E && E.m === m && E.l1Id === l1Id && (E.l2Id || null) === (l2Id || null)),
+      editValue: E ? E.value : '',
+      onEditStart: () => this.setState({ cfgEdit: { m, l1Id, l2Id: l2Id || null, value: name }, cfgConfirmDel: null }),
+      onEditInput: (e) => this.setState({ cfgEdit: Object.assign({}, this.state.cfgEdit, { value: e.target.value }) }),
+      onEditKey: (e) => { if (e.key === 'Enter') this.cfgSaveEdit(); if (e.key === 'Escape') this.setState({ cfgEdit: null }); },
+      onEditSave: () => this.cfgSaveEdit(), onEditCancel: () => this.setState({ cfgEdit: null }),
+      confirmDel: !!(D && D.m === m && D.l1Id === l1Id && (D.l2Id || null) === (l2Id || null)),
+      onDelAsk: () => this.setState({ cfgConfirmDel: { m, l1Id, l2Id: l2Id || null }, cfgEdit: null }),
+      onDelConfirm: () => this.cfgDelete(m, l1Id, l2Id || null), onDelCancel: () => this.setState({ cfgConfirmDel: null }),
+    });
+    const mkModule = (m, title, sub) => ({
+      m, title, sub, readOnly, hasL1s: cfg.buckets[m].length > 0,
+      l1s: cfg.buckets[m].map(l1 => Object.assign({ id: l1.id, name: l1.name, l2Count: l1.l2.length, noL2: l1.l2.length === 0,
+        l2s: l1.l2.map(l2 => Object.assign({ id: l2.id, name: l2.name }, editBind(m, l1.id, l2.id, l2.name))),
+        newL2: (st.cfgNewL2 || {})[l1.id] || '',
+        onNewL2Input: (e) => this.setState({ cfgNewL2: Object.assign({}, this.state.cfgNewL2, { [l1.id]: e.target.value }) }),
+        onNewL2Key: (e) => { if (e.key === 'Enter') this.cfgAddL2(m, l1.id); },
+        onAddL2: () => this.cfgAddL2(m, l1.id),
+      }, editBind(m, l1.id, null, l1.name))),
+      newL1: (st.cfgNewL1 || {})[m] || '',
+      onNewL1Input: (e) => this.setState({ cfgNewL1: Object.assign({}, this.state.cfgNewL1, { [m]: e.target.value }) }),
+      onNewL1Key: (e) => { if (e.key === 'Enter') this.cfgAddL1(m); },
+      onAddL1: () => this.cfgAddL1(m),
+    });
+    // Route Planner trigger defaults — edited as a draft, applied on Save (whole numbers only).
+    const Dv = cfg.rpDefaults;
+    const dr = st.cfgDefaultsDraft || { speedMode: Dv.speedMode, wave: Dv.wave, hold: Dv.hold, k: String(Dv.k), j: String(Dv.j), objectiveTime: String(Dv.objectiveTime) };
+    const intOk = (v) => /^\d+$/.test(String(v)) && Number(v) >= 1;
+    const setDr = (patch) => this.setState({ cfgDefaultsDraft: Object.assign({}, dr, patch) });
+    const numField = (key, label, unit, info, nnOnly) => ({ key, label, unit, info, nnOnly, value: dr[key], invalid: !intOk(dr[key]), onInput: (e) => setDr({ [key]: e.target.value }) });
+    const togField = (key, label, info) => ({ key, label, info, on: !!dr[key], onToggle: () => setDr({ [key]: !dr[key] }) });
+    const cfgDefaultsInvalid = !intOk(dr.k) || !intOk(dr.j) || !intOk(dr.objectiveTime);
+    return {
+      cfgCycleLabel: fmtCyc(cyc), cfgSourceLabel, cfgInherited: src !== cyc, cfgReadOnly: readOnly,
+      cfgModules: [
+        mkModule('rp', 'Reason Buckets \u2014 RLH Route Planner', 'Shown to Ops POCs when they flag a change in Route Planner Ops Alignment.'),
+        mkModule('rs', 'Reason Buckets \u2014 RLH Route Scheduler', 'Shown to SC / LH / LM users when they flag a change in Route Scheduler Ops Alignment.'),
+      ],
+      cfgToggles: [
+        togField('speedMode', 'Speed Mode', 'Off falls back to a flat default speed instead of reading Speed Profile.'),
+        togField('wave', 'Wave Staggering', 'Staggers dispatch into waves.'),
+        togField('hold', 'Hold Time', 'Allows holding at the SC within each SC\u2019s Max Hold limits.'),
+      ],
+      cfgNumbers: [
+        numField('objectiveTime', 'Objective Time', 'mins', 'Run-level; one value per trigger.', false),
+        numField('k', 'K', '', 'How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.', true),
+        numField('j', 'J', '', 'How many other existing routes a historical node on a marginal route may move to (on top of its own route and all spares). Controls how far a reordering cascade can spread once a route is unlocked.', true),
+      ],
+      cfgDefaultsDirty: !!st.cfgDefaultsDraft, cfgDefaultsInvalid,
+      onCfgDefaultsSave: () => {
+        if (cfgDefaultsInvalid) { this.showToast('K, J and Objective Time must be whole numbers (1 or more)', '#C77B00'); return; }
+        if (this.updateConfig(c2 => { c2.rpDefaults = { speedMode: !!dr.speedMode, wave: !!dr.wave, hold: !!dr.hold, k: Number(dr.k), j: Number(dr.j), objectiveTime: Number(dr.objectiveTime) }; })) {
+          this.setState({ cfgDefaultsDraft: null });
+          this.showToast('Route Planner defaults saved for ' + fmtCyc(cyc), '#128A3E');
+        }
+      },
+      onCfgDefaultsDiscard: () => this.setState({ cfgDefaultsDraft: null }),
+    };
+  }
+  defaultAppConfig() {
+    const l2 = (pfx, names) => names.map((n, i) => ({ id: pfx + '-' + (i + 1), name: n }));
+    return {
+      buckets: {
+        rp: [
+          { id: 'rp-veh', key: 'vehicle', name: 'Vehicle Change', l2: l2('rp-veh', ['Mapping of Local & Non-Local DCs in Same Lane']) },
+          { id: 'rp-tp', key: 'tp', name: 'TP Change', l2: l2('rp-tp', ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance']) },
+          { id: 'rp-route', key: 'route', name: 'Route Change', l2: l2('rp-route', ['Cross-State Route', 'Geo-Constraints (Road Closure/Block)', 'Vehicle Cannot Reach DC', 'Vehicle Not Available', 'Wrong DC Location']) },
+        ],
+        rs: [
+          { id: 'rs-sc-cut', key: 'SC_cutoff', name: 'SC \u00b7 Dispatch Cutoff', l2: l2('rs-sc-cut', ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time']) },
+          { id: 'rs-sc-tat', key: 'SC_tat', name: 'SC \u00b7 TAT', l2: l2('rs-sc-tat', ['Processing Time - Additional Time Needed', 'Handling Delay at Dock', 'Under-estimated Load/Unload Time']) },
+          { id: 'rs-lh-cut', key: 'LH_cutoff', name: 'LH \u00b7 Dispatch Cutoff', l2: l2('rs-lh-cut', ['Vendor not aligned - Due to Traffic', 'DC Not open to receive load']) },
+          { id: 'rs-lh-tat', key: 'LH_tat', name: 'LH \u00b7 TAT', l2: l2('rs-lh-tat', ['Due to Traffic', 'Geographical constraints']) },
+          { id: 'rs-lm-land', key: 'LM_landing', name: 'LM \u00b7 Landing Time', l2: l2('rs-lm-land', ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early']) },
+        ],
+      },
+      rpDefaults: { speedMode: true, wave: true, hold: true, k: 1, j: 1, objectiveTime: 100 },
+    };
+  }
+  configSourceFor(cycle) {
+    const m = (this.state && this.state.configByCycle) || {};
+    if (m[cycle]) return cycle;
+    const earlier = Object.keys(m).filter(k => k < cycle).sort();
+    return earlier.length ? earlier[earlier.length - 1] : null;
+  }
+  configFor(cycle) {
+    const src = this.configSourceFor(cycle);
+    return src ? this.state.configByCycle[src] : this.defaultAppConfig();
+  }
+  activeConfig() { return this.configFor((this.state.activeCycleMonth || {}).rlh); }
+  updateConfig(mutator) {
+    const cyc = (this.state.activeCycleMonth || {}).rlh;
+    if (cyc < currentMonthKey()) { this.showToast('Past cycle \u2014 Configurations are read-only', '#C77B00'); return false; }
+    const base = JSON.parse(JSON.stringify(this.configFor(cyc)));
+    if (mutator(base) === false) return false;
+    this.setState({ configByCycle: Object.assign({}, this.state.configByCycle || {}, { [cyc]: base }) });
+    return true;
+  }
+  // Name validation shared by L1 and L2: required, "Others" reserved (it's always appended
+  // automatically), unique among siblings (case-insensitive).
+  cfgNameError(name, siblings, selfId) {
+    const n = String(name || '').trim();
+    if (!n) return 'Name can\u2019t be empty';
+    if (n.toLowerCase() === 'others') return '"Others" is added automatically to every L1';
+    if ((siblings || []).some(s => s.id !== selfId && String(s.name).trim().toLowerCase() === n.toLowerCase())) return '"' + n + '" already exists here';
+    return null;
+  }
+  cfgUid(pfx) { return pfx + '-' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36); }
+  cfgAddL1(m) {
+    const name = String(((this.state.cfgNewL1 || {})[m]) || '').trim();
+    const err = this.cfgNameError(name, this.activeConfig().buckets[m], null);
+    if (err) { this.showToast(err, '#C77B00'); return; }
+    if (this.updateConfig(cfg => { cfg.buckets[m].push({ id: this.cfgUid(m), key: null, name, l2: [] }); })) {
+      this.setState({ cfgNewL1: Object.assign({}, this.state.cfgNewL1, { [m]: '' }) });
+      this.showToast('L1 "' + name + '" added \u2014 add at least one L2 under it', '#128A3E');
+    }
+  }
+  cfgAddL2(m, l1Id) {
+    const name = String(((this.state.cfgNewL2 || {})[l1Id]) || '').trim();
+    const l1 = this.activeConfig().buckets[m].find(x => x.id === l1Id); if (!l1) return;
+    const err = this.cfgNameError(name, l1.l2, null);
+    if (err) { this.showToast(err, '#C77B00'); return; }
+    if (this.updateConfig(cfg => { cfg.buckets[m].find(x => x.id === l1Id).l2.push({ id: this.cfgUid(l1Id), name }); })) {
+      this.setState({ cfgNewL2: Object.assign({}, this.state.cfgNewL2, { [l1Id]: '' }) });
+    }
+  }
+  cfgSaveEdit() {
+    const e = this.state.cfgEdit; if (!e) return;
+    const bk = this.activeConfig().buckets[e.m];
+    const l1 = bk.find(x => x.id === e.l1Id); if (!l1) { this.setState({ cfgEdit: null }); return; }
+    const err = e.l2Id ? this.cfgNameError(e.value, l1.l2, e.l2Id) : this.cfgNameError(e.value, bk, e.l1Id);
+    if (err) { this.showToast(err, '#C77B00'); return; }
+    const name = String(e.value).trim();
+    if (this.updateConfig(cfg => {
+      const t1 = cfg.buckets[e.m].find(x => x.id === e.l1Id);
+      if (e.l2Id) { const t2 = t1.l2.find(x => x.id === e.l2Id); if (t2) t2.name = name; } else { t1.name = name; }
+    })) this.setState({ cfgEdit: null });
+  }
+  // Hard delete, per product decision. Feedback already submitted keeps the reason text it was
+  // submitted with (stored as a snapshot, not a reference), so nothing already flagged breaks.
+  cfgDelete(m, l1Id, l2Id) {
+    const ok = this.updateConfig(cfg => {
+      if (l2Id) { const t1 = cfg.buckets[m].find(x => x.id === l1Id); if (t1) t1.l2 = t1.l2.filter(x => x.id !== l2Id); }
+      else cfg.buckets[m] = cfg.buckets[m].filter(x => x.id !== l1Id);
+    });
+    if (ok) { this.setState({ cfgConfirmDel: null }); this.showToast(l2Id ? 'L2 deleted' : 'L1 and all its L2s deleted', '#D14B4B'); }
+  }
+  // Reason picker data for a flag modal: L1 options (falls back to a single "General" L1 if a
+  // planner has deleted every L1, so flagging never dead-ends), and the chosen L1's L2 list with
+  // "Others" always appended last.
+  reasonPickerFor(m, chosenL1Id, suggestKey) {
+    const bk = this.activeConfig().buckets[m] || [];
+    const l1s = bk.length ? bk : [{ id: '__general', key: null, name: 'General', l2: [] }];
+    const suggested = (suggestKey && l1s.find(x => x.key === suggestKey)) || l1s[0];
+    const l1 = (chosenL1Id && l1s.find(x => x.id === chosenL1Id)) || suggested;
+    return { l1Options: l1s.map(x => ({ value: x.id, label: x.name })), l1Id: l1.id, l1Name: l1.name, l2Options: l1.l2.map(x => x.name).concat(['Others']) };
+  }
   // localThresholdFor(scCode) / dcIsLocal(dc) (2026-09-28) — Local vs Non-Local used to be decided
   // ONCE at seed time with a hardcoded 100 km and stored as dc.isLocal, so no setting could ever
   // change it. Now it's re-derived live from the DC's own stored distance against its SC's Local
@@ -9810,16 +10131,22 @@ class NDCApp extends React.Component {
   // Step 2 table and triggerRuns(), so what's shown and what's triggered can't disagree.
   step2ParamsFor(scCode) {
     const st = this.state;
+    // 2026-09-29 — defaults now come from Design Inputs → Configurations (per cycle), not
+    // hardcoded here; the Step 2 (ALL) header control and per-SC controls still override them.
+    const D = this.activeConfig().rpDefaults;
     const pick = (bySc, glob, dflt) => ((bySc || {})[scCode] !== undefined ? bySc[scCode] : (glob != null ? glob : dflt));
     const master = this.localThresholdFor(scCode);
     const ldOverride = (st.localDistBySC || {})[scCode] !== undefined || st.localDistGlobal != null;
     return {
-      speedMode: pick(st.speedModeBySC, st.speedModeGlobal, true),
-      wave: pick(st.waveBySC, st.waveGlobal, false),
+      speedMode: pick(st.speedModeBySC, st.speedModeGlobal, D.speedMode),
+      wave: pick(st.waveBySC, st.waveGlobal, D.wave),
+      hold: pick(st.holdBySC, st.holdGlobal, D.hold),
       localDist: pick(st.localDistBySC, st.localDistGlobal, master),
       localDistMaster: master, localDistOverridden: ldOverride,
-      k: pick(st.nnKBySC, st.nnKGlobal, 1),
-      j: pick(st.nnJBySC, st.nnJGlobal, 1),
+      k: pick(st.nnKBySC, st.nnKGlobal, D.k),
+      j: pick(st.nnJBySC, st.nnJGlobal, D.j),
+      // Objective Time is run-level (one per trigger), not per SC.
+      objectiveTime: st.objectiveTimeOverride != null ? st.objectiveTimeOverride : D.objectiveTime,
     };
   }
   dcIsLocal(dc) {
@@ -9828,19 +10155,9 @@ class NDCApp extends React.Component {
     if (typeof dc.distFromSc === 'number' && dc.distFromSc > 0 && scCode) return dc.distFromSc <= this.localThresholdFor(scCode);
     return dc.isLocal !== undefined ? dc.isLocal : true;
   }
-  // schedFeedbackReasons(persona, field) (2026-08-14) — the fixed reason-bucket list per
-  // (persona, field) pair, from the product's own defined table. "Others" is always last and
-  // always Mandatory remarks; every named reason is Optional remarks.
-  schedFeedbackReasons(persona, field) {
-    const T = {
-      SC_cutoff: ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time'],
-      SC_tat: ['Processing Time - Additional Time Needed', 'Handling Delay at Dock', 'Under-estimated Load/Unload Time'],
-      LH_cutoff: ['Vendor not aligned - Due to Traffic', 'DC Not open to receive load'],
-      LH_tat: ['Due to Traffic', 'Geographical constraints'],
-      LM_landing: ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early'],
-    };
-    return (T[persona + '_' + field] || []).concat(['Others']);
-  }
+  // schedFeedbackReasons() removed 2026-09-29 — reason lists now come from Design Inputs → Configurations
+  // (see defaultAppConfig() / reasonPickerFor()).
+
   // schedRouteBucket(planId, routeCode) — always-present accessor for a route's feedback bucket.
   schedRouteBucket(planId, routeCode) {
     return (((this.state.schedFeedback || {})[planId] || {})[routeCode]) || { items: [] };
@@ -9963,7 +10280,7 @@ class NDCApp extends React.Component {
           if (limit != null && newHoldMin > limit) tatVarianceWarnings.push(dcCode + ' hold would be ' + Math.round(newHoldMin) + 'm, over the ' + limit + 'm limit');
         }
       }
-      items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], originalValue, submittedAt: 'Today' });
+      items.push({ id: 'FB-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 9999), persona, field, dcCode, reason: f.reason, reasonL1: this.reasonPickerFor('rs', f.reasonL1, persona + '_' + field).l1Name, remark: st.schedNcRemark || '', status: 'Pending', proposedValue: resolved[k], originalValue, submittedAt: 'Today' });
     });
     if (tatVarianceWarnings.length > 0) this.showToast('Flagged after review: ' + tatVarianceWarnings.join('; '), '#C77B00');
     bucket.items = items;
@@ -12065,7 +12382,7 @@ class NDCApp extends React.Component {
     const isIngComingSoon = ing === 'fm';
     return {
       gate,
-      isVolumeTab: itab === 'volume', isNodesTab: itab === 'nodes', isMastersTab: itab === 'masters', isIngestionTab: itab === 'ingestion',
+      isVolumeTab: itab === 'volume', isNodesTab: itab === 'nodes', isMastersTab: itab === 'masters', isIngestionTab: itab === 'ingestion', isConfigTab: itab === 'config' && st.activeLeg === 'rlh',
       volumeFiles, volActiveStrip, volTypeChips, volFilesShown, volFilesTotal, volFilesEmpty: volFilesShown === 0, volEmptyMsg: (allVol.length === 0 ? 'No volume files uploaded yet — use Upload above to add one for any type.' : 'No volume files match this type or search.'), volSearch: st.volSearch || '', onVolSearch: (e) => this.setState({ volSearch: e.target.value }),
       nodeSteps, nstepActive: nstep === 'active', nstepChanges: nstep === 'changes', nstepMigrations: nstep === 'migrations',
       // D1 — one accurate stat per fact. dcTotal = Σ per-SC dcCount = total active LMSC→LMDC links (NOT unique LMDCs),
@@ -12511,7 +12828,8 @@ class NDCApp extends React.Component {
     // Global HW selector (0, 0.5, 1) + per-SC override
     const hwGlobal = st.hwGlobal !== undefined ? st.hwGlobal : 0.5;
     const hwBySC = st.hwBySC || {};
-    const speedModeGlobal = st.speedModeGlobal !== undefined ? st.speedModeGlobal : true;
+    const _cfgD = this.activeConfig().rpDefaults;
+    const speedModeGlobal = st.speedModeGlobal != null ? st.speedModeGlobal : _cfgD.speedMode;
     const speedModeBySC = st.speedModeBySC || {};
     const hwOptions = [0, 0.5, 1].map(v => ({ value: v, label: 'HW ' + v, active: hwGlobal === v, bg: hwGlobal === v ? '#003F98' : '#fff', fg: hwGlobal === v ? '#fff' : '#5A5E66', bd: hwGlobal === v ? '#003F98' : '#E6EBF2', onClick: () => this.setState({ hwGlobal: v }) }));
     const gwBg = (v) => hwGlobal === v ? '#003F98' : '#fff';
@@ -12686,14 +13004,16 @@ class NDCApp extends React.Component {
           return {
             wave: sp2.wave, waveLabel: sp2.wave ? 'On' : 'Off',
             onToggleWave: () => setBy('waveBySC', !sp2.wave),
+            hold: sp2.hold, holdLabel: sp2.hold ? 'On' : 'Off',
+            onToggleHold: () => setBy('holdBySC', !sp2.hold),
             localDist: sp2.localDist, localDistLabel: sp2.localDist + ' km',
             localDistSourceLabel: sp2.localDistOverridden ? ('SC Master: ' + sp2.localDistMaster + ' km') : 'SC Master',
             localDistOverridden: sp2.localDistOverridden,
             onLocalDistDec: () => setBy('localDistBySC', clamp(sp2.localDist - 10, 10, 500)),
             onLocalDistInc: () => setBy('localDistBySC', clamp(sp2.localDist + 10, 10, 500)),
             nnK: sp2.k, nnJ: sp2.j,
-            onKDec: () => setBy('nnKBySC', clamp(sp2.k - 1, 1, 10)), onKInc: () => setBy('nnKBySC', clamp(sp2.k + 1, 1, 10)),
-            onJDec: () => setBy('nnJBySC', clamp(sp2.j - 1, 1, 10)), onJInc: () => setBy('nnJBySC', clamp(sp2.j + 1, 1, 10)),
+            onKDec: () => setBy('nnKBySC', clamp(sp2.k - 1, 1, 99)), onKInc: () => setBy('nnKBySC', clamp(sp2.k + 1, 1, 99)),
+            onJDec: () => setBy('nnJBySC', clamp(sp2.j - 1, 1, 99)), onJInc: () => setBy('nnJBySC', clamp(sp2.j + 1, 1, 99)),
           };
         })(),
         // 2026-09-27 addition (item 6) — recommended vehicle for a vehicle-range failure, with a
@@ -13088,24 +13408,40 @@ class NDCApp extends React.Component {
       onSpeedModeGlobalToggle: () => this.setState({ speedModeGlobal: !speedModeGlobal, speedModeBySC: {} }),
       // 2026-09-28 — header-cell (ALL) controls for the new Step 2 params. Using any of them clears
       // that param's per-SC overrides, same as HW/Speed Mode.
-      waveGlobal: !!st.waveGlobal, waveGlobalLabel: st.waveGlobal ? 'On' : 'Off',
-      onWaveGlobalToggle: () => this.setState({ waveGlobal: !st.waveGlobal, waveBySC: {} }),
-      localDistHeaderLabel: st.localDistGlobal != null ? (st.localDistGlobal + ' km') : 'SC Master',
-      onLocalDistGlobalDec: () => this.setState({ localDistGlobal: Math.max(10, (st.localDistGlobal != null ? st.localDistGlobal : 100) - 10), localDistBySC: {} }),
-      onLocalDistGlobalInc: () => this.setState({ localDistGlobal: Math.min(500, (st.localDistGlobal != null ? st.localDistGlobal : 100) + 10), localDistBySC: {} }),
-      hasLocalDistOverride: st.localDistGlobal != null || Object.keys(st.localDistBySC || {}).length > 0,
-      onLocalDistReset: () => this.setState({ localDistGlobal: null, localDistBySC: {} }),
-      nnKGlobal: st.nnKGlobal != null ? st.nnKGlobal : 1, nnJGlobal: st.nnJGlobal != null ? st.nnJGlobal : 1,
-      onKGlobalDec: () => this.setState({ nnKGlobal: Math.max(1, (st.nnKGlobal || 1) - 1), nnKBySC: {} }),
-      onKGlobalInc: () => this.setState({ nnKGlobal: Math.min(10, (st.nnKGlobal || 1) + 1), nnKBySC: {} }),
-      onJGlobalDec: () => this.setState({ nnJGlobal: Math.max(1, (st.nnJGlobal || 1) - 1), nnJBySC: {} }),
-      onJGlobalInc: () => this.setState({ nnJGlobal: Math.min(10, (st.nnJGlobal || 1) + 1), nnJBySC: {} }),
+      ...(() => {
+        const effWave = st.waveGlobal != null ? st.waveGlobal : _cfgD.wave;
+        const effHold = st.holdGlobal != null ? st.holdGlobal : _cfgD.hold;
+        const effK = st.nnKGlobal != null ? st.nnKGlobal : _cfgD.k;
+        const effJ = st.nnJGlobal != null ? st.nnJGlobal : _cfgD.j;
+        const effObj = st.objectiveTimeOverride != null ? st.objectiveTimeOverride : _cfgD.objectiveTime;
+        return {
+          waveGlobal: effWave, waveGlobalLabel: effWave ? 'On' : 'Off',
+          onWaveGlobalToggle: () => this.setState({ waveGlobal: !effWave, waveBySC: {} }),
+          holdGlobal: effHold, holdGlobalLabel: effHold ? 'On' : 'Off',
+          onHoldGlobalToggle: () => this.setState({ holdGlobal: !effHold, holdBySC: {} }),
+          nnKGlobal: effK, nnJGlobal: effJ,
+          onKGlobalDec: () => this.setState({ nnKGlobal: Math.max(1, effK - 1), nnKBySC: {} }),
+          onKGlobalInc: () => this.setState({ nnKGlobal: Math.min(99, effK + 1), nnKBySC: {} }),
+          onJGlobalDec: () => this.setState({ nnJGlobal: Math.max(1, effJ - 1), nnJBySC: {} }),
+          onJGlobalInc: () => this.setState({ nnJGlobal: Math.min(99, effJ + 1), nnJBySC: {} }),
+          // Objective Time (run-level) — whole minutes only, default from Configurations.
+          objectiveTimeVal: String(st.objectiveTimeDraft != null ? st.objectiveTimeDraft : effObj),
+          objectiveTimeDefault: _cfgD.objectiveTime, objectiveTimeOverridden: st.objectiveTimeOverride != null,
+          onObjectiveTimeInput: (e) => {
+            const v = e.target.value;
+            if (/^\d+$/.test(v) && Number(v) >= 1) this.setState({ objectiveTimeDraft: null, objectiveTimeOverride: Number(v) });
+            else this.setState({ objectiveTimeDraft: v });
+          },
+          objectiveTimeInvalid: st.objectiveTimeDraft != null,
+          onObjectiveTimeReset: () => this.setState({ objectiveTimeDraft: null, objectiveTimeOverride: null }),
+        };
+      })(),
       nnKInfo: 'How many nearby routes a new node may scan for a feasible insertion; every route up to and including the first feasible one is unlocked to \u201cmarginal\u201d. Raise it when new nodes end up unserved; lower it when too much of the historical plan reshuffles.',
       nnJInfo: 'How many other existing routes a historical node on a marginal route may move to (on top of its own route and all spares). Controls how far a reordering cascade can spread once a route is unlocked.',
       nnOn: !!st.newNodeMode,
       step2Grid: st.newNodeMode
-        ? '1.9fr 0.55fr 0.7fr 0.85fr 1.15fr 0.8fr 0.8fr 1.15fr 1.4fr 0.85fr 0.85fr 1.3fr'
-        : '2fr 0.6fr 0.7fr 0.9fr 1.2fr 0.8fr 0.8fr 1.15fr 1.5fr 1.4fr',
+        ? '1.8fr 0.5fr 0.65fr 0.8fr 1.1fr 0.75fr 0.75fr 0.75fr 1.1fr 1.35fr 0.8fr 0.8fr 1.25fr'
+        : '1.9fr 0.55fr 0.7fr 0.85fr 1.15fr 0.8fr 0.8fr 0.8fr 1.15fr 1.45fr 1.35fr',
       scProps: scPropsWithHw, refNeeded, hasRefWarning: refNeeded > 0, hwGlobal, hwOptions,
       runName: st.runName || '', onRunNameChange: (e) => this.setState({ runName: e.target.value }),
       // K \u2014 "New Node Addition mode" (DS-algorithm mode toggle, not "include the new nodes")
@@ -14968,8 +15304,13 @@ class NDCApp extends React.Component {
     // a free numeric hours input now, not a fixed dropdown — see hrsToMinRoundUp()/minToHrsLabel().
     const TIME_OPTS_30 = []; for (let m = 0; m < 1440; m += 30) TIME_OPTS_30.push({ value: String(m), label: info.fmtTime(m) });
     const TIME_OPTS_15 = []; for (let m = 0; m < 1440; m += 15) TIME_OPTS_15.push({ value: String(m), label: info.fmtTime(m) });
-    const mkField = (key, label, currentLabel, defaultVal, options, reasons, isNumeric, distKm) => {
+    // 2026-09-29 — 6th arg is now the L1 suggestion key (e.g. 'SC_cutoff'), not a fixed reason
+    // list: reasons come from Design Inputs → Configurations as an L1 → L2 pair per field.
+    const mkField = (key, label, currentLabel, defaultVal, options, suggestKey, isNumeric, distKm) => {
       const flagged = !!draft[key];
+      const pick = this.reasonPickerFor('rs', flagged ? draft[key].reasonL1 : '', suggestKey);
+      const reasonRaw = flagged ? draft[key].reason : '';
+      const reasonOk = reasonRaw && pick.l2Options.indexOf(reasonRaw) >= 0 ? reasonRaw : '';
       const currentVal = flagged ? draft[key].value : defaultVal;
       // Speed validation (later session) — for TAT fields only (distKm passed): flags if the
       // CURRENTLY entered/proposed TAT implies a speed under 20kmph, given this DC's known
@@ -14991,27 +15332,29 @@ class NDCApp extends React.Component {
         value: currentVal,
         onInput: (e) => this.onSchedNcFieldValue(key, e.target.value),
         options, isNumeric: !!isNumeric,
-        reasonVal: flagged ? draft[key].reason : '',
+        reasonVal: reasonOk,
         onReason: (e) => this.onSchedNcFieldReason(key, e.target.value),
-        reasons,
+        reasons: pick.l2Options,
+        l1Options: pick.l1Options, l1Val: pick.l1Id, l1Name: pick.l1Name,
+        onL1: (e) => { const cur = Object.assign({}, this.state.schedNcFields); cur[key] = Object.assign({}, cur[key], { reasonL1: e.target.value, reason: '' }); this.setState({ schedNcFields: cur }); },
         speedWarning, hasSpeedWarning: !!speedWarning,
       };
     };
     const fields = [];
     if (role === 'SC' || role === 'LH') {
-      fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), String(ri.dispatchMin), TIME_OPTS_30, this.schedFeedbackReasons(role, 'cutoff')));
+      fields.push(mkField('cutoff', 'Dispatch Cutoff', info.fmtTime(ri.dispatchMin), String(ri.dispatchMin), TIME_OPTS_30, role + '_cutoff'));
     }
     if (role === 'SC' || role === 'LH') {
       ri.dcInfo.forEach(dc => {
         const tatMin = Math.round(dc.breakdownTatHrs * 60);
         const tatHrsLabel = this.minToHrsLabel(tatMin);
-        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatHrsLabel + ' hrs', tatHrsLabel, null, this.schedFeedbackReasons(role, 'tat'), true, dc.breakdownDistKm));
+        fields.push(mkField('tat:' + dc.dc.code, 'TAT \u2014 ' + dc.dc.code, tatHrsLabel + ' hrs', tatHrsLabel, null, role + '_tat', true, dc.breakdownDistKm));
       });
     }
     if (role === 'LM') {
       ri.dcInfo.forEach(dc => {
         const landingMin = Math.round(dc.landingMin);
-        fields.push(mkField('landing:' + dc.dc.code, 'Landing Time \u2014 ' + dc.dc.code, info.fmtTime(landingMin), String(landingMin), TIME_OPTS_15, this.schedFeedbackReasons('LM', 'landing')));
+        fields.push(mkField('landing:' + dc.dc.code, 'Landing Time \u2014 ' + dc.dc.code, info.fmtTime(landingMin), String(landingMin), TIME_OPTS_15, 'LM_landing'));
       });
     }
     return fields;
@@ -16531,23 +16874,15 @@ class NDCApp extends React.Component {
         ncDcCells[code] = { lat: e.lat != null ? String(e.lat) : '', lng: e.lng != null ? String(e.lng) : '', tp: e.tp != null ? String(e.tp) : '', distance: e.distance != null ? String(e.distance) : '', routeCode: e.routeCode || '' };
         if (e.splitVehicle) { ncSplitCode = e.routeCode; ncSplitVehicle = e.splitVehicle; }
       });
-      this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells, ncFlags, ncDcCells, ncSplitCode, ncSplitVehicle, ncRemark: fb.userRemark != null ? fb.userRemark : (fb.reasons ? '' : (fb.remark || '')), ncReasons: Object.assign({}, fb.reasons || {}) });
+      this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells, ncFlags, ncDcCells, ncSplitCode, ncSplitVehicle, ncRemark: fb.userRemark != null ? fb.userRemark : ((fb.reasonL2 || fb.reasons) ? '' : (fb.remark || '')), ncL1: fb.reasonL1Id || '', ncL2: fb.reasonL2 || '' });
       return;
     }
-    this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells: { vehicleType: r.veh }, ncFlags: {}, ncDcCells: {}, ncSplitCode: null, ncSplitVehicle: '', ncRemark: '', ncReasons: {} });
+    this.setState({ ncOpen: true, ncDecision: 'Needs Change', ncRow: { planId: planId, idx: idx }, ncCells: { vehicleType: r.veh }, ncFlags: {}, ncDcCells: {}, ncSplitCode: null, ncSplitVehicle: '', ncRemark: '', ncL1: '', ncL2: '' });
   }
   closeNc() { this.setState({ ncOpen: false }); }
-  // rpFeedbackReasons(category) (2026-09-28) — Route Planner's own fixed reason list per change
-  // category, mirroring Route Scheduler's schedFeedbackReasons(): "Others" always last, and the
-  // only reason that makes the remark mandatory.
-  rpFeedbackReasons(category) {
-    const T = {
-      vehicle: ['Mapping of Local & Non-Local DCs in Same Lane'],
-      tp: ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance'],
-      route: ['Cross-State Route', 'Geo-Constraints (Road Closure/Block)', 'Vehicle Cannot Reach DC', 'Vehicle Not Available', 'Wrong DC Location'],
-    };
-    return (T[category] || []).concat(['Others']);
-  }
+  // rpFeedbackReasons() removed 2026-09-29 — reason lists now come from Design Inputs → Configurations
+  // (see defaultAppConfig() / reasonPickerFor()).
+
   // rpNcCategories(flags, dcMap) — which change categories the in-progress flag submission
   // actually contains. Per-DC flags start empty (toggleNcDc seeds {}), so only an edited value
   // counts. Vehicle Change = route-level Vehicle Type; TP Change = any DC's TP; Route Change =
@@ -16627,22 +16962,20 @@ class NDCApp extends React.Component {
     // see "Change proposed by <name>". Ops Lead persona is now switchable (opsPersonaName()), not
     // hardcoded, so more-than-one-reviewer scenarios can be simulated on the same plan.
     const reviewerName = st.persona === 'planner' ? 'Pranita Sapkal' : this.opsPersonaName();
-    // 2026-09-28 — reason per change category present (Vehicle / TP / Route), chosen from a fixed
-    // dropdown like Route Scheduler. Remark is optional unless any chosen reason is "Others".
-    // Enforced here too, not only on the submit button, so nothing can bypass it.
-    const CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    // 2026-09-29 — one L1 → L2 reason per flag, from Design Inputs → Configurations (this cycle).
+    // L2 is mandatory; remark is optional unless L2 is "Others". L1 pre-selects from the change
+    // type being flagged when a matching L1 still exists. Enforced here, not only on the button.
     const cats = this.rpNcCategories(flags, dcMap);
     if (cats.length === 0) { this.showToast('Flag at least one change before submitting', '#C77B00'); return; }
-    const chosen = st.ncReasons || {};
-    const missing = cats.filter(k => !chosen[k]);
-    if (missing.length) { this.showToast('Pick a reason for ' + missing.map(k => CAT_LABEL[k]).join(' and '), '#C77B00'); return; }
+    const pick = this.reasonPickerFor('rp', st.ncL1, cats[0]);
+    const l2 = st.ncL2 && pick.l2Options.indexOf(st.ncL2) >= 0 ? st.ncL2 : '';
+    if (!l2) { this.showToast('Pick a reason (L2) before submitting', '#C77B00'); return; }
     const userRemark = (st.ncRemark || '').trim();
-    if (cats.some(k => chosen[k] === 'Others') && !userRemark) { this.showToast('Remarks are mandatory when "Others" is the reason', '#D14B4B'); return; }
-    const reasons = {}; cats.forEach(k => { reasons[k] = chosen[k]; });
-    // remark stays a readable one-liner for every existing downstream reader (planner row view,
-    // CSV export, etc.) — the user's own remark if given, otherwise the reason summary.
-    const reasonSummary = cats.map(k => CAT_LABEL[k] + ': ' + reasons[k]).join(' \u00b7 ');
-    const fb = { cells, dcCells, dcCount, reasons, userRemark, remark: userRemark ? (reasonSummary + ' \u2014 ' + userRemark) : reasonSummary, by: reviewerName };
+    if (l2 === 'Others' && !userRemark) { this.showToast('Remarks are mandatory when "Others" is the reason', '#D14B4B'); return; }
+    // Stored as text snapshots (+ the L1 id for reopening) so later renames/deletes in
+    // Configurations never rewrite or break feedback that's already been submitted.
+    const reasonSummary = pick.l1Name + ' \u00b7 ' + l2;
+    const fb = { cells, dcCells, dcCount, reasonL1Id: pick.l1Id, reasonL1: pick.l1Name, reasonL2: l2, userRemark, remark: userRemark ? (reasonSummary + ' \u2014 ' + userRemark) : reasonSummary, by: reviewerName };
     const a = Object.assign({}, st.opsRowFb); a[r.planId] = Object.assign({}, a[r.planId]); a[r.planId][r.idx] = fb;
     // mirror the attribution onto the live row so the Ops-Lead row indicator updates immediately
     const pl = st.data.plans.find(p => p.id === r.planId); if (pl) pl.rows[r.idx].proposedBy = reviewerName;
@@ -17033,20 +17366,15 @@ class NDCApp extends React.Component {
       if (ncDcsMissingTp.length) ncWarn.push({ lead: 'Error', text: ncDcsMissingTp.map(dc => dc.code).join(', ') + ' — touch-point # required before submitting (no established order in the new route yet).', fail: true, bg: '#FAFBFD', accentBd: '3px solid #D14B4B', fg: '#D14B4B', textFg: '#5A5E66' });
     }
     const ncHasFail = ncWarn.some(w => w.fail);
-    // 2026-09-28 — remark is no longer always mandatory. Each change category present in this
-    // submission (Vehicle / TP / Route) needs a reason from its dropdown; the remark is required
-    // only when one of those reasons is "Others" (same rule as Route Scheduler's flag modal).
-    const NC_CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    // 2026-09-29 — L1 → L2 reason picker from Configurations. L2 mandatory; remark required only
+    // when L2 is "Others".
     const ncCats = this.rpNcCategories(ncFlags, st.ncDcCells || {});
-    const ncReasonsSel = st.ncReasons || {};
-    const ncReasonGroups = ncCats.map(k => ({ key: k, label: NC_CAT_LABEL[k] + ' reason', value: ncReasonsSel[k] || '',
-      options: this.rpFeedbackReasons(k), missing: !ncReasonsSel[k],
-      onChange: (e) => { const m = Object.assign({}, this.state.ncReasons || {}); m[k] = e.target.value; this.setState({ ncReasons: m }); } }));
-    const ncReasonsMissing = ncReasonGroups.filter(g => g.missing);
-    const ncRemarkRequired = ncCats.some(k => ncReasonsSel[k] === 'Others');
-    const ncRemarkFilled = !ncRemarkRequired || !!(st.ncRemark || '').trim();
     const ncNothingFlagged = ncCats.length === 0;
-    const ncReady = !ncNothingFlagged && ncReasonsMissing.length === 0 && ncRemarkFilled;
+    const ncPick = this.reasonPickerFor('rp', st.ncL1, ncCats[0]);
+    const ncL2Val = st.ncL2 && ncPick.l2Options.indexOf(st.ncL2) >= 0 ? st.ncL2 : '';
+    const ncRemarkRequired = ncL2Val === 'Others';
+    const ncRemarkFilled = !ncRemarkRequired || !!(st.ncRemark || '').trim();
+    const ncReady = !ncNothingFlagged && !!ncL2Val && ncRemarkFilled;
     const ncRowCode = st.ncRow ? d.plans.find(p => p.id === st.ncRow.planId).rows[st.ncRow.idx].routeCode : '';
 
     // A3 — Ops Lead morning band: feedback-window countdown + health (SAME computed source as A1),
@@ -17269,14 +17597,17 @@ class NDCApp extends React.Component {
       // Warnings surface automatically (no Validate step required); hard-fails still block submit.
       ncShowWarn: ncWarn.length > 0,
       ncSubmit: () => { if (ncHasFail) { this.showToast('Fix the flagged errors before submitting', '#C77B00'); return; } this.submitNc(); }, ncClose: () => this.closeNc(),
-      ncReasonGroups, hasNcReasonGroups: ncReasonGroups.length > 0, ncRemarkRequired,
+      ncShowReason: !ncNothingFlagged, ncRemarkRequired,
+      ncL1Options: ncPick.l1Options, ncL1Val: ncPick.l1Id, ncL2Options: ncPick.l2Options, ncL2Val, ncL2Missing: !ncL2Val,
+      onNcL1: (e) => this.setState({ ncL1: e.target.value, ncL2: '' }),
+      onNcL2: (e) => this.setState({ ncL2: e.target.value }),
       ncSubmitLabel: 'Flag this change',
       ncSubmitBg: (!ncHasFail && ncReady) ? '#C77B00' : '#E6EBF2',
       ncSubmitFg: (!ncHasFail && ncReady) ? '#fff' : '#5A5E66',
       ncSubmitCursor: (!ncHasFail && ncReady) ? 'pointer' : 'not-allowed',
       ncSubmitHelper: ncHasFail ? 'Fix errors above to continue'
         : ncNothingFlagged ? 'Flag at least one change'
-        : ncReasonsMissing.length ? ('Pick a reason for ' + ncReasonsMissing.map(g => NC_CAT_LABEL[g.key]).join(' and '))
+        : !ncL2Val ? 'Pick a reason (L2)'
         : !ncRemarkFilled ? 'Remarks are mandatory when "Others" is the reason' : '',
       // Partial-submit confirm modal state
       opsPartialOpen: st.opsPartialOpen,
@@ -18938,8 +19269,9 @@ class NDCApp extends React.Component {
           nodes:     'AutoDML-sourced node list for this cycle. Review any flagged nodes before proceeding.',
           masters:   'SC, Vehicle & LMDC masters — shared across all cycles, edit anytime.',
           ingestion: 'Import an existing route plan CSV to seed the design — skips the solver for that SC.',
+          config: 'Reason buckets for Ops Alignment flags, and Route Planner trigger defaults. Specific to this cycle; a new cycle inherits the latest earlier one.',
         };
-        const IT = [['volume', 'Volume Inputs'], ['nodes', 'SC-DC Connections'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']];
+        const IT = [['volume', 'Volume Inputs'], ['nodes', 'SC-DC Connections'], ['masters', 'Node & Vehicle Master'], ['ingestion', 'Design Ingestion']].concat(st.activeLeg === 'rlh' ? [['config', 'Configurations']] : []); // Configurations is RLH-only (Route Planner / Scheduler)
         // Node Inputs: red dot when any AutoDML flags are present (attention needed)
         const autodmlFlagCount = (d.autodmlNodes || []).filter(n => n && n.hasFlag).length;
         subTabsArr = IT.map(t => {
@@ -19170,6 +19502,7 @@ class NDCApp extends React.Component {
       runMapOpen: !!st.runMapOpen, runMapClose: () => this.setState({ runMapOpen: false }),
       openFullMap: () => this.setState({ runMapOpen: false, view: 'map' }),
       ...this.inputsVals(),
+      ...this.configVals(),
       // inputs action handlers not produced by inputsVals (kept here so they survive):
       ...this.addScVals(),
       uploadFile: () => (this.state.ingestionTab === 'nlh' ? this.ingestNlhPlan() : this.ingestRlhPlan()), downloadCsv: () => this.downloadCsvFile(), nudgeReviewers: () => { const plan = (this.state.data.plans || []).find(p => p.id === this.state.alignPlanId); const names = plan && plan.reviewerNames && plan.reviewerNames.length ? plan.reviewerNames.join(', ') : 'the reviewers'; const rp = Object.assign({}, this.state.remindedPlans); if (this.state.alignPlanId) rp[this.state.alignPlanId] = true; this.setState({ remindedPlans: rp }); this.showToast('Reminder sent to ' + names, '#1E6FB8'); }, addSc: () => this.setState({ addScOpen: true, addScEditCode: null, addScForm: { type: 'LMSC', zone: 'South', localTp: '5', nonLocalTp: '3' } }),
@@ -19187,7 +19520,7 @@ class NDCApp extends React.Component {
       showRlhCycleSwitcher: st.activeLeg === 'rlh',
       legSidebarCycleLabel: st.activeLeg && st.activeLeg !== 'rlh' ? monthLabel(st.activeCycleMonth[st.activeLeg]) : '',
       toggleCycle: () => this.setState({ cycleOpen: !st.cycleOpen }), closeCycle: () => this.setState({ cycleOpen: false }),
-      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, speedModeBySC: {}, waveBySC: {}, localDistBySC: {}, nnKBySC: {}, nnJBySC: {}, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false, step4PreValidated: false }); this.go('creation'); },
+      newCycle: () => { this.setState({ cycleOpen: false, creationStep: 1, selectedSCs: [], creationVolume: null, creationView: 'wizard', fixReturnStep: null, focusSC: null, runQueue: [], hwBySC: {}, speedModeBySC: {}, waveBySC: {}, holdBySC: {}, localDistBySC: {}, nnKBySC: {}, nnJBySC: {}, objectiveTimeOverride: null, objectiveTimeDraft: null, refBySC: {}, droppedDcBySC: {}, globalRefApplied: false, newNodeMode: false, step4PreValidated: false }); this.go('creation'); },
       isPastCycle,
       toggleCyclePicker: () => this.setState({ cyclePickerOpen: !st.cyclePickerOpen }),      cyclePickerOpen: !!st.cyclePickerOpen,
       cyclePickerChevron: st.cyclePickerOpen ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6',

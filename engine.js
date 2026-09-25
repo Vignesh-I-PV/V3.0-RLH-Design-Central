@@ -712,6 +712,9 @@ function materializeRLHScs(store, cycleMonth) {
       // inside an already-whitelisted object like rateCard above. Caught by checking this
       // function directly rather than assuming "no engine-level changes needed" held for both.
       centralPocs: d.centralPocs || { lhCt1: '', lhCt2: '', bizFinCt1: '', bizFinCt2: '' },
+      // Local Distance Threshold (2026-09-28) — km from the SC up to which a DC counts as Local;
+      // beyond it, Non-Local. Default 100 km (the value that used to be hardcoded app-side).
+      localDistThreshold: d.localDistThreshold != null ? d.localDistThreshold : 100,
       // 2026-08-26 — real dispatch-role facts, exposed for the SC Master screen's SC TYPE column
       // (now derived from these, not a dcCount-size guess) and for filtering RLH/NLH's own SC
       // Vehicle Availability screens to the SCs that actually dispatch that leg.

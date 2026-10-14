@@ -3471,3 +3471,62 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     utilisation cap were confirmed computationally/via the compiled output; the layout fixes and
     the color-seam fix from the day before still need visual confirmation on the *next* deploy,
     since this session's browser was pointed at the deploy that predated these specific fixes).
+
+- **2026-09-18 → 2026-09-30 — (back-filled pointer.)** This session's work (SC Master Central
+  POCs / Local Distance Threshold / Rate Card table model / bulk cards; Design Inputs →
+  Configurations; Route Planner Design Creation Steps 1–4; Design Review run names, filters,
+  skipped DCs, vehicles used; Ops Alignment Add Reviewer, Revoke, L1 → L2 flag reasons) was never
+  given a dated entry here. Full detail lives in `PROJECT_CONTEXT.md` §13–§15 and the 2026-09-30
+  sections of `01`–`05`.
+
+- **2026-10-14 — SC-DC Mapping (Node Mapping) removed from the build and archived, together with
+  SC Rate Card and LMDC Pincodes.** Product decision: park the module now, re-add it in a newer
+  version of the platform. Context preserved in `07_SC-DC_Mapping_Archive.md` (features,
+  decisions, data model, logic, validations, open items, re-insertion steps) and
+  `archive_code.md` (50 verbatim code blocks, each with its location and neighbouring anchors).
+  - **Removed (.jsx)**: Design Creation › Node Mapping wizard (entry, Steps 1–4, run queue,
+    results redirect); Design Review › Node Mapping (two-pane review, Stage 1/Stage 2);
+    `scDcMapVals()` / `reviewMapVals()` and their `renderVals()` spreads; every `map*` class
+    method plus `effectiveLmscFor()`; top-level `computeMappingResultPure`,
+    `mapVolumeInfoForDcPure`, `deriveMigrationPipelineEntries`; seeded runs MAP-SEED-1/2,
+    `seedMapDecisionsAll` and all `map*` / `reviewMap*` state keys; Route Planner Step 1 "Include
+    pipeline DCs" toggle and "(N pipeline)" label; SC-DC Connections › Migrations pipeline table
+    (tab now lists real migrations only); SC Master Rate Card (column, modal, bulk card, CSV,
+    errors banner, methods); LMDC Master Pincodes (column, inline edit, CSV column, seed).
+  - **Removed (engine.js)**: `mappingRuns` / `migrationPipeline` from `RLH_TRANSACTIONAL_KEYS`
+    and `emptyRlhTransactional()`; their suffixing and `_mappingRunIdMap` in
+    `suffixRlhIdsForMonth()`; `rateCard` from the `materializeRLHScs()` whitelist;
+    `groupDcsBySharedPincode()`.
+  - **Kept / changed**: Node Mapping tier tabs stay in Design Creation / Review / Ops Alignment,
+    now flagged SOON and landing on "SC-DC Mapping · COMING SOON" (Review gained the same
+    sub-row pill as the other two). `buildScDcCounts()` simplified to plain LMDC Master counts
+    minus closures (Route Planner Step 1 still uses it — counts verified identical to the
+    2026-09-30 build: 81 SCs, 12,605 DCs). SC Master grid 18 → 17 tracks; LMDC grid 16 → 15
+    tracks, min-width 1810 → 1670px; bulk-upload card grid 3 → 2 columns. Network Map
+    "Mapping Plan · SOON" placeholder left as-is.
+  - **Verification**: Babel compile clean after every cut; `with(B)` undefined-identifier audit
+    0 unresolved; 0 JSX-text `\u` escapes; header/body grid cell counts match track counts;
+    jsdom + React render of the full app (engine.js + compiled .jsx) with navigation through SC
+    Master, LMDC Master, Migrations, all three Node Mapping tiers, Design Review RLH and Network
+    Map — zero runtime errors; LMDC edit-save and CSV export exercised (header now 18 columns).
+    Not yet live-tested on the deployed build.
+  - **Note**: the app's "current cycle" follows the real date, so as of October 2026 Sep 2026 is a
+    past (read-only) cycle in Design Inputs and Oct 2026 is the current one.
+  - **Files changed**: `v3.0-rlh-design-base.jsx`, `engine.js`, `context.md`; new
+    `07_SC-DC_Mapping_Archive.md`, `archive_code.md`.
+
+- **2026-10-14 (later same day) — Migrations merged back into one tab; SC-DC Mapping shown as a
+  "Coming Soon" sub-tab.**
+  - **Design Inputs › SC-DC Connections**: the separate Migrations tab is gone. Additions,
+    Closures and Migrations share one tab ("Additions, Closures & Migrations"), one table (all
+    `nodeChangesUnified` rows, flag pill per row) and one count. The single combined CSV upload
+    already covered all three. A stale `nodeStep: 'migrations'` falls back to the merged tab;
+    empty Lat/Lng shows "—"; an empty-state line was added. `nodeChangesAC` / `nodeChangesMig` /
+    `migAlignedRows` / `nstepMigrations` removed.
+  - **Design Creation and Design Review › Node Mapping**: the SOON tag moved from the tier tab to
+    the sub-tab: "SC-DC Mapping" is shown as the active sub-tab with a "COMING SOON" chip (hover:
+    "Coming soon — SC-DC Mapping returns in a later version"); the Coming Soon landing below is
+    unchanged. Ops Alignment unchanged (tier tab still tagged SOON).
+  - **Verification**: compile clean; 0 unresolved render names; 0 JSX-text escapes; jsdom render
+    of Sep 2026 shows all 10 seeded rows in the merged table (5 Addition, 2 Closure, 3 Migration,
+    matching the 2026-09-30 build's data); both sub-tabs render with the chip; zero runtime errors.

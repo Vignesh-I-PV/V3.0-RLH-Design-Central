@@ -26,6 +26,10 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.8/babel.min.js"></script>
+<!-- SheetJS (2026-10-15) — reads .xlsx uploads in Design Ingestion (the NLH Landing Plan is an
+     Excel file with a two-row header) and writes the NLH Landing Plan .xlsx template. Loaded
+     as a plain global (window.XLSX). If it ever fails to load, those cards still accept CSV. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <!-- Multi-leg master-data engine (Class A/B/D/F field model). Split out of
      v3.0-rlh-design-base.jsx into its own file (later session) since it's

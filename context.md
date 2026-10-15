@@ -3625,3 +3625,41 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     independent openpyxl check. CSV path, a bad row (flagged with link + reason), a junk file
     (rejected) and the template download all tested. Compile clean, 0 unresolved names.
   - Still recorded only — Route Scheduler continues to use the NLH card's scenarios.
+
+- **2026-10-15 (later) — POCs: one column per category, single or comma-separated emails;
+  in-app SC / LMDC templates switched to the production Excel templates.**
+  - **Model (engine.js)**: SC POCs are one Class D object `pocRoles` with 8 categories
+    (`SC_POC_CATEGORIES`): Ops ZH, LH Ops ZH, Ops CH, LH Ops CH = single email, **mandatory**;
+    Ops AM, LH Ops AM, Central LH CT, Central Biz Fin CT = email lists, optional, uncapped.
+    LMDC: `lmZh`, `lmCh` single (mandatory), `lmAm` list (optional) (`LMDC_POC_CATEGORIES`).
+    Emails must be name@domain; on screen names are derived from them
+    (firstname.lastname@domain → "Firstname Lastname"). Comma is the only list separator;
+    duplicates dropped. Legacy data (positional `pocs` names, `centralPocs` CT-1/CT-2,
+    `lmAm1`/`lmAm2`) migrates on read (`normalizeScPocRoles`, `normalizeLmdcPocs`). Seeds now
+    emit emails. `materializeRLHScs()` exposes `pocRoles` and derives `pocs` = names of ALL POCs
+    (all 8 categories); `centralPocs` no longer exposed.
+  - **Push to Alignment goes to all POCs** (the 2-reviewer slices removed in openPush, Finalise
+    directly, new-plan default and Route Scheduler push). Ops Alignment SC/LH roles come from
+    the categories (`deriveScPocRoles(sc)`): SC = Ops ZH/CH/AM, LH = LH Ops ZH/CH/AM.
+  - **Forms**: Add/Edit SC shows the 8 categories — single = one email field; list = one field
+    per email with × and "+ POC". LM POCs modal: ZH, CH single; AM list with "+ POC".
+    Validation blocks save with the first problem named.
+  - **Tables**: SC Master "N POCs" dropdown lists every POC by category (name + email); LMDC
+    LM POCs tooltip shows ZH / CH / AM names.
+  - **Templates (in-app = production)**: SC Master 29 columns, LMDC Master 19 (POC columns now
+    single per category). Download Template serves the styled production .xlsx (embedded
+    base64, generated from the same spec as the delivered files); Download Current Data writes
+    the same layout (row 1 headers, row 2 descriptions); uploads take that .xlsx or a CSV with
+    the same headers (older CSV headers still alias), skip the description row, and now also
+    apply Latitude/Longitude, NLH Docks and STATUS (SC), and STATUS (LMDC). POC cells: single
+    categories reject a list or a blank mandatory value; every email validated. LMDC Master's
+    bulk card gained Download Template; its export button renamed Download Current Data.
+  - Not stored in the app (exported blank / ignored on upload): CPS ZONE, City, State,
+    Opening/Closing Time.
+  - **Verification**: compile clean, 0 unresolved names, engine parses. jsdom: table POC list;
+    edit form groups (4 "+ POC"), bad email and missing ZH blocked, lists saved; push reviewers =
+    all 6 POCs; templates download (styled files); SC export → edit → re-upload .xlsx: 77
+    applied, 3 flagged (list in single field, bad email, blank mandatory), AM list replaced,
+    STATUS Inactive applied (SC drops off page 1); LMDC modal "+ POC" save; LMDC export →
+    re-upload: 4 applied, 2 flagged, AM list replaced, STATUS Inactive applied; Ops Alignment
+    roles (LH / SC) resolve. Earlier suites (fixes, NLH landing ingestion) still pass.

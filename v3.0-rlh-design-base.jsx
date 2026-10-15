@@ -889,7 +889,7 @@ All modules
 <button onClick={scMasterTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
 <button onClick={scMasterExportCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
 <button onClick={triggerScMasterUpload} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only" : "Upload CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload</button>
-<input ref={scMasterFileInputRef} type={"file"} accept={".csv"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
+<input ref={scMasterFileInputRef} type={"file"} accept={".csv,.xlsx"} onChange={onScMasterFileChange} style={css(`display:none;`)} />
 </div>
 </div>
 <div style={css(`display:flex; flex-direction:column; gap:12px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px;`)}>
@@ -1369,8 +1369,9 @@ All modules
 </details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{lmdcShown}</strong> of <strong style={css(`color:#14171F;`)}>{lmdcTotal}</strong> LMDCs</span>
-<input ref={lmdcFileInputRef} type={"file"} accept={".csv"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
-<button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download CSV</button>
+<input ref={lmdcFileInputRef} type={"file"} accept={".csv,.xlsx"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
+<button onClick={lmdcTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
+<button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
 <button onClick={triggerLmdcUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
 </div>
 {(hasLmdcUploadErrors) ? (<>
@@ -1847,23 +1848,23 @@ All modules
 {/* 2026-08-26 fix — the old "NLH-Specific Data" section (NLH Docks) removed from RLH's own SC
     edit form: it's now a confusing duplicate of NLH's own real Dock Capacity field on the SC-SC
     and NLH Design card's own masters screen, which is where this genuinely belongs now. */}
-<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>Contact fields are email IDs (ops contacts)</div>
+{/* POCs (2026-10-15) — one block per category. Single-entry categories have one email field;
+    list categories start with one and grow with "+ POC" (remove with ×). Emails are
+    firstname.lastname@domain; names shown elsewhere are derived from them. */}
+<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>POCs — email IDs (firstname.lastname@domain). <span style={css(`color:#D14B4B;`)}>*</span> required</div>
 <div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
-{(addScContacts || []).map((c, __i38) => (<React.Fragment key={__i38}>
+{(addScPocGroups || []).map((g, __iPG) => (<React.Fragment key={__iPG}>
 <div>
-<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div>
-<input value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
+<div style={css(`display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{g.label}{(g.required) ? (<><span style={css(`color:#D14B4B;`)}>*</span></>) : null}{(g.multi) ? (<><span style={css(`font-weight:500; text-transform:none; letter-spacing:0; color:#8E96A3;`)}>one or more</span></>) : null}</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px;`)}>
+{(g.entries || []).map((en, __iPE) => (<React.Fragment key={__iPE}>
+<div style={css(`display:flex; gap:6px; align-items:center;`)}>
+<input type={"email"} value={en.value} onInput={en.onInput} placeholder={"firstname.lastname@valmo.in"} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; box-sizing:border-box;`)} />
+{(en.canRemove) ? (<><button onClick={en.onRemove} aria-label={"Remove this POC"} title={"Remove"} style={css(`width:30px; height:30px; flex-shrink:0; border:1px solid #E6EBF2; background:#fff; color:#8E96A3; border-radius:7px; cursor:pointer; font-size:15px; line-height:1;`)}>×</button></>) : null}
 </div>
 </React.Fragment>))}
+{(g.multi) ? (<><button onClick={g.onAdd} style={css(`align-self:flex-start; height:28px; padding:0 10px; border:1px dashed #C3C9D4; background:#fff; color:#003F98; border-radius:7px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600;`)}>+ POC</button></>) : null}
 </div>
-{/* Central POCs (2026-09-18, item 4) — people who look after ALL SCs, not this one SC's own
-    Ops/LH-Ops chain above. All 4 optional. */}
-<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>Central POCs (optional) — cover all SCs, not just this one</div>
-<div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
-{(addScCentralContacts || []).map((c, __i38c) => (<React.Fragment key={__i38c}>
-<div>
-<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div>
-<input value={c.value} onInput={c.onInput} placeholder={c.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} />
 </div>
 </React.Fragment>))}
 </div>
@@ -6506,10 +6507,20 @@ NLH cycle: {schedNlhMonthLabel}
 <button onClick={lmContactsModal.onClose} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 <div style={css(`display:flex; flex-direction:column; gap:14px;`)}>
-<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM ZH (Zonal Head) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.zh} onInput={lmContactsModal.onZh} placeholder={"e.g. Rahul Sharma"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
-<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM CH (Cluster Head) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.ch} onInput={lmContactsModal.onCh} placeholder={"e.g. Megha Bose"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
-<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM AM-1 (Area Manager) <span style={css(`color:#D14B4B;`)}>*</span></label><input type={"text"} value={lmContactsModal.am1} onInput={lmContactsModal.onAm1} placeholder={"e.g. Karthik Varma"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
-<div><label style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; display:block; margin-bottom:6px;`)}>LM AM-2 (Area Manager) <span style={css(`color:#8E96A3; font-weight:500;`)}>optional</span></label><input type={"text"} value={lmContactsModal.am2} onInput={lmContactsModal.onAm2} placeholder={"e.g. Arjun Desai"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; padding:0 12px; box-sizing:border-box; outline:none;`)} /></div>
+{(lmContactsModal.groups || []).map((g, __iLG) => (<React.Fragment key={__iLG}>
+<div>
+<div style={css(`display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>{g.label}{(g.required) ? (<><span style={css(`color:#D14B4B;`)}>*</span></>) : (<><span style={css(`color:#8E96A3; font-weight:500;`)}>optional · one or more</span></>)}</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px;`)}>
+{(g.entries || []).map((en, __iLE) => (<React.Fragment key={__iLE}>
+<div style={css(`display:flex; gap:6px; align-items:center;`)}>
+<input type={"email"} value={en.value} onInput={en.onInput} placeholder={"firstname.lastname@valmo.in"} style={css(`width:100%; height:38px; border:1px solid #E6EBF2; border-radius:8px; font-family:inherit; font-size:13px; padding:0 12px; box-sizing:border-box; outline:none;`)} />
+{(en.canRemove) ? (<><button onClick={en.onRemove} aria-label={"Remove this POC"} title={"Remove"} style={css(`width:30px; height:30px; flex-shrink:0; border:1px solid #E6EBF2; background:#fff; color:#8E96A3; border-radius:7px; cursor:pointer; font-size:15px; line-height:1;`)}>×</button></>) : null}
+</div>
+</React.Fragment>))}
+{(g.multi) ? (<><button onClick={g.onAdd} style={css(`align-self:flex-start; height:28px; padding:0 10px; border:1px dashed #C3C9D4; background:#fff; color:#003F98; border-radius:7px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600;`)}>+ POC</button></>) : null}
+</div>
+</div>
+</React.Fragment>))}
 </div>
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:20px;`)}>
 <button onClick={lmContactsModal.onClose} style={css(`height:34px; padding:0 16px; border:1px solid #E6EBF2; background:#fff; border-radius:8px; font-family:inherit; font-size:12.5px; color:#5A5E66; cursor:pointer;`)}>Cancel</button>
@@ -6701,6 +6712,16 @@ function NDC_haversineKm(lat1, lng1, lat2, lng2) {
 // comment for the full explanation and the verification that was run before
 // splitting it out.
 // ============================================================================
+
+// SC / LMDC Master templates (2026-10-15) — the production column set and descriptions (row 1 / row 2
+// of the production template), plus the styled template files themselves (base64, generated from the
+// same spec), so the in-app Download Template gives exactly the production file. Uploads read either
+// this .xlsx (two header rows) or a .csv with the same headers; Download Current Data writes the same
+// layout. POCs are one column per category: single email, or comma-separated emails for list categories.
+const SC_TEMPLATE_COLS = [["HUB CODE", "Hub code (mandatory) - upsert key"], ["SC NAME", "SC name (human-readable label)"], ["HUB TYPE", "Hub type - MANDATORY"], ["ZONE", "Zone - MANDATORY"], ["CITY", "City"], ["STATE", "State"], ["LATITUDE", "SC latitude (-90..90) - MANDATORY"], ["LONGITUDE", "SC longitude (-180..180) - MANDATORY"], ["VOLUME CAPACITY", "Volume capacity - MANDATORY"], ["SORT CAPACITY", "Sort capacity - MANDATORY"], ["NLH DOCKS", "NLH docks - MANDATORY"], ["RLH DOCKS", "RLH docks - MANDATORY"], ["LOCAL TP LIMIT", "Local touch point limit - MANDATORY"], ["NON LOCAL TP LIMIT", "Non-local touch point limit - MANDATORY"], ["LOCAL DISTANCE THRESHOLD (KM)", "Local distance threshold in km - a DC within this road distance of the SC is Local, beyond it Non-Local. Default 100"], ["MAX HOLD TIME LOCAL (MIN)", "Max hold time for Local DCs, in minutes - MANDATORY"], ["MAX HOLD TIME NON LOCAL (MIN)", "Max hold time for Non-Local DCs, in minutes - MANDATORY"], ["OPENING TIME", "Opening time (HH:mm)"], ["CLOSING TIME", "Closing time (HH:mm)"], ["POC SC OPS ZH EMAIL", "POC SC Ops ZH email - MANDATORY. Single email, firstname.lastname@domain"], ["POC SC LH OPS ZH EMAIL", "POC SC LH Ops ZH email - MANDATORY. Single email"], ["POC SC OPS CH EMAIL", "POC SC Ops CH email - MANDATORY. Single email"], ["POC SC LH OPS CH EMAIL", "POC SC LH Ops CH email - MANDATORY. Single email"], ["POC SC OPS AM EMAIL", "POC SC Ops AM emails - optional. One or more, comma separated"], ["POC SC LH OPS AM EMAIL", "POC SC LH Ops AM emails - optional. One or more, comma separated"], ["POC CENTRAL LH CT EMAIL", "Central LH contact emails - optional. One or more, comma separated"], ["POC CENTRAL BIZ FIN CT EMAIL", "Central Business Finance contact emails - optional. One or more, comma separated"], ["CPS ZONE", "CPS zone - MANDATORY. The rate band this SC prices against, NOT the operational ZONE. One of south|north|west|ne|north_east|south_west|maharashtra|surat|west_bengal. Leading component of every rate-card natural_key, so an SC without one cannot be priced."], ["STATUS", "SC status - Active or Inactive. Inactive SCs stay in SC Master but are left out of Design Creation. Blank = Active"]];
+const LMDC_TEMPLATE_COLS = [["LMDC CODE", "LMDC code (mandatory) - upsert key"], ["LMSC CODE", "Parent LMSC code - read-only, from AutoDML; ignored on upload"], ["LATITUDE", "LMDC latitude (-90..90) - read-only, from AutoDML; ignored on upload"], ["LONGITUDE", "LMDC longitude (-180..180) - read-only, from AutoDML; ignored on upload"], ["CAPACITY", "LMDC capacity - read-only, from AutoDML; ignored on upload"], ["RLH MODE", "RLH mode - Direct Vehicle | MDC | Co-Loading. Blank = Direct Vehicle"], ["MDC CODE", "MDC node code - only when RLH MODE is MDC. Optional"], ["LANE NAME", "Co-loading lane name, e.g. CL-01 - only when RLH MODE is Co-Loading. Optional"], ["CUTOFF", "Lane cutoff (HH:mm, 30-min slots) - MDC / Co-Loading only. Optional. One cutoff per lane on an LMSC"], ["TAT (HRS)", "Lane TAT in hours (> 0), rounded up to 15 min - MDC / Co-Loading only. Optional"], ["OPEN TIME", "DC open time (HH:mm, 30-min slots) or Default"], ["CLOSE TIME", "DC close time (HH:mm, 30-min slots) or Default"], ["D0 CUTOFF", "D0 cutoff (07:00 to 15:00, 30-min slots) or Default"], ["MAX VEHICLE SIZE", "Largest RLH vehicle this DC can take, or Default (largest RLH vehicle)"], ["UNLOADING TIME (MIN)", "Unloading time in minutes (15 to 60, 5-min steps) or Default"], ["POC LM ZH EMAIL", "POC LM ZH email - MANDATORY. Single email, firstname.lastname@domain"], ["POC LM CH EMAIL", "POC LM CH email - MANDATORY. Single email"], ["POC LM AM EMAIL", "POC LM AM emails - optional. One or more, comma separated"], ["STATUS", "LMDC status - Active or Inactive. Blank = Active"]];
+const SC_TEMPLATE_B64 = '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';
+const LMDC_TEMPLATE_B64 = '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';
 
 // INGEST_KINDS (2026-10-14) — Design Ingestion's upload cards, one entry per plan type. Each
 // card downloads its own template and validates an uploaded CSV against it: every template
@@ -7035,10 +7056,18 @@ class NDCApp extends React.Component {
     const base = this.buildMultiSelect(selected, ZONES, stateKey, extraResetKeys, 'All Zones');
     return Object.assign({}, base, { options: base.options.map(o => ({ zone: o.value, checked: o.checked, onToggle: o.onToggle })) });
   }
-  deriveScPocRoles(pocs) {
+  // 2026-10-15 — takes the SC (preferred: reads pocRoles, the 8 categories) or a legacy positional
+  // names array. SC side = Ops ZH / Ops CH / Ops AM; LH side = LH Ops ZH / LH Ops CH / LH Ops AM.
+  // Names are derived from the emails. Central POCs belong to neither side.
+  deriveScPocRoles(scOrPocs) {
+    if (scOrPocs && !Array.isArray(scOrPocs)) {
+      const r = scOrPocs.pocRoles || normalizeScPocRoles(scOrPocs);
+      const nm = (arr) => pocUniq(arr.filter(Boolean)).map(pocEmailToName);
+      return { scNames: nm([r.opsZh, r.opsCh].concat(r.opsAm || [])), lhNames: nm([r.lhOpsZh, r.lhOpsCh].concat(r.lhOpsAm || [])) };
+    }
     const POC_ROLES = ['Ops ZH', 'LH Ops ZH', 'Ops CH', 'LH Ops CH', 'Ops AM-1', 'Ops AM-2'];
     const scNames = [], lhNames = [];
-    (pocs || []).slice(0, 6).forEach((n, i) => { const role = POC_ROLES[i] || ('Ops Lead ' + (i + 1)); if (role.indexOf('LH ') === 0) lhNames.push(n); else scNames.push(n); });
+    (scOrPocs || []).slice(0, 6).forEach((n, i) => { const role = POC_ROLES[i] || ('Ops Lead ' + (i + 1)); if (role.indexOf('LH ') === 0) lhNames.push(n); else scNames.push(n); });
     return { scNames, lhNames };
   }
   buildSeed() {
@@ -7626,8 +7655,8 @@ class NDCApp extends React.Component {
     const scLmZh = {}, scLmCh = {};
     scs.forEach(sc => {
       const h = sc.code.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
-      scLmZh[sc.code] = NAMES[h % NAMES.length];
-      scLmCh[sc.code] = NAMES[(h + 3) % NAMES.length];
+      scLmZh[sc.code] = pocNameToEmail(NAMES[h % NAMES.length]);
+      scLmCh[sc.code] = pocNameToEmail(NAMES[(h + 3) % NAMES.length]);
     });
     const lmAmFor = (dcCode, scCode) => {
       const h = dcCode.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 0);
@@ -7635,7 +7664,8 @@ class NDCApp extends React.Component {
       const cluster = Math.floor(h / 97) % 3; // ~3 AM pairs spread across a SC's DC pool
       const lmAm1 = NAMES[(scH + cluster * 11 + 5) % NAMES.length];
       const lmAm2 = (h % 10) < 7 ? NAMES[(scH + cluster * 11 + 9) % NAMES.length] : null; // ~70% have an AM-2, rest leave it genuinely optional
-      return { lmAm1, lmAm2 };
+      // 2026-10-15 — one AM list (emails) instead of AM-1 / AM-2.
+      return { lmAm: [lmAm1, lmAm2].filter(Boolean).map(pocNameToEmail) };
     };
     // rlhMode/mdcCode/laneName/cutoff/tat now come straight from the pool DC (tagged above, before
     // route generation drew from it) — carried through here rather than re-seeded, so LMDC Master
@@ -7703,7 +7733,7 @@ class NDCApp extends React.Component {
       const info = this.schedulerRouteDcInfo(sp);
       if (!info || !info.routeInfo.length) return;
       const sc = d.scs.find(s => s.code === sp.scCode) || {};
-      const pocs = this.deriveScPocRoles(sc.pocs);
+      const pocs = this.deriveScPocRoles(sc);
       const scName = pocs.scNames[0] || 'SC Ops Lead';
       const lhName = pocs.lhNames[0] || 'LH Ops Lead';
       const r0 = info.routeInfo[0];
@@ -7966,23 +7996,11 @@ class NDCApp extends React.Component {
     // above); addScNlh kept as an empty array rather than deleted outright, since addScRlh's
     // sibling structure (and the now-unused JSX map over it) stays harmless either way.
     const addScNlh = [];
-    const contacts = [['opsZh', 'SC Ops ZH'], ['lhOpsZh', 'SC-LH Ops ZH'], ['opsCh', 'SC Ops CH'], ['lhOpsCh', 'SC-LH Ops CH'], ['opsAm1', 'SC Ops AM-1'], ['lhOpsAm1', 'SC-LH Ops AM-1'], ['opsAm2', 'SC Ops AM-2'], ['lhOpsAm2', 'SC-LH Ops AM-2']];
-    const addScContacts = contacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
-    // 2026-09-18 addition (item 4) — Central POCs: 4 new optional per-SC contact fields for
-    // people who look after ALL SCs (not one SC's own Ops/LH-Ops chain above). Deliberately its
-    // own named object (centralPocs: {lhCt1, lhCt2, bizFinCt1, bizFinCt2}) on scMaster rather
-    // than extending the existing `pocs` array — that array is positional (index 0-3 = opsZh/
-    // opsCh/opsAm1/opsAm2, read back out by position in openScEdit()), which is exactly the
-    // fragile shape a 5th/6th/7th/8th slot would make worse. Also: while wiring this, confirmed
-    // the existing `lhOpsZh/lhOpsCh/lhOpsAm1/lhOpsAm2` fields defined just above in `contacts`
-    // are a real pre-existing dead end — submitAddSc() only ever persists opsZh/opsCh/opsAm1/
-    // opsAm2 into `pocs`, never the lhOps* ones, and openScEdit() never pre-fills them either.
-    // Flagged here, not fixed — out of scope for this ask, but worth a real look next time
-    // someone's in this form.
-    const centralContacts = [['lhCt1', 'LH CT-1'], ['lhCt2', 'LH CT-2'], ['bizFinCt1', 'Biz Fin CT-1'], ['bizFinCt2', 'Biz Fin CT-2']];
-    const addScCentralContacts = centralContacts.map(c => ({ key: c[0], label: c[1], value: f[c[0]] || '', ph: 'name@meesho.com', onInput: set(c[0]) }));
+    // POCs (2026-10-15) — 8 categories from SC_POC_CATEGORIES: 4 single-entry (mandatory) and 4 lists
+    // with "+ POC". Replaces the old 8 fixed slots + 4 Central CT-1/CT-2 slots.
+    const addScPocGroups = this.pocFormGroups(SC_POC_CATEGORIES, f, (patch) => this.setState({ addScForm: Object.assign({}, this.state.addScForm || {}, patch) }));
     const editing = !!st.addScEditCode;
-    return { addScOpen: !!st.addScOpen, addScCore: addScCore, addScRlh: addScRlh, addScNlh: addScNlh, addScContacts: addScContacts, addScCentralContacts: addScCentralContacts, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
+    return { addScOpen: !!st.addScOpen, addScCore: addScCore, addScRlh: addScRlh, addScNlh: addScNlh, addScPocGroups: addScPocGroups, addScTitle: editing ? ('Edit Sort Centre · ' + st.addScEditCode) : 'Add Sort Centre', addScSubmitLabel: editing ? 'Save changes' : 'Add SC', closeAddSc: () => this.setState({ addScOpen: false, addScEditCode: null }), submitAddSc: () => this.submitAddSc() };
   }
   // 2026-08-25 rewrite — data.scs is now ALWAYS the live materialization from the engine (see
   // refreshScs() below), so there's no more scEdits/addedScs overlay to merge here: every field
@@ -8248,8 +8266,7 @@ class NDCApp extends React.Component {
     const st = this.state;
     const sc = (st.data.scs || []).find(s => s.code === code);
     if (!sc) { this.comingSoon('Edit SC'); return; }
-    const pl = sc.pocs || [];
-    const cp = sc.centralPocs || {};
+    const pr = sc.pocRoles || normalizeScPocRoles(sc);
     // 2026-09-18 fix (items 2/3) — open/close and localSpeed/nonLocalSpeed no longer pre-filled:
     // both fields were removed from the form itself (see addScVals()), so carrying their old
     // values into addScForm here would be dead state with nothing rendering it.
@@ -8258,10 +8275,9 @@ class NDCApp extends React.Component {
       nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp),
       holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
       localDistThreshold: sc.localDistThreshold != null ? String(sc.localDistThreshold) : '100',
-      opsZh: pl[0] || '', opsCh: pl[1] || '', opsAm1: pl[2] || '', opsAm2: pl[3] || '',
-      // 2026-09-18 addition (item 4) — Central POCs pre-fill, read from the named object (not
-      // positional, unlike `pl` above — see addScVals() for why).
-      lhCt1: cp.lhCt1 || '', lhCt2: cp.lhCt2 || '', bizFinCt1: cp.bizFinCt1 || '', bizFinCt2: cp.bizFinCt2 || '' };
+      // 2026-10-15 — POCs pre-filled from pocRoles: single categories as strings, lists as arrays.
+      opsZh: pr.opsZh, lhOpsZh: pr.lhOpsZh, opsCh: pr.opsCh, lhOpsCh: pr.lhOpsCh,
+      opsAm: pr.opsAm.slice(), lhOpsAm: pr.lhOpsAm.slice(), lhCt: pr.lhCt.slice(), bizFinCt: pr.bizFinCt.slice() };
     this.setState({ addScOpen: true, addScEditCode: code, addScForm: form, pocOpenRow: null });
   }
   // C12 — functional INLINE edit for SC Vehicle Availability: per-field overlay stored as
@@ -8724,12 +8740,10 @@ class NDCApp extends React.Component {
     if ((lat != null && (lat < 6 || lat > 38)) || (lng != null && (lng < 68 || lng > 98))) {
       this.showToast('Coordinates look outside India\u2019s rough bounding box \u2014 saved anyway, double-check them', '#C77B00');
     }
-    const pocs = ['opsZh', 'opsCh', 'opsAm1', 'opsAm2'].map(k => (f[k] || '').trim()).filter(Boolean);
-    // 2026-09-18 addition (item 4) — Central POCs, a named object (not the positional `pocs`
-    // array above) so each of the 4 slots keeps its own identity regardless of which are filled.
-    // Stored even if all 4 are blank (as an object of empty strings) rather than omitted, so an
-    // edit that clears every field genuinely clears them instead of leaving a stale prior value.
-    const centralPocs = { lhCt1: (f.lhCt1 || '').trim(), lhCt2: (f.lhCt2 || '').trim(), bizFinCt1: (f.bizFinCt1 || '').trim(), bizFinCt2: (f.bizFinCt2 || '').trim() };
+    // POCs (2026-10-15) — validated as emails; the 4 single categories (ZH/CH, Ops and LH Ops) are
+    // mandatory, lists optional. Saved as the one pocRoles object.
+    const pocCheck = this.pocFormValidate(SC_POC_CATEGORIES, f);
+    if (pocCheck.errs.length) { this.showToast(pocCheck.errs[0] + (pocCheck.errs.length > 1 ? ' (+' + (pocCheck.errs.length - 1) + ' more)' : ''), '#C77B00'); return; }
     const rlhDocksN = opt(f.rlhDocks); // 2026-08-26 fix — nlhDocksN removed, form field no longer exists
     const name = (f.name || '').trim() || code;
     const zone = f.zone || 'South';
@@ -8780,8 +8794,7 @@ class NDCApp extends React.Component {
       rlhDocks: rlhDocksN, docks: rlhDocksN || 0,
       localTp: opt(f.localTp), nonLocalTp: opt(f.nonLocalTp),
       holdTimeOn: f.holdTimeOn === 'Off' ? false : true, maxHoldLocal: opt(f.maxHoldLocal), maxHoldNonLocal: opt(f.maxHoldNonLocal),
-      pocs: pocs.length ? pocs : ['\u2014'],
-      centralPocs: centralPocs,
+      pocRoles: pocCheck.roles,
       // Blank → 100 (the default), never null, so dcIsLocal() always has a real threshold.
       localDistThreshold: (f.localDistThreshold === '' || f.localDistThreshold == null) ? 100 : Number(f.localDistThreshold),
     };
@@ -9356,7 +9369,7 @@ class NDCApp extends React.Component {
     dcCodes.forEach(code => {
       const l = lmdcByCode[code];
       if (!l) return;
-      add(l.lmZh); add(l.lmCh); add(l.lmAm1); add(l.lmAm2);
+      const lp = normalizeLmdcPocs(l); [lp.lmZh, lp.lmCh].concat(lp.lmAm).filter(Boolean).forEach(em => add(pocEmailToName(em)));
     });
     return names;
   }
@@ -9388,7 +9401,7 @@ class NDCApp extends React.Component {
     if (!personaName) return null;
     if (sp.schedStage === 'stage2') return this.deriveLmPocs(sp).indexOf(personaName) >= 0 ? 'LM' : null;
     const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
-    const pocs = this.deriveScPocRoles(sc.pocs);
+    const pocs = this.deriveScPocRoles(sc);
     if (pocs.scNames.indexOf(personaName) >= 0) return 'SC';
     if (pocs.lhNames.indexOf(personaName) >= 0) return 'LH';
     return null;
@@ -9404,7 +9417,7 @@ class NDCApp extends React.Component {
     if (direct) return direct;
     if (sp.schedStage === 'stage2') return this.deriveLmPocs(sp).length ? 'LM' : null;
     const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
-    const pocs = this.deriveScPocRoles(sc.pocs);
+    const pocs = this.deriveScPocRoles(sc);
     return pocs.scNames.length ? 'SC' : (pocs.lhNames.length ? 'LH' : null);
   }
   // schedGlobalRoleForStage(stage) — rail-level bucketing needs ONE role to scope the WHOLE list
@@ -9431,7 +9444,7 @@ class NDCApp extends React.Component {
   schedPersonaName(sp, role) {
     if (role === 'LM') { const names = this.deriveLmPocs(sp); return names[0] || 'LM Ops Lead'; }
     const sc = this.state.data.scs.find(s => s.code === sp.scCode) || {};
-    const pocs = this.deriveScPocRoles(sc.pocs);
+    const pocs = this.deriveScPocRoles(sc);
     return role === 'LH' ? (pocs.lhNames[0] || 'LH Ops Lead') : (pocs.scNames[0] || 'SC Ops Lead');
   }
   // schedStageRoles(stage) — which roles are the active proposers for a stage; stage1 = SC+LH
@@ -9670,26 +9683,29 @@ class NDCApp extends React.Component {
   // genuinely optional. Plain name fields, matching this table's existing free-text convention
   // (the old POCs field) rather than a full name+email reviewer picker — this is
   // master data entry, not a push-time reviewer selection.
+  // LM POCs modal (2026-10-15) — ZH and CH single email (mandatory); AM a list (optional, "+ POC").
   openLmContactsModal(code) {
     const l = (this.state.data.lmdcs || []).find(x => x.code === code);
     if (!l) return;
-    this.setState({ lmContactsModal: { open: true, code, zh: l.lmZh || '', ch: l.lmCh || '', am1: l.lmAm1 || '', am2: l.lmAm2 || '' } });
+    const lp = normalizeLmdcPocs(l);
+    this.setState({ lmContactsModal: { open: true, code, lmZh: lp.lmZh, lmCh: lp.lmCh, lmAm: lp.lmAm.length ? lp.lmAm.slice() : [''] } });
   }
   closeLmContactsModal() { this.setState({ lmContactsModal: { open: false } }); }
   saveLmContactsModal() {
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const m = this.state.lmContactsModal || {};
-    const zh = (m.zh || '').trim(), ch = (m.ch || '').trim(), am1 = (m.am1 || '').trim(), am2 = (m.am2 || '').trim();
-    if (!zh || !ch || !am1) { this.showToast('LM ZH, LM CH and AM-1 are required \u2014 only AM-2 is optional', '#C77B00'); return; }
+    const chk = this.pocFormValidate(LMDC_POC_CATEGORIES, m);
+    if (chk.errs.length) { this.showToast(chk.errs[0] + (chk.errs.length > 1 ? ' (+' + (chk.errs.length - 1) + ' more)' : ''), '#C77B00'); return; }
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code) || {};
-    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmZh', zh, existing);
-    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmCh', ch, existing);
-    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm1', am1, existing);
-    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm2', am2 || null, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmZh', chk.roles.lmZh, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmCh', chk.roles.lmCh, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm', chk.roles.lmAm, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm1', null, existing);
+    setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, m.code, 'lmAm2', null, existing);
     this.refreshLmdcs();
     this.setState({ lmContactsModal: { open: false } });
-    this.showToast('LM contacts saved for ' + m.code, '#128A3E');
+    this.showToast('LM POCs saved for ' + m.code, '#128A3E');
   }
   saveLmdcEdit(code) {
     if (this.isRlhCyclePast()) { this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
@@ -9776,20 +9792,12 @@ class NDCApp extends React.Component {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const text = String(reader.result || '');
-        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
-        const splitCsvLine = (line) => {
-          const out = []; let cur = ''; let inQ = false;
-          for (let i = 0; i < line.length; i++) {
-            const c = line[i];
-            if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; }
-            else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; }
-          }
-          out.push(cur);
-          return out.map(s => s.trim());
-        };
-        const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
+        // 2026-10-15 — production LMDC template (.xlsx, two header rows) or a CSV with the same headers.
+        const isXlsxUp = /\.xlsx?$/i.test(file.name || '');
+        const lines = this.masterUploadLines(this.sheetRowsFrom(reader.result, isXlsxUp), 'lmdc code', {}, LMDC_TEMPLATE_COLS[0][1]);
+        if (!lines || lines.length < 2) { this.showToast('No "LMDC CODE" header with data rows found in that file', '#C77B00'); return; }
+        const splitCsvLine = (row) => row;
+        const headers = lines[0];
         const idx = (name) => headers.indexOf(name);
         const codeIdx = idx('lmdc code');
         if (codeIdx < 0) { this.showToast('Column "LMDC Code" not found in the uploaded file', '#D14B4B'); return; }
@@ -9826,7 +9834,7 @@ class NDCApp extends React.Component {
           const code = (cols[codeIdx] || '').trim();
           if (!code || !validCodes[code]) { skipped++; continue; }
           const patch = {};
-          const rowErrs = [];
+          const rowErrs = []; let statusTo = null;
           if (openIdx >= 0 && cols[openIdx]) { if (TIME_SET[cols[openIdx]]) patch.open = cols[openIdx]; else rowErrs.push('Open Time "' + cols[openIdx] + '" is not a 30-min slot'); }
           if (closeIdx >= 0 && cols[closeIdx]) { if (TIME_SET[cols[closeIdx]]) patch.close = cols[closeIdx]; else rowErrs.push('Close Time "' + cols[closeIdx] + '" is not a 30-min slot'); }
           if (d0Idx >= 0 && cols[d0Idx]) { if (D0_SET[cols[d0Idx]]) patch.d0Cutoff = cols[d0Idx]; else rowErrs.push('D0 Cutoff "' + cols[d0Idx] + '" is not "Default" or 07:00\u201315:00 in 30-min steps'); }
@@ -9848,14 +9856,15 @@ class NDCApp extends React.Component {
               if (rowErrs.length === before) Object.assign(patch, { rlhMode: mode, mdcCode: mode === 'MDC' ? (lane || null) : null, laneName: mode === 'Co-Loading' ? (lane || null) : null, cutoff: cut || null, tat: tatRaw ? String(this.hrsToMinRoundUp(tatRaw)) : null });
             }
           }
-          if (zhIdx >= 0) { if (!cols[zhIdx]) rowErrs.push('LM ZH is required'); else patch.lmZh = cols[zhIdx]; }
-          if (chIdx >= 0) { if (!cols[chIdx]) rowErrs.push('LM CH is required'); else patch.lmCh = cols[chIdx]; }
-          if (am1Idx >= 0) { if (!cols[am1Idx]) rowErrs.push('LM AM-1 is required'); else patch.lmAm1 = cols[am1Idx]; }
-          if (am2Idx >= 0 && cols[am2Idx]) patch.lmAm2 = cols[am2Idx];
+          // 2026-10-15 — POCs: POC LM ZH / CH EMAIL (one email, mandatory), POC LM AM EMAIL (comma list).
+          LMDC_POC_CATEGORIES.forEach(cat => { const ix = headers.indexOf(cat.header.toLowerCase()); if (ix < 0) return; const r = this.pocParseCell(cat, cols[ix]); r.errs.forEach(m => rowErrs.push(m)); patch[cat.key] = r.value; if (cat.key === 'lmAm') { patch.lmAm1 = null; patch.lmAm2 = null; } });
+          const stIx = headers.indexOf('status');
+          if (stIx >= 0 && cols[stIx]) { const sv = String(cols[stIx]).trim().toLowerCase(); if (sv === 'active' || sv === 'inactive') statusTo = sv; else rowErrs.push('Status "' + cols[stIx] + '" is not Active or Inactive'); }
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
-          if (Object.keys(patch).length === 0) { skipped++; continue; }
+          if (Object.keys(patch).length === 0 && !statusTo) { skipped++; continue; }
           const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
           Object.keys(patch).forEach(field => setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, code, field, patch[field], existing));
+          if (statusTo) { const was = resolveLmdcExistence(this.engineStore, code, cycleMonth) === 'active'; if (statusTo === 'inactive' && was) setLmdcStatus(this.engineStore, code, 'deactivated', cycleMonth); else if (statusTo === 'active' && !was) setLmdcStatus(this.engineStore, code, 'active', cycleMonth); }
           matched++;
         }
         this.refreshLmdcs();
@@ -9865,7 +9874,7 @@ class NDCApp extends React.Component {
         this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
       }
     };
-    reader.readAsText(file);
+    if (/\.xlsx?$/i.test(file.name || '')) reader.readAsArrayBuffer(file); else reader.readAsText(file);
   }
   // scMasterExportCsv() (2026-09-24 addition) — "Download Current Data": same 18 columns as
   // scMasterTemplate, one row per currently-displayable SC, so a planner can round-trip export →
@@ -9875,23 +9884,26 @@ class NDCApp extends React.Component {
   // display already does (City = SC Name, State = a 4-zone lookup), for consistency, not because
   // they're a real source of truth. MDC nodes are skipped — this export is for real SCs only,
   // same population the +SC modal/upload path itself governs.
+  // scMasterExportCsv() (2026-09-24; production template layout 2026-10-15) — "Download Current Data"
+  // as the SC Master template: row 1 headers, row 2 descriptions, one row per SC (MDC nodes
+  // skipped). City/State are derived as the table shows them; CPS ZONE isn't stored in this app
+  // yet, so it's exported blank. POC lists are comma-separated.
   scMasterExportCsv() {
     const ZSTATE = { North: 'Delhi NCR', West: 'Maharashtra', South: 'Karnataka', East: 'West Bengal' };
-    const header = 'SC Code,Name,City,State,SC Type,Zone,Volume Capacity,Sort Capacity,RLH Docks,Local TP Limit,Non-Local TP Limit,Max Hold Time - Local (min),Max Hold Time - Non-Local (min),Local Distance Threshold (km),Ops Leads,LH CT-1,LH CT-2,Biz Fin CT-1,Biz Fin CT-2';
     const scs = (this.state.data.scs || []).filter(s => s.nodeKind !== 'MDC');
     const rows = scs.map(s => {
-      const cp = s.centralPocs || {};
-      return [
-        s.code, s.name, s.name, ZSTATE[s.zone] || s.zone || '', s.dispatchRoleType || '', s.zone || '',
-        s.volCap != null ? s.volCap : '', s.sortCap != null ? s.sortCap : '', s.rlhDocks != null ? s.rlhDocks : '',
-        s.localTp != null ? s.localTp : '', s.nonLocalTp != null ? s.nonLocalTp : '',
-        s.maxHoldLocal != null ? s.maxHoldLocal : '', s.maxHoldNonLocal != null ? s.maxHoldNonLocal : '',
-        s.localDistThreshold != null ? s.localDistThreshold : 100,
-        (s.pocs || []).filter(p => p && p !== '\u2014').join(';'),
-        cp.lhCt1 || '', cp.lhCt2 || '', cp.bizFinCt1 || '', cp.bizFinCt2 || '',
-      ].map(v => this.csvField(v)).join(',');
+      const pr = s.pocRoles || normalizeScPocRoles(s);
+      const v = {
+        'HUB CODE': s.code, 'SC NAME': s.name, 'HUB TYPE': s.dispatchRoleType || 'LMSC', 'ZONE': s.zone, 'CITY': s.name, 'STATE': ZSTATE[s.zone] || '',
+        'LATITUDE': s.lat, 'LONGITUDE': s.lng, 'VOLUME CAPACITY': s.volCap, 'SORT CAPACITY': s.sortCap, 'NLH DOCKS': s.nlhDocks, 'RLH DOCKS': s.rlhDocks,
+        'LOCAL TP LIMIT': s.localTp, 'NON LOCAL TP LIMIT': s.nonLocalTp, 'LOCAL DISTANCE THRESHOLD (KM)': s.localDistThreshold != null ? s.localDistThreshold : 100,
+        'MAX HOLD TIME LOCAL (MIN)': s.maxHoldLocal, 'MAX HOLD TIME NON LOCAL (MIN)': s.maxHoldNonLocal, 'OPENING TIME': s.openTime || '', 'CLOSING TIME': s.closeTime || '',
+        'CPS ZONE': '', 'STATUS': s.isActive === false ? 'Inactive' : 'Active',
+      };
+      SC_POC_CATEGORIES.forEach(cat => { v[cat.header] = cat.multi ? (pr[cat.key] || []).join(', ') : (pr[cat.key] || ''); });
+      return SC_TEMPLATE_COLS.map(c => (v[c[0]] == null ? '' : v[c[0]]));
     });
-    this.downloadText('sort-centre-master-current.csv', header + '\n' + rows.join('\n') + (rows.length ? '\n' : ''));
+    this.writeMasterSheet('nd_sc_master_current', SC_TEMPLATE_COLS, rows);
     this.showToast('Sort Centre Master \u2014 current data downloaded \u00b7 ' + rows.length + ' SC' + (rows.length === 1 ? '' : 's'), '#128A3E');
   }
   // handleScMasterCsvUpload(e) (later session — fixes the uploadFile naming collision) — SC
@@ -9911,20 +9923,14 @@ class NDCApp extends React.Component {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const text = String(reader.result || '');
-        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-        if (lines.length < 2) { this.showToast('That CSV has no data rows', '#C77B00'); return; }
-        const splitCsvLine = (line) => {
-          const out = []; let cur = ''; let inQ = false;
-          for (let i = 0; i < line.length; i++) {
-            const c = line[i];
-            if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; }
-            else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; }
-          }
-          out.push(cur);
-          return out.map(s => s.trim());
-        };
-        const headers = splitCsvLine(lines[0]).map(h => h.toLowerCase());
+        // 2026-10-15 — reads the production template (.xlsx, two header rows) or a CSV with the same
+        // headers; older CSVs with the previous headers still map through the aliases below.
+        const isXlsxUp = /\.xlsx?$/i.test(file.name || '');
+        const sheetRows = this.sheetRowsFrom(reader.result, isXlsxUp);
+        const lines = this.masterUploadLines(sheetRows, 'hub code', { 'hub code': 'sc code', 'sc name': 'name', 'hub type': 'sc type', 'non local tp limit': 'non-local tp limit', 'max hold time local (min)': 'max hold time - local (min)', 'max hold time non local (min)': 'max hold time - non-local (min)' }, SC_TEMPLATE_COLS[0][1]) || this.masterUploadLines(sheetRows, 'sc code', {}, null);
+        if (!lines || lines.length < 2) { this.showToast('No "HUB CODE" header with data rows found in that file', '#C77B00'); return; }
+        const splitCsvLine = (row) => row;
+        const headers = lines[0];
         const idx = (name) => headers.indexOf(name);
         const codeIdx = idx('sc code');
         if (codeIdx < 0) { this.showToast('Column "SC Code" not found in the uploaded file', '#D14B4B'); return; }
@@ -9968,22 +9974,24 @@ class NDCApp extends React.Component {
           // of 30 is rejected the same way a bad number already was.
           if (maxHoldLocalIdx >= 0) { if (cols[maxHoldLocalIdx] === '') { rowErrs.push('Max Hold Time - Local is required'); } else { const n = parseInt(cols[maxHoldLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Local "' + cols[maxHoldLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldLocal = n; } }
           if (maxHoldNonLocalIdx >= 0) { if (cols[maxHoldNonLocalIdx] === '') { rowErrs.push('Max Hold Time - Non-Local is required'); } else { const n = parseInt(cols[maxHoldNonLocalIdx], 10); if (isNaN(n)) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" is not a number'); else if (n % 30 !== 0) rowErrs.push('Max Hold Time - Non-Local "' + cols[maxHoldNonLocalIdx] + '" must be a multiple of 30'); else dPatch.maxHoldNonLocal = n; } }
-          if (opsLeadsIdx >= 0 && cols[opsLeadsIdx]) dPatch.pocs = cols[opsLeadsIdx].split(/[;|]/).map(s => s.trim()).filter(Boolean);
           // 2026-09-28 — optional; blank leaves the SC's current threshold (default 100 km) untouched.
           if (localDistIdx >= 0 && cols[localDistIdx] !== '' && cols[localDistIdx] != null) { const n = Number(cols[localDistIdx]); if (n > 0) dPatch.localDistThreshold = n; else rowErrs.push('Local Distance Threshold "' + cols[localDistIdx] + '" must be a positive number of km'); }
-          // 2026-09-18 addition (item 4) — Central POCs: same named-object shape as the +SC
-          // modal writes (see submitAddSc()), built here only if at least one of the 4 columns
-          // is present and non-empty on this row, and merged onto whatever's already stored so a
-          // CSV row that only fills LH CT-1 doesn't blank out an existing Biz Fin CT-1/2.
-          if ((lhCt1Idx >= 0 && cols[lhCt1Idx]) || (lhCt2Idx >= 0 && cols[lhCt2Idx]) || (bizFinCt1Idx >= 0 && cols[bizFinCt1Idx]) || (bizFinCt2Idx >= 0 && cols[bizFinCt2Idx])) {
-            const existingCp = existingD.centralPocs || {};
-            dPatch.centralPocs = {
-              lhCt1: (lhCt1Idx >= 0 && cols[lhCt1Idx]) ? cols[lhCt1Idx] : (existingCp.lhCt1 || ''),
-              lhCt2: (lhCt2Idx >= 0 && cols[lhCt2Idx]) ? cols[lhCt2Idx] : (existingCp.lhCt2 || ''),
-              bizFinCt1: (bizFinCt1Idx >= 0 && cols[bizFinCt1Idx]) ? cols[bizFinCt1Idx] : (existingCp.bizFinCt1 || ''),
-              bizFinCt2: (bizFinCt2Idx >= 0 && cols[bizFinCt2Idx]) ? cols[bizFinCt2Idx] : (existingCp.bizFinCt2 || ''),
-            };
+          // 2026-10-15 — POCs: one column per category (SC_POC_CATEGORIES). A present column replaces
+          // that category; single categories take one email (mandatory ones can't be blank), list
+          // categories take comma-separated emails. Columns absent from the file leave POCs as-is.
+          const pocCols = SC_POC_CATEGORIES.map(cat => ({ cat, ix: headers.indexOf(cat.header.toLowerCase()) })).filter(x => x.ix >= 0);
+          if (pocCols.length) {
+            const roles = Object.assign({}, normalizeScPocRoles(existingD));
+            pocCols.forEach(({ cat, ix }) => { const r = this.pocParseCell(cat, cols[ix]); r.errs.forEach(m => rowErrs.push(m)); roles[cat.key] = r.value; });
+            dPatch.pocRoles = roles;
           }
+          // Latitude / Longitude (Class A) and NLH Docks — in the production template, applied when filled.
+          const latIdx = headers.indexOf('latitude'), lngIdx = headers.indexOf('longitude'), nlhDocksIdx = headers.indexOf('nlh docks'), statusIdx = headers.indexOf('status');
+          if (latIdx >= 0 && cols[latIdx] !== '' && cols[latIdx] != null) { const v = Number(cols[latIdx]); if (!isNaN(v) && v >= -90 && v <= 90) bPatch._lat = v; else rowErrs.push('Latitude "' + cols[latIdx] + '" is not -90..90'); }
+          if (lngIdx >= 0 && cols[lngIdx] !== '' && cols[lngIdx] != null) { const v = Number(cols[lngIdx]); if (!isNaN(v) && v >= -180 && v <= 180) bPatch._lng = v; else rowErrs.push('Longitude "' + cols[lngIdx] + '" is not -180..180'); }
+          if (nlhDocksIdx >= 0 && cols[nlhDocksIdx] !== '' && cols[nlhDocksIdx] != null) { const v = parseInt(cols[nlhDocksIdx], 10); if (!isNaN(v) && v >= 0) dPatch.nlhDocks = v; else rowErrs.push('NLH Docks "' + cols[nlhDocksIdx] + '" is not a number'); }
+          // STATUS — Active / Inactive (blank = leave as is).
+          if (statusIdx >= 0 && cols[statusIdx]) { const sv = String(cols[statusIdx]).trim().toLowerCase(); if (sv === 'active' || sv === 'inactive') bPatch._status = sv; else rowErrs.push('Status "' + cols[statusIdx] + '" is not Active or Inactive'); }
           if (rowErrs.length > 0) { errorRows.push({ row: i + 1, code, msg: rowErrs.join('; ') }); continue; }
           if (Object.keys(bPatch).length === 0 && Object.keys(dPatch).length === 0) { skipped++; continue; }
           // Class A (name/zone) — direct registry update, same as submitAddSc().
@@ -9991,7 +9999,10 @@ class NDCApp extends React.Component {
           if (row) {
             if (bPatch._name) row.name = bPatch._name;
             if (bPatch._zone) row.zone = bPatch._zone;
+            if (bPatch._lat != null) row.lat = bPatch._lat;
+            if (bPatch._lng != null) row.lng = bPatch._lng;
           }
+          if (bPatch._status) { const wasActive = resolveExistence(this.engineStore, code, cycleMonth) === 'active'; if (bPatch._status === 'inactive' && wasActive) { setSCStatus(this.engineStore, code, 'deactivated', cycleMonth); this.pruneScFromCreation(code); } else if (bPatch._status === 'active' && !wasActive) setSCStatus(this.engineStore, code, 'active', cycleMonth); }
           // Class B (sortCap/volCap/scType + derived dispatch flags) — cycle-versioned.
           if (bPatch.volCap != null) setClassBField(this.engineStore, code, cycleMonth, 'volCap', bPatch.volCap);
           if (bPatch.sortCap != null) setClassBField(this.engineStore, code, cycleMonth, 'sortCap', bPatch.sortCap);
@@ -10013,7 +10024,7 @@ class NDCApp extends React.Component {
         this.showToast('Could not read that file \u2014 make sure it\u2019s a CSV exported from here', '#D14B4B');
       }
     };
-    reader.readAsText(file);
+    if (/\.xlsx?$/i.test(file.name || '')) reader.readAsArrayBuffer(file); else reader.readAsText(file);
   }
   // handleAvailCsvUpload(e) (later session — same fix, SC Vehicle Availability's own "Upload
   // CSV" button had the identical uploadFile collision). Matches by SC Code against the real
@@ -10265,6 +10276,84 @@ class NDCApp extends React.Component {
       selectedSCs: (st.selectedSCs || []).filter(c => c !== code),
       schedulerSelectedPlanIds: (st.schedulerSelectedPlanIds || []).filter(id => planScById[id] !== code),
     });
+  }
+  // ===== Master template I/O helpers (2026-10-15) =====
+  downloadB64(name, b64) { try { const bin = atob(b64); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); const blob = new Blob([u8], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); } catch (err) { this.showToast('Download failed', '#D14B4B'); } }
+  // sheetRowsFrom(result, isXlsx) — array of string arrays from a CSV text or an .xlsx ArrayBuffer
+  // (first sheet). Excel times come back as their displayed text; H:MM is padded to HH:MM.
+  sheetRowsFrom(result, isXlsx) {
+    const pad = (v) => { const s = String(v == null ? '' : v).trim(); return /^\d:\d\d$/.test(s) ? '0' + s : s; };
+    if (isXlsx) {
+      if (typeof XLSX === 'undefined') throw new Error('Excel reader didn\u2019t load \u2014 save the sheet as CSV and upload that instead');
+      const wb = XLSX.read(result, { type: 'array' });
+      return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '', blankrows: false }).map(r => r.map(pad));
+    }
+    return String(result || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim().length > 0).map(l => this.splitCsvLineIngest(l).map(pad));
+  }
+  // masterUploadLines(rows, keyHeader, aliases) — finds the header row (the one containing
+  // keyHeader), lower-cases + aliases it, and drops the template's description row (row 2 of the
+  // production template) if present. Returns [header, ...dataRows] or null.
+  masterUploadLines(rows, keyHeader, aliases, descRow) {
+    const hi = rows.findIndex(r => r.some(c => String(c).trim().toLowerCase() === keyHeader));
+    if (hi < 0) return null;
+    const head = rows[hi].map(c => { const k = String(c).trim().toLowerCase(); return aliases[k] || k; });
+    let data = rows.slice(hi + 1);
+    if (data.length && descRow && String(data[0][0] || '').trim() === descRow) data = data.slice(1);
+    return [head].concat(data);
+  }
+  // writeMasterSheet(fileName, cols, rows) — Download Current Data in the template layout (row 1
+  // headers, row 2 descriptions, data from row 3). .xlsx via SheetJS, else CSV of the headers + data.
+  writeMasterSheet(fileName, cols, rows) {
+    if (typeof XLSX !== 'undefined') {
+      const ws = XLSX.utils.aoa_to_sheet([cols.map(c => c[0]), cols.map(c => c[1])].concat(rows));
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, fileName.indexOf('lmdc') >= 0 ? 'LMDC Master-Fill This' : 'SC Master-Fill This');
+      XLSX.writeFile(wb, fileName + '.xlsx');
+    } else {
+      this.downloadText(fileName + '.csv', [cols.map(c => c[0])].concat(rows).map(r => r.map(v => this.csvField(v)).join(',')).join('\n') + '\n');
+    }
+  }
+  // pocParseCell(cat, raw, present) — validates one POC cell from an upload. Single categories take
+  // exactly one email (a comma = error); list categories take comma-separated emails. Every email
+  // must be name@domain. Mandatory single categories can't be blank. Returns { value, errs }.
+  pocParseCell(cat, raw) {
+    const errs = []; const parts = pocSplitList(raw);
+    parts.forEach(p => { if (!pocIsEmail(p)) errs.push(cat.label + ' "' + p + '" is not an email (name@domain)'); });
+    if (!cat.multi) {
+      if (parts.length > 1) errs.push(cat.label + ' takes one email, not a list');
+      if (cat.required && parts.length === 0) errs.push(cat.label + ' is required');
+      return { value: (parts[0] || '').toLowerCase(), errs };
+    }
+    return { value: pocUniq(parts.map(p => p.toLowerCase())), errs };
+  }
+  // pocFormGroups(cats, form, setForm) — the POC section of a form: single categories = one input;
+  // list categories = one input per email with remove (×) and a "+ POC" button. form[key] is a
+  // string for single categories and an array for lists.
+  pocFormGroups(cats, form, setForm) {
+    return cats.map(cat => {
+      if (!cat.multi) return { key: cat.key, label: cat.label, required: cat.required, multi: false, isSingle: true,
+        entries: [{ value: form[cat.key] || '', onInput: (e) => setForm({ [cat.key]: e.target.value }), canRemove: false, onRemove: () => {} }], onAdd: () => {} };
+      const list = Array.isArray(form[cat.key]) && form[cat.key].length ? form[cat.key] : [''];
+      return { key: cat.key, label: cat.label, required: cat.required, multi: true, isSingle: false,
+        entries: list.map((v, i) => ({ value: v, onInput: (e) => { const next = list.slice(); next[i] = e.target.value; setForm({ [cat.key]: next }); }, canRemove: list.length > 1, onRemove: () => { const next = list.slice(); next.splice(i, 1); setForm({ [cat.key]: next.length ? next : [''] }); } })),
+        onAdd: () => setForm({ [cat.key]: list.concat(['']) }) };
+    });
+  }
+  // pocFormValidate(cats, form) — { roles, errs } from a form's POC fields.
+  pocFormValidate(cats, form) {
+    const roles = {}, errs = [];
+    cats.forEach(cat => {
+      if (!cat.multi) {
+        const v = String(form[cat.key] || '').trim();
+        if (!v) { if (cat.required) errs.push(cat.label + ' is required'); roles[cat.key] = ''; return; }
+        if (v.indexOf(',') >= 0) errs.push(cat.label + ' takes one email'); else if (!pocIsEmail(v)) errs.push(cat.label + ' must be an email (name@domain)');
+        roles[cat.key] = v.toLowerCase();
+      } else {
+        const list = (Array.isArray(form[cat.key]) ? form[cat.key] : []).map(x => String(x || '').trim()).filter(Boolean);
+        list.forEach(x => { if (!pocIsEmail(x)) errs.push(cat.label + ' "' + x + '" must be an email (name@domain)'); });
+        roles[cat.key] = pocUniq(list.map(x => x.toLowerCase()));
+      }
+    });
+    return { roles, errs };
   }
   // vehLoadingDefault(vehicleType) (2026-10-14, single value 2026-10-15) — Vehicle Master's Loading
   // Time for a vehicle type: live vehEdits override first, then the seeded value, then 15 min. Zone
@@ -10760,7 +10849,9 @@ class NDCApp extends React.Component {
     const scMasterPager = this.pager(scFiltered, st.pgScMaster, 'pgScMaster');
     const scRows = scMasterPager.pageRows.map(s0 => {
       const s = scEdits[s0.code] ? Object.assign({}, s0, scEdits[s0.code]) : s0;
-      const pl = (s.pocs || []).slice(0, 6);
+      const pr = s.pocRoles || normalizeScPocRoles(s);
+      const pl = [];  // every POC, category by category (2026-10-15)
+      SC_POC_CATEGORIES.forEach(cat => { (cat.multi ? (pr[cat.key] || []) : (pr[cat.key] ? [pr[cat.key]] : [])).forEach(em => pl.push({ name: pocEmailToName(em), role: cat.label, email: em })); });
       const rf = this.resolveScFields(s);
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
@@ -10768,8 +10859,8 @@ class NDCApp extends React.Component {
         coords: rf.lat.toFixed(4) + ', ' + rf.lng.toFixed(4),
         nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localDistThreshold: (s.localDistThreshold != null ? s.localDistThreshold : 100) + ' km', localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
         holdTimeOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
-        pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' lead' + (pl.length === 1 ? '' : 's')) : 'None on file',
-        pocList: pl.map((n, i) => ({ name: n, role: POC_ROLES[i] || ('Ops Lead ' + (i + 1)), email: n.toLowerCase().replace(/[^a-z\s]/g, '').trim().replace(/\s+/g, '.') + '@valmo.in' })),
+        pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' POC' + (pl.length === 1 ? '' : 's')) : 'None on file',
+        pocList: pl,
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
         opHoursConfigured: (rf.nonOperating.length > 0 || rf.breaks.length > 0),
         onOpenOpHours: () => this.openOpHoursModal(s.code),
@@ -10864,9 +10955,10 @@ class NDCApp extends React.Component {
         // LM Contacts (2026-09-12, items 2/3) — replaced the old shared pocs list with 4 named
         // per-DC roles. lmContactsComplete checks the 3 mandatory ones (ZH/CH/AM-1); AM-2 is
         // genuinely optional and never affects completeness.
-        lmZh: l.lmZh || null, lmCh: l.lmCh || null, lmAm1: l.lmAm1 || null, lmAm2: l.lmAm2 || null,
-        lmContactsComplete: !!(l.lmZh && l.lmCh && l.lmAm1),
-        lmContactsSummary: [l.lmZh ? 'ZH: ' + l.lmZh : 'ZH: missing', l.lmCh ? 'CH: ' + l.lmCh : 'CH: missing', l.lmAm1 ? 'AM-1: ' + l.lmAm1 : 'AM-1: missing', l.lmAm2 ? 'AM-2: ' + l.lmAm2 : 'AM-2: (optional)'].join(' \u00b7 '),
+        // 2026-10-15 — ZH / CH single emails (mandatory), AM a list (optional); names from emails.
+        lmZh: l.lmZh || null, lmCh: l.lmCh || null, lmAm: normalizeLmdcPocs(l).lmAm,
+        lmContactsComplete: (() => { const lp = normalizeLmdcPocs(l); return !!(lp.lmZh && lp.lmCh); })(),
+        lmContactsSummary: (() => { const lp = normalizeLmdcPocs(l); return ['ZH: ' + (lp.lmZh ? pocEmailToName(lp.lmZh) : 'missing'), 'CH: ' + (lp.lmCh ? pocEmailToName(lp.lmCh) : 'missing'), 'AM: ' + (lp.lmAm.length ? lp.lmAm.map(pocEmailToName).join(', ') : 'none')].join(' \u00b7 '); })(),
         onOpenLmContacts: () => this.openLmContactsModal(l.code),
         rlhMode: l.rlhMode || 'Direct Vehicle', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         // 2026-10-15 — Lane / Cutoff / TAT are optional for MDC and Co-Loading; blanks show —.
@@ -10889,17 +10981,22 @@ class NDCApp extends React.Component {
     // exactly the "CSVs must match the tables" gap flagged this round). TAT exports in HOURS
     // (matching the table's own display unit), not the internal minute storage.
     const LMDC_CSV_HEAD = 'LMDC Code,LMSC Code,Capacity,LMSC Active Status,RLH Mode,MDC Code,Lane Name,Cutoff,TAT (hrs),Open Time,Close Time,D0 Cutoff,Max Vehicle Size,Unloading Time (min),LM ZH,LM CH,LM AM-1,LM AM-2';
+    // Download Current Data (production template layout, 2026-10-15) — row 1 headers, row 2
+    // descriptions, one row per LMDC. POC lists comma-separated.
     const downloadLmdcCsv = () => {
-      const esc = (v) => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
       const rows = (d.lmdcs || []).map(l0 => { const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
-        const mode = l.rlhMode || 'Direct Vehicle';
-        return [l.code, l.lmscCode || 'Pending', l.capacity, l.active ? 'Active' : 'Inactive',
-          mode, mode === 'MDC' ? (l.mdcCode || '') : '', mode === 'Co-Loading' ? (l.laneName || '') : '',
-          mode !== 'Direct Vehicle' ? (l.cutoff || '') : '', mode !== 'Direct Vehicle' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
-          l.open, l.close, l.d0Cutoff, l.maxVehicle, l.unloadMin, l.lmZh || '', l.lmCh || '', l.lmAm1 || '', l.lmAm2 || ''].map(esc).join(','); });
-      this.downloadText('lmdc-master.csv', LMDC_CSV_HEAD + '\n' + rows.join('\n') + '\n');
+        const mode = l.rlhMode || 'Direct Vehicle', lp = normalizeLmdcPocs(l);
+        const v = { 'LMDC CODE': l.code, 'LMSC CODE': l.lmscCode || '', 'LATITUDE': l.lat, 'LONGITUDE': l.lng, 'CAPACITY': l.capacity, 'RLH MODE': mode,
+          'MDC CODE': mode === 'MDC' ? (l.mdcCode || '') : '', 'LANE NAME': mode === 'Co-Loading' ? (l.laneName || '') : '',
+          'CUTOFF': mode !== 'Direct Vehicle' ? (l.cutoff || '') : '', 'TAT (HRS)': mode !== 'Direct Vehicle' && l.tat != null ? this.minToHrsLabel(l.tat) : '',
+          'OPEN TIME': l.open, 'CLOSE TIME': l.close, 'D0 CUTOFF': l.d0Cutoff, 'MAX VEHICLE SIZE': l.maxVehicle, 'UNLOADING TIME (MIN)': l.unloadMin,
+          'POC LM ZH EMAIL': lp.lmZh, 'POC LM CH EMAIL': lp.lmCh, 'POC LM AM EMAIL': lp.lmAm.join(', '),
+          'STATUS': resolveLmdcExistence(this.engineStore, l.code, this.state.activeCycleMonth.rlh) === 'active' ? 'Active' : 'Inactive' };
+        return LMDC_TEMPLATE_COLS.map(c => (v[c[0]] == null ? '' : v[c[0]])); });
+      this.writeMasterSheet('nd_lmdc_master_current', LMDC_TEMPLATE_COLS, rows);
       this.showToast('LMDC Master downloaded \u00b7 ' + rows.length + ' rows', '#128A3E');
     };
+    const lmdcTemplate = () => { this.downloadB64('nd_lmdc_master_template.xlsx', LMDC_TEMPLATE_B64); this.showToast('LMDC Master template downloaded', '#128A3E'); };
     const lmdcVehNames = ['Default'].concat(rlhFeasibleVehNames);
     const lmdcUploadErrors = st.lmdcUploadErrors || [];
     const closeLmdcUploadErrors = () => this.setState({ lmdcUploadErrors: [] });
@@ -11231,13 +11328,13 @@ class NDCApp extends React.Component {
       // columns removed (same reasoning as the +SC modal: Speed Profile and Operating Hours are
       // the real models now, this template shouldn't offer the old flat pair as if it still
       // were). 4 new optional Central POC columns added at the end.
-      scMasterTemplate: () => this.downloadTemplate('Sort Centre Master', [{ k: 'SC Code' }, { k: 'Name' }, { k: 'City' }, { k: 'State' }, { k: 'SC Type' }, { k: 'Zone' }, { k: 'Volume Capacity' }, { k: 'Sort Capacity' }, { k: 'RLH Docks' }, { k: 'Local TP Limit' }, { k: 'Non-Local TP Limit' }, { k: 'Max Hold Time - Local (min)' }, { k: 'Max Hold Time - Non-Local (min)' }, { k: 'Local Distance Threshold (km)' }, { k: 'Ops Leads' }, { k: 'LH CT-1' }, { k: 'LH CT-2' }, { k: 'Biz Fin CT-1' }, { k: 'Biz Fin CT-2' }]),
+      scMasterTemplate: () => { this.downloadB64('nd_sc_master_template.xlsx', SC_TEMPLATE_B64); this.showToast('SC Master template downloaded', '#128A3E'); },
       // 2026-09-24 addition — "Download Current Data" for all 3 bulk-upload cards.
       scMasterExportCsv: () => this.scMasterExportCsv(),
       opHoursExportCsv: () => this.opHoursExportCsv(),
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
-      lmdcVehNames, downloadLmdcCsv, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS, lmdcSysDefaults: this.lmdcSystemDefaults(),
+      lmdcVehNames, downloadLmdcCsv, lmdcTemplate, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS, lmdcSysDefaults: this.lmdcSystemDefaults(),
       rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS,
       lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
@@ -11298,7 +11395,7 @@ class NDCApp extends React.Component {
       opHoursModal: this.buildOpHoursModal(),
       dockProfileModal: this.buildDockProfileModal(),
       schedSimulate: this.buildSchedSimulate(),
-      lmContactsModal: (() => { const m = this.state.lmContactsModal || {}; if (!m.open) return { open: false }; return { open: true, code: m.code, zh: m.zh || '', ch: m.ch || '', am1: m.am1 || '', am2: m.am2 || '', onZh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { zh: e.target.value }) }), onCh: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { ch: e.target.value }) }), onAm1: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am1: e.target.value }) }), onAm2: (e) => this.setState({ lmContactsModal: Object.assign({}, m, { am2: e.target.value }) }), onSave: () => this.saveLmContactsModal(), onClose: () => this.closeLmContactsModal() }; })(),
+      lmContactsModal: (() => { const m = this.state.lmContactsModal || {}; if (!m.open) return { open: false }; return { open: true, code: m.code, groups: this.pocFormGroups(LMDC_POC_CATEGORIES, m, (patch) => this.setState({ lmContactsModal: Object.assign({}, this.state.lmContactsModal || {}, patch) })), onSave: () => this.saveLmContactsModal(), onClose: () => this.closeLmContactsModal() }; })(),
     };
   }
   // buildSpeedProfileModal() (2026-09-03, item 1; reworked 2026-09-07) — render-ready props for
@@ -12304,7 +12401,7 @@ class NDCApp extends React.Component {
     };
   }
 
-  openPush(code, runId) { const sc = this.state.data.scs.find(s => s.code === code); this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [...new Set(sc.pocs)].slice(0, 2), pushName: '', pushEmail: '', pushIsAddOnly: false }); }
+  openPush(code, runId) { const sc = this.state.data.scs.find(s => s.code === code); this.setState({ pushOpen: true, pushSCcode: code, pushRunId: runId || null, pushReviewers: [...new Set(sc.pocs)], pushName: '', pushEmail: '', pushIsAddOnly: false }); }
   // openAddReviewer(planId) (2026-09-26 addition, Ops Alignment item 1) — same modal UI as
   // openPush() (pushOpen/pushReviewers/pushName/pushEmail — same input fields, same chip
   // picker), but pre-seeds pushReviewers with the plan's OWN already-assigned reviewers (so
@@ -12480,7 +12577,7 @@ class NDCApp extends React.Component {
     // full tracker above is what the card/overlay actually render now.
     const stageLabel = schedStage === 'stage2' ? 'Stage 2 · LM' : 'Stage 1 · SC/LH';
     const stageBg = schedStage === 'stage2' ? '#F0EDFB' : '#E9F5F5', stageFg = schedStage === 'stage2' ? '#5B4FA0' : '#0D7377';
-    const scPoc = this.deriveScPocRoles(sc ? sc.pocs : []);
+    const scPoc = this.deriveScPocRoles(sc || []);
     const stage1Sub = ((st.schedSubmitted || {})[sp.id] || {}).stage1 || {};
     const stage2Sub = ((st.schedSubmitted || {})[sp.id] || {}).stage2 || {};
     // 2026-08-19 — always show all 3 roles' status (SC/LH/LM), not just the current stage's —
@@ -12649,7 +12746,7 @@ class NDCApp extends React.Component {
     // 2026-09-11 (item 2.3) — reviewers now come from the interactive two-pool selection made in
     // the push modal (st.schedPushReviewersSelected), not a silently-recomputed fixed default.
     // Finalise Directly has no modal step, so it still falls back to the same auto-pick as before.
-    const reviewers = finaliseDirect ? (sc ? [...new Set(sc.pocs)].slice(0, 2) : []) : (st.schedPushReviewersSelected || []);
+    const reviewers = finaliseDirect ? (sc ? [...new Set(sc.pocs)] : []) : (st.schedPushReviewersSelected || []);
     const schedulerPlans = d.schedulerPlans.slice();
     schedulerPlans[idx] = Object.assign({}, sp, { status: targetStatus, reviewerNames: reviewers, submittedReviewers: finaliseDirect ? reviewers.slice() : [], pushedBy: 'Pranita Sapkal', sentDate: 'Today', finalisedDirect: !!finaliseDirect });
     this.setState({ data: Object.assign({}, d, { schedulerPlans }), schedPushOpen: false, schedFinaliseDirectOpen: false, schedPushPlanId: null, schedFinaliseDirectPlanId: null });
@@ -12712,7 +12809,7 @@ class NDCApp extends React.Component {
         const dcs = []; for (let k = 0; k < tp; k++) dcs.push(sc.cityCode + (101 + j * 7 + k));
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
-      const newPlanReviewers = reviewers.length ? reviewers : [...new Set(sc.pocs)].slice(0, 2);
+      const newPlanReviewers = reviewers.length ? reviewers : [...new Set(sc.pocs)];
       plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], sourceRunId: run.id, finalisedDirect: !!finaliseDirect, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost, vehByType: run.vehByType, vehAvail: run.vehAvail } };
       plans.push(plan);
     }
@@ -17136,7 +17233,7 @@ class NDCApp extends React.Component {
     const schedLmPocChips = schedUniqLmPocs.map(n => ({ name: n, selected: schedPushSelected.indexOf(n) >= 0, bg: schedPushSelected.indexOf(n) >= 0 ? '#0D7377' : '#fff', fg: schedPushSelected.indexOf(n) >= 0 ? '#fff' : '#5A5E66', bd: schedPushSelected.indexOf(n) >= 0 ? '#0D7377' : '#C3C9D4', onToggle: () => this.toggleSchedPushReviewer(n) }));
     const schedReviewersList = schedPushSelected.map(n => ({ name: n, initials: n.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase(), email: n.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '') + '@valmo.com', isScPoc: schedUniqScPocs.indexOf(n) >= 0, isLmPoc: schedUniqLmPocs.indexOf(n) >= 0, onRemove: () => this.removeSchedReviewer(n) }));
     const schedPushCount = schedPushSelected.length;
-    const schedPushReviewers = (() => { if (!schedPushPlan) return []; const sc = d.scs.find(s => s.code === schedPushPlan.scCode); return sc ? [...new Set(sc.pocs)].slice(0, 2) : []; })();
+    const schedPushReviewers = (() => { if (!schedPushPlan) return []; const sc = d.scs.find(s => s.code === schedPushPlan.scCode); return sc ? [...new Set(sc.pocs)] : []; })();
 
     return {
       isReview: st.view === 'review' && st.activeLeg === 'rlh',

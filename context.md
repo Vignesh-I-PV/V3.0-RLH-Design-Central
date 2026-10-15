@@ -3684,3 +3684,31 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     save applies Co-Loading lane/cutoff, unloading time and the new AM; LM POCs icon opens the
     form. Scheduler: Run Name row on Step 2; trigger on Sep 2026 created 2 plans named
     "Oct wave A" (IDs kept), shown in Run Queue. Earlier suites still pass. engine.js unchanged.
+
+- **2026-10-15 (later) — NLH Landing Plan template now matches the production file.**
+  Investigation: the card's Download Template built the file with SheetJS — correct 49 columns,
+  two header rows and merges, but unstyled (Calibri, no navy header), sheet named "NLH Landing
+  Plan" instead of ".", no frozen header, widths or time formats; and when SheetJS wasn't loaded
+  (e.g. index.html not redeployed / CDN blocked) it fell back to a one-row CSV — a different format
+  altogether. Fix: the template is now built from the production file's "." sheet (identical
+  header values, styles, merges, column widths, row heights, freeze at A3, and the data-row
+  formats — hh:mm on cutoff/landing, number formats — pre-applied to 500 empty rows) and embedded
+  as `NLH_LANDING_TEMPLATE_B64`; Download Template serves it directly (no SheetJS dependency),
+  named Template_NLH_Landing_Plan.xlsx. Verified: header rows/styles/merges identical to the
+  production sheet; download works with SheetJS absent; the empty template uploads as "no link
+  rows"; template + 5 production rows → 5 links; the production file still ingests 1,162 links.
+
+- **2026-10-15 (later) — NLH Landing Plan switched to the site-wise hourly matrix.** Per product: the
+  multi-cutoff link layout isn't wanted. The card now uses the production "arr_matrix" sheet: banner
+  row (Hourly Vehicle Arrivals | Hourly Volume Arrivel), header row SC Code + hours 0–23 (vehicles)
+  + hours 0–23 (volume), one row per SC. Template = that sheet rebuilt exactly (styles, merges B1:Y1 /
+  Z1:AW1, widths, freeze B3, number formats on 300 rows), embedded (`NLH_LANDING_TEMPLATE_B64`).
+  Parser (`findNlhHeaderRow` / `applyNlhLandingRows`, layout `nlhHourlyMatrix`): finds SC Code (or
+  Site) + two 0–23 blocks (banner decides which is vehicles/volume), flags blank or duplicate SC,
+  non-numbers, negative or fractional vehicles; stores per SC hourly vehicles / volume and totals,
+  plus network hourly vehicles and peak hour. .xlsx (first matching sheet with data) or CSV. The
+  multi-cutoff template and parser are gone. Verified: template identical to the production sheet;
+  empty template → "no SC rows"; a 118-SC matrix (built from the production links) → 2,017
+  vehicles, 1,69,40,850 shipments, peak 07:00; BGS1 31 vehicles / 4,20,497 matching the earlier
+  derivation; CSV with 4 bad rows flagged correctly. The full production workbook reports "no SC
+  rows" because its arr_matrix sheet is empty.

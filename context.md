@@ -3566,3 +3566,62 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     cutoff snap, Co-Loading missing lane blocked, Valmo clears, CSV 2 applied / 2 flagged;
     SC toggle → confirm → inactive → pruned from selection → absent from Route Planner →
     reactivated. Zero runtime errors.
+
+- **2026-10-15 — six fixes to the 2026-10-14 round.**
+  1. **Loading Time is one value per vehicle type** (time to load the vehicle; not zone-dependent).
+     Vehicle Master: single LOADING TIME (MIN) column; seed `loadingTimeLocal`/`loadingTimeNonLocal`
+     collapsed to `loadingTime` (old local figure kept). `vehLoadingDefault(type)` no longer takes
+     a zone; SC Vehicle Availability uses it as the default for new rows of any zone feasibility.
+  2. **One RLH ingestion: "RLH Vehicle Plan"** — the former RLH Plan card renamed (same template,
+     same `ingestedPlans` store, still feeds Design Review's Ingested Plans). The separate
+     RLH Vehicle Plan card I'd added (and `ingestedRlhVehPlans`) is gone. It's now a real file
+     upload (numeric Touch Points / Round-Trip Distance, HH:MM Out Cutoff); Design Review shows
+     "SC X" or "N SCs" from the file and the real status (Validated / N errors).
+     `ingestRlhPlan()` (synthesised) is no longer wired to any card.
+  3. **"Valmo RLH" renamed "Direct Vehicle"** as the stored value everywhere (seed, Route Planner
+     eligibility filter, LMDC dropdown/filters, CSV). CSV upload still accepts "Valmo RLH".
+  4. **Lane / Cutoff / TAT optional** for MDC and Co-Loading (2026-10-14 mandatory rule reverted):
+     blanks save as empty and display "—"; filled values still validated (TAT > 0, 30-min Cutoff,
+     real MDC node); lane cutoff snapping kept. Note: a lane DC without a cutoff isn't picked up
+     by Dock Profile lane slots / Route Planner lane grouping (they skip blank cutoffs).
+  5. **SC Master**: new STATUS column (toggle + "Active"/"Inactive" text) before a slimmer Edit
+     column. Header colour fix: the table's min-width was hard-coded 1680px while the columns
+     summed 1780px, so the sticky header's grey stopped short — now `scGridMinW`, the sum of the
+     tracks (1876px). The deactivate dialog now shows an amber power icon and a **Deactivate**
+     button (vehicle removals still show red Delete).
+  6. **SC Master sorts Active SCs first**, deactivated ones last (stable, before paging).
+  - **Verification**: compile clean; 0 unresolved render names; 0 JSX-text escapes; grid cell
+    counts match (SC Master 18, Vehicle Master 8). jsdom: Loading Time edit → default for any
+    zone; RLH Vehicle Plan good / bad / multi-SC file → listed in Design Ingestion and Design
+    Review with correct SC text and status; rename (12,589 DCs Direct Vehicle, 0 Valmo RLH;
+    export and "Valmo RLH" CSV alias); Co-Loading saves with blanks, bad TAT blocked, partial
+    values saved, CSV 2 applied / 1 flagged (bad cutoff); STATUS header present; dialog shows
+    Deactivate (not Delete); deactivated SC moves to the last page; vehicle dialog still Delete.
+    Zero runtime errors.
+
+- **2026-10-15 (later) — Master templates regenerated; NLH Landing Plan ingests the production
+  multi-cutoff file.**
+  - **Templates** (deliverables, not wired into the app's own CSV templates): `nd_sc_master_template.xlsx`
+    (33 columns) and `nd_lmdc_master_template.xlsx` (20 columns), in the production template's
+    style — "<X> Master-Fill This" + "Validation-SheetProperties" sheets, row 1 headers (Arial 14
+    bold, pink F759A0), row 2 descriptions (Arial 12, orange F78D1E), thin borders, row height 60,
+    validations on rows 3–303 (text length / numeric / dropdown lists from the Validation sheet).
+    SC Master = production's 25 columns + LOCAL DISTANCE THRESHOLD, MAX HOLD TIME LOCAL / NON
+    LOCAL, 4 central POC emails (LH CT1/2, Biz Fin CT1/2), STATUS. LMDC Master = every LMDC table
+    column (LMSC code / lat-long / capacity marked read-only from AutoDML) with dropdowns for RLH
+    Mode (Direct Vehicle / MDC / Co-Loading), MDC Code, Cutoff, Open/Close, D0 Cutoff, Max Vehicle
+    Size, Unloading Time, Status.
+  - **NLH Landing Plan card** now takes the production layout (`Template_NLH_Landing_Plan.xlsx`):
+    banner row + header row (Origin, Destination, Lane, Link, Haul, Link type, TAT, No of cutoffs,
+    Vehicles, cutoffN/landingN/sizeN/runN/vehN/volN × 6, totals). `.xlsx` read via SheetJS (first
+    sheet with the header — "." in the production file) or a `.csv` of the same columns.
+    `applyNlhLandingRows()` validates per link (Origin/Destination, cutoffs 1–6, each cutoff and
+    landing a time, veh/vol numeric) and derives per destination SC: volume, vehicles, landings
+    per hour, plus the flat landing list. Template download = the two-row header as .xlsx.
+    Other cards also accept .xlsx now (first sheet → CSV → same checks).
+  - **index.html**: loads SheetJS 0.18.5 from cdnjs (window.XLSX).
+  - **Verification**: the real production file ingested in jsdom — 1,162 links, 2,043 landings,
+    118 destination SCs, 2,017 vehicles, 1,69,40,850 shipments, 0 errors, ~2 s; totals match an
+    independent openpyxl check. CSV path, a bad row (flagged with link + reason), a junk file
+    (rejected) and the template download all tested. Compile clean, 0 unresolved names.
+  - Still recorded only — Route Scheduler continues to use the NLH card's scenarios.

@@ -3530,3 +3530,39 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - **Verification**: compile clean; 0 unresolved render names; 0 JSX-text escapes; jsdom render
     of Sep 2026 shows all 10 seeded rows in the merged table (5 Addition, 2 Closure, 3 Migration,
     matching the 2026-09-30 build's data); both sub-tabs render with the chip; zero runtime errors.
+
+- **2026-10-14 (third round) — Design Ingestion tabs + cards, Vehicle Master Loading Time, LMDC RLH
+  Mode rules, SC Active toggle.**
+  1. **Design Ingestion** (RLH card): three tabs, FM Carting Plans / NLH Plans / RLH Plans
+     (`INGEST_TABS`). Cards come from the new top-level `INGEST_KINDS`: RLH Plans = RLH Plan
+     (existing synthesised `ingestRlhPlan`, still feeds Design Review) + **RLH Vehicle Plan**;
+     NLH Plans = **NLH Vehicle Plan** + **NLH Landing Plan**; FM Carting Plans = Coming Soon.
+     New cards are real file uploads (`ingestPlanCsv` → `applyIngestCsv`): missing template
+     column = file rejected; blank / non-numeric / non-HH:MM cells flagged per row in a
+     dismissible banner; flagged files still listed with "N errors". Recently ingested combines
+     the tab's cards with a PLAN TYPE column, newest first (`ts`). NLH Landing Plan derives
+     `scCodes` / `volumeBySC` from the file. Stores: `ingestedPlans`, `ingestedRlhVehPlans`,
+     `ingestedNlhVehPlans`, `ingestedNlhPlans` (session state, not per cycle — same as before).
+     **Not wired downstream**: Route Scheduler still takes NLH scenarios from the NLH card.
+  2. **Vehicle Master**: LOCAL LOADING (MIN) / NON-LOCAL LOADING (MIN) columns (existing
+     `loadingTimeLocal` / `loadingTimeNonLocal`), inline-editable. New `vehLoadingDefault()`
+     (vehEdits → seed → 15) is now the SC Vehicle Availability default for rows added via CSV or
+     the add form — previously it read the seed only and ignored Vehicle Master edits.
+  3. **LMDC Master**: RLH Mode defaults to Valmo RLH. MDC and Co-Loading both require Lane (MDC
+     Code / Lane Name), Cutoff and TAT — save blocked with a toast naming what's missing; rows
+     missing any show a red "Required". MDC can now set Cutoff/TAT (was Co-Loading only). Lane
+     cutoff snapping extended to MDC lanes (by MDC Code). Valmo RLH clears all four. CSV upload
+     now reads RLH Mode / MDC Code / Lane Name / Cutoff / TAT (hrs) (blank mode = Valmo RLH; same
+     mandatory rule; bad rows flagged); export writes Cutoff/TAT for MDC too.
+  4. **SC Master**: Deactivate/Reactivate icons → an Active toggle (off = confirm dialog, on =
+     immediate) + "Inactive" tag by the code. Deactivating calls `pruneScFromCreation()`
+     (drops it from Route Planner `selectedSCs` and Route Scheduler `schedulerSelectedPlanIds`);
+     read-time filters on Route Planner selection, the zero-vol CSV, Route Scheduler Step 1, and
+     the "of N SCs" total.
+  - **Verification**: compile clean; 0 unresolved render names; 0 JSX-text escapes; grid cell
+    counts match (SC Master 17, Vehicle Master 9). jsdom tests: ingestion good/bad/missing-column
+    files, NLH landing derivation, tab switching, FM Coming Soon; Vehicle Master edit → saved →
+    used as availability default; LMDC MDC blocked (all blank, then TAT only) → saved with lane
+    cutoff snap, Co-Loading missing lane blocked, Valmo clears, CSV 2 applied / 2 flagged;
+    SC toggle → confirm → inactive → pruned from selection → absent from Route Planner →
+    reactivated. Zero runtime errors.

@@ -1339,6 +1339,22 @@ All modules
 </div>
 </>) : null}
 {(isLmdcMaster) ? (<>
+{/* Bulk upload card (2026-10-15) — same card as SC Master's, replacing the toolbar buttons. */}
+<div style={css(`display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; margin-bottom:16px;`)}>
+<div style={css(`display:flex; flex-direction:column; gap:12px; padding:15px 18px; background:#fff; border:1px solid #E6EBF2; border-radius:8px;`)}>
+<div style={css(`display:flex; align-items:center; gap:12px;`)}>
+<div style={css(`width:38px; height:38px; border-radius:8px; background:#EAEEFB; display:flex; align-items:center; justify-content:center; flex-shrink:0;`)}><svg width={"19"} height={"19"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.6"}><path d={"M7 3h7l5 5v12a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></div>
+<div style={css(`font-size:13.5px; font-weight:700; color:#14171F;`)}>Bulk Upload — LMDC Master</div>
+</div>
+<div style={css(`font-size:11.5px; color:#5A5E66; line-height:1.5;`)}>One row per LMDC · matched by LMDC Code; AutoDML fields (LMSC, location, capacity) are read-only</div>
+<div style={css(`display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:2px;`)}>
+<button onClick={lmdcTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
+<button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
+<button onClick={triggerLmdcUpload} disabled={rlhCyclePast} title={rlhCyclePast ? "Past cycle — read-only" : "Upload CSV"} style={css(`display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}>Upload</button>
+<input ref={lmdcFileInputRef} type={"file"} accept={".csv,.xlsx"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
+</div>
+</div>
+</div>
 <div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:13px;`)}>
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
@@ -1369,10 +1385,6 @@ All modules
 </details>
 <div style={css(`flex:1;`)} />
 <span style={css(`font-size:12px; color:#5A5E66;`)}>Showing <strong style={css(`color:#14171F;`)}>{lmdcShown}</strong> of <strong style={css(`color:#14171F;`)}>{lmdcTotal}</strong> LMDCs</span>
-<input ref={lmdcFileInputRef} type={"file"} accept={".csv,.xlsx"} onChange={onLmdcFileChange} style={css(`display:none;`)} />
-<button onClick={lmdcTemplate} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Template</button>
-<button onClick={downloadLmdcCsv} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 13px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `border-color:#C3C9D4;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 4v12M7 11l5 5 5-5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Download Current Data</button>
-<button onClick={triggerLmdcUpload} disabled={rlhCyclePast} style={css(`display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)} onMouseEnter={(e) => hoverOn(e, `background:#00337D;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 14px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`, `background:#00337D;`)}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 20V8M7 13l5-5 5 5M5 20h14"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>Upload CSV</button>
 </div>
 {(hasLmdcUploadErrors) ? (<>
 <div style={css(`margin-bottom:14px; padding:12px 14px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px;`)}>
@@ -1811,6 +1823,71 @@ All modules
 </div>
 </div>
 {/* ADD SORT CENTRE MODAL */}
+{/* ===== EDIT LMDC FORM (2026-10-15) — same intake format as Edit Sort Centre: AutoDML core facts
+    (read-only), RLH lane data, DC operating parameters, and POCs (ZH / CH single, AM list with
+    "+ POC"). Replaces inline row editing and the separate LM POCs popup. */}
+{(lmdcForm.open) ? (<>
+<div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
+<div style={css(`width:880px; max-width:100%; max-height:92vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
+<div style={css(`display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid #E6EBF2; position:sticky; top:0; background:#fff; z-index:1;`)}>
+<div style={css(`font-size:17px; font-weight:700; color:#14171F;`)}>{lmdcForm.title}</div>
+<button onClick={lmdcForm.onClose} aria-label={"Close dialog"} style={css(`border:none; background:transparent; cursor:pointer; padding:6px; color:#5A5E66; display:flex;`)}><svg aria-hidden={"true"} width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
+</div>
+<div style={css(`padding:22px 24px;`)}>
+<div style={css(`font-size:11.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; color:#5A5E66; margin-bottom:12px;`)}>Core Node Data <span style={css(`font-weight:500; text-transform:none; letter-spacing:0; color:#8E96A3;`)}>· from AutoDML, read-only</span></div>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px 18px;`)}>
+{(lmdcForm.core || []).map((c, __iLC) => (<React.Fragment key={__iLC}>
+<div><div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{c.label}</div><div style={css(`height:38px; display:flex; align-items:center; padding:0 10px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FA; font-size:13px; color:#5A5E66; box-sizing:border-box;`)}>{c.value}</div></div>
+</React.Fragment>))}
+</div>
+<div style={css(`display:flex; align-items:center; gap:8px; margin:22px 0 14px; padding:10px 13px; background:#E9F5F5; border:1px solid #BFE0E0; border-radius:8px;`)}>
+<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#0D7377"} strokeWidth={"1.8"} style={css(`flex-shrink:0;`)}><path d={"M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
+<span style={css(`font-size:12px; color:#14171F;`)}><strong>RLH Lane</strong> — {lmdcForm.modeHint}</span>
+</div>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px 18px;`)}>
+{(lmdcForm.rlh || []).map((fl, __iLR) => (<React.Fragment key={__iLR}>
+<div>
+<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{fl.label}</div>
+{(fl.isSelect) ? (<><select value={fl.value} onChange={fl.onInput} disabled={rlhCyclePast} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>{(fl.options || []).map((o, __iLRo) => (<React.Fragment key={__iLRo}><option value={o}>{o === '' ? '—' : o}</option></React.Fragment>))}</select></>) : null}
+{(fl.isText) ? (<><input value={fl.value} onInput={fl.onInput} placeholder={fl.ph} disabled={rlhCyclePast} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)} /></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11.5px; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; color:#5A5E66; margin-bottom:12px; margin-top:22px;`)}>DC Operating Parameters <span style={css(`font-weight:500; text-transform:none; letter-spacing:0; color:#8E96A3;`)}>· Default = the system default</span></div>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px 18px;`)}>
+{(lmdcForm.ops || []).map((fl, __iLO) => (<React.Fragment key={__iLO}>
+<div>
+<div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{fl.label}</div>
+{(fl.isSelect) ? (<><select value={fl.value} onChange={fl.onInput} disabled={rlhCyclePast} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>{(fl.options || []).map((o, __iLOo) => (<React.Fragment key={__iLOo}><option value={o}>{o === '' ? '—' : o}</option></React.Fragment>))}</select></>) : null}
+{(fl.isText) ? (<><input value={fl.value} onInput={fl.onInput} placeholder={fl.ph} disabled={rlhCyclePast} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)} /></>) : null}
+</div>
+</React.Fragment>))}
+</div>
+<div style={css(`font-size:11px; color:#8E96A3; margin:20px 0 8px;`)}>POCs — email IDs (firstname.lastname@domain). <span style={css(`color:#D14B4B;`)}>*</span> required</div>
+<div style={css(`display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;`)}>
+{(lmdcForm.pocGroups || []).map((g, __iLPG) => (<React.Fragment key={__iLPG}>
+<div>
+<div style={css(`display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{g.label}{(g.required) ? (<><span style={css(`color:#D14B4B;`)}>*</span></>) : null}{(g.multi) ? (<><span style={css(`font-weight:500; text-transform:none; letter-spacing:0; color:#8E96A3;`)}>one or more</span></>) : null}</div>
+<div style={css(`display:flex; flex-direction:column; gap:6px;`)}>
+{(g.entries || []).map((en, __iLPE) => (<React.Fragment key={__iLPE}>
+<div style={css(`display:flex; gap:6px; align-items:center;`)}>
+<input type={"email"} value={en.value} onInput={en.onInput} disabled={rlhCyclePast} placeholder={"firstname.lastname@valmo.in"} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)} />
+{(en.canRemove) ? (<><button onClick={en.onRemove} aria-label={"Remove this POC"} title={"Remove"} style={css(`width:30px; height:30px; flex-shrink:0; border:1px solid #E6EBF2; background:#fff; color:#8E96A3; border-radius:7px; cursor:pointer; font-size:15px; line-height:1;`)}>×</button></>) : null}
+</div>
+</React.Fragment>))}
+{(g.multi) ? (<><button onClick={g.onAdd} disabled={rlhCyclePast} style={css(`align-self:flex-start; height:28px; padding:0 10px; border:1px dashed #C3C9D4; background:#fff; color:#003F98; border-radius:7px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600;`)}>+ POC</button></>) : null}
+</div>
+</div>
+</React.Fragment>))}
+</div>
+</div>
+<div style={css(`display:flex; justify-content:flex-end; gap:10px; padding:14px 24px; border-top:1px solid #E6EBF2; position:sticky; bottom:0; background:#fff;`)}>
+<button onClick={lmdcForm.onClose} style={css(`height:38px; padding:0 18px; border:1px solid #C3C9D4; background:#fff; color:#5A5E66; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
+<button onClick={lmdcForm.onSave} disabled={rlhCyclePast} style={css(`height:38px; padding:0 22px; border:none; background:#003F98; color:#fff; font-family:inherit; font-size:13px; font-weight:600; border-radius:8px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.45' : '1'};`)}>Save changes</button>
+</div>
+</div>
+</div>
+</>) : null}
 {(addScOpen) ? (<>
 <div style={css(`position:fixed; inset:0; z-index:80; background:rgba(11,20,48,0.45); display:flex; align-items:center; justify-content:center; padding:24px;`)}>
 <div style={css(`width:880px; max-width:100%; max-height:92vh; overflow:auto; background:#fff; border-radius:15px; box-shadow:0 24px 60px rgba(0,0,0,0.3);`)}>
@@ -2783,6 +2860,12 @@ NLH cycle: {schedNlhMonthLabel}
     vertical space, more plan rows visible without scrolling. The global reference-plan picker
     (only relevant when HW is globally On) moves to a slim banner just under the header, shown
     only when it's actually needed rather than permanently reserving space for it. */}
+{/* Run Name (2026-10-15) — same as Route Planner Design Creation Step 2: optional, defaults to the
+    Run ID. Stamped on every plan this trigger creates (one per selected SC). */}
+<div style={css(`display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; margin-bottom:14px;`)}>
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>RUN NAME</span>
+<input value={schedRunName} onInput={onSchedRunNameChange} placeholder={"Optional — defaults to the Run ID"} style={css(`flex:1; min-width:200px; max-width:380px; height:32px; padding:0 11px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
+</div>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;`)}>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Per-SC operating mode</div>
 {(overriddenCount > 0) ? (<><span style={css(`font-size:11.5px; color:#C77B00; font-weight:600;`)}>{overriddenCount} SC{overriddenCount === 1 ? '' : 's'} overridden</span></>) : null}
@@ -2946,7 +3029,7 @@ NLH cycle: {schedNlhMonthLabel}
 </div>
 {(schedulerQueueRows || []).map((r, __i57) => (<React.Fragment key={__i57}>
 <div style={css(`display:grid; grid-template-columns:1.1fr 0.8fr 1.5fr 0.9fr; gap:8px; padding:10px 12px; align-items:center; border-top:1px solid #EEF1F6;`)}>
-<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.id}</div>
+<div style={css(`font-size:12.5px; color:#14171F;`)}>{r.runName || r.id}{(r.runName) ? (<><span style={css(`font-size:11px; color:#8E96A3; margin-left:6px;`)}>{r.id}</span></>) : null}</div>
 <div><span style={css(`padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; background:${r.statusBg}; color:${r.statusFg};`)}>{r.statusLabel}</span></div>
 {(r.isCompleted) ? (<>
 <div style={css(`display:flex; align-items:center; gap:6px;`)}>
@@ -3418,7 +3501,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
+<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.runName || c.id}</span>{(c.runName) ? (<><span style={css(`font-size:11px; font-weight:600; color:#8E96A3; margin-left:6px;`)}>{c.id}</span></>) : null}
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
@@ -3800,7 +3883,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
+<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.runName || c.id}</span>{(c.runName) ? (<><span style={css(`font-size:11px; font-weight:600; color:#8E96A3; margin-left:6px;`)}>{c.id}</span></>) : null}
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
@@ -4901,7 +4984,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;`)}>
 <div style={css(`min-width:0;`)}>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
-<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.id}</span>
+<span style={css(`font-size:13.5px; font-weight:700; color:#0D7377;`)}>{c.runName || c.id}</span>{(c.runName) ? (<><span style={css(`font-size:11px; font-weight:600; color:#8E96A3; margin-left:6px;`)}>{c.id}</span></>) : null}
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10px; font-weight:700; background:${c.verdictBg}; color:${c.verdictFg};`)}>{c.verdict}</span>
 <span style={css(`padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; background:#E9F5F5; color:#0D7377;`)}>HW {c.hw > 0 ? 'On' : 'Off'} · Hold {c.holdOn ? 'On' : 'Off'}</span>
 </div>
@@ -9707,10 +9790,21 @@ class NDCApp extends React.Component {
     this.setState({ lmContactsModal: { open: false } });
     this.showToast('LM POCs saved for ' + m.code, '#128A3E');
   }
+  // openLmdcForm(l) (2026-10-15) — opens the Edit LMDC form pre-filled from the LMDC (operational
+  // fields + POCs). Saved by saveLmdcEdit(code), which validates POCs together with the rest.
+  openLmdcForm(l) {
+    const lp = normalizeLmdcPocs(l);
+    this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin),
+      rlhMode: l.rlhMode || 'Direct Vehicle', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '',
+      lmZh: lp.lmZh, lmCh: lp.lmCh, lmAm: lp.lmAm.length ? lp.lmAm.slice() : [''] } });
+  }
   saveLmdcEdit(code) {
     if (this.isRlhCyclePast()) { this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }); this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; }
     const st = this.state;
     const f = st.lmdcEditDraft || {};
+    // POCs (2026-10-15) — validated with the rest of the form; ZH / CH mandatory, AM list optional.
+    const pocChk = this.pocFormValidate(LMDC_POC_CATEGORIES, f);
+    if (pocChk.errs.length) { this.showToast(pocChk.errs[0] + (pocChk.errs.length > 1 ? ' (+' + (pocChk.errs.length - 1) + ' more)' : ''), '#C77B00'); return; }
     const num = (x) => { const n = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? 0 : n; };
     // 2026-08-26 fix (#11) — writes straight through the per-DC engine entity instead of the old
     // lmdcEdits session overlay (which never persisted across a cycle switch -- the actual bug
@@ -9753,6 +9847,7 @@ class NDCApp extends React.Component {
       patch.mdcCode = null; patch.laneName = null; patch.cutoff = null; patch.tat = null;
     }
     const existing = peekClassD(this.engineStore, 'rlh', 'lmdc', cycleMonth, code) || {};
+    Object.assign(patch, { lmZh: pocChk.roles.lmZh, lmCh: pocChk.roles.lmCh, lmAm: pocChk.roles.lmAm, lmAm1: null, lmAm2: null });
     Object.keys(patch).forEach(field => setClassDField(this.engineStore, 'rlh', 'lmdc', cycleMonth, code, field, patch[field], existing));
     this.refreshLmdcs();
     this.setState({ lmdcEditCode: null, lmdcEditDraft: {} });
@@ -10937,7 +11032,9 @@ class NDCApp extends React.Component {
     (d.autodmlDetails.multi || []).forEach(m => { multiConflictByDc[m.code] = m; });
     const lmdcRows = lmdcPager.pageRows.map(l0 => {
       const l = lmdcEdits[l0.code] ? Object.assign({}, l0, lmdcEdits[l0.code]) : l0;
-      const editing = lmdcEditCode === l.code;
+      // 2026-10-15 — LMDC edits moved from inline row editing to a form (same intake as SC Master's
+      // Edit Sort Centre). Rows always render read-only; lmdcEditCode now means "form open for".
+      const editing = false;
       const isMdc = l.rlhMode === 'MDC', isCoLoad = l.rlhMode === 'Co-Loading';
       // 2026-08-26 (#11) — rowIsActive is the NEW per-DC deactivate mechanism (separate from the
       // pre-existing `active`/`pending` fields above, which mean "is the LMSC parent active per
@@ -10959,7 +11056,7 @@ class NDCApp extends React.Component {
         lmZh: l.lmZh || null, lmCh: l.lmCh || null, lmAm: normalizeLmdcPocs(l).lmAm,
         lmContactsComplete: (() => { const lp = normalizeLmdcPocs(l); return !!(lp.lmZh && lp.lmCh); })(),
         lmContactsSummary: (() => { const lp = normalizeLmdcPocs(l); return ['ZH: ' + (lp.lmZh ? pocEmailToName(lp.lmZh) : 'missing'), 'CH: ' + (lp.lmCh ? pocEmailToName(lp.lmCh) : 'missing'), 'AM: ' + (lp.lmAm.length ? lp.lmAm.map(pocEmailToName).join(', ') : 'none')].join(' \u00b7 '); })(),
-        onOpenLmContacts: () => this.openLmContactsModal(l.code),
+        onOpenLmContacts: () => this.openLmdcForm(l),
         rlhMode: l.rlhMode || 'Direct Vehicle', isMdc, isCoLoad, isValmoRlh: !isMdc && !isCoLoad,
         // 2026-10-15 — Lane / Cutoff / TAT are optional for MDC and Co-Loading; blanks show —.
         // (laneMissing/cutoffMissing/tatMissing kept as always-false so the cells fall through to —.)
@@ -10971,7 +11068,7 @@ class NDCApp extends React.Component {
         draftIsMdc: lmdcDraft.rlhMode === 'MDC', draftIsCoLoad: lmdcDraft.rlhMode === 'Co-Loading', draftNeedsLane: lmdcDraft.rlhMode === 'MDC' || lmdcDraft.rlhMode === 'Co-Loading',
         onDraftOpen: ldSet('open'), onDraftClose: ldSet('close'), onDraftD0: ldSet('d0Cutoff'), onDraftVehicle: ldSet('maxVehicle'), onDraftUnload: ldSet('unloadMin'),
         onDraftRlhMode: ldSet('rlhMode'), onDraftMdcCode: ldSet('mdcCode'), onDraftLaneName: ldSet('laneName'), onDraftCutoff: ldSet('cutoff'), onDraftTat: ldSet('tat'),
-        onEdit: () => this.setState({ lmdcEditCode: l.code, lmdcEditDraft: { open: l.open, close: l.close, d0Cutoff: l.d0Cutoff, maxVehicle: l.maxVehicle, unloadMin: String(l.unloadMin), rlhMode: l.rlhMode || 'Direct Vehicle', mdcCode: l.mdcCode || '', laneName: l.laneName || '', cutoff: l.cutoff || '', tat: l.tat != null ? this.minToHrsLabel(l.tat) : '' } }),
+        onEdit: () => this.openLmdcForm(l),
         onCancelRow: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }),
         onSaveRow: () => this.saveLmdcEdit(l.code),
       };
@@ -11335,6 +11432,24 @@ class NDCApp extends React.Component {
       lmdcRows, lmdcPager, lmdcShown: lmdcRows.length, lmdcTotal: lmdcFiltered.length, lmdcZoneSel, lmdcModeSel,
       lmdcSearch: st.lmdcSearch || '', onLmdcSearch: (e) => this.setState({ lmdcSearch: e.target.value, pgLmdc: 1 }),
       lmdcVehNames, downloadLmdcCsv, lmdcTemplate, lmdcTimeSlots: LMDC_TIME_SLOTS, lmdcD0Options: LMDC_D0_OPTIONS, lmdcUnloadOptions: LMDC_UNLOAD_OPTIONS, lmdcSysDefaults: this.lmdcSystemDefaults(),
+      lmdcForm: (() => {
+        const code = st.lmdcEditCode; if (!code) return { open: false };
+        const l = (d.lmdcs || []).find(x => x.code === code); if (!l) return { open: false };
+        const f = st.lmdcEditDraft || {};
+        const fld = (label, key, kind, options, extra) => Object.assign({ label, req: false, value: f[key] == null ? '' : f[key], onInput: ldSet(key), isSelect: kind === 'select', isText: kind === 'text', options: options || [], ph: '' }, extra || {});
+        const mode = f.rlhMode || 'Direct Vehicle';
+        const rlh = [fld('RLH Mode', 'rlhMode', 'select', RLH_MODE_OPTIONS)];
+        if (mode === 'MDC') rlh.push(fld('MDC Code', 'mdcCode', 'select', [''].concat(mdcCodeOptions)));
+        if (mode === 'Co-Loading') rlh.push(fld('Lane Name', 'laneName', 'text', null, { ph: 'e.g. CL-01' }));
+        if (mode !== 'Direct Vehicle') { rlh.push(fld('Cutoff', 'cutoff', 'select', [''].concat(LMDC_CUTOFF_OPTIONS))); rlh.push(fld('TAT (hrs)', 'tat', 'text', null, { ph: 'e.g. 1.5' })); }
+        const ops = [fld('Open Time', 'open', 'select', LMDC_TIME_SLOTS), fld('Close Time', 'close', 'select', LMDC_TIME_SLOTS), fld('D0 Cutoff', 'd0Cutoff', 'select', LMDC_D0_OPTIONS),
+          fld('Max Vehicle Size', 'maxVehicle', 'select', lmdcVehNames), fld('Unloading Time (min)', 'unloadMin', 'select', LMDC_UNLOAD_OPTIONS)];
+        return { open: true, title: 'Edit LMDC \u2014 ' + code,
+          core: [['LMDC Code', l.code], ['LMSC', l.lmscCode || '\u2014'], ['Location', (Number(l.lat) || 0).toFixed(4) + ', ' + (Number(l.lng) || 0).toFixed(4)], ['Capacity', l.capacity != null ? Number(l.capacity).toLocaleString('en-IN') : '\u2014']].map(x => ({ label: x[0], value: x[1] })),
+          rlh, ops, modeHint: mode === 'Direct Vehicle' ? 'Direct Vehicle \u2014 no lane fields.' : (mode + ' \u2014 lane, cutoff and TAT are optional; one cutoff per lane on an LMSC.'),
+          pocGroups: this.pocFormGroups(LMDC_POC_CATEGORIES, f, (patch) => this.setState({ lmdcEditDraft: Object.assign({}, this.state.lmdcEditDraft || {}, patch) })),
+          onSave: () => this.saveLmdcEdit(code), onClose: () => this.setState({ lmdcEditCode: null, lmdcEditDraft: {} }) };
+      })(),
       rlhModeOptions: RLH_MODE_OPTIONS, mdcCodeOptions, lmdcCutoffOptions: LMDC_CUTOFF_OPTIONS,
       lmdcUploadErrors, hasLmdcUploadErrors: lmdcUploadErrors.length > 0, closeLmdcUploadErrors,
       triggerLmdcUpload: () => { if (this.lmdcFileInputEl) this.lmdcFileInputEl.click(); },
@@ -12604,7 +12719,7 @@ class NDCApp extends React.Component {
     const activeStageSub = schedStage === 'stage2' ? stage2Sub : stage1Sub;
     const canSubmitFeedback = (sp.status === 'Pushed' || sp.status === 'In Alignment') && this.schedStageRoles(schedStage).indexOf(activeRole) >= 0 && !activeStageSub[activeRole];
     const card = {
-      id: sp.id, code: sp.scCode, name: sp.scName, zone: sp.zone,
+      id: sp.id, runName: sp.runName || '', code: sp.scCode, name: sp.scName, zone: sp.zone,
       scCoords: sc ? (Number(sc.lat).toFixed(4) + ', ' + Number(sc.lng).toFixed(4)) : '\u2014',
       createdAt: sp.createdAt, createdBy: sp.createdBy || '', sentDate: sp.sentDate || sp.createdAt, pushedBy: sp.pushedBy || sp.createdBy || '',
       status: sp.status, verdict: vv[0], verdictBg: vv[1], verdictFg: vv[2],
@@ -13004,6 +13119,7 @@ class NDCApp extends React.Component {
       const params = this.resolveSchedulerParamsFor(parent.scCode);
       const spDraft = {
         id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
+        runName: (this.state.schedRunName || '').trim(), // 2026-10-15 — Step 2 Run Name; blank = show the Run ID
         scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
         status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
         nlhPlanId: chosenScenario.planId,
@@ -13426,7 +13542,7 @@ class NDCApp extends React.Component {
     const schedRunQueue = st.schedulerRunQueue || [];
     const SP_LABEL = { Queued: ['Queued', '#F2F5FA', '#5A5E66'], 'In Progress': ['In Progress', '#EAF0FB', '#1E6FB8'], Completed: ['Completed', '#E7F4EC', '#128A3E'] };
     const schedulerQueueRows = schedRunQueue.map(r => {
-      const base = { id: r.id, scCode: r.scCode, statusLabel: SP_LABEL[r.status][0], statusBg: SP_LABEL[r.status][1], statusFg: SP_LABEL[r.status][2], isCompleted: r.status === 'Completed' };
+      const _spN = (d.schedulerPlans || []).find(x => x.id === r.id); const base = { id: r.id, runName: (_spN && _spN.runName) || '', scCode: r.scCode, statusLabel: SP_LABEL[r.status][0], statusBg: SP_LABEL[r.status][1], statusFg: SP_LABEL[r.status][2], isCompleted: r.status === 'Completed' };
       if (r.status !== 'Completed') return base;
       const sp = (d.schedulerPlans || []).find(x => x.id === r.id);
       if (!sp) return base;
@@ -13466,6 +13582,7 @@ class NDCApp extends React.Component {
     return {
       schedulerStepper, schedulerStep: step,
       isSchedStep1: step === 1, isSchedStep2: step === 2, isSchedStep3: step === 3,
+      schedRunName: st.schedRunName || '', onSchedRunNameChange: (e) => this.setState({ schedRunName: e.target.value }),
       // Step 1
       zoneChipsStep1, schedulerScGroups, schedulerZoneSections, scsWithFinalEmpty, step1Summary, canNextScheduler1, nlhPicked, selectedScCodesStep1,
       onSelectAllPlans, onSelectAllScsLatest, onClearAllPlans,

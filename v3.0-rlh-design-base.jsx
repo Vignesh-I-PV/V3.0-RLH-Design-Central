@@ -6718,9 +6718,14 @@ const INGEST_KINDS = {
   nlhVehicle: { tab: 'nlh', label: 'NLH Vehicle Plan', title: 'NLH Vehicle Plan', sub: 'SC-to-SC linehaul vehicles \u2014 one row per lane and vehicle type',
     store: 'ingestedNlhVehPlans', prefix: 'NVP',
     cols: ['Origin SC Code', 'Destination SC Code', 'Vehicle Type', 'Vehicle Count', 'Departure Time', 'Arrival Time'], numeric: ['Vehicle Count'], time: ['Departure Time', 'Arrival Time'] },
-  nlhLanding: { tab: 'nlh', label: 'NLH Landing Plan', title: 'NLH Landing Plan', sub: 'Inbound NLH vehicles landing at each LMSC \u2014 one row per vehicle',
-    store: 'ingestedNlhPlans', prefix: 'NLP',
-    cols: ['LMSC Code', 'Origin SC Code', 'Inbound Vehicle Type', 'Scheduled Arrival Time', 'Dock Number', 'Shipment Volume'], numeric: ['Dock Number', 'Shipment Volume'], time: ['Scheduled Arrival Time'] },
+  // NLH Landing Plan (2026-10-15) — the production multi-cutoff layout (Template_NLH_Landing_Plan.xlsx):
+  // one row per NLH link (Origin → Destination), up to 6 cutoffs, each with cutoffN / landingN /
+  // sizeN / runN / vehN / volN, under a merged "CUTOFF N" banner row. Parsed by
+  // applyNlhLandingRows(), not the generic column check. Accepts .xlsx (first sheet with this
+  // header) or a .csv of the same columns.
+  nlhLanding: { tab: 'nlh', label: 'NLH Landing Plan', title: 'NLH Landing Plan', sub: 'Multi-cutoff link plan \u2014 one row per Origin \u2192 Destination link, up to 6 cutoffs with landing time, vehicle and volume',
+    store: 'ingestedNlhPlans', prefix: 'NLP', layout: 'nlhMultiCutoff',
+    cols: ['Origin', 'Destination', 'Lane', 'Link', 'Haul', 'Link type', 'TAT', 'No of cutoffs', 'Vehicles (link_TAT)'].concat([1, 2, 3, 4, 5, 6].reduce((a, n) => a.concat(['cutoff' + n, 'landing' + n, 'size' + n, 'run' + n, 'veh' + n, 'vol' + n]), [])).concat(['Total vehicles', 'Link volume', 'Vehicle combo', 'Basis']) },
 };
 const INGEST_TABS = [['fm', 'FM Carting Plans', 'FM Carting plan ingestion \u2014 coming soon'], ['nlh', 'NLH Plans', 'NLH Vehicle Plan and NLH Landing Plan uploads'], ['rlh', 'RLH Plans', 'RLH Vehicle Plan upload']];
 
@@ -10276,17 +10281,138 @@ class NDCApp extends React.Component {
   // the file picker so it can be exercised directly (tests, or a future drag-and-drop).
   ingestPlanCsv(kind) {
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 Design Inputs are read-only.', '#C77B00'); return; }
-    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.csv';
-    inp.onchange = () => {
-      const f = inp.files && inp.files[0]; if (!f) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => this.applyIngestCsv(kind, f.name, String((ev.target && ev.target.result) || ''));
-      reader.readAsText(f);
-    };
+    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.csv,.xlsx,.xls';
+    inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) this.readIngestFile(kind, f); };
     inp.click();
+  }
+  // readIngestFile(kind, file) (2026-10-15) — .csv read as text; .xlsx/.xls read with SheetJS
+  // (window.XLSX, loaded by index.html). The NLH Landing Plan gets its own multi-cutoff parser;
+  // every other card takes the first sheet as CSV through applyIngestCsv().
+  readIngestFile(kind, f) {
+    const K = INGEST_KINDS[kind]; if (!K) return;
+    const isXlsx = /\.xlsx?$/i.test(f.name || '');
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const res = (ev.target && ev.target.result) || reader.result;
+      try {
+        if (isXlsx) {
+          if (typeof XLSX === 'undefined') { this.showToast('Excel reader didn\u2019t load \u2014 save the sheet as CSV and upload that instead', '#D14B4B'); return; }
+          const wb = XLSX.read(res, { type: 'array' });
+          if (K.layout === 'nlhMultiCutoff') {
+            const name = wb.SheetNames.find(n => this.findNlhHeaderRow(XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: true, defval: null, blankrows: false }).slice(0, 6)) >= 0);
+            if (!name) { this.showToast('NLH Landing Plan rejected \u2014 no sheet has the Origin / Destination / cutoff1 header row', '#D14B4B'); return; }
+            this.applyNlhLandingRows(f.name, XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: true, defval: null, blankrows: false }), name);
+          } else {
+            this.applyIngestCsv(kind, f.name, XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));
+          }
+        } else if (K.layout === 'nlhMultiCutoff') {
+          const text = String(res || '').replace(/^\uFEFF/, '');
+          this.applyNlhLandingRows(f.name, text.split(/\r?\n/).map(l => this.splitCsvLineIngest(l)), null);
+        } else {
+          this.applyIngestCsv(kind, f.name, String(res || ''));
+        }
+      } catch (err) { this.showToast('Could not read ' + f.name + ' \u2014 ' + (err && err.message ? err.message : 'unknown error'), '#D14B4B'); }
+    };
+    if (isXlsx) reader.readAsArrayBuffer(f); else reader.readAsText(f);
+  }
+  splitCsvLineIngest(line) { const out = []; let cur = '', inQ = false; for (let i = 0; i < line.length; i++) { const c = line[i]; if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; } else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; } } out.push(cur); return out.map(x => x.trim()); }
+  // findNlhHeaderRow(rows) — index of the row holding Origin / Destination / cutoff1 (row 2 in the
+  // production file, under the "CUTOFF N" banner row), or -1.
+  findNlhHeaderRow(rows) {
+    for (let i = 0; i < Math.min(rows.length, 6); i++) {
+      const h = (rows[i] || []).map(x => String(x == null ? '' : x).trim().toLowerCase());
+      if (h.indexOf('origin') >= 0 && h.indexOf('destination') >= 0 && h.indexOf('cutoff1') >= 0) return i;
+    }
+    return -1;
+  }
+  // applyNlhLandingRows(fileName, rows, sheetName) (2026-10-15) — parses the multi-cutoff NLH Landing
+  // Plan. Per link row: Origin and Destination required; "No of cutoffs" a whole number 1-6; for
+  // each cutoff 1..N, cutoffN and landingN must be times (Excel time cells or HH:MM text) and vehN /
+  // volN, when present, numbers. Rows with problems are flagged (not applied); blank rows skipped.
+  // Derived per DESTINATION SC (where the vehicles land): landing volume (sum of volN), vehicles
+  // (sum of vehN) and landings per hour of day (by landingN), plus the flat landing list.
+  applyNlhLandingRows(fileName, rows, sheetName) {
+    const K = INGEST_KINDS.nlhLanding;
+    const hi = this.findNlhHeaderRow(rows);
+    if (hi < 0) { this.showToast('NLH Landing Plan rejected \u2014 header row with Origin, Destination and cutoff1 not found', '#D14B4B'); return; }
+    const head = rows[hi].map(x => String(x == null ? '' : x).trim().toLowerCase());
+    const need = ['origin', 'destination', 'no of cutoffs', 'cutoff1', 'landing1'];
+    const missing = need.filter(c => head.indexOf(c) < 0);
+    if (missing.length) { this.showToast('NLH Landing Plan rejected \u2014 missing column' + (missing.length === 1 ? '' : 's') + ': ' + missing.join(', '), '#D14B4B'); return; }
+    const ix = (n) => head.indexOf(n);
+    const toMin = (v) => {
+      if (v == null || v === '') return null;
+      if (typeof v === 'number') { if (v < 0) return null; return Math.round((v % 1) * 1440) % 1440; }
+      if (v instanceof Date) return v.getHours() * 60 + v.getMinutes();
+      const m = String(v).trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/); if (!m) return null;
+      const h = +m[1], mm = +m[2]; return (h < 24 && mm < 60) ? h * 60 + mm : null;
+    };
+    const hhmm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+    const num = (v) => (v == null || v === '') ? null : (typeof v === 'number' ? v : (/^-?\d+(\.\d+)?$/.test(String(v).trim()) ? Number(v) : NaN));
+    const errorRows = [], landings = [], volumeBySC = {}, vehiclesBySC = {}, hourlyBySC = {};
+    let links = 0;
+    for (let r = hi + 1; r < rows.length; r++) {
+      const row = rows[r] || [];
+      if (!row.some(x => x != null && String(x).trim() !== '')) continue;
+      const cell = (n) => { const i = ix(n); return i < 0 ? null : row[i]; };
+      const o = String(cell('origin') == null ? '' : cell('origin')).trim(), d = String(cell('destination') == null ? '' : cell('destination')).trim();
+      const errs = [];
+      if (!o) errs.push('Origin is blank'); if (!d) errs.push('Destination is blank');
+      const n = num(cell('no of cutoffs'));
+      if (!(Number.isInteger(n) && n >= 1 && n <= 6)) errs.push('No of cutoffs "' + (cell('no of cutoffs') == null ? '' : cell('no of cutoffs')) + '" is not 1\u20136');
+      const mine = [];
+      if (Number.isInteger(n) && n >= 1 && n <= 6) {
+        for (let k = 1; k <= n; k++) {
+          const c = toMin(cell('cutoff' + k)), l = toMin(cell('landing' + k));
+          if (c == null) errs.push('cutoff' + k + ' is not a time'); if (l == null) errs.push('landing' + k + ' is not a time');
+          const veh = num(cell('veh' + k)), vol = num(cell('vol' + k));
+          if (Number.isNaN(veh)) errs.push('veh' + k + ' is not a number'); if (Number.isNaN(vol)) errs.push('vol' + k + ' is not a number');
+          mine.push({ o, d, cutoff: c, landing: l, size: cell('size' + k) || null, veh: veh || 0, vol: vol || 0 });
+        }
+      }
+      if (errs.length) { errorRows.push({ row: r + 1, msg: (o || d ? (o + '\u2192' + d + ': ') : '') + errs.join('; ') }); continue; }
+      links++;
+      const haul = cell('haul') || null;
+      mine.forEach(m => {
+        landings.push({ o: m.o, d: m.d, haul, cutoff: hhmm(m.cutoff), landing: hhmm(m.landing), size: m.size, veh: m.veh, vol: m.vol });
+        volumeBySC[m.d] = (volumeBySC[m.d] || 0) + m.vol;
+        vehiclesBySC[m.d] = (vehiclesBySC[m.d] || 0) + m.veh;
+        const hb = hourlyBySC[m.d] || (hourlyBySC[m.d] = new Array(24).fill(0)); hb[Math.floor(m.landing / 60)] += (m.veh || 0);
+      });
+    }
+    if (links === 0 && errorRows.length === 0) { this.showToast(fileName + ' has no link rows under the header', '#D14B4B'); return; }
+    const n = (this.state.ingestionCounter || 0) + 1;
+    const now = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const date = String(now.getDate()).padStart(2, '0') + ' ' + months[now.getMonth()] + ' \u00b7 ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const scCodes = Object.keys(volumeBySC).sort();
+    const totVol = scCodes.reduce((a, c) => a + volumeBySC[c], 0), totVeh = scCodes.reduce((a, c) => a + vehiclesBySC[c], 0);
+    const plan = { name: fileName, sheet: sheetName, rows: links + errorRows.length, links, by: 'Pranita Sapkal', date, ts: now.getTime(), status: errorRows.length ? 'Errors' : 'Validated', errors: errorRows.length, kind: 'nlhLanding', runId: K.prefix + '-' + String(n).padStart(3, '0'),
+      scCodes, scCount: scCodes.length, volumeBySC, vehiclesBySC, hourlyBySC, landings,
+      detail: links.toLocaleString('en-IN') + ' links \u00b7 ' + landings.length.toLocaleString('en-IN') + ' landings \u00b7 ' + scCodes.length + ' destination SCs \u00b7 ' + totVeh.toLocaleString('en-IN') + ' vehicles \u00b7 ' + totVol.toLocaleString('en-IN') + ' shipments' + (sheetName ? ' \u00b7 sheet \u201c' + sheetName + '\u201d' : '') };
+    this.setState({ ingestionCounter: n, ingestedNlhPlans: [plan].concat(this.state.ingestedNlhPlans || []), ingestUploadErrors: errorRows.length ? { kind: 'nlhLanding', label: K.label, fileName, rows: errorRows } : null });
+    this.showToast(errorRows.length ? ('NLH Landing Plan uploaded \u00b7 ' + links + ' links applied, ' + errorRows.length + ' flagged') : ('NLH Landing Plan validated \u00b7 ' + links + ' links'), errorRows.length ? '#C77B00' : '#128A3E');
+  }
+  // downloadIngestTemplate(kind) — the NLH Landing Plan template is the production two-row header
+  // (CUTOFF N banner + column names) as .xlsx; every other card's template stays a one-row CSV.
+  downloadIngestTemplate(kind) {
+    const K = INGEST_KINDS[kind]; if (!K) return;
+    if (K.layout === 'nlhMultiCutoff' && typeof XLSX !== 'undefined') {
+      const banner = ['LANE  \u2022  LINK  \u2022  BASIS', null, null, null, null, null, null, null, null];
+      for (let c = 1; c <= 6; c++) banner.push('CUTOFF ' + c, null, null, null, null, null);
+      banner.push('TOTALS', null, null, null);
+      const ws = XLSX.utils.aoa_to_sheet([banner, K.cols]);
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 8 } }].concat([0, 1, 2, 3, 4, 5].map(i => ({ s: { r: 0, c: 9 + i * 6 }, e: { r: 0, c: 14 + i * 6 } }))).concat([{ s: { r: 0, c: 45 }, e: { r: 0, c: 48 } }]);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'NLH Landing Plan');
+      XLSX.writeFile(wb, 'nlh_landing_plan_template.xlsx');
+      this.showToast(K.label + ' template downloaded', '#128A3E');
+      return;
+    }
+    this.downloadTemplate(K.label, K.cols.map(c => ({ k: c })));
   }
   applyIngestCsv(kind, fileName, text) {
     const K = INGEST_KINDS[kind]; if (!K) return;
+    if (K.layout === 'nlhMultiCutoff') { this.applyNlhLandingRows(fileName, String(text || '').replace(/^\uFEFF/, '').split(/\r?\n/).map(l => this.splitCsvLineIngest(l)), null); return; }
     const splitCsvLine = (line) => { const out = []; let cur = '', inQ = false; for (let i = 0; i < line.length; i++) { const c = line[i]; if (inQ) { if (c === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; } else cur += c; } else { if (c === '"') inQ = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c; } } out.push(cur); return out.map(x => x.trim()); };
     const lines = String(text || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim() !== '');
     if (!lines.length) { this.showToast(fileName + ' is empty', '#D14B4B'); return; }
@@ -10319,12 +10445,6 @@ class NDCApp extends React.Component {
       // Design Review's Ingested Plans line shows "SC X" for a single-SC file, "N SCs" otherwise.
       const scs = Array.from(new Set(rowsOk.map(cells => cells[colIdx['SC Code']]).filter(Boolean)));
       plan.scCodes = scs; if (scs.length === 1) plan.scCode = scs[0]; else plan.scCount = scs.length;
-    }
-    if (kind === 'nlhLanding') {
-      // Same shape ingestNlhPlan() synthesised (scCodes / volumeBySC), now derived from the file.
-      const volumeBySC = {};
-      rowsOk.forEach(cells => { const sc = cells[colIdx['LMSC Code']]; volumeBySC[sc] = (volumeBySC[sc] || 0) + Number(cells[colIdx['Shipment Volume']] || 0); });
-      plan.scCodes = Object.keys(volumeBySC); plan.scCount = plan.scCodes.length; plan.volumeBySC = volumeBySC;
     }
     const patch = { ingestionCounter: n, ingestUploadErrors: errorRows.length ? { kind, label: K.label, fileName, rows: errorRows } : null };
     patch[K.store] = [plan].concat(this.state[K.store] || []);
@@ -11054,7 +11174,7 @@ class NDCApp extends React.Component {
     const ingTabs = INGEST_TABS.map(t => ({ label: t[1], soon: t[0] === 'fm', tip: t[2], attention: false, active: ing === t[0], color: ing === t[0] ? '#003F98' : '#5A5E66', weight: ing === t[0] ? '700' : '500', bg: ing === t[0] ? '#fff' : 'transparent', bd: ing === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ ingestionTab: t[0], ingestUploadErrors: null }) }));
     const isIngComingSoon = ing === 'fm';
     const ingCards = ingKindsHere.map(k => { const K = INGEST_KINDS[k]; return { key: k, title: K.title, sub: 'CSV \u00b7 template enforced \u00b7 ' + K.sub,
-      onTemplate: () => this.downloadTemplate(K.label, K.cols.map(c => ({ k: c }))),
+      onTemplate: () => this.downloadIngestTemplate(k),
       onUpload: () => this.ingestPlanCsv(k) }; });
     const ingAll = [];
     ingKindsHere.forEach(k => { (st[INGEST_KINDS[k].store] || []).forEach((p, i) => ingAll.push({ p, k, i })); });
@@ -11157,7 +11277,7 @@ class NDCApp extends React.Component {
       downloadSpeedProfileTemplate: () => this.downloadTemplate('Speed Profile', [{ k: 'sort_centre_id' }, { k: 'vehicle_type' }, { k: 'zone' }].concat(this.defaultSpeedBandStarts().map(h => ({ k: h })))),
       ingTabs, isIngComingSoon, ingCards, ingCardCols: 'repeat(' + Math.max(1, ingCards.length) + ', minmax(0,1fr))',
       ingIsNlh: ing === 'nlh',
-      ingPlans: ingAll.slice(0, 10).map(x => { const p = x.p; const bad = p.status === 'Errors' || (p.errors || 0) > 0; return { name: p.name, by: p.by, date: p.date, rows: Number(p.rows || 0).toLocaleString('en-IN'), runId: p.runId || '', typeLabel: INGEST_KINDS[x.k].label,
+      ingPlans: ingAll.slice(0, 10).map(x => { const p = x.p; const bad = p.status === 'Errors' || (p.errors || 0) > 0; return { name: p.name, by: p.by, date: p.date, rows: Number(p.rows || 0).toLocaleString('en-IN'), runId: (p.runId || '') + (p.detail ? ' \u00b7 ' + p.detail : ''), typeLabel: INGEST_KINDS[x.k].label,
         statusLabel: bad ? (p.errors + ' error' + (p.errors === 1 ? '' : 's')) : 'Validated', statusBg: bad ? '#FBF1DF' : '#E7F4EC', statusFg: bad ? '#C77B00' : '#128A3E' }; }),
       ingHasPlans: ingAllPlans.length > 0,
       ingNoPlans: ingAllPlans.length === 0,

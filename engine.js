@@ -544,6 +544,7 @@ function seedRLHMasterData(store, opts = {}) {
         zeroVolDc, missVolDc: Math.min(missRaw, Math.max(0, 6 - zeroVolDc)),
         pocs: Array.from({ length: ri(2, 4) }, () => NAMES[Math.floor(R() * NAMES.length)]),
         nodeKind: 'SC',
+        pocRoles: (() => { const nm = (k) => pocNameToEmail(NAMES[(h >>> k) % NAMES.length]); return { opsZh: nm(1), lhOpsZh: nm(5), opsCh: nm(9), lhOpsCh: nm(13), opsAm: pocUniq([nm(17), (h % 3) ? nm(21) : '']).filter(Boolean), lhOpsAm: (h % 2) ? [nm(25)] : [], lhCt: [], bizFinCt: [] }; })(),
       });
     }
     ci++;
@@ -577,6 +578,7 @@ function seedRLHMasterData(store, opts = {}) {
       hasRef: false, htp: 60, farDist: 0, zeroVolDc: 0, missVolDc: 0,
       pocs: Array.from({ length: ri(2, 3) }, () => NAMES[Math.floor(R() * NAMES.length)]),
       nodeKind: 'MDC',
+      pocRoles: { opsZh: pocNameToEmail(NAMES[(mi * 5) % NAMES.length]), lhOpsZh: pocNameToEmail(NAMES[(mi * 5 + 1) % NAMES.length]), opsCh: pocNameToEmail(NAMES[(mi * 5 + 2) % NAMES.length]), lhOpsCh: pocNameToEmail(NAMES[(mi * 5 + 3) % NAMES.length]), opsAm: [pocNameToEmail(NAMES[(mi * 5 + 4) % NAMES.length])], lhOpsAm: [], lhCt: [], bizFinCt: [] },
     });
   });
 
@@ -616,7 +618,7 @@ function seedRLHMasterData(store, opts = {}) {
       localSpeed: sc.localSpeed, nonLocalSpeed: sc.nonLocalSpeed, openTime: sc.openTime, closeTime: sc.closeTime,
       holdTimeOn: sc.holdTimeOn, maxHoldLocal: sc.maxHoldLocal, maxHoldNonLocal: sc.maxHoldNonLocal,
       hasRef: sc.hasRef, farDist: sc.farDist, zeroVolDc: sc.zeroVolDc, missVolDc: sc.missVolDc,
-      pocs: sc.pocs, nodeKind: sc.nodeKind,
+      pocs: sc.pocs, pocRoles: sc.pocRoles, nodeKind: sc.nodeKind,
       // Operating Hours (2026-09-11, seed-data pass) — nonOperating/breaks default to empty
       // (fully operational) for every SC except a couple of deliberately-seeded examples (set
       // right after `generated` is built, by code — see "Operating Hours demo seed" below), so
@@ -653,7 +655,12 @@ function materializeRLHScs(store, cycleMonth) {
       // not stored — see computeShiftsFromWindows() in the main file.
       nonOperating: d.nonOperating || [], breaks: d.breaks || [],
       hasRef: !!d.hasRef, farDist: d.farDist || 0, zeroVolDc: d.zeroVolDc || 0, missVolDc: d.missVolDc || 0,
-      pocs: d.pocs || [], nodeKind: d.nodeKind || 'SC',
+      // 2026-10-15 — pocRoles is the source of truth (emails, 8 categories); `pocs` is now DERIVED:
+      // display names of every POC on the SC (all categories), which is who Push to Alignment and
+      // the reviewer pickers offer. Legacy rows (positional names + centralPocs) migrate on read.
+      pocRoles: normalizeScPocRoles(d),
+      pocs: scAllPocEmails(normalizeScPocRoles(d)).map(pocEmailToName),
+      nodeKind: d.nodeKind || 'SC',
       // Central POCs (2026-09-18, item 4) — LH CT-1/-2, Biz Fin CT-1/-2. People who look after
       // ALL SCs, kept as a separate named object from `pocs` above (which is positional/SC-own-
       // chain-specific) — same Class D mechanism, no schema declaration needed (see setClassD
@@ -661,7 +668,7 @@ function materializeRLHScs(store, cycleMonth) {
       // so a new top-level Class D field has to be added here too, unlike a new key nested
       // inside an already-whitelisted object. Caught by checking this
       // function directly rather than assuming "no engine-level changes needed" held for both.
-      centralPocs: d.centralPocs || { lhCt1: '', lhCt2: '', bizFinCt1: '', bizFinCt2: '' },
+      // centralPocs: superseded 2026-10-15 by pocRoles.lhCt / pocRoles.bizFinCt (lists); no longer exposed.
       // Local Distance Threshold (2026-09-28) — km from the SC up to which a DC counts as Local;
       // beyond it, Non-Local. Default 100 km (the value that used to be hardcoded app-side).
       localDistThreshold: d.localDistThreshold != null ? d.localDistThreshold : 100,
@@ -905,4 +912,67 @@ function findNlhIngestedPlanById(store, planId) {
     if (found) return found;
   }
   return null;
+}
+
+// ===== POCs (2026-10-15) =====================================================================
+// SC and LMDC contacts are email IDs, shown on screen as names derived from the email
+// (firstname.lastname@domain -> "Firstname Lastname"). SC Master has 8 categories: four single-
+// entry (Ops ZH, LH Ops ZH, Ops CH, LH Ops CH — mandatory) and four lists (Ops AM, LH Ops AM,
+// Central LH CT, Central Biz Fin CT — optional, uncapped). Stored as ONE Class D object
+// `pocRoles` on scMaster. Legacy shapes (positional `pocs` names + `centralPocs` CT-1/CT-2) are
+// migrated on read by normalizeScPocRoles(), so nothing already in the store is lost.
+const POC_DOMAIN = 'valmo.in';
+const POC_EMAIL_RE = /^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/;
+const SC_POC_CATEGORIES = [
+  { key: 'opsZh', label: 'SC Ops ZH', header: 'POC SC OPS ZH EMAIL', multi: false, required: true, lh: false },
+  { key: 'lhOpsZh', label: 'SC LH Ops ZH', header: 'POC SC LH OPS ZH EMAIL', multi: false, required: true, lh: true },
+  { key: 'opsCh', label: 'SC Ops CH', header: 'POC SC OPS CH EMAIL', multi: false, required: true, lh: false },
+  { key: 'lhOpsCh', label: 'SC LH Ops CH', header: 'POC SC LH OPS CH EMAIL', multi: false, required: true, lh: true },
+  { key: 'opsAm', label: 'SC Ops AM', header: 'POC SC OPS AM EMAIL', multi: true, required: false, lh: false },
+  { key: 'lhOpsAm', label: 'SC LH Ops AM', header: 'POC SC LH OPS AM EMAIL', multi: true, required: false, lh: true },
+  { key: 'lhCt', label: 'Central LH CT', header: 'POC CENTRAL LH CT EMAIL', multi: true, required: false, central: true },
+  { key: 'bizFinCt', label: 'Central Biz Fin CT', header: 'POC CENTRAL BIZ FIN CT EMAIL', multi: true, required: false, central: true },
+];
+const LMDC_POC_CATEGORIES = [
+  { key: 'lmZh', label: 'LM ZH', header: 'POC LM ZH EMAIL', multi: false, required: true },
+  { key: 'lmCh', label: 'LM CH', header: 'POC LM CH EMAIL', multi: false, required: true },
+  { key: 'lmAm', label: 'LM AM', header: 'POC LM AM EMAIL', multi: true, required: false },
+];
+function pocIsEmail(s) { return POC_EMAIL_RE.test(String(s || '').trim()); }
+function pocEmailToName(email) {
+  const s = String(email || '').trim(); if (!s) return '';
+  if (s.indexOf('@') < 0) return s; // legacy plain name
+  return s.split('@')[0].split(/[._-]+/).filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join(' ');
+}
+function pocNameToEmail(name) {
+  const s = String(name || '').trim(); if (!s) return '';
+  if (s.indexOf('@') >= 0) return s.toLowerCase();
+  return s.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().split(/\s+/).join('.') + '@' + POC_DOMAIN;
+}
+// Comma is the only list separator (product decision 2026-10-15).
+function pocSplitList(v) { return Array.isArray(v) ? v.map(x => String(x || '').trim()).filter(Boolean) : String(v == null ? '' : v).split(',').map(x => x.trim()).filter(Boolean); }
+function pocUniq(arr) { const seen = {}; return (arr || []).filter(x => { const k = String(x).toLowerCase(); if (!x || seen[k]) return false; seen[k] = true; return true; }); }
+function emptyScPocRoles() { return { opsZh: '', lhOpsZh: '', opsCh: '', lhOpsCh: '', opsAm: [], lhOpsAm: [], lhCt: [], bizFinCt: [] }; }
+function normalizeScPocRoles(d) {
+  d = d || {};
+  if (d.pocRoles && typeof d.pocRoles === 'object') {
+    const r = Object.assign(emptyScPocRoles(), d.pocRoles);
+    ['opsAm', 'lhOpsAm', 'lhCt', 'bizFinCt'].forEach(k => { r[k] = pocUniq(pocSplitList(r[k])); });
+    return r;
+  }
+  // Legacy: positional names [Ops ZH, LH Ops ZH, Ops CH, LH Ops CH, Ops AM-1, Ops AM-2] + centralPocs.
+  const p = (d.pocs || []).filter(x => x && x !== '\u2014').map(pocNameToEmail);
+  const cp = d.centralPocs || {};
+  return { opsZh: p[0] || '', lhOpsZh: p[1] || '', opsCh: p[2] || '', lhOpsCh: p[3] || '', opsAm: pocUniq(p.slice(4, 6)), lhOpsAm: [],
+    lhCt: pocUniq([cp.lhCt1, cp.lhCt2].filter(Boolean).map(pocNameToEmail)), bizFinCt: pocUniq([cp.bizFinCt1, cp.bizFinCt2].filter(Boolean).map(pocNameToEmail)) };
+}
+// Every POC email on an SC, all 8 categories, de-duplicated — Push to Alignment goes to all of them.
+function scAllPocEmails(roles) {
+  const r = roles || emptyScPocRoles();
+  return pocUniq([r.opsZh, r.lhOpsZh, r.opsCh, r.lhOpsCh].concat(r.opsAm || [], r.lhOpsAm || [], r.lhCt || [], r.bizFinCt || []).filter(Boolean));
+}
+function normalizeLmdcPocs(l) {
+  l = l || {};
+  const am = l.lmAm != null ? pocSplitList(l.lmAm) : [l.lmAm1, l.lmAm2].filter(Boolean);
+  return { lmZh: l.lmZh ? pocNameToEmail(l.lmZh) : '', lmCh: l.lmCh ? pocNameToEmail(l.lmCh) : '', lmAm: pocUniq(am.map(pocNameToEmail)) };
 }

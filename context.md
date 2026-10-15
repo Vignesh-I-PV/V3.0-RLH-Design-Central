@@ -3663,3 +3663,24 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     STATUS Inactive applied (SC drops off page 1); LMDC modal "+ POC" save; LMDC export →
     re-upload: 4 applied, 2 flagged, AM list replaced, STATUS Inactive applied; Ops Alignment
     roles (LH / SC) resolve. Earlier suites (fixes, NLH landing ingestion) still pass.
+
+- **2026-10-15 (later) — LMDC Master edits use a form (matching SC Master); Route Scheduler Run Name.**
+  1. **Edit LMDC form** replaces inline row editing and the separate LM POCs popup — same intake
+     style as Edit Sort Centre (modal, sticky header/footer, 3-column fields, Cancel / Save
+     changes). Sections: Core Node Data (LMDC Code, LMSC, Location, Capacity — read-only, from
+     AutoDML); RLH Lane (RLH Mode; MDC Code / Lane Name, Cutoff, TAT appear for MDC / Co-Loading,
+     all optional); DC Operating Parameters (Open, Close, D0 Cutoff, Max Vehicle Size, Unloading
+     Time); POCs (LM ZH, LM CH single and mandatory; LM AM list with "+ POC"). Opened by the row's
+     pencil or the LM POCs icon (`openLmdcForm`); `saveLmdcEdit` now validates and saves POCs
+     with everything else. Rows always render read-only.
+  2. **LMDC bulk upload card** — same card as SC Master's ("Bulk Upload — LMDC Master": Download
+     Template / Download Current Data / Upload), replacing the toolbar buttons.
+  3. **Route Scheduler Design Creation Step 2 — Run Name** (optional, defaults to the Run ID),
+     same row style as Route Planner Step 2. Stamped on every plan the trigger creates
+     (`schedulerPlans[].runName`); Run Queue and the Design Review / Ops Alignment / Finalise plan
+     cards show the Run Name with the Run ID beside it.
+  - **Verification**: compile clean, 0 unresolved names. jsdom: LMDC card buttons; form opens
+    with core facts + current values + POCs; mode switch shows lane fields; bad AM email blocked;
+    save applies Co-Loading lane/cutoff, unloading time and the new AM; LM POCs icon opens the
+    form. Scheduler: Run Name row on Step 2; trigger on Sep 2026 created 2 plans named
+    "Oct wave A" (IDs kept), shown in Run Queue. Earlier suites still pass. engine.js unchanged.

@@ -6627,12 +6627,12 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`background:#fff; border-radius:14px; padding:24px 26px; width:100%; max-width:960px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(11,20,48,0.3);`)} onClick={(e) => e.stopPropagation()}>
 <div style={css(`display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:4px;`)}>
 <div>
-<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile{(speedProfileModal.readOnly) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#F2F5FA; color:#5A5E66;`)}>Read-only</span></>) : null}{(speedProfileModal.reviewMode) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#EAEEFB; color:#003F98;`)}>Review</span></>) : null}</div>
+<div style={css(`font-size:16px; font-weight:700; color:#14171F;`)}>Speed Profile{(speedProfileModal.readOnly) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#F2F5FA; color:#5A5E66;`)}>Read-only</span></>) : null}{(speedProfileModal.reviewMode) ? (<><span style={css(`margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:700; background:#EAEEFB; color:#003F98;`)}>Preview</span></>) : null}</div>
 <div style={css(`font-size:12.5px; color:#5A5E66; margin-top:2px;`)}>{speedProfileModal.scCode} · {speedProfileModal.scName}</div>
 </div>
 <button onClick={speedProfileModal.close} aria-label={"Close"} style={css(`width:30px; height:30px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66; flex-shrink:0;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px; line-height:1.5;`)}>{(speedProfileModal.readOnly) ? 'Speed by vehicle type, zone, and hour of day. View-only here — edit from SC Vehicle Availability.' : (speedProfileModal.reviewMode) ? 'This is the fully resolved matrix \u2014 blank hours filled forward from the previous hour. Confirm to save exactly this.' : 'Speed by vehicle type, zone, and hour of day. Feeds Route Scheduler\u2019s dispatch-time search directly \u2014 a row left entirely blank falls back to Vehicle Master\u2019s own speed for that vehicle type. Enter at least one row\u2019s 00:00 value, then use the row actions to apply it across.'}</div>
+<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:14px; line-height:1.5;`)}>{(speedProfileModal.readOnly) ? 'Speed by vehicle type, zone, and hour of day. View-only here — edit from SC Vehicle Availability.' : (speedProfileModal.reviewMode) ? 'Preview \u2014 every hour resolved, exactly as Route Scheduler will read it. Check it, then Save.' : 'Speed by vehicle type, zone, and hour of day. Feeds Route Scheduler\u2019s dispatch-time search directly \u2014 a row left entirely blank falls back to Vehicle Master\u2019s own speed for that vehicle type. Every row needs a 00:00 speed; an hour you enter carries forward (shown greyed) until the next hour you enter. Use Quick apply to fill many rows at once.'}</div>
 {/* 2026-09-08 fix (item 7) — this SC has zero rows in SC Vehicle Availability at all (confirmed
     this was JLRS's exact situation), so there's nothing to build a Speed Profile table from. The
     modal used to silently render a headers-only, contentless table with a huge empty gap before
@@ -6643,33 +6643,44 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`font-size:12px; color:#8E96A3;`)}>Add vehicle types in SC Vehicle Availability first, then a Speed Profile can be entered for them.</div>
 </div>
 </>) : (<>
+{/* Quick apply (2026-10-15) — replaces the per-row action buttons. Three switches scope one speed:
+    All day / All vehicle types / Zone specific; the sentence below says exactly what Apply will do. */}
+{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<>
+<div style={css(`background:#F7F9FC; border:1px solid #E6EBF2; border-radius:9px; padding:11px 13px; margin-bottom:12px;`)}>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>QUICK APPLY</div>
+<div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
+<label style={css(`display:flex; align-items:center; gap:6px; font-size:12px; color:#5A5E66;`)}>Speed <input type={"number"} min={"1"} step={"1"} value={speedProfileModal.qa.speed} onInput={speedProfileModal.qa.onSpeed} placeholder={"km/h"} style={css(`width:70px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; text-align:center; box-sizing:border-box;`)} /> km/h</label>
+<button onClick={speedProfileModal.qa.onToggleAllDay} aria-pressed={speedProfileModal.qa.allDay} title={"On: the whole day from 00:00. Off: from the hour you pick, until the next hour you have entered."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allDay ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allDay ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allDay ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allDay ? '✓ ' : ''}All day</button>
+{(!speedProfileModal.qa.allDay) ? (<><select value={speedProfileModal.qa.hourIdx} onChange={speedProfileModal.qa.onHour} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.hourOptions || []).map((o, __iQh) => (<React.Fragment key={__iQh}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></>) : null}
+<button onClick={speedProfileModal.qa.onToggleAllVeh} aria-pressed={speedProfileModal.qa.allVeh} title={"On: every vehicle type at this SC. Off: pick one."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allVeh ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allVeh ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allVeh ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allVeh ? '✓ ' : ''}All vehicle types</button>
+{(!speedProfileModal.qa.allVeh) ? (<><select value={speedProfileModal.qa.veh} onChange={speedProfileModal.qa.onVeh} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.vehOptions || []).map((o, __iQv) => (<React.Fragment key={__iQv}><option value={o}>{o}</option></React.Fragment>))}</select></>) : null}
+<button onClick={speedProfileModal.qa.onToggleZone} aria-pressed={speedProfileModal.qa.zoneSpecific} title={"Off: every zone the vehicle runs. On: Local or Non-Local only."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.zoneSpecific ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.zoneSpecific ? '✓ ' : ''}Zone specific</button>
+{(speedProfileModal.qa.zoneSpecific) ? (<><select value={speedProfileModal.qa.zone} onChange={speedProfileModal.qa.onZone} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.zoneOptions || []).map((o, __iQz) => (<React.Fragment key={__iQz}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></>) : null}
+<button onClick={speedProfileModal.qa.onApply} style={css(`margin-left:auto; height:30px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Apply</button>
+</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:7px;`)}>{speedProfileModal.qa.desc}</div>
+</div>
+</>) : null}
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
 <div style={css(`overflow-x:auto;`)}>
-<div style={css(`min-width:1500px;`)}>
-<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px) ${speedProfileModal.readOnly || speedProfileModal.reviewMode ? '' : '260px'}; gap:0; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
+<div style={css(`min-width:1470px;`)}>
+<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px); gap:0; background:#FAFBFD; border-bottom:1px solid #E6EBF2;`)}>
 <div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; position:sticky; left:0; background:#FAFBFD;`)}>VEHICLE — ZONE</div>
 {(speedProfileModal.rows[0] ? speedProfileModal.rows[0].cells : []).map((c, __iSph) => (<React.Fragment key={__iSph}><div style={css(`padding:8px 4px; font-size:9.5px; font-weight:700; color:#5A5E66; text-align:center; white-space:nowrap;`)}>{c.label}</div></React.Fragment>))}
-{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:8px 12px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em;`)}>ROW ACTIONS</div></>) : null}
 </div>
 {(speedProfileModal.rows || []).map((r, __iSpr) => (<React.Fragment key={__iSpr}>
-<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px) ${speedProfileModal.readOnly || speedProfileModal.reviewMode ? '' : '260px'}; gap:0; align-items:center; border-top:1px solid #EEF1F6;`)}>
+<div style={css(`display:grid; grid-template-columns:170px repeat(24,54px); gap:0; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`padding:8px 12px; font-size:12px; font-weight:600; color:#14171F; position:sticky; left:0; background:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{r.rowLabel}</div>
 {(r.cells || []).map((c, __iSpc) => (<React.Fragment key={__iSpc}>
-{(speedProfileModal.readOnly || speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 4px; font-size:11.5px; text-align:center; color:${c.value === '' ? '#C3C9D4' : '#14171F'}; font-variant-numeric:tabular-nums;`)}>{c.value === '' ? '\u2014' : c.value}</div></>) : (<><div style={css(`padding:3px;`)}><input value={c.value} onChange={(e) => c.onChange(e.target.value)} type={"number"} min={"0"} style={css(`width:100%; height:28px; padding:0 3px; text-align:center; border:1px solid ${c.value === '' ? '#E6EBF2' : '#C3C9D4'}; border-radius:5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /></div></>) }
+{(speedProfileModal.readOnly || speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 4px; font-size:11.5px; text-align:center; color:${c.value === '' ? '#C3C9D4' : '#14171F'}; font-variant-numeric:tabular-nums;`)}>{c.value === '' ? '\u2014' : c.value}</div></>) : (<><div style={css(`padding:3px;`)}><input value={c.value} onChange={(e) => c.onChange(e.target.value)} type={"number"} min={"0"} placeholder={c.inherited === '' ? '' : String(c.inherited)} title={c.required ? 'Required \u2014 every row needs a 00:00 speed' : (c.value === '' && c.inherited !== '') ? ('Inherited from an earlier hour: ' + c.inherited + ' km/h') : ''} aria-label={r.rowLabel + ' ' + c.label} style={css(`width:100%; height:28px; padding:0 3px; text-align:center; border:1px solid ${c.required ? '#D14B4B' : (c.value === '' ? '#E6EBF2' : '#C3C9D4')}; background:${c.required ? '#FBEAEA' : (c.value === '' ? '#F7F9FC' : '#fff')}; color:#14171F; border-radius:5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /></div></>) }
 </React.Fragment>))}
-{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 10px; display:flex; gap:4px; flex-wrap:wrap;`)}>
-<button onClick={r.onFillAllDay} disabled={!speedProfileModal.hasSeed} title={"Stamp this row's 00:00 value across all 24 hours"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>Apply All-day</button>
-{/* 2026-09-08 (items 1 & 3) — "All zones" only renders when this vehicle type actually has a
-    sibling zone to copy to; a Local-only vehicle type never shows a dead/no-op button. */}
-{(r.hasOtherZone) ? (<><button onClick={r.onCopyToOtherZone} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the other zone, same vehicle"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>Apply across zones</button></>) : null}
-<button onClick={r.onCopyToAllVehicles} disabled={!speedProfileModal.hasSeed} title={"Copy this row to the same zone, every vehicle type"} style={css(`height:24px; padding:0 8px; border:1px solid #E6EBF2; background:#fff; color:${speedProfileModal.hasSeed ? '#0D7377' : '#C3C9D4'}; font-family:inherit; font-size:10px; font-weight:600; border-radius:5px; cursor:${speedProfileModal.hasSeed ? 'pointer' : 'not-allowed'};`)}>Apply to all vehicles</button>
-</div></>) : null}
 </div>
 </React.Fragment>))}
 </div>
 </div>
 </div>
 </>)}
+{(!speedProfileModal.readOnly && !speedProfileModal.reviewMode && !speedProfileModal.isEmpty) ? (<><div style={css(`display:flex; gap:16px; flex-wrap:wrap; font-size:11.5px; color:#8E96A3; margin-top:9px;`)}><span><span style={css(`display:inline-block; width:10px; height:10px; border:1px solid #C3C9D4; border-radius:2px; vertical-align:-1px; margin-right:5px;`)} />Entered</span><span><span style={css(`display:inline-block; width:10px; height:10px; background:#F7F9FC; border:1px solid #E6EBF2; border-radius:2px; vertical-align:-1px; margin-right:5px;`)} />Greyed = inherited from the hour before</span><span><span style={css(`display:inline-block; width:10px; height:10px; background:#FBEAEA; border:1px solid #D14B4B; border-radius:2px; vertical-align:-1px; margin-right:5px;`)} />00:00 required</span></div></>) : null}
 {(speedProfileModal.errors && speedProfileModal.errors.length > 0) ? (<>
 <div style={css(`padding:10px 13px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px; margin-top:14px;`)}>
 <div style={css(`font-size:12px; font-weight:700; color:#D14B4B; margin-bottom:4px;`)}>Can’t continue:</div>
@@ -6679,10 +6690,10 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; justify-content:flex-end; gap:8px; margin-top:18px;`)}>
 {(speedProfileModal.readOnly) ? (<><button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Close</button></>) : (speedProfileModal.reviewMode) ? (<>
 <button onClick={speedProfileModal.onBackToEdit} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Back to Edit</button>
-<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Confirm &amp; Save</button>
+<button onClick={speedProfileModal.onSave} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Save</button>
 </>) : (<>
 <button onClick={speedProfileModal.close} style={css(`height:36px; padding:0 14px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Cancel</button>
-<button onClick={speedProfileModal.onReview} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Review &amp; Save</button>
+<button onClick={speedProfileModal.onReview} style={css(`height:36px; padding:0 18px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12.5px; font-weight:600; border-radius:8px; cursor:pointer;`)}>Preview</button>
 </>)}
 </div>
 </div>
@@ -8426,13 +8437,21 @@ class NDCApp extends React.Component {
       // 3h/1h-preset-era save) is re-keyed onto the fixed 24-hour grid, dropping values at bands
       // that don't line up, rather than guessing at a mapping.
       if (e && e.bandStarts && e.bandStarts.length === bandStarts.length && e.bandStarts.every((b, i) => b === bandStarts[i])) {
-        vehicles[vt] = { local: e.local.slice(), zonal: e.zonal.slice() };
+        // 2026-10-15 fix — a zone the vehicle type doesn't run is stored as undefined; reading it with
+        // .slice() threw, so a saved profile never reopened (and the view-only Design Creation views
+        // failed too) for any SC with a Local-only or Non-Local-only vehicle type. Missing zone = blank.
+        // Stored values are fully resolved (every hour filled); on reopen only the hours where the speed
+        // CHANGES are shown as entered, the rest show as inherited — i.e. the profile reopens the way
+        // it was typed, and re-saving it gives exactly the same result.
+        const compress = (arr) => { const a = Array.isArray(arr) ? arr : []; return bandStarts.map((_, i) => { const v = a[i] != null ? a[i] : ''; return (i === 0 || v !== (a[i - 1] != null ? a[i - 1] : '')) ? v : ''; }); };
+        vehicles[vt] = { local: compress(e.local), zonal: compress(e.zonal) };
       } else {
         vehicles[vt] = { local: bandStarts.map(() => ''), zonal: bandStarts.map(() => '') };
       }
     });
     this.setState({
-      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileVehicleZones: vehicleZones, speedProfileReadOnly: !!readOnly,
+      speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileVehicleZones: vehicleZones, speedProfileReadOnly: !!readOnly || this.isRlhCyclePast(), // past cycles open view-only (2026-10-15)
+      speedQA: { speed: '', allDay: true, hourIdx: 0, allVeh: true, veh: vehicleTypeNames[0] || '', zoneSpecific: false, zone: 'local' },
       speedProfileDraft: { bandStarts, vehicles },
       speedProfileReviewMode: false, speedProfileErrors: [],
     });
@@ -8714,7 +8733,40 @@ class NDCApp extends React.Component {
   backToEditSpeedProfile() {
     this.setState({ speedProfileReviewMode: false });
   }
+  // Speed Profile quick apply (2026-10-15) — one speed, scoped by three switches: All day (on = the
+  // whole day: the row restarts from 00:00 with this speed and everything after it inherits; off =
+  // from a chosen hour, inheriting forward until the next entered hour), All vehicle types (off = one
+  // vehicle type), Zone specific (on = Local or Non-Local only; off = every zone the vehicle runs).
+  // Replaces the old per-row "Apply all-day / to all vehicles / across zones" buttons.
+  setSpeedQA(patch) { this.setState({ speedQA: Object.assign({}, this.state.speedQA || {}, patch) }); }
+  applySpeedQuick() {
+    const q = this.state.speedQA || {}, draft = this.state.speedProfileDraft;
+    if (!draft) return;
+    const sp = Math.round(Number(q.speed));
+    if (!(sp > 0)) { this.showToast('Enter a speed (km/h) to apply', '#C77B00'); return; }
+    const zones = this.state.speedProfileVehicleZones || {};
+    const vehicles = Object.assign({}, draft.vehicles);
+    let touched = 0;
+    (this.state.speedProfileVehicleTypes || []).forEach(vt => {
+      if (!q.allVeh && vt !== q.veh) return;
+      const vz = zones[vt] || { local: true, zonal: true };
+      const e = Object.assign({}, vehicles[vt] || { local: draft.bandStarts.map(() => ''), zonal: draft.bandStarts.map(() => '') });
+      ['local', 'zonal'].forEach(z => {
+        if (!vz[z]) return;
+        if (q.zoneSpecific && q.zone !== z) return;
+        let arr = (e[z] || draft.bandStarts.map(() => '')).slice();
+        if (q.allDay) arr = draft.bandStarts.map((_, i) => (i === 0 ? sp : ''));
+        else arr[q.hourIdx || 0] = sp;
+        e[z] = arr; touched++;
+      });
+      vehicles[vt] = e;
+    });
+    if (!touched) { this.showToast('No vehicle \u00d7 zone rows match that selection', '#C77B00'); return; }
+    this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }), speedProfileErrors: [] });
+    this.showToast(sp + ' km/h applied to ' + touched + ' row' + (touched === 1 ? '' : 's') + (q.allDay ? ', all day' : ' from ' + draft.bandStarts[q.hourIdx || 0]), '#128A3E');
+  }
   saveSpeedProfileModal() {
+    if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 Design Inputs are read-only.', '#C77B00'); return; }
     const scCode = this.state.speedProfileSC;
     const draft = this.state.speedProfileDraft;
     if (!scCode || !draft) return;
@@ -11542,7 +11594,7 @@ class NDCApp extends React.Component {
     });
     // In review mode, show the actually-resolved matrix (inheritance applied) — exactly what
     // Save will persist, not the raw draft with its gaps still showing.
-    const resolvedVehicles = reviewMode ? applySpeedProfileInheritance(draft.vehicles, vehicleZones) : draft.vehicles;
+    const resolvedVehicles = (reviewMode || readOnly) ? applySpeedProfileInheritance(draft.vehicles, vehicleZones) : draft.vehicles;
     const rows = [];
     vehicleTypeNames.forEach(vt => {
       const e = resolvedVehicles[vt] || { local: [], zonal: [] };
@@ -11553,13 +11605,15 @@ class NDCApp extends React.Component {
       // separately-zoned rows for the "same" vehicle type correctly produce two rows here.
       [['local', 'Local', zones.local], ['zonal', 'Non-Local', zones.zonal]].filter(([, , applicable]) => applicable).forEach(([zoneKey, zoneLabel]) => {
         const arr = e[zoneKey] || draft.bandStarts.map(() => '');
+        // Inheritance shown live (2026-10-15): a blank hour displays, greyed, the speed it will inherit.
+        const inh = []; let lastV = ''; arr.forEach(v => { if (v !== '' && v != null) lastV = v; inh.push(lastV); });
         const hasOtherZone = zoneKey === 'local' ? zones.zonal : zones.local;
         rows.push({
           vehicleType: vt, zoneKey, zoneLabel, rowLabel: vt + ' \u2014 ' + zoneLabel,
           hasAny: arr.some(v => v !== '' && v != null),
           hasOtherZone,
           cells: draft.bandStarts.map((b, i) => ({
-            idx: i, label: b, value: arr[i] != null ? arr[i] : '',
+            idx: i, label: b, value: arr[i] != null ? arr[i] : '', inherited: (arr[i] === '' || arr[i] == null) ? inh[i] : '', required: i === 0 && (arr[i] === '' || arr[i] == null),
             onChange: (v) => this.setSpeedCell(vt, zoneKey, i, v === '' ? '' : Number(v)),
           })),
           onFillAllDay: () => this.speedFillSameAllDay(vt, zoneKey),
@@ -11576,6 +11630,22 @@ class NDCApp extends React.Component {
       onReview: () => this.openSpeedProfileReview(),
       onBackToEdit: () => this.backToEditSpeedProfile(),
       onSave: () => this.saveSpeedProfileModal(),
+      // Quick apply (2026-10-15)
+      qa: (() => { const q = st.speedQA || {}; return {
+        speed: q.speed == null ? '' : q.speed, allDay: q.allDay !== false, allVeh: q.allVeh !== false, zoneSpecific: !!q.zoneSpecific,
+        hourIdx: String(q.hourIdx || 0), veh: q.veh || '', zone: q.zone || 'local',
+        hourOptions: draft.bandStarts.map((b, i) => ({ value: String(i), label: 'From ' + b })),
+        vehOptions: vehicleTypeNames, zoneOptions: [{ value: 'local', label: 'Local' }, { value: 'zonal', label: 'Non-Local' }],
+        onSpeed: (e) => this.setSpeedQA({ speed: e.target.value }),
+        onToggleAllDay: () => this.setSpeedQA({ allDay: !(q.allDay !== false) }),
+        onToggleAllVeh: () => this.setSpeedQA({ allVeh: !(q.allVeh !== false) }),
+        onToggleZone: () => this.setSpeedQA({ zoneSpecific: !q.zoneSpecific }),
+        onHour: (e) => this.setSpeedQA({ hourIdx: Number(e.target.value) }),
+        onVeh: (e) => this.setSpeedQA({ veh: e.target.value }),
+        onZone: (e) => this.setSpeedQA({ zone: e.target.value }),
+        onApply: () => this.applySpeedQuick(),
+        desc: 'Sets ' + (Number(q.speed) > 0 ? Math.round(Number(q.speed)) : '\u2014') + ' km/h for ' + (q.allVeh !== false ? 'every vehicle type' : (q.veh || '\u2014')) + ', ' + (q.zoneSpecific ? ((q.zone === 'zonal' ? 'Non-Local' : 'Local') + ' only') : 'all zones') + ', ' + (q.allDay !== false ? 'all day (00:00 onward)' : ('from ' + (draft.bandStarts[q.hourIdx || 0] || '00:00') + ' until the next entered hour')) + '.',
+      }; })(),
     };
   }
 

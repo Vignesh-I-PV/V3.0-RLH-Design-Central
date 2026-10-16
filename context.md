@@ -3712,3 +3712,28 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   vehicles, 1,69,40,850 shipments, peak 07:00; BGS1 31 vehicles / 4,20,497 matching the earlier
   derivation; CSV with 4 bad rows flagged correctly. The full production workbook reports "no SC
   rows" because its arr_matrix sheet is empty.
+
+- **2026-10-15 (later) — Speed Profile editor simplified; reopen crash and past-cycle save fixed.**
+  - **Bug — saved profile wouldn't reopen**: a zone a vehicle type doesn't run is stored as
+    `undefined`; `openSpeedProfileModal` called `.slice()` on it and threw, so the click did
+    nothing for any SC with a Local-only / Non-Local-only vehicle type (DELS in the recording) —
+    and every view-only opener in Design Creation (Route Planner Step 4 vehicle check, Route
+    Scheduler Step 1 rows, Route Scheduler plan cards in Design Review / Ops Alignment /
+    Finalise) failed the same way. Missing zone now = blank.
+  - **Bug — past cycles saved**: the editor didn't check `isRlhCyclePast()`. Past cycles now open
+    view-only and Save is refused.
+  - **Editor** (same hourly storage — Route Scheduler lookup, CSV upload and view-only screens
+    unchanged): Quick apply bar replaces the per-row action buttons — Speed + three switches:
+    All day (off → "From HH:00"), All vehicle types (off → pick one), Zone specific (on → Local or
+    Non-Local); a sentence states exactly what Apply will do (`applySpeedQuick`). All day restarts
+    the row at 00:00 with that speed; a from-hour apply sets that hour and inherits forward.
+    Grid: every row needs 00:00 (empty 00:00 cell outlined red; Preview blocked with the rows
+    named); a blank hour shows, greyed, the speed it inherits from the last entered hour; legend
+    under the grid. "Review & Save" → **Preview** (fully resolved matrix) → **Save**. Reopening
+    shows only the hours where the speed changes as entered (the rest inherited), so it reopens
+    the way it was typed.
+  - **Verification**: jsdom on DELS — 00:00 required blocks Preview for all 5 rows; Quick apply all
+    / Non-Local only / one vehicle from 08:00 behave as described; manual 20:00 entry; greyed
+    inheritance rendered; Preview resolves 25→20 (08:00)→35 (20:00); Save; **reopen works** and
+    shows 25 / 20 / 35 at their hours; view-only opener (Design Creation path) shows the resolved
+    hours; Sep 2026 opens view-only without Quick apply and Save is refused. Earlier suites pass.

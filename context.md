@@ -3803,3 +3803,28 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     (TAT Change → Rain / Weather), rename an L2, delete DC Location's last L2 (L1 kept); pickers map
     every key to its fixed L1; category detection for vehicle / order / dist / split / location.
     Earlier suites pass.
+
+- **2026-10-19 — Production cycle model; global cycle filter archived.**
+  - **Archived** (`08_Global_Cycle_Filter_Archive.md` handover + `archive_cycle.md` verbatim code):
+    Cycle Pick screen (all legs), sidebar Design Cycle switcher (RLH) and NLH/FM cycle label +
+    selector, past-cycle banner, top-bar "Nd to freeze" chip, Home deadline hero, freeze bindings,
+    and the original `selectLeg` / `pickCycle` / `componentDidUpdate`.
+  - **Now**: leg cards go straight into Design Inputs, which are global (always the current month).
+    Route Planner Step 2 and Route Scheduler Step 2 have a **Target Month** select (current −6 … +12,
+    default current) stamped on runs / scheduler plans as `cycleMonth`. Design Review, Ops Alignment
+    and Network Map read plans / runs / scheduler plans from every month, narrowed by ONE global
+    month filter in the top bar (`monthFilter`, default "All months", not per SC; breadcrumbs show
+    it). `pickCycle` merges every month's items; `componentDidUpdate` writes each back to its own
+    month's bucket. Freeze countdown removed. engine.js unchanged.
+  - **Performance fixes** (exposed by loading ~205 plans / ~100 scheduler plans): `genDcRows()`
+    rebuilt a ~12.6k-entry LMDC lookup per call — now cached on `d.lmdcs`;
+    `computeSchedulerMetricsFor()` recomputed every scheduler plan every render — now memoised per
+    plan with full invalidation (data, overrides, LMDC edits, month, Speed Profile version).
+    Full render 5.7 s → ~0.1 s.
+  - **Verification**: compile clean, 0 unresolved names, 0 JSX-text escapes. jsdom: legs straight in
+    (RLH, NLH); plans merged by month (5 seeded months × 41); filter options April 2026 … October
+    2027 + All months; Sep filter narrows 205 → 41 plans and persists into Ops Alignment;
+    breadcrumb; Network Map; Route Planner and Route Scheduler Target Month (19 months, default
+    current); a scheduler plan targeted to Dec 2026 persists to Dec's bucket only and shows under a
+    Dec filter; Design Inputs never show the filter. Earlier suites (SC Master / AutoDML, Speed
+    Profile & Configurations, NLH ingestion) pass. Seed data for future months: to discuss next.

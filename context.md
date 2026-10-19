@@ -3737,3 +3737,69 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     inheritance rendered; Preview resolves 25→20 (08:00)→35 (20:00); Save; **reopen works** and
     shows 25 / 20 / 35 at their hours; view-only opener (Design Creation path) shows the resolved
     hours; Sep 2026 opens view-only without Quick apply and Save is refused. Earlier suites pass.
+
+- **2026-10-15 (later) — SC Master: AutoDML vs user-input fields; SC list = AutoDML ∪ platform.**
+  - **engine.js**: new `store.autodmlSc` (AutoDML's view per SC: lat, lng, volCap, active) and
+    `ingestAutodmlScFeed(store, feed, month)` — what a backend sync would call. New codes are added
+    with only the AutoDML facts; coordinates always follow AutoDML; AutoDML `active: false`
+    deactivates (and `true` reactivates). `materializeRLHScs()`: lat/lng from AutoDML when known;
+    **SC Capacity (Volume) = user value (`volCapUser`, Class D) if entered, else AutoDML's, else the
+    legacy Class B value** — a user value is kept even if AutoDML later changes; `source`
+    (AutoDML | Manual); `scTypeSet` (SC Type was really set — `dispatchRoleType` still defaults to
+    LMSC for display); `name` falls back to the code. Demo seed: every generated SC (incl. MDC
+    nodes) is in the feed; UJN2 (an FMSC) is deactivated on AutoDML; **BBSS, DHNS, GHYS** are new
+    from AutoDML with nothing configured.
+  - **Readiness** (`scMissingFields`): an active, non-MDC SC needs action if it lacks Coordinates,
+    SC Capacity, Sort Capacity, SC Type, Zone, RLH Docks, Local / Non-Local TP Limit, or any of the
+    4 mandatory POCs. Defaults (Local Distance Threshold, Max Hold, NLH Docks, Operating Hours)
+    never count.
+  - **SC Master table**: columns now SC Code → Status → SC Coordinates → SC Capacity → SC Name →
+    rest (header + body reordered together; tracks and min-width follow). Rows needing action
+    sort first, tinted red with a red left edge, "Needs action" chip (tooltip lists the fields),
+    missing cells show red "Missing"; then Active, then Deactivated. Red banner shows only the
+    count ("3 SCs need action"). Status is locked (lock icon) for AutoDML SCs — it follows the
+    backend; Manual SCs keep the toggle; label "Deactivated". Manual SCs get a "Manual" chip.
+  - **Edit / Add SC form**: same order; Code and Coordinates locked for AutoDML SCs; SC Capacity
+    pre-filled (AutoDML default) and editable — stored as the user's value only if it differs
+    from AutoDML (or the SC already has one / is Manual). SC Type and Zone have no default
+    ("Select…"); save blocked until Capacity, Sort Capacity, Type, Zone, RLH Docks, both TP
+    limits (and Coordinates for a Manual SC) are filled, plus the mandatory POCs.
+  - **Uploads**: Volume Capacity → the user value (same rule); Latitude / Longitude and STATUS are
+    ignored for AutoDML SCs (applied for Manual ones). Template descriptions updated.
+  - **Design Creation**: Route Planner Step 1's existing "SC Master details missing" strip (with
+    Fix in SC Master) is now driven by real readiness and names the missing fields — it was
+    hard-coded to GGNS as a demo. SCs without a Zone appear in a trailing "Zone not set" group
+    instead of being hidden.
+  - **Verification**: jsdom — banner "3 SCs need action"; BBSS / DHNS / GHYS first and red;
+    header order; DELS status locked; UJN2 Deactivated last; BBSS edit blocked until filled, then
+    ready; DELS capacity 70,000 kept after AutoDML sent 99,999, GHYS took AutoDML's new 41,000;
+    AutoDML `active:false` deactivates AGRS; Manual SC requires coordinates, saves as Manual;
+    Route Planner Step 1 shows the 3 SCs under "Zone not set" with their missing fields;
+    selecting an incomplete SC through Steps 2–4, Route Scheduler, SC Vehicle Availability,
+    export and Network Map — zero runtime errors. Earlier suites pass.
+
+- **2026-10-15 (later) — Speed Profile Quick apply made static; Configurations L1s made static.**
+  1. **Speed Profile Quick apply** — no dropdowns any more: Speed + three switches (All day, All
+     vehicle types, Zone specific) + Apply, so the bar never changes shape. The switches scope
+     relative to the grid cell last clicked (the "selected cell", outlined teal, shown in the
+     sentence under the bar): All day off = from that cell's hour onward; All vehicle types off =
+     that cell's vehicle only; Zone specific on = that cell's zone only. Default selected cell =
+     first row, 00:00. (`speedQA.anchor`, set by `onFocusCell` on every grid cell.)
+  2. **Configurations → Reason Buckets**: L1s are fixed per module (`defaultAppConfig`, enforced by
+     `cfgStaticL1s` on every read — saved configs keep their L2s under the matching fixed L1):
+     Route Planner = Vehicle Change, DC Movement, Route Order Change, Distance Change, New Route /
+     Split, DC Location; Route Scheduler = Cutoff Change, TAT Change, Landing Time Change. Only L2s
+     are added / renamed / deleted; the Add form's L1 is a fixed select; an L1 with no L2 stays
+     (placeholder row; flag modals then offer only "Others"). Starter L2s carried over from the old
+     buckets (Route Scheduler SC/LH/LM buckets merged by field).
+  - **Flag modals**: the L1 is fixed by what was changed (`reasonPickerFor` offers just that L1;
+    select disabled). Route Planner's change detection (`rpNcCategories`) now yields the six
+    categories — vehicle type → Vehicle Change; DC moved to another existing route → DC Movement;
+    touch-point → Route Order Change; distance → Distance Change; split / new route → New Route /
+    Split; lat/lng → DC Location — one L2 per category flagged, as before. Route Scheduler keys
+    (SC_cutoff, LH_tat, LM_landing …) map on the field → Cutoff / TAT / Landing Time Change.
+  - **Verification**: jsdom — Quick apply bar has 0 dropdowns; selected-cell scoping (vehicle from
+    08:00; all Non-Local rows all day) applied correctly; Configurations show the fixed L1s, add
+    (TAT Change → Rain / Weather), rename an L2, delete DC Location's last L2 (L1 kept); pickers map
+    every key to its fixed L1; category detection for vehicle / order / dist / split / location.
+    Earlier suites pass.

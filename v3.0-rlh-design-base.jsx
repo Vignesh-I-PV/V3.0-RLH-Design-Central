@@ -67,56 +67,7 @@ function View(B, self) {
 <div style={css(`font-size:10px; font-weight:600; color:#8E9AC4; letter-spacing:0.04em;`)}>{activeLegShort} · ALL DESIGN LEGS</div>
 </div>
 </div>
-{/* design cycle selector -- RLH's real interactive switcher, or a simple read-only label for
-    NLH/FM (whose real switcher lives inline on their Design Inputs screen instead) */}
-{(showRlhCycleSwitcher) ? (<>
-<div style={css(`padding:0 14px 8px; position:relative;`)}>
-<button onClick={toggleCycle} style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:9px 11px; border:1px solid #243056; border-radius:8px; background:#111B3C; cursor:pointer; text-align:left;`)} title={"Switch design cycle"}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#7E8AB8"} strokeWidth={"1.7"}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 9.5h16M8.5 3v3.5M15.5 3v3.5"} strokeLinecap={"round"} /></svg>
-<div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`font-size:9.5px; font-weight:600; color:#8E9AC4; letter-spacing:0.05em;`)}>DESIGN CYCLE</div>
-<div style={css(`font-size:13px; font-weight:600; color:#E8ECF7; line-height:1.2;`)}>{cycleName}</div>
-</div>
-<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#7E8AB8"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</button>
-{(cycleOpen) ? (<>
-<div onClick={closeCycle} style={css(`position:fixed; inset:0; z-index:40;`)} />
-<div style={css(`position:absolute; left:14px; right:14px; top:100%; margin-top:5px; z-index:50; background:#15224A; border:1px solid #2A3866; border-radius:8px; padding:6px; box-shadow:0 14px 34px rgba(0,0,0,0.45);`)}>
-<div style={css(`font-size:9.5px; font-weight:700; color:#8E9AC4; letter-spacing:0.05em; padding:6px 8px 4px;`)}>SWITCH CYCLE</div>
-{(cycleOptions || []).map((c, __i1) => (<React.Fragment key={__i1}>
-<button onClick={c.onSelect} style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:8px 10px; border:none; background:${c.rowBg}; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#1E2C57;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:9px; width:100%; padding:8px 10px; border:none; background:${c.rowBg}; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#1E2C57;`)}>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12.5px; font-weight:600; color:#E8ECF7;`)}>{c.name}</div><div style={css(`font-size:10.5px; color:#8E9AC4;`)}>{c.meta}</div></div>
-{(c.active) ? (<><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#6E8BFF"} strokeWidth={"2.4"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
-</button>
-</React.Fragment>))}
-<button onClick={toggleCyclePicker} style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:7px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#1E2C57;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:9px; width:100%; padding:7px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#1E2C57;`)}>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12px; font-weight:500; color:#9AB4FF;`)}>Start a new cycle for another month…</div></div>
-<svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#7E8AB8"} strokeWidth={"2.2"}><path d={cyclePickerChevron} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</button>
-{(cyclePickerOpen) ? (<>
-{(pastCycleOptions || []).map((p, __i2) => (<React.Fragment key={__i2}>
-<button onClick={p.onSelect} style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:6px 10px 6px 22px; border:none; background:${p.rowBg}; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#1E2C57;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; gap:9px; width:100%; padding:6px 10px 6px 22px; border:none; background:${p.rowBg}; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#1E2C57;`)}>
-<div style={css(`flex:1; min-width:0;`)}><div style={css(`font-size:12px; font-weight:600; color:#C8D4F5;`)}>{p.name}</div><div style={css(`font-size:10px; color:#8E9AC4;`)}>{p.meta}</div></div>
-{(p.active) ? (<><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#6E8BFF"} strokeWidth={"2.4"}><path d={"M20 6L9 17l-5-5"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
-</button>
-</React.Fragment>))}
-{(pastCycleOptions && pastCycleOptions.length === 0) ? (<><div style={css(`padding:8px 22px; font-size:11.5px; color:#6E7899;`)}>All months in the rolling window already have a cycle.</div></>) : null}
-</>) : null}
-</div>
-</>) : null}
-</div>
-</>) : (<>
-<div style={css(`padding:0 14px 10px;`)}>
-<div style={css(`display:flex; align-items:center; gap:9px; width:100%; padding:9px 11px; border:1px solid #243056; border-radius:8px; background:#111B3C;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#7E8AB8"} strokeWidth={"1.7"}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 9.5h16M8.5 3v3.5M15.5 3v3.5"} strokeLinecap={"round"} /></svg>
-<div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`font-size:9.5px; font-weight:600; color:#8E9AC4; letter-spacing:0.05em;`)}>DESIGN CYCLE</div>
-<div style={css(`font-size:13px; font-weight:600; color:#E8ECF7; line-height:1.2;`)}>{legSidebarCycleLabel}</div>
-</div>
-</div>
-<div style={css(`font-size:10px; color:#6E7899; padding:6px 2px 0;`)}>Switch from Design Inputs</div>
-</div>
-</>)}
+
 {/* nav */}
 <nav style={css(`flex:1; overflow-y:auto; padding:4px 12px 12px;`)}>
 {(navGroups || []).map((group, __i4) => (<React.Fragment key={__i4}>
@@ -153,10 +104,7 @@ function View(B, self) {
 <button onClick={comingSoonSearch} aria-label={"Search"} title={"Search across sort centres, plans and runs"} style={css(`display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; cursor:pointer; color:#8E96A3; font-family:inherit; flex-shrink:0;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#C3C9D4; color:#5A5E66;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E6EBF2; border-radius:8px; background:#F7F8FB; cursor:pointer; color:#8E96A3; font-family:inherit; flex-shrink:0;`, `border-color:#C3C9D4; color:#5A5E66;`)}>
 <svg aria-hidden={"true"} width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 </button>
-<div style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border-radius:999px; background:${freezeMiniBg}; color:${freezeMiniFg}; font-size:12px; font-weight:600; white-space:nowrap;`)}>
-<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.9"}><path d={"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-        {freezeMiniText}
-      </div>
+{(showMonthFilter) ? (<><label style={css(`display:flex; align-items:center; gap:7px; font-size:12px; color:#5A5E66;`)} title={"Filters Design Review, Ops Alignment and Network Map by the month each plan was designed for"}><svg aria-hidden={"true"} width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><rect x={"3"} y={"5"} width={"18"} height={"16"} rx={"2"} /><path d={"M3 10h18M8 3v4M16 3v4"} strokeLinecap={"round"} /></svg><select value={monthFilter} onChange={onMonthFilter} aria-label={"Month"} style={css(`height:32px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; cursor:pointer;`)}>{(monthFilterOptions || []).map((o, __iMF) => (<React.Fragment key={__iMF}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></label></>) : null}
 {(showPersonaToggle) ? (<>
 <div style={css(`display:flex; align-items:center; gap:8px; padding:4px 7px 4px 9px; border:1px dashed #C3C9D4; border-radius:999px;`)} title={"Switch your view — Planner or Ops Lead"}>
 <span style={css(`font-size:9.5px; font-weight:700; letter-spacing:0.07em; color:#5A5E66;`)}>View as</span>
@@ -259,52 +207,7 @@ Continue
 </div>
 </div>
 </>) : null}
-{/* ===== CYCLE PICK (2026-08-26 fix) — the explicit gate every leg passes through before any
-     sidebar/content loads. Real <select>, two groups: existing cycles vs. start a new one. ===== */}
-{(isCyclePick) ? (<>
-<div style={css(`padding:48px 40px; max-width:620px; margin:0 auto;`)}>
-<button onClick={goLanding} style={css(`display:flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#5A5E66; margin-bottom:24px;`)}>
-<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-All design legs
-</button>
-<div style={css(`font-size:20px; font-weight:700; color:#14171F; margin-bottom:5px;`)}>{cyclePickLegTitle}</div>
-<div style={css(`font-size:13px; color:#5A5E66; margin-bottom:28px;`)}>{cyclePickLegSubtitle}</div>
-<div style={css(`padding:26px; border:1px dashed #D7DCE5; border-radius:12px; background:#F7F8FB;`)}>
-<div style={css(`display:flex; align-items:center; gap:9px; margin-bottom:14px;`)}>
-<svg width={"18"} height={"18"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"1.8"}><path d={"M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2zM4 9.5h16M8.5 3v3.5M15.5 3v3.5"} strokeLinecap={"round"} /></svg>
-<span style={css(`font-size:14px; font-weight:700; color:#14171F;`)}>Select a cycle to continue</span>
-</div>
-<div style={css(`font-size:12px; color:#8E96A3; margin-bottom:16px;`)}>Pick an existing cycle to load its data, or start a new one — a new cycle inherits its masters from the most recent existing cycle for this leg, if any.</div>
-<div style={css(`position:relative;`)}>
-<button onClick={toggleCyclePick} style={css(`display:flex; align-items:center; justify-content:space-between; width:100%; height:44px; border:1px solid #D7DCE5; border-radius:8px; padding:0 14px; font-family:inherit; font-size:13.5px; color:#14171F; background:#fff; cursor:pointer;`)}>
-<span style={css(`color:#8E96A3;`)}>Select a cycle…</span>
-<svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#003F98"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</button>
-{(cyclePickOpen) ? (<>
-<div onClick={toggleCyclePick} style={css(`position:fixed; inset:0; z-index:40;`)} />
-<div style={css(`position:absolute; left:0; right:0; top:100%; margin-top:6px; z-index:50; background:#fff; border:1px solid #E6EBF2; border-radius:10px; padding:6px; box-shadow:0 10px 30px rgba(20,23,31,0.14); max-height:320px; overflow-y:auto;`)}>
-{(cyclePickExistingOpts.length > 0) ? (<>
-<div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.05em; padding:8px 10px 4px;`)}>EXISTING CYCLES</div>
-{(cyclePickExistingOpts || []).map((o, __iCpe) => (<React.Fragment key={__iCpe}>
-<button onClick={o.onSelect} style={css(`display:flex; align-items:center; justify-content:space-between; width:100%; padding:9px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#EEF2FB;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:space-between; width:100%; padding:9px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#EEF2FB;`)}>
-<span style={css(`font-size:13px; font-weight:600; color:#14171F;`)}>{o.label}</span>
-<span style={css(`font-size:11px; color:#8E96A3;`)}>{o.tag}</span>
-</button>
-</React.Fragment>))}
-</>) : null}
-<div style={css(`font-size:10px; font-weight:700; color:#8E96A3; letter-spacing:0.05em; padding:10px 10px 4px;`)}>START NEW CYCLE</div>
-{(cyclePickNewOpts || []).map((o, __iCpn) => (<React.Fragment key={__iCpn}>
-<button onClick={o.onSelect} style={css(`display:flex; align-items:center; justify-content:space-between; width:100%; padding:9px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`)} onMouseEnter={(e) => hoverOn(e, `background:#EEF2FB;`)} onMouseLeave={(e) => hoverOff(e, `display:flex; align-items:center; justify-content:space-between; width:100%; padding:9px 10px; border:none; background:transparent; border-radius:7px; cursor:pointer; text-align:left; font-family:inherit;`, `background:#EEF2FB;`)}>
-<span style={css(`font-size:13px; font-weight:500; color:#003F98;`)}>{o.label}</span>
-<span style={css(`font-size:11px; color:#8E96A3;`)}>{o.tag}</span>
-</button>
-</React.Fragment>))}
-</div>
-</>) : null}
-</div>
-</div>
-</div>
-</>) : null}
+
 {/* ===== LEG STUB (2026-08-25) — NLH / FM Carting shell: cycle selector + Design Inputs placeholder.
      Real masters/uploads for these legs are a later build pass -- this is nav + cycle infra only. ===== */}
 {(isLegInputs) ? (<>
@@ -314,24 +217,7 @@ All design legs
 <svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M15 18l-6-6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 All modules
 </button>
-<div style={css(`position:relative;`)}>
-<button onClick={toggleLegCycle} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
-              {legCycleLabel}
-{(legCycleIsPast) ? (<><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"}><path d={"M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></>) : null}
-<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</button>
-{(legCycleOpen) ? (<>
-<div style={css(`position:absolute; top:36px; left:0; width:220px; max-height:280px; overflow-y:auto; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.08); z-index:20; padding:6px;`)}>
-{(legCycleOptions || []).map((o, __iLegCyc) => (<React.Fragment key={__iLegCyc}>
-<div onClick={o.onSelect} style={css(`display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border-radius:6px; cursor:pointer; background:${o.active ? '#EEF2FB' : 'transparent'};`)}>
-<span style={css(`font-size:12.5px; font-weight:${o.active ? '700' : '500'}; color:#14171F;`)}>{o.label}</span>
-{(o.isPast) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#8E96A3;`)}>PAST</span></>) : null}
-{(o.isCurrent) ? (<><span style={css(`font-size:9.5px; font-weight:700; color:#128A3E;`)}>CURRENT</span></>) : null}
-</div>
-</React.Fragment>))}
-</div>
-</>) : null}
-</div>
+
 </div>
 <div style={css(`display:flex; align-items:center; gap:4px; border-bottom:1px solid #E6EBF2; margin-bottom:20px;`)}>
 {(legTabs || []).map((t, __iLegTab) => (<React.Fragment key={__iLegTab}>
@@ -341,12 +227,7 @@ All modules
 {/* Leg past-cycle read-only banner (later session) — NLH previously had zero past-cycle
      enforcement; this mirrors RLH's own banner. NLH/FM have no Finalise-Directly-style bypass,
      so unlike RLH's banner there's no "X remains available" carve-out to mention. */}
-{(legCycleIsPast) ? (<>
-<div style={css(`display:flex; align-items:center; gap:10px; padding:11px 16px; background:#FBF1DF; border:1px solid #EDD9AF; border-radius:8px; margin-bottom:16px;`)}>
-<svg width={"16"} height={"16"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"1.9"} style={css(`flex-shrink:0;`)}><path d={"M6 10V8a6 6 0 1112 0v2M5 10h14v10H5z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-<span style={css(`font-size:12.5px; color:#14171F;`)}><strong>{legCycleLabel}</strong> is a past cycle — Design Inputs are read-only for {activeLegShort}.</span>
-</div>
-</>) : null}
+
 {/* ===== VOLUME INPUTS (2026-08-26 rebuild) — mirrors RLH's ACTIVE THIS CYCLE + library pattern for
      NLH (FMSC Manifestation + LMSC Landing); FM keeps its simpler single-card version. ===== */}
 {(legIsVolumeTab) ? (<>
@@ -665,39 +546,7 @@ All modules
 <button onClick={dismissCoach} aria-label={"Dismiss"} style={css(`border:none; background:transparent; cursor:pointer; padding:4px; color:#8E96A3; display:flex; flex-shrink:0;`)} title={"Dismiss"}><svg width={"14"} height={"14"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 6l12 12M18 6L6 18"} strokeLinecap={"round"} /></svg></button>
 </div>
 </>) : null}
-{/* DEADLINE HERO */}
-<div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:20px 26px; display:flex; flex-wrap:wrap; gap:20px 32px; align-items:center;`)}>
-<div style={css(`flex-shrink:0; display:flex; align-items:center; gap:16px; padding-right:28px; border-right:1px solid #E6EBF2;`)}>
-<div>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.07em; color:#7A8094; margin-bottom:6px;`)}>TIME TO FREEZE</div>
-<div style={css(`display:flex; align-items:center; gap:9px;`)}>
-<span style={css(`font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:52px; line-height:1; color:#003F98;`)}>{hero.days}</span>
-<span style={css(`font-size:13px; color:#5A5E66; line-height:1.4;`)}>days<br />left</span>
-</div>
-<div style={css(`display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:4px 10px; border-radius:999px; background:${hero.healthBg}; color:${hero.healthFg}; font-size:11.5px; font-weight:700;`)}>
-<span style={css(`width:6px; height:6px; border-radius:50%; background:${hero.healthDot};`)} />{hero.healthLabel}
-                </div>
-</div>
-</div>
-<div style={css(`flex:1; min-width:480px;`)}>
-<div style={css(`font-size:10.5px; font-weight:700; letter-spacing:0.07em; color:#7A8094; margin-bottom:14px;`)}>CYCLE MILESTONES</div>
-<div style={css(`display:flex; align-items:flex-start;`)}>
-{(milestones || []).map((ms, __i6) => (<React.Fragment key={__i6}>
-<div style={css(`flex:1; min-width:0;`)}>
-<div style={css(`display:flex; align-items:center;`)}>
-<div style={css(`width:11px; height:11px; border-radius:50%; flex-shrink:0; background:${ms.dotBg}; border:2px solid ${ms.dotBorder};`)} />
-<div style={css(`flex:1; height:1.5px; background:${ms.lineBg};`)} />
-</div>
-<div style={css(`margin-top:9px; padding-right:12px;`)}>
-<div style={css(`font-size:10.5px; font-weight:600; color:#7A8094;`)}>{ms.date}</div>
-<div style={css(`font-size:12px; font-weight:700; color:#14171F; margin-top:2px; line-height:1.25;`)}>{ms.label}</div>
-<div style={css(`font-size:11px; color:#5A5E66; margin-top:2px;`)}>{ms.stateLabel}</div>
-</div>
-</div>
-</React.Fragment>))}
-</div>
-</div>
-</div>
+
 {/* WORK QUEUE */}
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; margin:24px 2px 14px;`)}>
 <div>
@@ -2321,13 +2170,14 @@ All modules
 <div style={css(`font-size:12px; color:#5A5E66; margin-top:2px;`)}>Pick the operating mode and Historical Weight per SC, and a reference plan where required. Vehicles are configured next.</div>
 </div>
 {/* 2026-09-27 fix (item 5) — Run Name moved back here from Step 4, matching production.
-    Target Month deliberately NOT added alongside it — that stays a global, panel-level
-    setting (the existing cycle picker), not a per-run field duplicated into this step. */}
+    (2026-10-19: Target Month now sits beside it — the global cycle picker was removed; see
+    08_Global_Cycle_Filter_Archive.md.) */}
 {/* 2026-09-30 — Run Name + New Node Addition merged into one compact row (was two tall cards).
     Objective Time field removed from Step 2: every trigger uses the Configurations default. */}
 <div style={css(`display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; margin-bottom:14px;`)}>
 <span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>RUN NAME</span>
 <input value={runName} onInput={onRunNameChange} placeholder={"Optional — defaults to the Run ID"} style={css(`flex:1; min-width:200px; max-width:380px; height:32px; padding:0 11px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; margin-left:8px;`)} title={"The month this design is planned for \u2014 current month 6 back to 12 ahead"}>TARGET MONTH</span><select value={targetMonth} onChange={onTargetMonthChange} aria-label={"Target month"} style={css(`height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; cursor:pointer;`)}>{(targetMonthOptions || []).map((o, __itarget) => (<React.Fragment key={__itarget}><option value={o.value}>{o.label}</option></React.Fragment>))}</select>
 <span style={css(`width:1px; height:22px; background:#E6EBF2;`)} />
 <label onClick={onToggleNewNodeMode} style={css(`display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none;`)}>
 <span style={css(`font-size:12.5px; font-weight:600; color:#14171F; white-space:nowrap;`)}>New Node Addition mode</span>
@@ -2484,7 +2334,7 @@ All modules
 {(step4HasScs) ? (<>
 {/* 2026-09-27 fix (item 5) — Run Name moved back to Step 2, matching production (was moved
     here from Step 2 in an earlier session; moving it back per direct instruction, keeping
-    Target Month out of it — that stays a global, panel-level setting, not a per-step field). */}
+    Target Month is in Step 2 since 2026-10-19, with the run's other configuration). */}
 {/* 2.6: Validation panel — flags aggregated across all selected SCs */}
 {(step4AnyFlags) ? (<>
 <div style={css(`background:#fff; border:1px solid #E6EBF2; border-radius:10px; overflow:hidden; margin-bottom:14px;`)}>
@@ -2836,6 +2686,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:flex; align-items:center; gap:16px; flex-wrap:wrap; background:#fff; border:1px solid #E6EBF2; border-radius:8px; padding:10px 16px; margin-bottom:14px;`)}>
 <span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>RUN NAME</span>
 <input value={schedRunName} onInput={onSchedRunNameChange} placeholder={"Optional — defaults to the Run ID"} style={css(`flex:1; min-width:200px; max-width:380px; height:32px; padding:0 11px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; box-sizing:border-box; outline:none;`)} />
+<span style={css(`font-size:10.5px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap; margin-left:8px;`)} title={"The month this design is planned for \u2014 current month 6 back to 12 ahead"}>TARGET MONTH</span><select value={schedTargetMonth} onChange={onSchedTargetMonthChange} aria-label={"Target month"} style={css(`height:32px; padding:0 10px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12.5px; color:#14171F; background:#fff; cursor:pointer;`)}>{(schedTargetMonthOptions || []).map((o, __ischedT) => (<React.Fragment key={__ischedT}><option value={o.value}>{o.label}</option></React.Fragment>))}</select>
 </div>
 <div style={css(`display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;`)}>
 <div style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Per-SC operating mode</div>
@@ -3131,7 +2982,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(hasCurSC) ? (<>
 {/* L1→L2→L3 breadcrumb: cycle › SC › plan */}
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{cycleName}</span>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{monthFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#003F98;`)}>{curCode}</span>
 {(reviewDetail.open) ? (<>
@@ -3991,7 +3842,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(aSel.exists && aSel.showCard) ? (<>
 <div style={css(`padding:20px 26px;`)}>
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{cycleName}</span>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{monthFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>{aSel.statusLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
@@ -4099,7 +3950,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`flex:1; overflow-y:auto; padding:20px 26px;`)}>
 {/* L1→L2→L3 breadcrumb: cycle › status › SC — same pattern as Design Review's cycle › SC › plan */}
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{cycleName}</span>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{monthFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>{aSel.statusLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
@@ -5076,7 +4927,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(oSel.exists && oSel.showCard) ? (<>
 <div style={css(`padding:20px 26px;`)}>
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{cycleName}</span>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{monthFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>{opsFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
@@ -5124,7 +4975,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`flex:1; overflow-y:auto; padding:20px 26px;`)}>
 {/* L1→L2→L3 breadcrumb: cycle › status › SC — same pattern as Design Review's cycle › SC › plan */}
 <div style={css(`display:flex; align-items:center; gap:5px; margin-bottom:12px; font-size:11.5px; color:#8E96A3; flex-wrap:wrap;`)}>
-<span style={css(`font-weight:600; color:#5A5E66;`)}>{cycleName}</span>
+<span style={css(`font-weight:600; color:#5A5E66;`)}>{monthFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-weight:600; color:#5A5E66;`)}>{opsFilterLabel}</span>
 <svg width={"10"} height={"10"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C3C9D4"} strokeWidth={"2.2"}><path d={"M9 18l6-6-6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
@@ -8086,7 +7937,9 @@ class NDCApp extends React.Component {
   // Every leg (including RLH) now stops at an explicit cycle-pick step first -- selecting a leg
   // alone creates nothing and loads nothing.
   selectLeg(leg) {
-    this.setState({ activeLeg: leg, view: 'cyclepick', legCycleOpen: false });
+    // 2026-10-19 — no cycle pick any more: Design Inputs are global (current month), so every leg goes
+    // straight in. RLH loads plans / runs / scheduler plans from every month (see pickCycle).
+    this.setState({ activeLeg: leg, legCycleOpen: false }, () => this.pickCycle(leg, currentMonthKey()));
   }
   // pickCycle() -- the ONE real place a cycle actually gets loaded/created, used by the initial
   // cycle-pick screen AND by the in-app cycle switcher (old sidebar switcher for RLH, legstub's
@@ -8105,11 +7958,20 @@ class NDCApp extends React.Component {
       // bucket (real per-cycle isolation, see componentDidUpdate below for how edits get saved
       // back), not a single flat array shared across every month.
       const bucket = this.engineStore.rlhCycleData && this.engineStore.rlhCycleData[month] ? this.engineStore.rlhCycleData[month] : emptyRlhTransactional();
+      // 2026-10-19 — plans / runs / scheduler plans from EVERY month, each tagged with its month
+      // (cycleMonth = the month it was designed for); everything else (Design Inputs) is this month's.
+      const allBuckets = this.engineStore.rlhCycleData || {};
+      const merged = { plans: [], runs: [], schedulerPlans: [] }; const seen = {};
+      Object.keys(allBuckets).sort().reverse().forEach(m => ['plans', 'runs', 'schedulerPlans'].forEach(k => (allBuckets[m][k] || []).forEach(x => {
+        const key = k + ':' + x.id; if (seen[key]) return; seen[key] = true;
+        merged[k].push(x.cycleMonth ? x : Object.assign({}, x, { cycleMonth: m }));
+      })));
       patch.data = Object.assign({}, this.state.data, bucket, {
         scs: materializeRLHScs(this.engineStore, month),
         VEH: materializeVehicleMasterLeg(this.engineStore, 'rlh', month),
         scVehAvail: materializeScVehAvailLeg(this.engineStore, 'rlh', month),
         lmdcs: materializeLmdcEntities(this.engineStore, 'rlh', month),
+        plans: merged.plans, runs: merged.runs, schedulerPlans: merged.schedulerPlans,
       });
     }
     this.setState(patch, () => {
@@ -8118,10 +7980,10 @@ class NDCApp extends React.Component {
       // month already visited would stomp on any real edits made there since).
       if (leg === 'rlh') {
         this._seedFeedbackDone = this._seedFeedbackDone || {};
-        if (!this._seedFeedbackDone[month]) { this._seedFeedbackDone[month] = true; this.seedSchedDemoFeedback(); }
+        if (!this._seedFeedbackDone.all) { this._seedFeedbackDone.all = true; this.seedSchedDemoFeedback(); }
       }
     });
-    this.showToast(alreadyCreated ? ('Loaded ' + monthLabel(month)) : ('Started a new cycle for ' + monthLabel(month) + ' — masters inherited from the previous cycle'), '#003F98');
+    // (2026-10-19) no "Loaded <month>" toast — there is no cycle to load any more.
   }
   // switchCycle() kept as a thin alias -- legstub's own selector already calls this name.
   switchCycle(leg, month) { this.pickCycle(leg, month); }
@@ -8139,7 +8001,14 @@ class NDCApp extends React.Component {
       // Cycle just switched away from prevMonth -- persist whatever prevMonth's data last was.
       if (prevState.data) this.engineStore.rlhCycleData[prevMonth] = extractRlhTransactional(prevState.data);
     } else if (this.state.data !== prevState.data) {
-      this.engineStore.rlhCycleData[curMonth] = extractRlhTransactional(this.state.data);
+      // 2026-10-19 — plans / runs / scheduler plans hold every month (tagged cycleMonth): each is written
+      // back to its own month's bucket; the rest (Design Inputs) to the current month.
+      const tx = extractRlhTransactional(this.state.data);
+      const byMonth = {};
+      ['plans', 'runs', 'schedulerPlans'].forEach(k => (tx[k] || []).forEach(x => { const m = x.cycleMonth || curMonth; (byMonth[m] = byMonth[m] || { plans: [], runs: [], schedulerPlans: [] })[k].push(x); }));
+      const cur = Object.assign({}, tx, byMonth[curMonth] || { plans: [], runs: [], schedulerPlans: [] });
+      this.engineStore.rlhCycleData[curMonth] = cur;
+      Object.keys(byMonth).forEach(m => { if (m === curMonth) return; this.engineStore.rlhCycleData[m] = Object.assign({}, this.engineStore.rlhCycleData[m] || emptyRlhTransactional(), byMonth[m]); });
     }
   }
   // 2026-08-25 (Phase 4) — NLH/FM Carting masters + uploads + (NLH-only) Design Ingestion.
@@ -8750,7 +8619,7 @@ class NDCApp extends React.Component {
     });
     const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw, zones);
     const cycleMonth = this.state.activeCycleMonth.rlh;
-    setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
+    this._spVer = (this._spVer || 0) + 1; setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
     this.showToast('Speed Profile saved for ' + scCode, '#128A3E');
     this.closeSpeedProfileModal();
   }
@@ -8815,7 +8684,7 @@ class NDCApp extends React.Component {
           const check = isSpeedProfileComplete(vehiclesRaw, zonesSeenBySc[scCode]);
           if (!check.complete) return; // one or more applicable rows missing 00:00 for this SC — skip it, don't error the whole file
           const vehiclesOut = applySpeedProfileInheritance(vehiclesRaw, zonesSeenBySc[scCode]);
-          setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
+          this._spVer = (this._spVer || 0) + 1; setSpeedProfile(this.engineStore, cycleMonth, scCode, vehiclesOut);
           scCount++;
         });
         this.showToast('Speed Profile upload \u00b7 ' + scCount + ' SC' + (scCount === 1 ? '' : 's') + ' updated' + (skippedScCount ? ', ' + skippedScCount + ' skipped (unrecognised SC code)' : ''), scCount > 0 ? '#128A3E' : '#C77B00');
@@ -10442,6 +10311,24 @@ class NDCApp extends React.Component {
     return out;
   }
 
+  // ===== Months (2026-10-19) — production cycle model =====
+  // No global cycle any more: Design Inputs are always the current month; Design Creation picks a
+  // Target Month per run; Design Review, Ops Alignment and Network Map read plans from EVERY month
+  // and narrow them with ONE global month filter (st.monthFilter, default 'all'). Range for both
+  // the Target Month select and the filter: current month -6 .. +12.
+  monthFull(m) { const p = String(m || '').split('-'); const N = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; return p.length === 2 ? N[Number(p[1]) - 1] + ' ' + p[0] : String(m || ''); }
+  monthWindow() {
+    const cur = currentMonthKey(); const [y, m] = cur.split('-').map(Number);
+    const out = []; for (let k = 12; k >= -6; k--) { const d = new Date(y, m - 1 + k, 1); out.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')); }
+    return out; // newest first
+  }
+  monthScopedData() {
+    const d = this.state.data || {}; const f = this.state.monthFilter || 'all';
+    if (f === 'all') return d;
+    const inM = (x) => (x.cycleMonth || this.state.activeCycleMonth.rlh) === f;
+    return Object.assign({}, d, { plans: (d.plans || []).filter(inM), runs: (d.runs || []).filter(inM), schedulerPlans: (d.schedulerPlans || []).filter(inM) });
+  }
+
   // ===== Master template I/O helpers (2026-10-15) =====
   downloadB64(name, b64) { try { const bin = atob(b64); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); const blob = new Blob([u8], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); } catch (err) { this.showToast('Download failed', '#D14B4B'); } }
   // sheetRowsFrom(result, isXlsx) — array of string arrays from a CSV text or an .xlsx ArrayBuffer
@@ -10728,7 +10615,7 @@ class NDCApp extends React.Component {
     // 2026-09-28 — each queued run also carries its SC's resolved Step 2 params (Speed Mode, Wave
     // Staggering, Local Distance Threshold, K/J) via step2ParamsFor(), the same resolver the Step 2
     // table shows. Same caveat as runName: runQueue only, d.runs is still static seed data.
-    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0, runName: _runNameNow, params: Object.assign({ newNodeMode: !!this.state.newNodeMode }, this.step2ParamsFor(c)) })));
+    const _merged = _kept.concat(codes.map(c => ({ scCode: c, status: 'Queued', ticks: 0, runName: _runNameNow, cycleMonth: this.state.rpTargetMonth || currentMonthKey(), params: Object.assign({ newNodeMode: !!this.state.newNodeMode }, this.step2ParamsFor(c)) })));
     let _active = _merged.filter(r => r.status === 'In Progress').length;
     for (let i = 0; i < _merged.length && _active < CONCURRENCY; i++) { if (_merged[i].status === 'Queued') { _merged[i].status = 'In Progress'; _merged[i].ticks = 0; _active++; } }
     this.setState({ runQueue: _merged, creationStep: 4 });
@@ -12514,6 +12401,9 @@ class NDCApp extends React.Component {
         : '2fr 0.6fr 0.75fr 0.9fr 1.3fr 0.85fr 0.85fr 0.85fr 1.2fr 1.5fr',
       scProps: scPropsWithHw, refNeeded, hasRefWarning: refNeeded > 0, hwGlobal, hwOptions,
       runName: st.runName || '', onRunNameChange: (e) => this.setState({ runName: e.target.value }),
+      // Target Month (2026-10-19) — the month this run is designed for; -6 .. +12 around the current month.
+      targetMonth: st.rpTargetMonth || currentMonthKey(), onTargetMonthChange: (e) => this.setState({ rpTargetMonth: e.target.value }),
+      targetMonthOptions: this.monthWindow().slice().reverse().map(m => ({ value: m, label: this.monthFull(m) + (m === currentMonthKey() ? ' (current)' : '') })),
       // K \u2014 "New Node Addition mode" (DS-algorithm mode toggle, not "include the new nodes")
       newNodeMode: !!st.newNodeMode, onToggleNewNodeMode: () => this.setState({ newNodeMode: !st.newNodeMode }),
       newNodesTrackBg: st.newNodeMode ? '#003F98' : '#C3C9D4', newNodesKnobX: st.newNodeMode ? '18px' : '2px',
@@ -13196,6 +13086,7 @@ class NDCApp extends React.Component {
       const spDraft = {
         id: parent.id + '-SCHED-' + String(n).padStart(2, '0'), parentPlanId: parent.id,
         runName: (this.state.schedRunName || '').trim(), // 2026-10-15 — Step 2 Run Name; blank = show the Run ID
+        cycleMonth: this.state.schedTargetMonth || currentMonthKey(), // 2026-10-19 — Step 2 Target Month
         scCode: parent.scCode, scName: parent.scName, zone: parent.zone,
         status: 'Draft', createdAt: new Date().toISOString().slice(0, 10), createdBy: 'Pranita Sapkal',
         nlhPlanId: chosenScenario.planId,
@@ -13659,6 +13550,8 @@ class NDCApp extends React.Component {
       schedulerStepper, schedulerStep: step,
       isSchedStep1: step === 1, isSchedStep2: step === 2, isSchedStep3: step === 3,
       schedRunName: st.schedRunName || '', onSchedRunNameChange: (e) => this.setState({ schedRunName: e.target.value }),
+      schedTargetMonth: st.schedTargetMonth || currentMonthKey(), onSchedTargetMonthChange: (e) => this.setState({ schedTargetMonth: e.target.value }),
+      schedTargetMonthOptions: this.monthWindow().slice().reverse().map(m => ({ value: m, label: this.monthFull(m) + (m === currentMonthKey() ? ' (current)' : '') })),
       // Step 1
       zoneChipsStep1, schedulerScGroups, schedulerZoneSections, scsWithFinalEmpty, step1Summary, canNextScheduler1, nlhPicked, selectedScCodesStep1,
       onSelectAllPlans, onSelectAllScsLatest, onClearAllPlans,
@@ -13768,8 +13661,11 @@ class NDCApp extends React.Component {
     // synthesis. isLocal in particular has to be the real, persistent DC-level attribute — a coin
     // flip here would silently disagree with what LMDC Master and Route Scheduler both read.
     const d = this.state.data;
-    const lmdcByCode = {};
-    (d.lmdcs || []).forEach(l => { lmdcByCode[l.code] = l; });
+    // 2026-10-19 perf fix — the LMDC lookup was rebuilt from all ~12.6k LMDCs on EVERY call (once per
+    // route, per plan, per render); with plans from every month loaded that made each render take
+    // 5-7 s. Cached against the d.lmdcs array itself, so any LMDC change still rebuilds it.
+    if (!this._lmdcIdx || this._lmdcIdx.src !== d.lmdcs) { const m = {}; (d.lmdcs || []).forEach(l => { m[l.code] = l; }); this._lmdcIdx = { src: d.lmdcs, map: m }; }
+    const lmdcByCode = this._lmdcIdx.map;
     const dcArr = r.dcs; // array of dc-code strings e.g. ["BDQ234","BDQ567"]
     const n = dcArr.length || 1;
     const baseVol = Math.floor(r.volume / n);
@@ -14025,7 +13921,24 @@ class NDCApp extends React.Component {
     });
     return { parent, routes, cutoffMin, connStartShiftMin, seed, holdOn, maxHoldLocal, maxHoldNonLocal, localSpeed, nonLocalSpeed, routeInfo, fmtTime, hash, resolveDcHours, holdForArrival, roundUp, laneSlotCounts, slotOf };
   }
+  // 2026-10-19 perf — memoised: with scheduler plans from every month loaded this ran for every plan on
+  // every render (~2 s). Cache entry is tied to the plan object, the override, its connection-start
+  // shift, and is dropped whenever st.data, the route-cutoff / DC-TAT overrides, LMDC edits or the month
+  // change, or a Speed Profile is saved (_spVer) — every state input the metrics read.
   computeSchedulerMetricsFor(sp, connStartShiftOverride) {
+    if (!sp) return null;
+    const st = this.state;
+    const key = [connStartShiftOverride === undefined ? 'u' : connStartShiftOverride, (st.schedulerConnStartShiftByRunId || {})[sp.id] || 0, this._spVer || 0].join('|');
+    const deps = [st.data, st.schedRouteCutoffOverride, st.schedDcTatOverride, st.lmdcEdits, (st.activeCycleMonth || {}).rlh];
+    const c = this._schedMetricsCache;
+    this._schedMetricsCache = (c && c.deps.length === deps.length && c.deps.every((x, k) => x === deps[k])) ? c : { deps, map: new WeakMap() };
+    const per = this._schedMetricsCache.map.get(sp) || {};
+    if (Object.prototype.hasOwnProperty.call(per, key)) return per[key];
+    const val = this.computeSchedulerMetricsForUncached(sp, connStartShiftOverride);
+    per[key] = val; this._schedMetricsCache.map.set(sp, per);
+    return val;
+  }
+  computeSchedulerMetricsForUncached(sp, connStartShiftOverride) {
     const info = this.schedulerRouteDcInfo(sp, connStartShiftOverride);
     if (!info) return null;
     return this.deriveSchedulerMetrics(info, sp);
@@ -14845,7 +14758,7 @@ class NDCApp extends React.Component {
   }
 
   alignVals() {
-    const st = this.state, d = st.data;
+    const st = this.state, d = this.monthScopedData(); // 2026-10-19 — global month filter
     const pct = (n) => Math.round(n * 100) + '%';
     const fmtInt = (n) => n.toLocaleString('en-IN');
     const eff = (p) => st.alignStatus[p.id] || p.status;
@@ -16122,7 +16035,7 @@ class NDCApp extends React.Component {
   }
 
   opsVals() {
-    const st = this.state, d = st.data;
+    const st = this.state, d = this.monthScopedData(); // 2026-10-19 — global month filter
     const pct = (n) => Math.round(n * 100) + '%';
     const fmtInt = (n) => n.toLocaleString('en-IN');
     // Keep a plan visible after the Ops Lead submits (it flips Pushed → In Alignment) so the panel retains a
@@ -16799,7 +16712,7 @@ class NDCApp extends React.Component {
   }
 
   mapVals() {
-    const st = this.state, d = st.data;
+    const st = this.state, d = this.monthScopedData(); // 2026-10-19 — global month filter
     const isMap = st.view === 'map' && st.activeLeg === 'rlh';
     // toned-down (desaturated) route palette — softer than the vivid original per design feedback
     const PALETTE = ['#6E82C4', '#6BA083', '#C6A06A', '#C88585', '#7EA3C9', '#9C8AC4', '#C892AC', '#72A39C', '#C99E74', '#96A6D6', '#9BA1AE', '#8FB185'];
@@ -16963,7 +16876,7 @@ class NDCApp extends React.Component {
 
 
   finaliseVals() {
-    const st = this.state, d = st.data;
+    const st = this.state, d = this.monthScopedData(); // 2026-10-19 — global month filter
     const eff = (p) => st.alignStatus[p.id] || p.status;
     const finPlans = d.plans.filter(p => { const s = eff(p); return s === 'Finalised' || s === 'Acknowledged'; })
       .slice().sort((a, b) => (eff(a) === 'Finalised' ? 0 : 1) - (eff(b) === 'Finalised' ? 0 : 1));
@@ -17040,7 +16953,7 @@ class NDCApp extends React.Component {
   }
 
   reviewVals() {
-    const st = this.state, d = st.data;
+    const st = this.state, d = this.monthScopedData(); // 2026-10-19 — global month filter
     // eff(p) mirrors alignVals'/opsVals' own resolver — the plan's true current status is
     // st.alignStatus[p.id], falling back to p.status; needed here (2026-07-31) so a run card can
     // show the CORRECT per-run push status instead of a blanket SC-level flag.
@@ -18106,6 +18019,12 @@ class NDCApp extends React.Component {
         const tag = m === currentMonthKey() ? 'Current month' : monthIsPast(m, currentMonthKey()) ? 'Past' : 'Future';
         return { name: monthLabel(m), meta: tag + ' · not started yet', active: false, rowBg: 'transparent', onSelect: () => this.pickCycle('rlh', m) };
       }),
+      // Global month filter (2026-10-19) — shown in the top bar on Design Review, Ops Alignment and
+      // Network Map; one value for all three screens (not per SC).
+      showMonthFilter: ['review', 'align', 'ops', 'map', 'finalise'].indexOf(st.view) >= 0,
+      monthFilter: st.monthFilter || 'all', monthFilterLabel: (st.monthFilter && st.monthFilter !== 'all') ? this.monthFull(st.monthFilter) : 'All months',
+      monthFilterOptions: [{ value: 'all', label: 'All months' }].concat(this.monthWindow().map(m => ({ value: m, label: this.monthFull(m) }))),
+      onMonthFilter: (e) => this.setState({ monthFilter: e.target.value }),
       freezeMiniText: daysToFreeze + 'd to freeze · ' + health.label, freezeMiniBg: health.miniBg, freezeMiniFg: health.miniFg,
       plannerSegBg: planner ? '#fff' : 'transparent', plannerSegFg: planner ? '#003F98' : '#5A5E66',
       opsSegBg: !planner ? '#fff' : 'transparent', opsSegFg: !planner ? '#003F98' : '#5A5E66',

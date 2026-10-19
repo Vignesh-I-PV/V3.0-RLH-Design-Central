@@ -3828,3 +3828,19 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     current); a scheduler plan targeted to Dec 2026 persists to Dec's bucket only and shows under a
     Dec filter; Design Inputs never show the filter. Earlier suites (SC Master / AutoDML, Speed
     Profile & Configurations, NLH ingestion) pass. Seed data for future months: to discuss next.
+
+- **2026-10-19 (later) — SC Master edit-form highlights; source chip; old-engine guard.**
+  - **Reported "edits don't show / 80 SCs need action"**: reproduced with the new
+    `v3.0-rlh-design-base.jsx` running against the PREVIOUS `engine.js` (pre-AutoDML), which has no
+    `scTypeSet` — every SC read as "SC Type missing", and a saved SC Type could never clear it.
+    With the matching engine only BBSS / DHNS / GHYS need action and edits show immediately
+    (DELS → FMSC, capacity 64,000 verified). Hardening: `scTypeSet === false` is now required to
+    flag SC Type (undefined = older engine → not flagged), and SC Master shows an amber warning
+    when `engine.js` is older than the app (`ingestAutodmlScFeed` / `scSourceOf` missing).
+  - **Edit / Add SC form**: every mandatory field that's blank is outlined red with "Required",
+    live as the form is filled — core (Code, Coordinates for Manual SCs, SC Capacity, SC Type,
+    Zone, Sort Capacity), RLH section (RLH Docks, Local / Non-Local TP Limit) and the 4 mandatory
+    POCs. (`missing` on the `txt` / `sel` descriptors.)
+  - **SC Master table**: the "Needs action" chip is gone; every row shows its source chip —
+    **AutoDML** (blue) or **Manual** (amber). Red row tint, red "Missing" cells, ordering and the
+    count banner are unchanged.

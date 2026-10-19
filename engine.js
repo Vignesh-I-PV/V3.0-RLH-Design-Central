@@ -196,6 +196,9 @@ function makeEmptyStore() {
   return {
     // Class A -- { [code]: { name, lat, lng, zone, statusLog: [{status, effectiveMonth}] } }
     scRegistry: {},
+    // AutoDML SC feed (2026-10-15) -- { [code]: { lat, lng, volCap, active } }: the backend service's
+    // view of each SC. SC list = AutoDML codes UNION SCs added in the platform ("Manual").
+    autodmlSc: {},
     // Class B -- { [code]: { [cycleMonth]: { scType, sortCap, volCap, htp, _clonedFrom } } }
     scCycleFields: {},
     // Class D -- { [leg]: { [table]: { [cycleMonth]: { [entityCode]: {...fields, _clonedFrom} } } } }
@@ -505,6 +508,32 @@ const RLH_ZONES = [
 ];
 
 // Returns the list of SC codes seeded (mostly for test/inspection convenience).
+// ===== AutoDML SC feed (2026-10-15) ==========================================================
+// AutoDML supplies, per SC: coordinates, Volume Capacity and active status. Everything else is a
+// user input in SC Master. ingestAutodmlScFeed() is what a real backend sync would call:
+//  - an SC new to the platform is added (Class A row, active from effectiveMonth) with only the
+//    AutoDML facts — every user field is blank, so it shows up in SC Master as "needs action";
+//  - coordinates always follow AutoDML (they're not user-editable for AutoDML SCs);
+//  - Volume Capacity from AutoDML is the DEFAULT — a user-entered value (Class D `volCapUser`)
+//    wins and is kept even if AutoDML later sends a different number;
+//  - active === false from AutoDML deactivates the SC (Deactivated) from effectiveMonth.
+function ingestAutodmlScFeed(store, feed, effectiveMonth) {
+  store.autodmlSc = store.autodmlSc || {};
+  (feed || []).forEach(f => {
+    if (!f || !f.code) return;
+    const code = f.code;
+    const existed = !!(store.scRegistry[code] && store.scRegistry[code].statusLog.length);
+    if (!existed) addSC(store, code, { name: '', lat: f.lat, lng: f.lng, zone: null }, effectiveMonth);
+    const row = ensureScRegistryRow(store, code);
+    if (f.lat != null) row.lat = f.lat; if (f.lng != null) row.lng = f.lng;
+    const prev = store.autodmlSc[code] || {};
+    store.autodmlSc[code] = { lat: f.lat, lng: f.lng, volCap: f.volCap, active: f.active !== false };
+    if (f.active === false && prev.active !== false) setSCStatus(store, code, 'deactivated', effectiveMonth);
+    else if (f.active !== false && prev.active === false) setSCStatus(store, code, 'active', effectiveMonth);
+  });
+}
+function scSourceOf(store, code) { return (store.autodmlSc || {})[code] ? 'AutoDML' : 'Manual'; }
+
 function seedRLHMasterData(store, opts = {}) {
   const genesisMonth = opts.genesisMonth || RLH_GENESIS_MONTH;
   const count = opts.count || 80;
@@ -628,7 +657,18 @@ function seedRLHMasterData(store, opts = {}) {
     ensureClassDMaterialized(store, 'rlh', 'scMaster', genesisMonth, sc.code, dFields);
   });
 
-  return generated.map(s => s.code);
+  // AutoDML feed (2026-10-15 demo seed): every generated SC is known to AutoDML (coords, Volume
+  // Capacity); one FMSC is deactivated on AutoDML; three SCs are NEW from AutoDML with nothing
+  // configured yet, so SC Master's "needs action" state and Design Creation's missing-details strip
+  // are demonstrable on first load.
+  const firstFmsc = generated.find(s => s.scType === 'FMSC');
+  const feed = generated.map(s => ({ code: s.code, lat: s.lat, lng: s.lng, volCap: s.volCap, active: !(firstFmsc && s.code === firstFmsc.code) }));
+  feed.push({ code: 'BBSS', lat: 20.2961, lng: 85.8245, volCap: 52000, active: true },
+            { code: 'DHNS', lat: 23.7957, lng: 86.4304, volCap: 47000, active: true },
+            { code: 'GHYS', lat: 26.1445, lng: 91.7362, volCap: 39000, active: true });
+  ingestAutodmlScFeed(store, feed, genesisMonth);
+
+  return generated.map(s => s.code).concat(['BBSS', 'DHNS', 'GHYS']);
 }
 
 // Flat shape matches what buildSeed()'s downstream plan/route generation already expects --
@@ -641,10 +681,16 @@ function materializeRLHScs(store, cycleMonth) {
     const b = peekClassB(store, code, cycleMonth) || {};
     const d = peekClassD(store, 'rlh', 'scMaster', cycleMonth, code) || {};
     return {
-      code, name: identity.name, cityCode: d.cityCode || code.slice(0, 3), zone: identity.zone,
-      lat: identity.lat, lng: identity.lng,
+      code, name: identity.name || code, cityCode: d.cityCode || code.slice(0, 3), zone: identity.zone,
+      // 2026-10-15 — AutoDML: coordinates follow the feed; Volume Capacity = user value if entered,
+      // else AutoDML's, else the legacy Class B value. `source` = AutoDML | Manual.
+      lat: ((store.autodmlSc || {})[code] || {}).lat != null ? store.autodmlSc[code].lat : identity.lat,
+      lng: ((store.autodmlSc || {})[code] || {}).lng != null ? store.autodmlSc[code].lng : identity.lng,
+      source: scSourceOf(store, code), autodmlVolCap: ((store.autodmlSc || {})[code] || {}).volCap,
+      scTypeSet: !!b.scType,
       dcCount: d.dcCount || 0, volume: d.volume || 0,
-      sortCap: b.sortCap != null ? b.sortCap : 0, volCap: b.volCap != null ? b.volCap : 0,
+      sortCap: b.sortCap != null ? b.sortCap : 0,
+      volCap: d.volCapUser != null ? d.volCapUser : (((store.autodmlSc || {})[code] || {}).volCap != null ? store.autodmlSc[code].volCap : (b.volCap != null ? b.volCap : 0)),
       htp: b.htp != null ? b.htp : 0,
       docks: d.docks || 0, rlhDocks: d.rlhDocks, nlhDocks: d.nlhDocks,
       localTp: d.localTp, nonLocalTp: d.nonLocalTp, localSpeed: d.localSpeed, nonLocalSpeed: d.nonLocalSpeed,

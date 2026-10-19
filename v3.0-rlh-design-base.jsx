@@ -932,6 +932,7 @@ All modules
 </div>
 </>) : null}
 <div style={css(`display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:13px;`)}>
+{(hasScNeedsAction) ? (<><div role={"status"} style={css(`display:flex; align-items:center; gap:9px; padding:10px 14px; margin-bottom:12px; background:#FBEAEA; border:1px solid #F0C6C6; border-radius:8px;`)}><svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`font-size:12.5px; font-weight:700; color:#D14B4B;`)}>{scNeedsActionCount} SC{scNeedsActionCount === 1 ? '' : 's'} need{scNeedsActionCount === 1 ? 's' : ''} action</span></div></>) : null}
 <div style={css(`display:flex; align-items:center; gap:7px; height:36px; padding:0 11px; border:1px solid #E6EBF2; border-radius:8px; background:#fff;`)}>
 <svg width={"15"} height={"15"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M11 4a7 7 0 105 12 7 7 0 00-5-12zM21 21l-4.5-4.5"} strokeLinecap={"round"} /></svg>
 <input value={scSearch} onInput={onInputsSearch} placeholder={"Search SC code or name…"} style={css(`border:none; outline:none; font-family:inherit; font-size:12.5px; color:#14171F; background:transparent; width:190px;`)} />
@@ -970,78 +971,49 @@ All modules
 <div style={css(`min-width:${scGridMinW}px;`)}>
 <div style={css(`display:grid; grid-template-columns:${scGridCols}; background:#E6EBF2; position:sticky; top:0; z-index:6;`)}>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC CODE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>NAME</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"From AutoDML for AutoDML SCs (locked); editable for SCs added manually. Deactivated SCs stay in SC Master but are left out of Design Creation."}>STATUS</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Latitude, Longitude \u2014 from AutoDML (locked)"}>SC COORDINATES</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}title={"Volume capacity \u2014 defaults from AutoDML; edit to overwrite (your value is kept)"}>SC CAPACITY</div>
+<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC NAME</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>CITY, STATE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>SC TYPE</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>ZONE</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>VOL CAP</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:right; white-space:nowrap;`)}>SORT CAP</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)} title={"Latitude, Longitude"}>COORDINATES</div>
-{/* 2026-09-10 fix — Open/Close removed (replaced by the Operating Hours popup, right); the 7
-    columns below are now ALL uniform width + 2-line wrap (previously a mix of nowrap and wrap
-    at different widths, which read as inconsistent even after the 2026-09-07 overlap fix). */}
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25; border-left:1px solid #D0D5DD;`)}>RLH DOCKS</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>LOCAL TP</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)}>NON-LOCAL TP</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"DC-to-SC distance up to which a DC is Local; beyond it, Non-Local"}>LOCAL DIST THRESHOLD</div>
-{/* 2026-09-11 fix (point 1) — Local Speed / Non-Local Speed columns removed: Speed Profile
-    (SC x Vehicle Type x Zone x Time) is now the only editable surface for speed, so a flat
-    per-SC number here was redundant and could drift from what Speed Profile actually holds.
-    resolveScFields()'s localSpeed/nonLocalSpeed are left exactly as they were (same
-    "SC Master value if set, else synthetic hash default" resolution Route Scheduler's
-    resolveSchedulerParamsFor() already uses) — same staged-migration pattern this codebase
-    already used for RLH Docks before Dock Profile existed: the UI moves off SC Master first,
-    the underlying resolution catches up in a later pass, not this one. */}
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD LOCAL</div>
 <div style={css(`padding:9px 8px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:normal; line-height:1.25;`)} title={"Max hold time (minutes) for non-local-zone DCs, when Hold Time is On at plan creation"}>MAX HOLD NON-LOCAL</div>
-{/* 2026-08-26 fix — NLH Docks column removed from RLH's SC Master table (see edit-form removal
-    above for why); scNlhOpen/onToggleScNlh bindings left in place but unused, harmless. */}
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)}>OPS LEADS</div>
 <div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; text-align:center; white-space:nowrap;`)}>OP HOURS</div>
-<div style={css(`padding:9px 10px; font-size:10px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; white-space:nowrap;`)} title={"Inactive SCs stay in SC Master but are left out of Design Creation"}>STATUS</div>
 <div style={css(`padding:9px 10px;`)} />
 </div>
 {(scRows || []).map((s, __i16) => (<React.Fragment key={__i16}>
-<div style={css(`display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
-<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)}>{s.code}{(!s.rowIsActive) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>Inactive</span></>) : null}{(s.isMdc) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EEEAFB; color:#5B4FA0;`)} title={"Multi-Distribution-Centre node \u2014 not a real Sort Centre; DCs tagged 'MDC' on LMDC Master route from here instead"}>MDC</span></>) : null}{(!s.rowIsActive) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)} title={"Deactivated \u2014 excluded from Route Planner and SC Vehicle Availability selection"}>INACTIVE</span></>) : null}</div>
+<div style={css(`display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6; background:${s.needsAction ? '#FDF1F1' : '#fff'}; box-shadow:${s.needsAction ? 'inset 3px 0 0 #D14B4B' : 'none'};`)} onMouseEnter={(e) => hoverOn(e, `background:#FAFBFD;`)} onMouseLeave={(e) => hoverOff(e, `background:${s.needsAction ? '#FDF1F1' : '#fff'}; display:grid; grid-template-columns:${scGridCols}; align-items:center; border-top:1px solid #EEF1F6;`, `background:#FAFBFD;`)}>
+<div style={css(`padding:10px 10px; font-size:12px; font-weight:700; color:#003F98; white-space:nowrap;`)} title={s.needsAction ? ('Needs action \u2014 missing: ' + s.missingLabel) : ''}>{s.code}{(s.needsAction) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#FBEAEA; color:#D14B4B;`)}>Needs action</span></>) : null}{(s.isManual) ? (<><span title={"Added in the platform \u2014 not in AutoDML"} style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#F2F5FA; color:#5A5E66;`)}>Manual</span></>) : null}{(!s.rowIsActive) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9.5px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)}>Deactivated</span></>) : null}{(s.isMdc) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#EEEAFB; color:#5B4FA0;`)} title={"Multi-Distribution-Centre node \u2014 not a real Sort Centre; DCs tagged 'MDC' on LMDC Master route from here instead"}>MDC</span></>) : null}{(!s.rowIsActive) ? (<><span style={css(`margin-left:6px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; background:#F2F5FA; color:#8E96A3;`)} title={"Deactivated \u2014 excluded from Route Planner and SC Vehicle Availability selection"}>INACTIVE</span></>) : null}</div>
+<div style={css(`padding:7px 10px; display:flex; align-items:center; gap:8px;`)}>
+<button role={"switch"} aria-checked={s.rowIsActive} onClick={s.onToggleActive} disabled={rlhCyclePast || s.statusLocked} aria-label={(s.rowIsActive ? "Deactivate " : "Activate ") + s.code} title={s.statusLocked ? 'From AutoDML \u2014 status follows the backend' : rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : (s.rowIsActive ? "Active — switch off to deactivate (hidden from Design Creation)" : "Inactive — switch on to reactivate")} style={css(`position:relative; width:34px; height:20px; flex-shrink:0; align-self:center; border:none; border-radius:999px; padding:0; background:${s.rowIsActive ? '#128A3E' : '#C3C9D4'}; cursor:${(rlhCyclePast || s.statusLocked) ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : (s.statusLocked ? '0.75' : '1')}; transition:background 120ms ease;`)}><span style={css(`position:absolute; top:2px; left:${s.rowIsActive ? '16px' : '2px'}; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(11,20,48,0.25); transition:left 120ms ease;`)} /></button>
+<span style={css(`font-size:11.5px; font-weight:600; color:${s.rowIsActive ? '#128A3E' : '#8E96A3'};`)}>{s.rowIsActive ? 'Active' : 'Deactivated'}</span>{(s.statusLocked) ? (<><svg aria-label={"From AutoDML"} width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#8E96A3"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><rect x={"5"} y={"11"} width={"14"} height={"10"} rx={"2"} /><path d={"M8 11V7a4 4 0 018 0v4"} /></svg></>) : null}
+</div>
+<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.coords}</div>
+<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.name}</div>
 <div style={css(`padding:10px 10px; font-size:11.5px; color:#5A5E66; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;`)}>{s.cityState}</div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:${s.isMdc ? '#EEEAFB' : '#EAEEFB'}; color:${s.isMdc ? '#5B4FA0' : '#2F4FC6'}; white-space:nowrap;`)}>{s.isMdc ? 'MDC' : s.scType}</span></div>
 <div style={css(`padding:10px 10px;`)}><span style={css(`display:inline-flex; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:600; background:#F2F5FA; color:#5A5E66; white-space:nowrap;`)}>{s.zone}</span></div>
-<div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.volCap}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.sortCap}</div>
-<div style={css(`padding:10px 10px; font-size:11px; color:#5A5E66; text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap;`)}>{s.coords}</div>
-{/* 2026-09-07 fix — a stray leftover placeholder <div/> used to sit here (paired with the
-    collapse-toggle header column removed earlier this session, whose matching header cell was
-    deleted but this body-side partner was missed) — it shifted every subsequent cell one column
-    out of alignment with the 19-track header, so the row had 20 grid items for 19 tracks and the
-    last one (the edit/deactivate icons) had nowhere to go and wrapped onto a new implicit row. */}
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.rlhDocks}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.nonLocalTp}</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.localDistThreshold}</div>
-{/* 2026-09-11 fix (point 1) — localSpeed/nonLocalSpeed cells removed, see header comment above. */}
-{/* 2026-09-07 fix — Hold Time On/Off badge removed (now purely plan-level, no SC-level default
-    to show); Max Hold Local/Non-Local no longer gated by a holdTimeOn that doesn't exist at this
-    level anymore — they're SC-level facts regardless of whether a given plan turns hold time on. */}
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.maxHoldLocal} min</div>
 <div style={css(`padding:10px 10px; font-size:12px; color:#14171F; text-align:center; font-variant-numeric:tabular-nums;`)}>{s.maxHoldNonLocal} min</div>
-{/* 2026-08-26 fix — NLH Docks body cell removed alongside the header/toggle above. The
-    unconditional placeholder <div/> that used to pair with the (now-removed) NLH-toggle header
-    cell is ALSO removed here — leaving it in was exactly what broke row alignment (14 body
-    cells vs. 13 header cells), pushing edit/delete onto a wrapped second grid row. */}
 <div style={css(`padding:10px 10px;`)}>
-<button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>{s.pocSummary}<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
+<button onClick={s.togglePoc} style={css(`display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 9px; border:1px solid ${s.pocOpen ? '#003F98' : '#E6EBF2'}; background:${s.pocOpen ? '#EAEEFB' : '#fff'}; color:${s.pocOpen ? '#003F98' : '#5A5E66'}; border-radius:6px; cursor:pointer; font-family:inherit; font-size:11.5px; font-weight:600; white-space:nowrap;`, `border-color:#003F98; color:#003F98;`)}><svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg><span style={css(`color:${s.pocMissing ? '#D14B4B' : 'inherit'}; font-weight:${s.pocMissing ? '700' : 'inherit'};`)}>{s.pocSummary}</span><svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} style={css(`transform:rotate(${s.pocOpen ? '180deg' : '0deg'}); transition:transform 120ms;`)}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 <div style={css(`padding:10px 10px; text-align:center;`)}>
 <button onClick={s.onOpenOpHours} title={"Operating Hours" + (s.opHoursConfigured ? ' — configured' : ' — falls back to always-open default')} aria-label={"Open Operating Hours for " + s.code} style={css(`width:26px; height:26px; border:1px solid ${s.opHoursConfigured ? '#0D7377' : '#E6EBF2'}; background:${s.opHoursConfigured ? '#E9F5F5' : '#fff'}; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#0D7377;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-</div>
-{/* STATUS (2026-10-15) — Active toggle in its own column with a text label. Switching OFF asks to
-    confirm (Deactivate dialog); switching ON reactivates immediately. Inactive SCs drop out of
-    Design Creation and sort to the end of this list. */}
-<div style={css(`padding:7px 10px; display:flex; align-items:center; gap:8px;`)}>
-<button role={"switch"} aria-checked={s.rowIsActive} onClick={s.onToggleActive} disabled={rlhCyclePast} aria-label={(s.rowIsActive ? "Deactivate " : "Activate ") + s.code} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : (s.rowIsActive ? "Active — switch off to deactivate (hidden from Design Creation)" : "Inactive — switch on to reactivate")} style={css(`position:relative; width:34px; height:20px; flex-shrink:0; align-self:center; border:none; border-radius:999px; padding:0; background:${s.rowIsActive ? '#128A3E' : '#C3C9D4'}; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; transition:background 120ms ease;`)}><span style={css(`position:absolute; top:2px; left:${s.rowIsActive ? '16px' : '2px'}; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(11,20,48,0.25); transition:left 120ms ease;`)} /></button>
-<span style={css(`font-size:11.5px; font-weight:600; color:${s.rowIsActive ? '#128A3E' : '#8E96A3'};`)}>{s.rowIsActive ? 'Active' : 'Inactive'}</span>
 </div>
 <div style={css(`padding:7px 10px; display:flex; justify-content:flex-end;`)}>
 <button onClick={s.rowEdit} disabled={rlhCyclePast} aria-label={"Edit row"} title={rlhCyclePast ? "Past cycle — read-only. Switch to the current cycle to edit." : "Edit"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:${rlhCyclePast ? 'not-allowed' : 'pointer'}; opacity:${rlhCyclePast ? '0.4' : '1'}; display:flex; align-items:center; justify-content:center; color:#5A5E66;`)} onMouseEnter={(e) => hoverOn(e, `border-color:#003F98; color:#003F98;`)} onMouseLeave={(e) => hoverOff(e, `width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#5A5E66;`, `border-color:#003F98; color:#003F98;`)}><svg aria-hidden={"true"} width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"1.8"}><path d={"M14 6l4 4M4 20l4-1 9.5-9.5a2 2 0 00-3-3L5 16z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
@@ -1646,8 +1618,8 @@ All modules
 </div>
 </>) : (r.editing) ? (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1.6fr 104px; align-items:center; border-top:${__iCr === 0 ? 'none' : '1px solid #EEF1F6'}; background:#FAFBFD;`)}>
-<div style={css(`padding:7px 8px 7px 18px;`)}><input autoFocus list={'cfg-l1-' + cm.m} value={r.editL1} onInput={r.onEditL1} onKeyDown={r.onEditKey} title={"Pick an existing L1 to move this row there, or type a new one"} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%;`)} /></div>
-<div style={css(`padding:7px 8px;`)}><input value={r.editL2} onInput={r.onEditL2} onKeyDown={r.onEditKey} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%;`)} /></div>
+<div style={css(`padding:10px 18px; font-size:12.5px; color:#5A5E66;`)} title={"L1 categories are fixed"}>{r.l1}</div>
+<div style={css(`padding:7px 8px;`)}><input autoFocus value={r.editL2} onInput={r.onEditL2} onKeyDown={r.onEditKey} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%;`)} /></div>
 <div style={css(`padding:7px 18px 7px 4px; display:flex; gap:5px; justify-content:flex-end;`)}>
 <button onClick={r.onSave} title={"Save"} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; padding:0 9px; border:none; background:#003F98; color:#fff;`)}>Save</button>
 <button onClick={r.onCancel} title={"Cancel"} style={css(`height:28px; padding:0 11px; border-radius:6px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; padding:0 7px; border:1px solid #E6EBF2; background:#fff; color:#5A5E66;`)}>✕</button>
@@ -1656,11 +1628,11 @@ All modules
 </>) : (<>
 <div style={css(`display:grid; grid-template-columns:1fr 1.6fr 104px; align-items:center; border-top:${__iCr === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
 <div style={css(`padding:10px 18px; font-size:12.5px; color:#14171F;`)}>{r.l1}</div>
-<div style={css(`padding:10px 14px; font-size:12.5px; color:#14171F;`)}>{r.l2}</div>
-<div style={css(`padding:6px 18px; display:flex; gap:5px; justify-content:flex-end;`)}>
+<div style={css(`padding:10px 14px; font-size:12.5px; color:${r.empty ? '#8E96A3' : '#14171F'}; font-style:${r.empty ? 'italic' : 'normal'};`)}>{r.l2}</div>
+{(r.empty) ? (<><div /></>) : (<><div style={css(`padding:6px 18px; display:flex; gap:5px; justify-content:flex-end;`)}>
 <button onClick={r.onEdit} disabled={cm.readOnly} title={cm.readOnly ? 'Past cycle — read-only' : 'Edit'} aria-label={"Edit reason"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; opacity:${cm.readOnly ? '0.4' : '1'}; cursor:${cm.readOnly ? 'not-allowed' : 'pointer'};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#5A5E66"} strokeWidth={"1.8"}><path d={"M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 <button onClick={r.onDelAsk} disabled={cm.readOnly} title={cm.readOnly ? 'Past cycle — read-only' : 'Delete'} aria-label={"Delete reason"} style={css(`width:28px; height:28px; border:1px solid #E6EBF2; background:#fff; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; opacity:${cm.readOnly ? '0.4' : '1'}; cursor:${cm.readOnly ? 'not-allowed' : 'pointer'};`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#D14B4B"} strokeWidth={"1.8"}><path d={"M5 7h14M9 7V5h6v2M6 7l1 13h10l1-13"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
-</div>
+</div></>)}
 </div>
 </>)}
 </React.Fragment>))}
@@ -1715,9 +1687,8 @@ All modules
 </div>
 <div style={css(`padding:18px 20px; display:flex; flex-direction:column; gap:14px;`)}>
 <div>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>L1 — REASON CATEGORY <span style={css(`color:#D14B4B;`)}>*</span></div>
-<input autoFocus list={"cfg-add-l1"} value={cfgAdd.l1} onInput={cfgAdd.onL1} onKeyDown={cfgAdd.onKey} placeholder={"Pick an existing L1 or type a new one"} style={css(`height:30px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box; width:100%; height:36px;`)} />
-<datalist id={"cfg-add-l1"}>{(cfgAdd.l1List || []).map((n, __iAdl) => (<React.Fragment key={__iAdl}><option value={n} /></React.Fragment>))}</datalist>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:6px;`)}>L1 — REASON CATEGORY <span style={css(`font-weight:500; letter-spacing:0; color:#8E96A3;`)}>· fixed list</span></div>
+<select autoFocus value={cfgAdd.l1} onChange={cfgAdd.onL1} style={css(`width:100%; height:36px; padding:0 9px; border:1px solid #C3C9D4; border-radius:6px; font-family:inherit; font-size:12.5px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>{(cfgAdd.l1List || []).map((n, __iAdl) => (<React.Fragment key={__iAdl}><option value={n}>{n}</option></React.Fragment>))}</select>
 {(cfgAdd.l1IsNew) ? (<><div style={css(`font-size:11px; color:#2F4FC6; margin-top:5px;`)}>New L1 — it will be created with this reason under it.</div></>) : null}
 </div>
 <div>
@@ -1903,7 +1874,7 @@ All modules
 <div style={css(`font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#5A5E66; margin-bottom:6px;`)}>{f.label}{(f.req) ? (<><span style={css(`color:#D14B4B;`)}> *</span></>) : null}</div>
 {(f.isSelect) ? (<><select value={f.value} onChange={f.onInput} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none; background:#fff;`)}>{(f.options || []).map((o, __i36) => (<React.Fragment key={__i36}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></>) : null}
 {(f.isTime) ? (<><input type={"time"} value={f.value} onInput={f.onInput} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} /></>) : null}
-{(f.isText) ? (<><input value={f.value} onInput={f.onInput} placeholder={f.ph} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid #C3C9D4; border-radius:8px; font-family:inherit; font-size:13px; color:#14171F; outline:none;`)} /></>) : null}
+{(f.isText) ? (<><input value={f.value} onInput={f.onInput} placeholder={f.ph} disabled={!!f.readOnly} title={f.readOnly ? 'From AutoDML \u2014 not editable here' : ''} style={css(`width:100%; height:38px; padding:0 10px; border:1px solid ${f.readOnly ? '#E6EBF2' : '#C3C9D4'}; border-radius:8px; font-family:inherit; font-size:13px; color:${f.readOnly ? '#5A5E66' : '#14171F'}; background:${f.readOnly ? '#F7F8FA' : '#fff'}; outline:none; box-sizing:border-box;`)} /></>) : null}
 </div>
 </React.Fragment>))}
 </div>
@@ -2168,7 +2139,7 @@ All modules
 <div style={css(`display:flex; align-items:center; gap:10px; padding:7px 16px 7px 46px; background:#FDF6EC; border-top:1px solid #F4E4BF;`)}>
 <svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"#C77B00"} strokeWidth={"2"} style={css(`flex-shrink:0;`)}><path d={"M12 9v4m0 4h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
 <span style={css(`font-size:12px; font-weight:700; color:#C77B00;`)}>SC Master details missing</span>
-<span style={css(`font-size:11.5px; color:#5A5E66;`)}>Vol capacity, sort capacity, RLH docks or location are not set.</span>
+<span style={css(`font-size:11.5px; color:#5A5E66;`)}>{s.missingMasterText}</span>
 <button onClick={s.onFixMaster} style={css(`display:inline-flex; align-items:center; gap:5px; height:26px; padding:0 10px; border:1px solid #E0C98A; background:#fff; color:#C77B00; font-family:inherit; font-size:11.5px; font-weight:600; border-radius:7px; cursor:pointer; margin-left:auto; flex-shrink:0;`)}>Update via SC Master<svg width={"11"} height={"11"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2.2"}><path d={"M5 12h14M13 6l6 6-6 6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg></button>
 </div>
 </>) : null}
@@ -5601,7 +5572,7 @@ NLH cycle: {schedNlhMonthLabel}
 {(ncReasonRows || []).map((rr, __iNcRr) => (<React.Fragment key={__iNcRr}>
 <div style={css(`display:grid; grid-template-columns:0.9fr 1fr 1.3fr; align-items:center; border-top:${__iNcRr === 0 ? 'none' : '1px solid #EEF1F6'};`)}>
 <div style={css(`padding:8px 12px; font-size:12.5px; font-weight:600; color:#14171F;`)}>{rr.label}</div>
-<div style={css(`padding:6px 8px;`)}><select value={rr.l1Val} onChange={rr.onL1} style={css(`height:34px; padding:0 9px; border-radius:7px; font-family:inherit; font-size:12px; background:#fff; outline:none; width:100%; box-sizing:border-box; border:1px solid #E6EBF2; color:#14171F;`)}>{(rr.l1Options || []).map((o, __iNcL1) => (<React.Fragment key={__iNcL1}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></div>
+<div style={css(`padding:6px 8px;`)}><select value={rr.l1Val} onChange={rr.onL1} disabled={(rr.l1Options || []).length <= 1} title={"Reason category \u2014 fixed by the change type"} style={css(`height:34px; padding:0 9px; border-radius:7px; font-family:inherit; font-size:12px; background:#fff; outline:none; width:100%; box-sizing:border-box; border:1px solid #E6EBF2; color:#14171F;`)}>{(rr.l1Options || []).map((o, __iNcL1) => (<React.Fragment key={__iNcL1}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></div>
 <div style={css(`padding:6px 8px;`)}><select value={rr.l2Val} onChange={rr.onL2} style={css(`height:34px; padding:0 9px; border-radius:7px; font-family:inherit; font-size:12px; background:#fff; outline:none; width:100%; box-sizing:border-box; border:1px solid ${rr.l2Missing ? '#EDD9AF' : '#E6EBF2'}; color:${rr.l2Val ? '#14171F' : '#8E96A3'};`)}><option value={""}>Select a reason…</option>{(rr.l2Options || []).map((o, __iNcL2) => (<React.Fragment key={__iNcL2}><option value={o}>{o}</option></React.Fragment>))}</select></div>
 </div>
 </React.Fragment>))}
@@ -5742,7 +5713,7 @@ NLH cycle: {schedNlhMonthLabel}
 </select>
 </>)}
 {/* 2026-09-29 — L1 (reason category) → L2 (reason), from Design Inputs → Configurations */}
-<select value={f.l1Val} onChange={f.onL1} title={"Reason category (L1)"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
+<select value={f.l1Val} onChange={f.onL1} disabled={(f.l1Options || []).length <= 1} title={"Reason category (L1) \u2014 fixed by the field changed"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #E6EBF2; border-radius:7px; font-family:inherit; font-size:12px; color:#14171F; outline:none; background:#fff; box-sizing:border-box;`)}>
 {(f.l1Options || []).map((o, __iSL1) => (<React.Fragment key={__iSL1}><option value={o.value}>{o.label}</option></React.Fragment>))}
 </select>
 <select value={f.reasonVal} onChange={f.onReason} title={"Reason (L2) \u2014 required"} style={css(`width:100%; height:34px; padding:0 9px; border:1px solid #C77B00; border-radius:7px; font-family:inherit; font-size:12px; color:${f.reasonVal ? '#14171F' : '#8E96A3'}; outline:none; background:#fff; box-sizing:border-box;`)}>
@@ -6650,15 +6621,12 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>QUICK APPLY</div>
 <div style={css(`display:flex; align-items:center; gap:8px; flex-wrap:wrap;`)}>
 <label style={css(`display:flex; align-items:center; gap:6px; font-size:12px; color:#5A5E66;`)}>Speed <input type={"number"} min={"1"} step={"1"} value={speedProfileModal.qa.speed} onInput={speedProfileModal.qa.onSpeed} placeholder={"km/h"} style={css(`width:70px; height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12.5px; text-align:center; box-sizing:border-box;`)} /> km/h</label>
-<button onClick={speedProfileModal.qa.onToggleAllDay} aria-pressed={speedProfileModal.qa.allDay} title={"On: the whole day from 00:00. Off: from the hour you pick, until the next hour you have entered."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allDay ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allDay ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allDay ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allDay ? '✓ ' : ''}All day</button>
-{(!speedProfileModal.qa.allDay) ? (<><select value={speedProfileModal.qa.hourIdx} onChange={speedProfileModal.qa.onHour} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.hourOptions || []).map((o, __iQh) => (<React.Fragment key={__iQh}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></>) : null}
-<button onClick={speedProfileModal.qa.onToggleAllVeh} aria-pressed={speedProfileModal.qa.allVeh} title={"On: every vehicle type at this SC. Off: pick one."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allVeh ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allVeh ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allVeh ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allVeh ? '✓ ' : ''}All vehicle types</button>
-{(!speedProfileModal.qa.allVeh) ? (<><select value={speedProfileModal.qa.veh} onChange={speedProfileModal.qa.onVeh} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.vehOptions || []).map((o, __iQv) => (<React.Fragment key={__iQv}><option value={o}>{o}</option></React.Fragment>))}</select></>) : null}
-<button onClick={speedProfileModal.qa.onToggleZone} aria-pressed={speedProfileModal.qa.zoneSpecific} title={"Off: every zone the vehicle runs. On: Local or Non-Local only."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.zoneSpecific ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.zoneSpecific ? '✓ ' : ''}Zone specific</button>
-{(speedProfileModal.qa.zoneSpecific) ? (<><select value={speedProfileModal.qa.zone} onChange={speedProfileModal.qa.onZone} style={css(`height:30px; padding:0 8px; border:1px solid #C3C9D4; border-radius:7px; font-family:inherit; font-size:12px; background:#fff;`)}>{(speedProfileModal.qa.zoneOptions || []).map((o, __iQz) => (<React.Fragment key={__iQz}><option value={o.value}>{o.label}</option></React.Fragment>))}</select></>) : null}
+<button onClick={speedProfileModal.qa.onToggleAllDay} aria-pressed={speedProfileModal.qa.allDay} title={"On: the whole day from 00:00. Off: from the selected cell\u2019s hour onward."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allDay ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allDay ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allDay ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allDay ? '✓ ' : ''}All day</button>
+<button onClick={speedProfileModal.qa.onToggleAllVeh} aria-pressed={speedProfileModal.qa.allVeh} title={"On: every vehicle type at this SC. Off: only the selected cell\u2019s vehicle type."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.allVeh ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.allVeh ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.allVeh ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.allVeh ? '✓ ' : ''}All vehicle types</button>
+<button onClick={speedProfileModal.qa.onToggleZone} aria-pressed={speedProfileModal.qa.zoneSpecific} title={"Off: every zone the vehicle runs. On: only the selected cell\u2019s zone."} style={css(`height:30px; padding:0 11px; border-radius:7px; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; border:1px solid ${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#C3C9D4'}; background:${speedProfileModal.qa.zoneSpecific ? '#E7F4F4' : '#fff'}; color:${speedProfileModal.qa.zoneSpecific ? '#0D7377' : '#5A5E66'};`)}>{speedProfileModal.qa.zoneSpecific ? '✓ ' : ''}Zone specific</button>
 <button onClick={speedProfileModal.qa.onApply} style={css(`margin-left:auto; height:30px; padding:0 16px; border:none; background:#0D7377; color:#fff; font-family:inherit; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;`)}>Apply</button>
 </div>
-<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:7px;`)}>{speedProfileModal.qa.desc}</div>
+<div style={css(`font-size:11.5px; color:#8E96A3; margin-top:7px;`)}>{speedProfileModal.qa.desc} <span style={css(`color:#0D7377; font-weight:600;`)}>Selected cell: {speedProfileModal.qa.anchorLabel}</span></div>
 </div>
 </>) : null}
 <div style={css(`border:1px solid #E6EBF2; border-radius:9px; overflow:hidden;`)}>
@@ -6672,7 +6640,7 @@ NLH cycle: {schedNlhMonthLabel}
 <div style={css(`display:grid; grid-template-columns:170px repeat(24,54px); gap:0; align-items:center; border-top:1px solid #EEF1F6;`)}>
 <div style={css(`padding:8px 12px; font-size:12px; font-weight:600; color:#14171F; position:sticky; left:0; background:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{r.rowLabel}</div>
 {(r.cells || []).map((c, __iSpc) => (<React.Fragment key={__iSpc}>
-{(speedProfileModal.readOnly || speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 4px; font-size:11.5px; text-align:center; color:${c.value === '' ? '#C3C9D4' : '#14171F'}; font-variant-numeric:tabular-nums;`)}>{c.value === '' ? '\u2014' : c.value}</div></>) : (<><div style={css(`padding:3px;`)}><input value={c.value} onChange={(e) => c.onChange(e.target.value)} type={"number"} min={"0"} placeholder={c.inherited === '' ? '' : String(c.inherited)} title={c.required ? 'Required \u2014 every row needs a 00:00 speed' : (c.value === '' && c.inherited !== '') ? ('Inherited from an earlier hour: ' + c.inherited + ' km/h') : ''} aria-label={r.rowLabel + ' ' + c.label} style={css(`width:100%; height:28px; padding:0 3px; text-align:center; border:1px solid ${c.required ? '#D14B4B' : (c.value === '' ? '#E6EBF2' : '#C3C9D4')}; background:${c.required ? '#FBEAEA' : (c.value === '' ? '#F7F9FC' : '#fff')}; color:#14171F; border-radius:5px; font-family:inherit; font-size:11px; box-sizing:border-box;`)} /></div></>) }
+{(speedProfileModal.readOnly || speedProfileModal.reviewMode) ? (<><div style={css(`padding:6px 4px; font-size:11.5px; text-align:center; color:${c.value === '' ? '#C3C9D4' : '#14171F'}; font-variant-numeric:tabular-nums;`)}>{c.value === '' ? '\u2014' : c.value}</div></>) : (<><div style={css(`padding:3px;`)}><input value={c.value} onChange={(e) => c.onChange(e.target.value)} onFocus={c.onFocusCell} type={"number"} min={"0"} placeholder={c.inherited === '' ? '' : String(c.inherited)} title={c.required ? 'Required \u2014 every row needs a 00:00 speed' : (c.value === '' && c.inherited !== '') ? ('Inherited from an earlier hour: ' + c.inherited + ' km/h') : ''} aria-label={r.rowLabel + ' ' + c.label} style={css(`width:100%; height:28px; padding:0 3px; text-align:center; border:1px solid ${c.required ? '#D14B4B' : (c.value === '' ? '#E6EBF2' : '#C3C9D4')}; background:${c.required ? '#FBEAEA' : (c.value === '' ? '#F7F9FC' : '#fff')}; color:#14171F; border-radius:5px; font-family:inherit; font-size:11px; box-sizing:border-box; box-shadow:${c.anchored ? '0 0 0 2px #0D7377' : 'none'};`)} /></div></>) }
 </React.Fragment>))}
 </div>
 </React.Fragment>))}
@@ -6812,9 +6780,9 @@ function NDC_haversineKm(lat1, lng1, lat2, lng2) {
 // same spec), so the in-app Download Template gives exactly the production file. Uploads read either
 // this .xlsx (two header rows) or a .csv with the same headers; Download Current Data writes the same
 // layout. POCs are one column per category: single email, or comma-separated emails for list categories.
-const SC_TEMPLATE_COLS = [["HUB CODE", "Hub code (mandatory) - upsert key"], ["SC NAME", "SC name (human-readable label)"], ["HUB TYPE", "Hub type - MANDATORY"], ["ZONE", "Zone - MANDATORY"], ["CITY", "City"], ["STATE", "State"], ["LATITUDE", "SC latitude (-90..90) - MANDATORY"], ["LONGITUDE", "SC longitude (-180..180) - MANDATORY"], ["VOLUME CAPACITY", "Volume capacity - MANDATORY"], ["SORT CAPACITY", "Sort capacity - MANDATORY"], ["NLH DOCKS", "NLH docks - MANDATORY"], ["RLH DOCKS", "RLH docks - MANDATORY"], ["LOCAL TP LIMIT", "Local touch point limit - MANDATORY"], ["NON LOCAL TP LIMIT", "Non-local touch point limit - MANDATORY"], ["LOCAL DISTANCE THRESHOLD (KM)", "Local distance threshold in km - a DC within this road distance of the SC is Local, beyond it Non-Local. Default 100"], ["MAX HOLD TIME LOCAL (MIN)", "Max hold time for Local DCs, in minutes - MANDATORY"], ["MAX HOLD TIME NON LOCAL (MIN)", "Max hold time for Non-Local DCs, in minutes - MANDATORY"], ["OPENING TIME", "Opening time (HH:mm)"], ["CLOSING TIME", "Closing time (HH:mm)"], ["POC SC OPS ZH EMAIL", "POC SC Ops ZH email - MANDATORY. Single email, firstname.lastname@domain"], ["POC SC LH OPS ZH EMAIL", "POC SC LH Ops ZH email - MANDATORY. Single email"], ["POC SC OPS CH EMAIL", "POC SC Ops CH email - MANDATORY. Single email"], ["POC SC LH OPS CH EMAIL", "POC SC LH Ops CH email - MANDATORY. Single email"], ["POC SC OPS AM EMAIL", "POC SC Ops AM emails - optional. One or more, comma separated"], ["POC SC LH OPS AM EMAIL", "POC SC LH Ops AM emails - optional. One or more, comma separated"], ["POC CENTRAL LH CT EMAIL", "Central LH contact emails - optional. One or more, comma separated"], ["POC CENTRAL BIZ FIN CT EMAIL", "Central Business Finance contact emails - optional. One or more, comma separated"], ["CPS ZONE", "CPS zone - MANDATORY. The rate band this SC prices against, NOT the operational ZONE. One of south|north|west|ne|north_east|south_west|maharashtra|surat|west_bengal. Leading component of every rate-card natural_key, so an SC without one cannot be priced."], ["STATUS", "SC status - Active or Inactive. Inactive SCs stay in SC Master but are left out of Design Creation. Blank = Active"]];
+const SC_TEMPLATE_COLS = [["HUB CODE", "Hub code (mandatory) - upsert key"], ["SC NAME", "SC name (human-readable label)"], ["HUB TYPE", "Hub type (SC Type) - MANDATORY"], ["ZONE", "Zone - MANDATORY"], ["CITY", "City"], ["STATE", "State"], ["LATITUDE", "SC latitude (-90..90) - from AutoDML (ignored on upload for AutoDML SCs); required for SCs added manually"], ["LONGITUDE", "SC longitude (-180..180) - from AutoDML (ignored on upload for AutoDML SCs); required for SCs added manually"], ["VOLUME CAPACITY", "SC capacity (volume) - MANDATORY. Defaults from AutoDML; a value here overwrites it and is kept"], ["SORT CAPACITY", "Sort capacity - MANDATORY"], ["NLH DOCKS", "NLH docks - MANDATORY"], ["RLH DOCKS", "RLH docks - MANDATORY"], ["LOCAL TP LIMIT", "Local touch point limit - MANDATORY"], ["NON LOCAL TP LIMIT", "Non-local touch point limit - MANDATORY"], ["LOCAL DISTANCE THRESHOLD (KM)", "Local distance threshold in km - a DC within this road distance of the SC is Local, beyond it Non-Local. Default 100"], ["MAX HOLD TIME LOCAL (MIN)", "Max hold time for Local DCs, in minutes - MANDATORY"], ["MAX HOLD TIME NON LOCAL (MIN)", "Max hold time for Non-Local DCs, in minutes - MANDATORY"], ["OPENING TIME", "Opening time (HH:mm)"], ["CLOSING TIME", "Closing time (HH:mm)"], ["POC SC OPS ZH EMAIL", "POC SC Ops ZH email - MANDATORY. Single email, firstname.lastname@domain"], ["POC SC LH OPS ZH EMAIL", "POC SC LH Ops ZH email - MANDATORY. Single email"], ["POC SC OPS CH EMAIL", "POC SC Ops CH email - MANDATORY. Single email"], ["POC SC LH OPS CH EMAIL", "POC SC LH Ops CH email - MANDATORY. Single email"], ["POC SC OPS AM EMAIL", "POC SC Ops AM emails - optional. One or more, comma separated"], ["POC SC LH OPS AM EMAIL", "POC SC LH Ops AM emails - optional. One or more, comma separated"], ["POC CENTRAL LH CT EMAIL", "Central LH contact emails - optional. One or more, comma separated"], ["POC CENTRAL BIZ FIN CT EMAIL", "Central Business Finance contact emails - optional. One or more, comma separated"], ["CPS ZONE", "CPS zone - MANDATORY. The rate band this SC prices against, NOT the operational ZONE. One of south|north|west|ne|north_east|south_west|maharashtra|surat|west_bengal. Leading component of every rate-card natural_key, so an SC without one cannot be priced."], ["STATUS", "SC status - from AutoDML for AutoDML SCs (ignored on upload); Active or Inactive for SCs added manually. Inactive SCs are left out of Design Creation"]];
 const LMDC_TEMPLATE_COLS = [["LMDC CODE", "LMDC code (mandatory) - upsert key"], ["LMSC CODE", "Parent LMSC code - read-only, from AutoDML; ignored on upload"], ["LATITUDE", "LMDC latitude (-90..90) - read-only, from AutoDML; ignored on upload"], ["LONGITUDE", "LMDC longitude (-180..180) - read-only, from AutoDML; ignored on upload"], ["CAPACITY", "LMDC capacity - read-only, from AutoDML; ignored on upload"], ["RLH MODE", "RLH mode - Direct Vehicle | MDC | Co-Loading. Blank = Direct Vehicle"], ["MDC CODE", "MDC node code - only when RLH MODE is MDC. Optional"], ["LANE NAME", "Co-loading lane name, e.g. CL-01 - only when RLH MODE is Co-Loading. Optional"], ["CUTOFF", "Lane cutoff (HH:mm, 30-min slots) - MDC / Co-Loading only. Optional. One cutoff per lane on an LMSC"], ["TAT (HRS)", "Lane TAT in hours (> 0), rounded up to 15 min - MDC / Co-Loading only. Optional"], ["OPEN TIME", "DC open time (HH:mm, 30-min slots) or Default"], ["CLOSE TIME", "DC close time (HH:mm, 30-min slots) or Default"], ["D0 CUTOFF", "D0 cutoff (07:00 to 15:00, 30-min slots) or Default"], ["MAX VEHICLE SIZE", "Largest RLH vehicle this DC can take, or Default (largest RLH vehicle)"], ["UNLOADING TIME (MIN)", "Unloading time in minutes (15 to 60, 5-min steps) or Default"], ["POC LM ZH EMAIL", "POC LM ZH email - MANDATORY. Single email, firstname.lastname@domain"], ["POC LM CH EMAIL", "POC LM CH email - MANDATORY. Single email"], ["POC LM AM EMAIL", "POC LM AM emails - optional. One or more, comma separated"], ["STATUS", "LMDC status - Active or Inactive. Blank = Active"]];
-const SC_TEMPLATE_B64 = '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';
+const SC_TEMPLATE_B64 = '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';
 const LMDC_TEMPLATE_B64 = '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';
 // NLH Landing Plan template (2026-10-15, hourly matrix) — the production "arr_matrix" sheet: banner row
 // (Hourly Vehicle Arrivals | Hourly Volume Arrivel), header row (SC Code, hours 0-23, hours 0-23), navy
@@ -8050,16 +8018,20 @@ class NDCApp extends React.Component {
     const txt = (key, label, req, ph) => ({ key: key, label: label, req: !!req, ph: ph || '', isText: true, isSelect: false, isTime: false, value: f[key] || '', onInput: set(key) });
     const sel = (key, label, req, options) => ({ key: key, label: label, req: !!req, ph: '', isText: false, isSelect: true, isTime: false, value: f[key] || options[0].value, options: options, onInput: set(key) });
     const tm = (key, label, dflt) => ({ key: key, label: label, req: false, ph: '', isText: false, isSelect: false, isTime: true, value: f[key] || dflt, onInput: set(key) });
+    const isEdit = !!st.addScEditCode; const scIsAutodml = !!(isEdit && (this.engineStore.autodmlSc || {})[st.addScEditCode]);
     const addScCore = [
-      txt('code', 'SC Code', true, 'e.g. BLRS'),
+      // 2026-10-15 — order: SC Code, SC Coordinates, SC Capacity, SC Name, then the rest. For an SC
+      // known to AutoDML, Code and Coordinates are locked (they follow the backend); SC Capacity
+      // defaults from AutoDML and can be overwritten. Zone and SC Type have no default (mandatory).
+      Object.assign(txt('code', 'SC Code', true, 'e.g. BLRS'), { readOnly: isEdit }),
+      Object.assign(txt('lat', 'Latitude', !scIsAutodml, scIsAutodml ? 'From AutoDML' : 'e.g. 12.9716'), { readOnly: scIsAutodml }),
+      Object.assign(txt('lng', 'Longitude', !scIsAutodml, scIsAutodml ? 'From AutoDML' : 'e.g. 77.5946'), { readOnly: scIsAutodml }),
+      txt('volCap', 'SC Capacity (Volume)', true, scIsAutodml ? 'Default from AutoDML' : 'shipments / day'),
       txt('name', 'SC Name', false, 'e.g. Bengaluru'),
       txt('city', 'SC City, State', false, 'e.g. Bengaluru, KA'),
-      sel('type', 'SC Type', true, opt(['LMSC', 'FMSC', 'Hybrid'])),
-      sel('zone', 'Zone', true, opt(['North', 'South', 'East', 'West'])),
-      txt('volCap', 'Volume Capacity', true, 'shipments / day'),
+      sel('type', 'SC Type', true, [{ value: '', label: 'Select\u2026' }].concat(opt(['LMSC', 'FMSC', 'Hybrid']))),
+      sel('zone', 'Zone', true, [{ value: '', label: 'Select\u2026' }].concat(opt(['North', 'South', 'East', 'West']))),
       txt('sortCap', 'Sort Capacity', true, 'DCs it can serve, e.g. 50\u2013250'),
-      txt('lat', 'Latitude', false, 'e.g. 12.9716'),
-      txt('lng', 'Longitude', false, 'e.g. 77.5946'),
       // 2026-09-18 fix (item 2) — SC Opening/Closing Time removed from this form entirely: SC
       // Master's own table moved to the Operating Hours model (nonOperating/breaks) back on
       // 2026-09-10, but this add/edit form was never reconciled to match — it kept offering the
@@ -8369,10 +8341,10 @@ class NDCApp extends React.Component {
     // 2026-09-18 fix (items 2/3) — open/close and localSpeed/nonLocalSpeed no longer pre-filled:
     // both fields were removed from the form itself (see addScVals()), so carrying their old
     // values into addScForm here would be dead state with nothing rendering it.
-    const form = { code: sc.code, name: sc.name, city: (sc.name || '') + (sc.zone ? ', ' + sc.zone : ''), type: sc.dispatchRoleType || 'LMSC', zone: sc.zone || 'South', volCap: String(sc.volCap || ''), sortCap: String(sc.sortCap || ''),
+    const form = { code: sc.code, name: sc.name === sc.code ? '' : sc.name, city: sc.name === sc.code ? '' : ((sc.name || '') + (sc.zone ? ', ' + sc.zone : '')), type: sc.scTypeSet ? (sc.dispatchRoleType || '') : '', zone: sc.zone || '', volCap: String(sc.volCap || ''), sortCap: sc.sortCap ? String(sc.sortCap) : '',
       lat: sc.lat != null ? String(sc.lat) : '', lng: sc.lng != null ? String(sc.lng) : '',
-      nlhDocks: String(sc.nlhDocks), rlhDocks: String(sc.rlhDocks), localTp: String(sc.localTp), nonLocalTp: String(sc.nonLocalTp),
-      holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: String(sc.maxHoldLocal), maxHoldNonLocal: String(sc.maxHoldNonLocal),
+      nlhDocks: sc.nlhDocks == null ? '' : String(sc.nlhDocks), rlhDocks: sc.rlhDocks == null ? '' : String(sc.rlhDocks), localTp: sc.localTp == null ? '' : String(sc.localTp), nonLocalTp: sc.nonLocalTp == null ? '' : String(sc.nonLocalTp),
+      holdTimeOn: sc.holdTimeOn ? 'On' : 'Off', maxHoldLocal: sc.maxHoldLocal == null ? '30' : String(sc.maxHoldLocal), maxHoldNonLocal: sc.maxHoldNonLocal == null ? '120' : String(sc.maxHoldNonLocal),
       localDistThreshold: sc.localDistThreshold != null ? String(sc.localDistThreshold) : '100',
       // 2026-10-15 — POCs pre-filled from pocRoles: single categories as strings, lists as arrays.
       opsZh: pr.opsZh, lhOpsZh: pr.lhOpsZh, opsCh: pr.opsCh, lhOpsCh: pr.lhOpsCh,
@@ -8451,7 +8423,7 @@ class NDCApp extends React.Component {
     });
     this.setState({
       speedProfileSC: scCode, speedProfileVehicleTypes: vehicleTypeNames, speedProfileVehicleZones: vehicleZones, speedProfileReadOnly: !!readOnly || this.isRlhCyclePast(), // past cycles open view-only (2026-10-15)
-      speedQA: { speed: '', allDay: true, hourIdx: 0, allVeh: true, veh: vehicleTypeNames[0] || '', zoneSpecific: false, zone: 'local' },
+      speedQA: { speed: '', allDay: true, allVeh: true, zoneSpecific: false, anchor: { vt: vehicleTypeNames[0] || '', zone: (vehicleZones[vehicleTypeNames[0]] || {}).local === false ? 'zonal' : 'local', hourIdx: 0 } },
       speedProfileDraft: { bandStarts, vehicles },
       speedProfileReviewMode: false, speedProfileErrors: [],
     });
@@ -8733,14 +8705,14 @@ class NDCApp extends React.Component {
   backToEditSpeedProfile() {
     this.setState({ speedProfileReviewMode: false });
   }
-  // Speed Profile quick apply (2026-10-15) — one speed, scoped by three switches: All day (on = the
-  // whole day: the row restarts from 00:00 with this speed and everything after it inherits; off =
-  // from a chosen hour, inheriting forward until the next entered hour), All vehicle types (off = one
-  // vehicle type), Zone specific (on = Local or Non-Local only; off = every zone the vehicle runs).
+  // Speed Profile quick apply (2026-10-15, static bar) — Speed + three switches, no dropdowns. The
+  // switches scope relative to the grid cell last clicked (the anchor, outlined): All day (on = whole
+  // day from 00:00; off = from the anchor's hour onward, inheriting until the next entered hour), All
+  // vehicle types (off = the anchor's vehicle only), Zone specific (on = the anchor's zone only).
   // Replaces the old per-row "Apply all-day / to all vehicles / across zones" buttons.
   setSpeedQA(patch) { this.setState({ speedQA: Object.assign({}, this.state.speedQA || {}, patch) }); }
   applySpeedQuick() {
-    const q = this.state.speedQA || {}, draft = this.state.speedProfileDraft;
+    const q = this.state.speedQA || {}, draft = this.state.speedProfileDraft; const an = q.anchor || { vt: '', zone: 'local', hourIdx: 0 };
     if (!draft) return;
     const sp = Math.round(Number(q.speed));
     if (!(sp > 0)) { this.showToast('Enter a speed (km/h) to apply', '#C77B00'); return; }
@@ -8748,22 +8720,22 @@ class NDCApp extends React.Component {
     const vehicles = Object.assign({}, draft.vehicles);
     let touched = 0;
     (this.state.speedProfileVehicleTypes || []).forEach(vt => {
-      if (!q.allVeh && vt !== q.veh) return;
+      if (!q.allVeh && vt !== an.vt) return;
       const vz = zones[vt] || { local: true, zonal: true };
       const e = Object.assign({}, vehicles[vt] || { local: draft.bandStarts.map(() => ''), zonal: draft.bandStarts.map(() => '') });
       ['local', 'zonal'].forEach(z => {
         if (!vz[z]) return;
-        if (q.zoneSpecific && q.zone !== z) return;
+        if (q.zoneSpecific && an.zone !== z) return;
         let arr = (e[z] || draft.bandStarts.map(() => '')).slice();
         if (q.allDay) arr = draft.bandStarts.map((_, i) => (i === 0 ? sp : ''));
-        else arr[q.hourIdx || 0] = sp;
+        else arr[an.hourIdx || 0] = sp;
         e[z] = arr; touched++;
       });
       vehicles[vt] = e;
     });
     if (!touched) { this.showToast('No vehicle \u00d7 zone rows match that selection', '#C77B00'); return; }
     this.setState({ speedProfileDraft: Object.assign({}, draft, { vehicles }), speedProfileErrors: [] });
-    this.showToast(sp + ' km/h applied to ' + touched + ' row' + (touched === 1 ? '' : 's') + (q.allDay ? ', all day' : ' from ' + draft.bandStarts[q.hourIdx || 0]), '#128A3E');
+    this.showToast(sp + ' km/h applied to ' + touched + ' row' + (touched === 1 ? '' : 's') + (q.allDay ? ', all day' : ' from ' + draft.bandStarts[an.hourIdx || 0]), '#128A3E');
   }
   saveSpeedProfileModal() {
     if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 Design Inputs are read-only.', '#C77B00'); return; }
@@ -8867,6 +8839,17 @@ class NDCApp extends React.Component {
     // on this form too, so mandatory has to be a real, explicit check here, not an assumption
     // that switching the field to a <select> alone would be enough (a <select>'s own default
     // value is cosmetic/display-only until the underlying form state is actually touched).
+    // 2026-10-15 — mandatory fields (no safe default). Coordinates are required only for a Manual SC
+    // (an AutoDML SC's coordinates come from the backend and are locked).
+    const isAutodmlSc = !!(this.engineStore.autodmlSc || {})[code];
+    const reqMissing = [];
+    if (!isAutodmlSc && (String(f.lat || '').trim() === '' || String(f.lng || '').trim() === '')) reqMissing.push('Latitude / Longitude');
+    if (!(parseInt(String(f.volCap || '').replace(/[^0-9]/g, ''), 10) > 0)) reqMissing.push('SC Capacity');
+    if (!f.type) reqMissing.push('SC Type');
+    if (!f.zone) reqMissing.push('Zone');
+    if (!(parseInt(String(f.sortCap || '').replace(/[^0-9]/g, ''), 10) > 0)) reqMissing.push('Sort Capacity');
+    ['rlhDocks', 'localTp', 'nonLocalTp'].forEach(k => { if (f[k] == null || String(f[k]).trim() === '') reqMissing.push({ rlhDocks: 'RLH Docks', localTp: 'Local TP Limit', nonLocalTp: 'Non-Local TP Limit' }[k]); });
+    if (reqMissing.length) { this.showToast(reqMissing.join(', ') + (reqMissing.length === 1 ? ' is' : ' are') + ' required', '#C77B00'); return; }
     if (f.maxHoldLocal == null || f.maxHoldLocal === '') { this.showToast('Max Hold Time \u2014 Local is required', '#C77B00'); return; }
     if (f.localDistThreshold != null && f.localDistThreshold !== '' && !(Number(f.localDistThreshold) > 0)) { this.showToast('Local Distance Threshold must be a positive number of km', '#C77B00'); return; }
     if (f.maxHoldNonLocal == null || f.maxHoldNonLocal === '') { this.showToast('Max Hold Time \u2014 Non-Local is required', '#C77B00'); return; }
@@ -8886,7 +8869,7 @@ class NDCApp extends React.Component {
     if (pocCheck.errs.length) { this.showToast(pocCheck.errs[0] + (pocCheck.errs.length > 1 ? ' (+' + (pocCheck.errs.length - 1) + ' more)' : ''), '#C77B00'); return; }
     const rlhDocksN = opt(f.rlhDocks); // 2026-08-26 fix — nlhDocksN removed, form field no longer exists
     const name = (f.name || '').trim() || code;
-    const zone = f.zone || 'South';
+    const zone = f.zone;
     const cycleMonth = this.state.activeCycleMonth.rlh;
     const editing = !!st.addScEditCode;
 
@@ -8899,11 +8882,15 @@ class NDCApp extends React.Component {
     } else {
       const row = this.engineStore.scRegistry[code];
       row.name = name; row.zone = zone;
-      if (lat != null) row.lat = lat;
-      if (lng != null) row.lng = lng;
+      if (lat != null && !isAutodmlSc) row.lat = lat;
+      if (lng != null && !isAutodmlSc) row.lng = lng;
     }
     setClassBField(this.engineStore, code, cycleMonth, 'sortCap', num(f.sortCap));
-    setClassBField(this.engineStore, code, cycleMonth, 'volCap', num(f.volCap));
+    // SC Capacity (Volume): AutoDML's value is the default; only a value that differs from it (or an
+    // SC that already carries a user value, or a Manual SC) is stored as the user's — and then kept.
+    { const dCur = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {}; const feedVc = ((this.engineStore.autodmlSc || {})[code] || {}).volCap; const vcIn = num(f.volCap);
+      if (!isAutodmlSc || dCur.volCapUser != null || vcIn !== feedVc) setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'volCapUser', vcIn, dCur);
+      if (!isAutodmlSc) setClassBField(this.engineStore, code, cycleMonth, 'volCap', vcIn); }
     // 2026-08-26 fix (#5) — SC Type dropdown was always in the form but never actually applied.
     // Now genuinely governs dispatch role: LMSC = RLH only, FMSC = NLH only, Hybrid = both.
     // Cycle-versioned like every other Class B field, so this only takes effect from THIS cycle
@@ -8913,7 +8900,7 @@ class NDCApp extends React.Component {
     const existingDForType = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code);
     const isMdcNode = existingDForType && existingDForType.nodeKind === 'MDC';
     if (!isMdcNode) {
-      const scType = f.type || 'LMSC';
+      const scType = f.type;
       const dispatchesRLH = scType === 'LMSC' || scType === 'Hybrid';
       const dispatchesNLH = scType === 'FMSC' || scType === 'Hybrid';
       setClassBField(this.engineStore, code, cycleMonth, 'scType', scType);
@@ -8978,7 +8965,7 @@ class NDCApp extends React.Component {
     const mkModule = (m, title, info) => {
       const bk = cfg.buckets[m];
       const rows = [];
-      bk.forEach(g => g.l2.forEach(l2 => {
+      bk.forEach(g => { if (!g.l2.length) rows.push({ l1: g.name, l2: 'No L2 yet \u2014 flag modals show only \u201cOthers\u201d', empty: true, editing: false, confirmDel: false }); g.l2.forEach(l2 => {
         const editing = !!(E && E.m === m && E.l1Id === g.id && E.l2Id === l2.id);
         rows.push({
           l1: g.name, l2: l2.name, editing,
@@ -8992,10 +8979,10 @@ class NDCApp extends React.Component {
           onDelAsk: () => this.setState({ cfgConfirmDel: { m, l1Id: g.id, l2Id: l2.id }, cfgRowEdit: null }),
           onDelConfirm: () => this.cfgDeleteRow(m, g.id, l2.id), onDelCancel: () => this.setState({ cfgConfirmDel: null }),
         });
-      }));
-      return { m, title, info: info + ' L2 is mandatory when flagging; remarks are optional unless the L2 is \u201cOthers\u201d, which is added automatically under every L1 (not listed here). ' + cycleNote,
+      }); });
+      return { m, title, info: info + ' L1 categories are fixed (one per change type); add, rename or delete the L2 reasons under them. L2 is mandatory when flagging; remarks are optional unless the L2 is \u201cOthers\u201d, which is added automatically under every L1 (not listed here). ' + cycleNote,
         readOnly, rows, hasRows: rows.length > 0, l1List: bk.map(g => g.name),
-        onAdd: () => this.setState({ cfgAddOpen: { m, l1: '', l2: '' }, cfgRowEdit: null, cfgConfirmDel: null }) };
+        onAdd: () => this.setState({ cfgAddOpen: { m, l1: bk[0] ? bk[0].name : '', l2: '' }, cfgRowEdit: null, cfgConfirmDel: null }) };
     };
     const A = st.cfgAddOpen;
     // Route Planner defaults — two-column parameter list, applied on Save (whole numbers only).
@@ -9033,7 +9020,7 @@ class NDCApp extends React.Component {
       // Add reason form (modal)
       cfgAdd: A ? { open: true, title: 'Add reason \u2014 ' + (A.m === 'rp' ? 'Route Planner' : 'Route Scheduler'), l1: A.l1, l2: A.l2,
         l1List: cfg.buckets[A.m].map(g => g.name),
-        l1IsNew: !!String(A.l1 || '').trim() && !cfg.buckets[A.m].some(g => g.name.trim().toLowerCase() === String(A.l1).trim().toLowerCase()),
+        l1IsNew: false,
         onL1: (ev) => this.setState({ cfgAddOpen: Object.assign({}, this.state.cfgAddOpen, { l1: ev.target.value }) }),
         onL2: (ev) => this.setState({ cfgAddOpen: Object.assign({}, this.state.cfgAddOpen, { l2: ev.target.value }) }),
         onKey: (ev) => { if (ev.key === 'Enter') this.cfgAddPair(); if (ev.key === 'Escape') this.setState({ cfgAddOpen: null }); },
@@ -9044,17 +9031,20 @@ class NDCApp extends React.Component {
     const l2 = (pfx, names) => names.map((n, i) => ({ id: pfx + '-' + (i + 1), name: n }));
     return {
       buckets: {
+        // 2026-10-15 — L1s are STATIC (REASON_L1S): the change categories each Ops Alignment flow
+        // shows. Only L2s vary with user input. Starter L2s carried over from the earlier buckets.
         rp: [
-          { id: 'rp-veh', key: 'vehicle', name: 'Vehicle Change', l2: l2('rp-veh', ['Mapping of Local & Non-Local DCs in Same Lane']) },
-          { id: 'rp-tp', key: 'tp', name: 'TP Change', l2: l2('rp-tp', ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance']) },
-          { id: 'rp-route', key: 'route', name: 'Route Change', l2: l2('rp-route', ['Cross-State Route', 'Geo-Constraints (Road Closure/Block)', 'Vehicle Cannot Reach DC', 'Vehicle Not Available', 'Wrong DC Location']) },
+          { id: 'rp-vehicle', key: 'vehicle', name: 'Vehicle Change', l2: l2('rp-vehicle', ['Mapping of Local & Non-Local DCs in Same Lane', 'Vehicle Not Available']) },
+          { id: 'rp-dcMove', key: 'dcMove', name: 'DC Movement', l2: l2('rp-dcMove', ['Cross-State Route', 'Vehicle Cannot Reach DC']) },
+          { id: 'rp-order', key: 'order', name: 'Route Order Change', l2: l2('rp-order', ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance']) },
+          { id: 'rp-dist', key: 'dist', name: 'Distance Change', l2: l2('rp-dist', ['Geo-Constraints (Road Closure/Block)', 'Reduced Round Trip Distance']) },
+          { id: 'rp-split', key: 'split', name: 'New Route / Split', l2: l2('rp-split', ['Vehicle Not Available', 'Vehicle Cannot Reach DC']) },
+          { id: 'rp-location', key: 'location', name: 'DC Location', l2: l2('rp-location', ['Wrong DC Location']) },
         ],
         rs: [
-          { id: 'rs-sc-cut', key: 'SC_cutoff', name: 'SC \u00b7 Dispatch Cutoff', l2: l2('rs-sc-cut', ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time']) },
-          { id: 'rs-sc-tat', key: 'SC_tat', name: 'SC \u00b7 TAT', l2: l2('rs-sc-tat', ['Processing Time - Additional Time Needed', 'Handling Delay at Dock', 'Under-estimated Load/Unload Time']) },
-          { id: 'rs-lh-cut', key: 'LH_cutoff', name: 'LH \u00b7 Dispatch Cutoff', l2: l2('rs-lh-cut', ['Vendor not aligned - Due to Traffic', 'DC Not open to receive load']) },
-          { id: 'rs-lh-tat', key: 'LH_tat', name: 'LH \u00b7 TAT', l2: l2('rs-lh-tat', ['Due to Traffic', 'Geographical constraints']) },
-          { id: 'rs-lm-land', key: 'LM_landing', name: 'LM \u00b7 Landing Time', l2: l2('rs-lm-land', ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early']) },
+          { id: 'rs-cutoff', key: 'cutoff', name: 'Cutoff Change', l2: l2('rs-cutoff', ['Dock Constraints - Manpower Limitation', 'Dock Constraints - Dock Reserved for NLH', 'Processing Time - Additional Time Needed', 'Delay Departure - Shift Changes/Break Time', 'Vendor not aligned - Due to Traffic', 'DC Not open to receive load']) },
+          { id: 'rs-tat', key: 'tat', name: 'TAT Change', l2: l2('rs-tat', ['Processing Time - Additional Time Needed', 'Handling Delay at Dock', 'Under-estimated Load/Unload Time', 'Due to Traffic', 'Geographical constraints']) },
+          { id: 'rs-landing', key: 'landing', name: 'Landing Time Change', l2: l2('rs-landing', ['Processing Feasibility', 'DC not open during suggested landing time', 'DC opening early']) },
         ],
       },
       rpDefaults: { speedMode: true, wave: true, hold: true, k: 1, j: 1, objectiveTime: 100 },
@@ -9068,7 +9058,22 @@ class NDCApp extends React.Component {
   }
   configFor(cycle) {
     const src = this.configSourceFor(cycle);
-    return src ? this.state.configByCycle[src] : this.defaultAppConfig();
+    return this.cfgStaticL1s(src ? this.state.configByCycle[src] : this.defaultAppConfig());
+  }
+  // cfgStaticL1s(cfg) (2026-10-15) — L1s are fixed per module; a saved config keeps its L2s for each
+  // fixed L1 (matched by key, then name), anything else is dropped. Empty L1s stay (flag modals then
+  // offer only "Others").
+  cfgStaticL1s(cfg) {
+    const def = this.defaultAppConfig();
+    const out = JSON.parse(JSON.stringify(cfg || def));
+    ['rp', 'rs'].forEach(m => {
+      const saved = (out.buckets && out.buckets[m]) || [];
+      const isStatic = saved.length === def.buckets[m].length && saved.every((g, i) => g.key === def.buckets[m][i].key);
+      if (isStatic) return;
+      out.buckets = out.buckets || {};
+      out.buckets[m] = def.buckets[m].map(d => { const g = saved.find(x => x.key === d.key) || saved.find(x => String(x.name).trim().toLowerCase() === d.name.toLowerCase()); return g ? Object.assign({}, d, { l2: g.l2 || [] }) : d; });
+    });
+    return out;
   }
   activeConfig() { return this.configFor((this.state.activeCycleMonth || {}).rlh); }
   updateConfig(mutator) {
@@ -9103,14 +9108,14 @@ class NDCApp extends React.Component {
   cfgAddPair() {
     const f = this.state.cfgAddOpen; if (!f) return;
     const m = f.m, l1Name = String(f.l1 || '').trim(), l2Name = String(f.l2 || '').trim();
-    const e1 = this.cfgL1Error(l1Name); if (e1) { this.showToast(e1, '#C77B00'); return; }
+    if (!this.activeConfig().buckets[m].some(x => x.name.trim().toLowerCase() === l1Name.toLowerCase())) { this.showToast('Pick one of the listed L1 categories', '#C77B00'); return; }
     const bk = this.activeConfig().buckets[m];
     const target = bk.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
     const e2 = this.cfgNameError(l2Name, target ? target.l2 : [], null); if (e2) { this.showToast(e2.replace('Name', 'L2'), '#C77B00'); return; }
     if (this.updateConfig(cfg => {
       const b = cfg.buckets[m];
       let t = b.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
-      if (!t) { t = { id: this.cfgUid(m), key: null, name: l1Name, l2: [] }; b.push(t); }
+      if (!t) return false;
       t.l2.push({ id: this.cfgUid(t.id), name: l2Name });
     })) {
       this.setState({ cfgAddOpen: null });
@@ -9119,30 +9124,12 @@ class NDCApp extends React.Component {
   }
   cfgSaveRowEdit() {
     const e = this.state.cfgRowEdit; if (!e) return;
-    const l1Name = String(e.l1 || '').trim(), l2Name = String(e.l2 || '').trim();
-    const e1 = this.cfgL1Error(l1Name); if (e1) { this.showToast(e1, '#C77B00'); return; }
-    const bk = this.activeConfig().buckets[e.m];
-    const from = bk.find(x => x.id === e.l1Id); if (!from) { this.setState({ cfgRowEdit: null }); return; }
-    const sameGroup = from.name.trim().toLowerCase() === l1Name.toLowerCase();
-    const existing = sameGroup ? from : bk.find(x => x.name.trim().toLowerCase() === l1Name.toLowerCase());
-    // L2 must be unique within the L1 it ends up under (ignoring this row itself).
-    const siblings = existing ? existing.l2 : (from.l2.length === 1 ? from.l2 : []);
-    const e2 = this.cfgNameError(l2Name, siblings, e.l2Id); if (e2) { this.showToast(e2.replace('Name', 'L2'), '#C77B00'); return; }
+    const l2Name = String(e.l2 || '').trim();
+    const g = this.activeConfig().buckets[e.m].find(x => x.id === e.l1Id); if (!g) { this.setState({ cfgRowEdit: null }); return; }
+    const e2 = this.cfgNameError(l2Name, g.l2, e.l2Id); if (e2) { this.showToast(e2.replace('Name', 'L2'), '#C77B00'); return; }
     if (this.updateConfig(cfg => {
-      const b = cfg.buckets[e.m];
-      const src = b.find(x => x.id === e.l1Id); const item = src.l2.find(x => x.id === e.l2Id); if (!item) return false;
-      item.name = l2Name;
-      if (src.name.trim().toLowerCase() === l1Name.toLowerCase()) { src.name = l1Name; return; }
-      const tgt = b.find(x => x.id !== src.id && x.name.trim().toLowerCase() === l1Name.toLowerCase());
-      if (tgt) {
-        src.l2 = src.l2.filter(x => x.id !== item.id); tgt.l2.push(item);
-        if (!src.l2.length) cfg.buckets[e.m] = b.filter(x => x.id !== src.id);
-      } else if (src.l2.length === 1) {
-        src.name = l1Name; // last row → rename the L1 itself, keeping its suggestion key
-      } else {
-        src.l2 = src.l2.filter(x => x.id !== item.id);
-        b.splice(b.indexOf(src) + 1, 0, { id: this.cfgUid(e.m), key: null, name: l1Name, l2: [item] });
-      }
+      const src = cfg.buckets[e.m].find(x => x.id === e.l1Id); const item = src && src.l2.find(x => x.id === e.l2Id); if (!item) return false;
+      item.name = l2Name; // L1s are static (2026-10-15) — a row can't move between them
     })) this.setState({ cfgRowEdit: null });
   }
   // Hard delete (per product decision). Submitted feedback keeps its reason text snapshot.
@@ -9150,18 +9137,21 @@ class NDCApp extends React.Component {
     if (this.updateConfig(cfg => {
       const b = cfg.buckets[m]; const g = b.find(x => x.id === l1Id); if (!g) return false;
       g.l2 = g.l2.filter(x => x.id !== l2Id);
-      if (!g.l2.length) cfg.buckets[m] = b.filter(x => x.id !== l1Id);
+      // L1s are static (2026-10-15): an L1 stays even after its last L2 is deleted.
     })) { this.setState({ cfgConfirmDel: null }); this.showToast('Reason deleted', '#D14B4B'); }
   }
   // Reason picker data for a flag modal: L1 options (falls back to a single "General" L1 if a
   // planner has deleted every L1, so flagging never dead-ends), and the chosen L1's L2 list with
   // "Others" always appended last.
+  // 2026-10-15 — L1s are static, one per change category, so the L1 is fixed by what was changed:
+  // Route Planner keys (vehicle / dcMove / order / dist / split / location) map 1:1; Route Scheduler
+  // keys arrive as persona_field (e.g. 'LH_cutoff') and map on the field (cutoff / tat / landing).
+  // Only that one L1 is offered; L2s come from Configurations with "Others" always last.
   reasonPickerFor(m, chosenL1Id, suggestKey) {
     const bk = this.activeConfig().buckets[m] || [];
-    const l1s = bk.length ? bk : [{ id: '__general', key: null, name: 'General', l2: [] }];
-    const suggested = (suggestKey && l1s.find(x => x.key === suggestKey)) || l1s[0];
-    const l1 = (chosenL1Id && l1s.find(x => x.id === chosenL1Id)) || suggested;
-    return { l1Options: l1s.map(x => ({ value: x.id, label: x.name })), l1Id: l1.id, l1Name: l1.name, l2Options: l1.l2.map(x => x.name).concat(['Others']) };
+    const key = (m === 'rs' && suggestKey && String(suggestKey).indexOf('_') >= 0) ? String(suggestKey).split('_').pop() : suggestKey;
+    const l1 = (key && bk.find(x => x.key === key)) || (chosenL1Id && bk.find(x => x.id === chosenL1Id)) || bk[0] || { id: '__general', key: null, name: 'General', l2: [] };
+    return { l1Options: [{ value: l1.id, label: l1.name }], l1Id: l1.id, l1Name: l1.name, l2Options: l1.l2.map(x => x.name).concat(['Others']) };
   }
   // localThresholdFor(scCode) / dcIsLocal(dc) (2026-09-28) — Local vs Non-Local used to be decided
   // ONCE at seed time with a hardcoded 100 km and stored as dc.isLocal, so no setting could ever
@@ -10151,12 +10141,13 @@ class NDCApp extends React.Component {
           if (row) {
             if (bPatch._name) row.name = bPatch._name;
             if (bPatch._zone) row.zone = bPatch._zone;
-            if (bPatch._lat != null) row.lat = bPatch._lat;
-            if (bPatch._lng != null) row.lng = bPatch._lng;
+            const _isAdml = !!(this.engineStore.autodmlSc || {})[code]; // AutoDML coordinates / status aren't overwritten by uploads
+            if (bPatch._lat != null && !_isAdml) row.lat = bPatch._lat;
+            if (bPatch._lng != null && !_isAdml) row.lng = bPatch._lng;
           }
-          if (bPatch._status) { const wasActive = resolveExistence(this.engineStore, code, cycleMonth) === 'active'; if (bPatch._status === 'inactive' && wasActive) { setSCStatus(this.engineStore, code, 'deactivated', cycleMonth); this.pruneScFromCreation(code); } else if (bPatch._status === 'active' && !wasActive) setSCStatus(this.engineStore, code, 'active', cycleMonth); }
+          if (bPatch._status && !(this.engineStore.autodmlSc || {})[code]) { const wasActive = resolveExistence(this.engineStore, code, cycleMonth) === 'active'; if (bPatch._status === 'inactive' && wasActive) { setSCStatus(this.engineStore, code, 'deactivated', cycleMonth); this.pruneScFromCreation(code); } else if (bPatch._status === 'active' && !wasActive) setSCStatus(this.engineStore, code, 'active', cycleMonth); }
           // Class B (sortCap/volCap/scType + derived dispatch flags) — cycle-versioned.
-          if (bPatch.volCap != null) setClassBField(this.engineStore, code, cycleMonth, 'volCap', bPatch.volCap);
+          if (bPatch.volCap != null) { const dU = peekClassD(this.engineStore, 'rlh', 'scMaster', cycleMonth, code) || {}; const fv = ((this.engineStore.autodmlSc || {})[code] || {}).volCap; if (!(this.engineStore.autodmlSc || {})[code] || dU.volCapUser != null || bPatch.volCap !== fv) setClassDField(this.engineStore, 'rlh', 'scMaster', cycleMonth, code, 'volCapUser', bPatch.volCap, dU); }
           if (bPatch.sortCap != null) setClassBField(this.engineStore, code, cycleMonth, 'sortCap', bPatch.sortCap);
           if (bPatch.scType) {
             const dispatchesRLH = bPatch.scType === 'LMSC' || bPatch.scType === 'Hybrid';
@@ -10429,6 +10420,28 @@ class NDCApp extends React.Component {
       schedulerSelectedPlanIds: (st.schedulerSelectedPlanIds || []).filter(id => planScById[id] !== code),
     });
   }
+  // scMissingFields(sc) (2026-10-15) — what an SC still needs before Design Creation can use it.
+  // Mandatory with no safe default: Coordinates, SC Capacity (Volume), Sort Capacity, SC Type, Zone,
+  // RLH Docks, Local / Non-Local TP Limit, and the 4 mandatory POCs. Fields with a system default
+  // (Local Distance Threshold, Max Hold, NLH Docks, Operating Hours) never count. Deactivated SCs and
+  // MDC nodes don't need action. Returns [{ key, label }].
+  scMissingFields(s) {
+    if (!s || s.nodeKind === 'MDC' || s.isActive === false) return [];
+    const out = [], blank = (v) => v == null || v === '' || (typeof v === 'number' && Number.isNaN(v));
+    if (blank(s.lat) || blank(s.lng) || (Number(s.lat) === 0 && Number(s.lng) === 0)) out.push({ key: 'coords', label: 'Coordinates' });
+    if (!(Number(s.volCap) > 0)) out.push({ key: 'volCap', label: 'SC Capacity' });
+    if (!s.scTypeSet) out.push({ key: 'scType', label: 'SC Type' });
+    if (!s.zone) out.push({ key: 'zone', label: 'Zone' });
+    if (!(Number(s.sortCap) > 0)) out.push({ key: 'sortCap', label: 'Sort Capacity' });
+    if (blank(s.rlhDocks)) out.push({ key: 'rlhDocks', label: 'RLH Docks' });
+    if (blank(s.localTp)) out.push({ key: 'localTp', label: 'Local TP Limit' });
+    if (blank(s.nonLocalTp)) out.push({ key: 'nonLocalTp', label: 'Non-Local TP Limit' });
+    const pr = s.pocRoles || normalizeScPocRoles(s);
+    const missingPocs = SC_POC_CATEGORIES.filter(c => c.required && !pr[c.key]);
+    if (missingPocs.length) out.push({ key: 'pocs', label: missingPocs.length + ' mandatory POC' + (missingPocs.length === 1 ? '' : 's') });
+    return out;
+  }
+
   // ===== Master template I/O helpers (2026-10-15) =====
   downloadB64(name, b64) { try { const bin = atob(b64); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); const blob = new Blob([u8], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); } catch (err) { this.showToast('Download failed', '#D14B4B'); } }
   // sheetRowsFrom(result, isXlsx) — array of string arrays from a CSV text or an .xlsx ArrayBuffer
@@ -10970,9 +10983,11 @@ class NDCApp extends React.Component {
     const volErrModalReplace = () => { const m = st.volErrModal; this.setState({ volErrModal: null }); if (m && m.type) replaceVolFile(m.name, m.type); };
     const _addedScs = (st.addedScs || []).filter(s => zf(s.zone) && tf(scTypeOf(s)) && (!q || s.code.toLowerCase().indexOf(q) >= 0 || (s.name || '').toLowerCase().indexOf(q) >= 0));
     const scRemovedMap = st.scRemoved || {};
-    // 2026-10-15 — Active SCs first, deactivated ones after; original order kept within each group
+    // 2026-10-15 — SCs that need action first (red), then Active, then Deactivated; original order
     // (Array.prototype.sort is stable). Applied before paging, so it holds across pages.
-    const scFiltered = _addedScs.concat(anFiltered).filter(s => !scRemovedMap[s.code]).sort((a, b) => (a.isActive === false ? 1 : 0) - (b.isActive === false ? 1 : 0));
+    const scRank = (s) => (this.scMissingFields(s).length ? 0 : (s.isActive === false ? 2 : 1));
+    const scFiltered = _addedScs.concat(anFiltered).filter(s => !scRemovedMap[s.code]).sort((a, b) => scRank(a) - scRank(b));
+    const scNeedsActionCount = (d.scs || []).filter(s => this.scMissingFields(s).length > 0).length;
     // PARITY §6 — identity columns City / State + Type. State is the representative state for the SC's
     // zone (deterministic); Type derives from scale (large LMSC = Hub, mid = Regional, small = Spoke).
     const ZSTATE = { North: 'Delhi NCR', West: 'Maharashtra', South: 'Karnataka', East: 'West Bengal' };
@@ -10990,11 +11005,13 @@ class NDCApp extends React.Component {
       const rf = this.resolveScFields(s);
       const codeLC = s.code.toLowerCase().replace(/[^a-z0-9]/g, '');
       const pocOpenRect = st.pocOpenRect || { top: 0, left: 0 };
-      return { code: s.code, name: s.name, zone: s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone), scType: s.nodeKind === 'MDC' ? 'MDC' : s.dispatchRoleType, isMdc: s.nodeKind === 'MDC', sortCap: fmtInt(s.sortCap), volCap: fmtInt(s.volCap), docks: s.docks,
-        coords: rf.lat.toFixed(4) + ', ' + rf.lng.toFixed(4),
-        nlhDocks: rf.nlhDocks, rlhDocks: rf.rlhDocks, localTp: rf.localTp, nonLocalTp: rf.nonLocalTp, localDistThreshold: (s.localDistThreshold != null ? s.localDistThreshold : 100) + ' km', localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
+      const miss = {}; const missing = this.scMissingFields(s); missing.forEach(m => { miss[m.key] = true; });
+      const MISS = React.createElement('span', { style: { color: '#D14B4B', fontWeight: 700 } }, 'Missing');
+      return { needsAction: missing.length > 0, missingLabel: missing.map(m => m.label).join(', '), isManual: s.source === 'Manual', statusLocked: s.source === 'AutoDML', code: s.code, name: s.name, zone: miss.zone ? MISS : s.zone, cityState: s.name + ' / ' + (ZSTATE[s.zone] || s.zone || '\u2014'), scType: s.nodeKind === 'MDC' ? 'MDC' : (miss.scType ? MISS : s.dispatchRoleType), isMdc: s.nodeKind === 'MDC', sortCap: miss.sortCap ? MISS : fmtInt(s.sortCap), volCap: miss.volCap ? MISS : fmtInt(s.volCap), docks: s.docks,
+        coords: miss.coords ? MISS : (Number(rf.lat).toFixed(4) + ', ' + Number(rf.lng).toFixed(4)),
+        nlhDocks: rf.nlhDocks, rlhDocks: miss.rlhDocks ? MISS : rf.rlhDocks, localTp: miss.localTp ? MISS : rf.localTp, nonLocalTp: miss.nonLocalTp ? MISS : rf.nonLocalTp, localDistThreshold: (s.localDistThreshold != null ? s.localDistThreshold : 100) + ' km', localSpeed: rf.localSpeed, nonLocalSpeed: rf.nonLocalSpeed, openTime: rf.openTime, closeTime: rf.closeTime, dcCount: s.dcCount,
         holdTimeOn: rf.holdTimeOn, maxHoldLocal: rf.maxHoldLocal, maxHoldNonLocal: rf.maxHoldNonLocal,
-        pocCount: pl.length, pocSummary: pl.length ? (pl.length + ' POC' + (pl.length === 1 ? '' : 's')) : 'None on file',
+        pocCount: pl.length, pocSummary: miss.pocs ? ('Missing ' + missing.find(m => m.key === 'pocs').label.replace('mandatory ', '')) : (pl.length ? (pl.length + ' POC' + (pl.length === 1 ? '' : 's')) : 'None on file'), pocMissing: !!miss.pocs,
         pocList: pl,
         pocOpen: pocOpenRow === s.code, pocOpenRect: pocOpenRect,
         opHoursConfigured: (rf.nonOperating.length > 0 || rf.breaks.length > 0),
@@ -11014,7 +11031,7 @@ class NDCApp extends React.Component {
         rowDeactivate: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'deactivated', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' deactivated', '#C77B00', () => { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); }); },
         rowReactivate: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past — Design Inputs are read-only.', '#C77B00'); return; } setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' reactivated', '#128A3E'); },
         rowDeleteConfirm: () => this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }),
-        onToggleActive: () => { if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 Design Inputs are read-only.', '#C77B00'); return; } if (s.isActive) this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }); else { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' reactivated', '#128A3E'); } } };
+        onToggleActive: () => { if (s.source === 'AutoDML') { this.showToast(s.code + '\u2019s status comes from AutoDML', '#5A5E66'); return; } if (this.isRlhCyclePast()) { this.showToast('This cycle is in the past \u2014 Design Inputs are read-only.', '#C77B00'); return; } if (s.isActive) this.setState({ delConfirm: { kind: 'sc', key: s.code, label: s.code + ' / ' + s.name } }); else { setSCStatus(this.engineStore, s.code, 'active', this.state.activeCycleMonth.rlh); this.refreshScs(); this.showToast(s.code + ' reactivated', '#128A3E'); } } };
     });
     // ===== LMDC Master (2026-08-06, fixed dropdowns 2026-08-07) =========================
     // Search + zone filter + pagination over d.lmdcs (thousands of rows — generated once in
@@ -11439,14 +11456,14 @@ class NDCApp extends React.Component {
       // were rendering as garbled overlapping text). Widened each affected column.
       // 2026-10-15 — STATUS column (Active toggle) added before the Edit column; scGridMinW is the
       // sum of the tracks, so the sticky header's grey background always spans every column.
-      scGridCols: '90px 130px 160px 90px 80px 90px 90px 140px 100px 100px 100px 100px 100px 100px 140px 90px 120px 56px',
-      scGridMinW: [90, 130, 160, 90, 80, 90, 90, 140, 100, 100, 100, 100, 100, 100, 140, 90, 120, 56].reduce((a, b) => a + b, 0),
+      scGridCols: '110px 120px 140px 90px 130px 160px 90px 80px 90px 100px 100px 100px 100px 100px 100px 140px 90px 56px',
+      scGridMinW: [110, 120, 140, 90, 130, 160, 90, 80, 90, 100, 100, 100, 100, 100, 100, 140, 90, 56].reduce((a, b) => a + b, 0),
       isScMaster: st.mastersTab === 'sc', isVehMaster: st.mastersTab === 'vehicle', isAvail: st.mastersTab === 'avail', isLmdcMaster: st.mastersTab === 'lmdc',
       // Phase 7 (2026-08-25) — real past-cycle banner, driven by activeCycleMonth.rlh (not the
       // older cosmetic designCycle/isPastCycle that still separately drives sidebar nav).
       rlhCyclePast: this.isRlhCyclePast(), rlhCycleLabel: monthLabel(st.activeCycleMonth.rlh),
       mastersTabs: [['sc', 'Sort Center Master', d.scs.length, 'Canonical SC master — one row per Sort Centre with zone, capacity and location.'], ['avail', 'SC Vehicle Availability', (d.scVehAvail || []).length, 'Vehicles available per SC (one row per vehicle type per SC) — capped by the Touch Point Limit.'], ['vehicle', 'Vehicle Master', vehTypeCount, "Capacity, distance limit, TP cap and LH feasibility per vehicle type. TP Limit is a reference cap (default 7) — over it flags, doesn't block."], ['lmdc', 'LMDC Master', (d.lmdcs || []).length, 'Code/Location/Capacity: from AutoDML, locked. RLH Mode, Cutoff, Vehicle Size, Unload: edit inline or via CSV. Italic "Default" = a plan can still override; set a value to lock it.']].map(t => ({ label: t[1], tip: t[3], attention: false, active: st.mastersTab === t[0], color: st.mastersTab === t[0] ? '#003F98' : '#5A5E66', weight: st.mastersTab === t[0] ? '700' : '500', bg: st.mastersTab === t[0] ? '#fff' : 'transparent', bd: st.mastersTab === t[0] ? '#D7DCE5' : 'transparent', onClick: () => this.setState({ mastersTab: t[0] }) })),
-      scRows, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
+      scRows, scNeedsActionCount, hasScNeedsAction: scNeedsActionCount > 0, scMasterPager: scMasterPager, scShown: scRows.length, scTotal: scFiltered.length, vehMaster, vehTypeCount,
       addVehType: () => this.setState({ addVehOpen: true, addVehEditName: null, addVehForm: { vtype: '', capacity: '', dist: '', hardCap: '', localTp: '', nonLocalTp: '', feas: [] } }),
       addVehOpen: !!st.addVehOpen,
       addVehNotOpen: !st.addVehOpen,
@@ -11614,6 +11631,8 @@ class NDCApp extends React.Component {
           hasOtherZone,
           cells: draft.bandStarts.map((b, i) => ({
             idx: i, label: b, value: arr[i] != null ? arr[i] : '', inherited: (arr[i] === '' || arr[i] == null) ? inh[i] : '', required: i === 0 && (arr[i] === '' || arr[i] == null),
+            anchored: !!(st.speedQA && st.speedQA.anchor && st.speedQA.anchor.vt === vt && st.speedQA.anchor.zone === zoneKey && st.speedQA.anchor.hourIdx === i),
+            onFocusCell: () => this.setSpeedQA({ anchor: { vt, zone: zoneKey, hourIdx: i } }),
             onChange: (v) => this.setSpeedCell(vt, zoneKey, i, v === '' ? '' : Number(v)),
           })),
           onFillAllDay: () => this.speedFillSameAllDay(vt, zoneKey),
@@ -11631,20 +11650,15 @@ class NDCApp extends React.Component {
       onBackToEdit: () => this.backToEditSpeedProfile(),
       onSave: () => this.saveSpeedProfileModal(),
       // Quick apply (2026-10-15)
-      qa: (() => { const q = st.speedQA || {}; return {
+      qa: (() => { const q = st.speedQA || {}; const an = q.anchor || { vt: '', zone: 'local', hourIdx: 0 }; const zl = an.zone === 'zonal' ? 'Non-Local' : 'Local'; return {
         speed: q.speed == null ? '' : q.speed, allDay: q.allDay !== false, allVeh: q.allVeh !== false, zoneSpecific: !!q.zoneSpecific,
-        hourIdx: String(q.hourIdx || 0), veh: q.veh || '', zone: q.zone || 'local',
-        hourOptions: draft.bandStarts.map((b, i) => ({ value: String(i), label: 'From ' + b })),
-        vehOptions: vehicleTypeNames, zoneOptions: [{ value: 'local', label: 'Local' }, { value: 'zonal', label: 'Non-Local' }],
+        anchorLabel: (an.vt || '\u2014') + ' \u00b7 ' + zl + ' \u00b7 ' + (draft.bandStarts[an.hourIdx || 0] || '00:00'),
         onSpeed: (e) => this.setSpeedQA({ speed: e.target.value }),
         onToggleAllDay: () => this.setSpeedQA({ allDay: !(q.allDay !== false) }),
         onToggleAllVeh: () => this.setSpeedQA({ allVeh: !(q.allVeh !== false) }),
         onToggleZone: () => this.setSpeedQA({ zoneSpecific: !q.zoneSpecific }),
-        onHour: (e) => this.setSpeedQA({ hourIdx: Number(e.target.value) }),
-        onVeh: (e) => this.setSpeedQA({ veh: e.target.value }),
-        onZone: (e) => this.setSpeedQA({ zone: e.target.value }),
         onApply: () => this.applySpeedQuick(),
-        desc: 'Sets ' + (Number(q.speed) > 0 ? Math.round(Number(q.speed)) : '\u2014') + ' km/h for ' + (q.allVeh !== false ? 'every vehicle type' : (q.veh || '\u2014')) + ', ' + (q.zoneSpecific ? ((q.zone === 'zonal' ? 'Non-Local' : 'Local') + ' only') : 'all zones') + ', ' + (q.allDay !== false ? 'all day (00:00 onward)' : ('from ' + (draft.bandStarts[q.hourIdx || 0] || '00:00') + ' until the next entered hour')) + '.',
+        desc: 'Sets ' + (Number(q.speed) > 0 ? Math.round(Number(q.speed)) : '\u2014') + ' km/h for ' + (q.allVeh !== false ? 'every vehicle type' : an.vt) + ', ' + (q.zoneSpecific ? (zl + ' only') : 'all zones') + ', ' + (q.allDay !== false ? 'all day (00:00 onward)' : ('from ' + (draft.bandStarts[an.hourIdx || 0] || '00:00') + ' until the next entered hour')) + '.' + ((q.allVeh === false || q.zoneSpecific || q.allDay === false) ? ' Click a cell in the grid to change the vehicle, zone or hour this uses.' : ''),
       }; })(),
     };
   }
@@ -11742,8 +11756,11 @@ class NDCApp extends React.Component {
       rows.forEach(r => { const cap = r.cap != null ? Number(r.cap) : vehCapByName[r.type]; if (cap != null && (!best || cap > best.cap)) best = { type: r.type, cap }; });
       return best;
     };
-    const scGroups = ZONES.map(z => {
-      const list = filtered.filter(s => s.zone === z);
+    // 2026-10-15 — SCs with no Zone yet (e.g. new from AutoDML) get their own trailing group, so they
+    // still appear here with the missing-details strip instead of vanishing from Design Creation.
+    const NO_ZONE = 'Zone not set';
+    const scGroups = ZONES.concat(filtered.some(s => !s.zone) ? [NO_ZONE] : []).map(z => {
+      const list = filtered.filter(s => (z === NO_ZONE ? !s.zone : s.zone === z));
       const selN = list.filter(s => selSet[s.code]).length;
       const collapsed = !!st.collapsedZones[z];
       return { zone: z, count: list.length, selectedCount: selN, hasSel: selN > 0, collapsed, expanded: !collapsed && list.length > 0,
@@ -11752,7 +11769,8 @@ class NDCApp extends React.Component {
         onSelectZone: () => { const cur = new Set(sel); const all = selN === list.length; if (all) { list.forEach(s => cur.delete(s.code)); } else { let hit = false; list.forEach(s => { if (cur.has(s.code)) return; if (cur.size >= SC_CAP) { hit = true; return; } cur.add(s.code); }); if (hit) this.showToast('Plan group is capped at ' + SC_CAP + ' SCs — some were not added', '#C77B00'); } this.setState({ selectedSCs: [...cur] }); },
         scs: list.map(s => { const gap = scVolGap(s); const drops = droppedFor(s.code);
           // 2.5: SC Master properties — mark GGNS as the demo "missing details" SC.
-          const hasMissingMaster = s.code === 'GGNS';
+          // 2026-10-15 — driven by the SC's real readiness (scMissingFields), replacing the GGNS demo.
+          const scMissing = this.scMissingFields(s); const hasMissingMaster = scMissing.length > 0; const missingMasterText = scMissing.map(m => m.label).join(', ') + (scMissing.length === 1 ? ' is' : ' are') + ' not set.';
           const noMissingMaster = !hasMissingMaster;
           const scVolCapLabel = hasMissingMaster ? '—' : fmtInt(s.volCap);
           const scSortCapLabel = hasMissingMaster ? '—' : fmtInt(s.sortCap);
@@ -11767,7 +11785,7 @@ class NDCApp extends React.Component {
           const scLargestVehLabel = scLargestVeh ? (scLargestVeh.type + ' (' + fmtInt(scLargestVeh.cap) + ')') : '—';
           const realDc = { count: scDcCounts.counts[s.code] || 0 };
           return { code: s.code, name: s.name, dcCount: realDc.count, volume: fmtL(s.volume), selected: !!selSet[s.code], newSc: !s.hasRef, expanded: st.expandedSC === s.code, isMdc: s.nodeKind === 'MDC',
-          hasMissingMaster, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel, scLargestVehLabel,
+          hasMissingMaster, missingMasterText, noMissingMaster, scVolCapLabel, scSortCapLabel, scDocksLabel, scLocLabel, scLargestVehLabel,
           onFixMaster: () => { this.go('inputs'); this.setState({ inputsTab: 'masters', mastersTab: 'sc' }); this.showToast('Navigating to Sort Center Master — update ' + s.code + ' details', '#1E6FB8'); },
           // D. per-SC volume-gap flag (covers both zero-volume and missing-volume DCs)
           volGap: gap.hasGap, volGapLabel: gap.total + (gap.total === 1 ? ' DC no vol' : ' DCs no vol'),
@@ -15968,13 +15986,20 @@ class NDCApp extends React.Component {
   // any DC's Route Code (move / split), Lat/Lng or Distance — Lat/Lng and Distance aren't named
   // in the product's 3 categories, so they're grouped under Route Change ("Wrong DC Location"
   // is literally the lat/lng correction case).
+  // 2026-10-15 — the six change categories Ops Alignment shows (and the static L1s): Vehicle Change,
+  // DC Movement (DC moved to another existing route), Route Order Change (touch-point order), Distance
+  // Change, New Route / Split (DC peeled onto a new route), DC Location (lat / lng).
   rpNcCategories(flags, dcMap) {
     const cats = [];
-    if ((flags || {}).vehicleType) cats.push('vehicle');
     const vals = Object.keys(dcMap || {}).map(k => dcMap[k] || {});
     const has = (v) => v !== '' && v != null;
-    if (vals.some(v => has(v.tp))) cats.push('tp');
-    if (vals.some(v => has(v.routeCode) || has(v.lat) || has(v.lng) || has(v.distance))) cats.push('route');
+    const existing = new Set((((this.state.data || {}).plans || []).find(p => p.id === (this.state.alignPlanId || this.state.opsPlanId)) || { routes: [] }).routes.map(r => r.code || r.routeCode));
+    if ((flags || {}).vehicleType) cats.push('vehicle');
+    if (vals.some(v => has(v.routeCode) && v.routeCode !== '__SPLIT__' && (existing.size === 0 || existing.has(v.routeCode)))) cats.push('dcMove');
+    if (vals.some(v => has(v.tp))) cats.push('order');
+    if (vals.some(v => has(v.distance))) cats.push('dist');
+    if (vals.some(v => has(v.routeCode) && (v.routeCode === '__SPLIT__' || (existing.size > 0 && !existing.has(v.routeCode))))) cats.push('split');
+    if (vals.some(v => has(v.lat) || has(v.lng))) cats.push('location');
     return cats;
   }
   setNc(field, val) { const c = Object.assign({}, this.state.ncCells); c[field] = val; this.setState({ ncCells: c }); }
@@ -16045,7 +16070,7 @@ class NDCApp extends React.Component {
     // change + a TP change logs two reasons. Each type's L1 pre-selects the matching bucket from
     // Configurations (still changeable, since L1s are editable). L2 mandatory for every type;
     // remark mandatory only if any L2 is "Others". Enforced here, not only on the button.
-    const CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    const CAT_LABEL = { vehicle: 'Vehicle Change', dcMove: 'DC Movement', order: 'Route Order Change', dist: 'Distance Change', split: 'New Route / Split', location: 'DC Location' };
     const cats = this.rpNcCategories(flags, dcMap);
     if (cats.length === 0) { this.showToast('Flag at least one change before submitting', '#C77B00'); return; }
     const pairs = st.ncReasonPairs || {};
@@ -16452,7 +16477,7 @@ class NDCApp extends React.Component {
     }
     const ncHasFail = ncWarn.some(w => w.fail);
     // 2026-09-30 — one reason row per change type flagged (Vehicle / TP / Route).
-    const NC_CAT_LABEL = { vehicle: 'Vehicle Change', tp: 'TP Change', route: 'Route Change' };
+    const NC_CAT_LABEL = { vehicle: 'Vehicle Change', dcMove: 'DC Movement', order: 'Route Order Change', dist: 'Distance Change', split: 'New Route / Split', location: 'DC Location' };
     const ncCats = this.rpNcCategories(ncFlags, st.ncDcCells || {});
     const ncNothingFlagged = ncCats.length === 0;
     const ncPairs = st.ncReasonPairs || {};

@@ -1892,7 +1892,7 @@ All modules
 </button>
 </React.Fragment>))}
 </div>
-{(volFilesEmpty) ? (<><div style={css(`padding:16px 0 10px; text-align:center; font-size:12.5px; color:#5A5E66;`)}>No volume files match this search.</div></>) : null}
+{(volFilesEmpty) ? (<><div style={css(`padding:16px 0 10px; text-align:center; font-size:12.5px; color:#5A5E66;`)}>{(creationVolSearch) ? 'No volume files match this search.' : 'No LMDC Landing volume files yet \u2014 upload one in Design Inputs \u2192 Volume Inputs.'}</div></>) : null}
 </>) : null}
 {/* Empty state */}
 {(planTypeNoFiles) ? (<>
@@ -2574,26 +2574,13 @@ All modules
     2026-08-25 — NLH Design Ingestion now lives exclusively on the NLH card; this picker just
     references whichever cycle-month's plans NLH has ingested. */}
 <div style={css(`display:flex; align-items:center; gap:6px; margin-bottom:10px;`)}><span style={css(`font-size:13px; font-weight:700; color:#14171F;`)}>Pick an NLH scenario for these SCs</span><span className={"ndc-tip"} style={css(`position:relative; display:inline-flex; align-items:center; color:#8E96A3;`)}><svg width={"13"} height={"13"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"} strokeLinecap={"round"} strokeLinejoin={"round"}><path d={"M12 16v-4M12 8h.01M12 21a9 9 0 100-18 9 9 0 000 18z"} /></svg><span className={"ndc-tip-pop"}>Applies to every SC selected below. Add scenarios on SC-SC and NLH Design → Design Ingestion.</span></span></div>
-<div style={css(`position:relative; display:inline-block; margin-bottom:14px;`)}>
-<button onClick={toggleSchedNlhMonth} style={css(`display:flex; align-items:center; gap:7px; height:32px; padding:0 12px; border:1px solid #E6EBF2; border-radius:8px; background:#fff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; color:#14171F;`)}>
-NLH cycle: {schedNlhMonthLabel}
-<svg width={"12"} height={"12"} viewBox={"0 0 24 24"} fill={"none"} stroke={"currentColor"} strokeWidth={"2"}><path d={"M6 9l6 6 6-6"} strokeLinecap={"round"} strokeLinejoin={"round"} /></svg>
-</button>
-{(schedNlhMonthOpen) ? (<>
-<div style={css(`position:absolute; top:36px; left:0; width:200px; max-height:260px; overflow-y:auto; background:#fff; border:1px solid #E6EBF2; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.08); z-index:20; padding:6px;`)}>
-{(schedNlhMonthOptions || []).map((o, __iSchedNlhM) => (<React.Fragment key={__iSchedNlhM}>
-<div onClick={o.onSelect} style={css(`padding:8px 10px; border-radius:6px; cursor:pointer; font-size:12.5px; font-weight:${o.active ? '700' : '500'}; color:#14171F; background:${o.active ? '#EEF2FB' : 'transparent'};`)}>{o.label}</div>
-</React.Fragment>))}
-</div>
-</>) : null}
-</div>
 {(schedulerNlhEmpty) ? (<>
 <div style={css(`display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:40px 20px; text-align:center; border:1px dashed #E6EBF2; border-radius:10px; margin-bottom:20px;`)}>
-<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH scenarios for {schedNlhMonthLabel}</div>
-<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Add one on the SC-SC and NLH Design card's Design Ingestion tab, or pick a different month above.</div>
+<div style={css(`font-size:14px; font-weight:600; color:#14171F;`)}>No NLH scenarios yet</div>
+<div style={css(`font-size:12.5px; color:#5A5E66; max-width:340px;`)}>Add one on the SC-SC and NLH Design card's Design Ingestion tab.</div>
 </div>
 </>) : (<>
-<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO — {schedNlhMonthLabel}</div>
+<div style={css(`font-size:11px; font-weight:700; color:#5A5E66; letter-spacing:0.04em; margin-bottom:8px;`)}>PICK AN NLH SCENARIO <span style={css(`font-weight:500; letter-spacing:0; color:#8E96A3;`)}>· all months</span></div>
 <div style={css(`display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; margin-bottom:16px;`)}>
 {(schedulerNlhScenarioCards || []).map((sc, __iNsc) => (<React.Fragment key={__iNsc}>
 <button onClick={sc.onClick} style={css(`display:flex; align-items:center; gap:13px; text-align:left; padding:14px 16px; border:1.5px solid ${sc.active ? '#003F98' : '#E6EBF2'}; background:${sc.active ? '#EAEEFB' : '#fff'}; border-radius:8px; cursor:pointer; font-family:inherit;`)}>
@@ -6707,10 +6694,26 @@ class NDCApp extends React.Component {
     // object in the store; anything the user triggers from here is fully independent per cycle) —
     // it's the SEEDING METHOD that's simplified, not the isolation architecture.
     const julTransactional = extractRlhTransactional(_seedForNlh);
-    [['2026-05', 'May'], ['2026-06', 'Jun'], ['2026-07', 'Jul'], ['2026-08', 'Aug'], ['2026-09', 'Sep']].forEach(([month, abbr]) => {
-      this.engineStore.rlhCycleData = this.engineStore.rlhCycleData || {};
-      const retargeted = abbr === 'Jul' ? julTransactional : retargetMonthStrings(julTransactional, 'Jul', abbr, 'July', MONTH_ABBR_FULL[abbr]);
+    // 2026-11-17 — seed EVERY month May 2026 … Apr 2027 (12 months, a mix of past / current /
+    // future target months) so Design Review, Ops Alignment and Network Map show the platform at
+    // scale. Each month is the July dataset re-dated (month names, and the year for 2027 months).
+    // Months after the real current month are future targets: their plans are still early in the
+    // loop (Finalised -> In Alignment, Acknowledged -> Pushed) and have no Route Scheduler plans
+    // yet (those need a finalised parent).
+    const SEED_MONTHS = ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12', '2027-01', '2027-02', '2027-03', '2027-04'];
+    const _curMonth = currentMonthKey();
+    this.seedMonths = SEED_MONTHS;
+    this.engineStore.rlhCycleData = this.engineStore.rlhCycleData || {};
+    SEED_MONTHS.forEach(month => {
+      const abbr = MONTH_NAMES[Number(month.slice(5)) - 1];
+      let retargeted = abbr === 'Jul' ? julTransactional : retargetMonthStrings(julTransactional, 'Jul', abbr, 'July', MONTH_ABBR_FULL[abbr]);
+      if (month.slice(0, 4) !== '2026') retargeted = retargetMonthStrings(retargeted, '2026', month.slice(0, 4), '2026', month.slice(0, 4));
       const suffixed = suffixRlhIdsForMonth(retargeted, month);
+      if (monthCompare(month, _curMonth) > 0) {
+        const EARLY = { Finalised: 'In Alignment', Acknowledged: 'Pushed' };
+        suffixed.plans = (suffixed.plans || []).map(p => EARLY[p.status] ? Object.assign({}, p, { status: EARLY[p.status] }) : p);
+        suffixed.schedulerPlans = [];
+      }
       this.engineStore.rlhCycleData[month] = suffixed;
       createCycle(this.engineStore, 'rlh', month, { tables: [{ table: 'scMaster', defaults: {} }] });
     });
@@ -6722,7 +6725,7 @@ class NDCApp extends React.Component {
     // different, not just differently named. One tagged 'finalised' (as if NLH's own Design
     // Creation produced it), one 'ingested' (a raw uploaded file) — real variety for the origin
     // flag, not just a hardcoded default.
-    ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
+    SEED_MONTHS.forEach(month => {
       const realScs = (_seedForNlh.scs || []).filter(s => s.nodeKind !== 'MDC');
       [['30L Base', 'finalised', 1], ['45L Peak', 'ingested', 1.5]].forEach(([name, origin, mult]) => {
         const scData = {};
@@ -6739,7 +6742,7 @@ class NDCApp extends React.Component {
     // retargeting loop and the NLH seeding loop above have already run. Alternates each plan
     // between the two seeded scenarios (by SC-code hash) purely for demo variety — a real trigger
     // always has the planner explicitly pick one scenario for the whole run.
-    ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09'].forEach(month => {
+    SEED_MONTHS.forEach(month => {
       const bucket = this.engineStore.rlhCycleData[month];
       if (!bucket || !bucket.schedulerPlans) return;
       bucket.schedulerPlans = bucket.schedulerPlans.map(sp => {
@@ -6748,11 +6751,28 @@ class NDCApp extends React.Component {
         return Object.assign({}, sp, { nlhPlanId: 'NLH-SCENARIO-' + scenarioName.replace(/[^A-Za-z0-9]/g, '') + '-' + month });
       });
     });
-    // October: created (selectable, masters carried forward) but genuinely empty — nothing
-    // generated for it yet, ready for the user to trigger Design Creation into. Every other month
-    // (Feb-Apr, Nov onward) is deliberately left un-created — reachable only via "start new cycle".
-    this.engineStore.rlhCycleData['2026-10'] = emptyRlhTransactional();
-    createCycle(this.engineStore, 'rlh', '2026-10', { tables: [{ table: 'scMaster', defaults: {} }] });
+    // 2026-11-17 — GLOBAL INPUTS. Design Inputs aren't tied to a month any more: one global set,
+    // where each seeded entry carries the month it came from (`cycleMonth`) as a tag. It lives in
+    // the bucket the app works in (the real current month), so it never goes empty as the date
+    // moves. Volume files: every seeded month's files (distinct records, newest month first).
+    // AutoDML actions and node changes are the same DCs every month, so they're kept once, with
+    // their rows' month tags spread across the seeded months up to now.
+    const _pastSeed = SEED_MONTHS.filter(m => monthCompare(m, _curMonth) <= 0);
+    const _tagOf = (i) => _pastSeed[_pastSeed.length - 1 - (i % _pastSeed.length)];
+    const _latest = this.engineStore.rlhCycleData[_pastSeed[_pastSeed.length - 1]] || emptyRlhTransactional();
+    const globalInputs = {
+      volumeFiles: SEED_MONTHS.slice().reverse().reduce((acc, m) => acc.concat(((this.engineStore.rlhCycleData[m] || {}).volumeFiles || []).map(f => Object.assign({}, f, { cycleMonth: m }))), []),
+      autodml: (_latest.autodml || []).map(x => Object.assign({}, x)),
+      autodmlDetails: Object.keys(_latest.autodmlDetails || {}).reduce((acc, k) => { acc[k] = (_latest.autodmlDetails[k] || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i) })); return acc; }, {}),
+      autodmlNodes: (_latest.autodmlNodes || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i) })),
+      nodeAdditions: (_latest.nodeAdditions || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i) })),
+      nodeClosures: (_latest.nodeClosures || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i + 1) })),
+      migrations: (_latest.migrations || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i + 2) })),
+      nodeChangesUnified: (_latest.nodeChangesUnified || []).map((x, i) => Object.assign({}, x, { cycleMonth: _tagOf(i) })),
+    };
+    this.globalInputs = globalInputs;
+    createCycle(this.engineStore, 'rlh', _curMonth, { tables: [{ table: 'scMaster', defaults: {} }] });
+    this.engineStore.rlhCycleData[_curMonth] = Object.assign({}, this.engineStore.rlhCycleData[_curMonth] || emptyRlhTransactional(), globalInputs);
     const _demoNlhScCodes = (_seedForNlh.scs || []).slice(0, Math.ceil((_seedForNlh.scs || []).length * 0.8)).map(s => s.code);
     this.state = {
       persona: 'planner',
@@ -10322,6 +10342,14 @@ class NDCApp extends React.Component {
   // and narrow them with ONE global month filter (st.monthFilter, default 'all'). Range for both
   // the Target Month select and the filter: current month -6 .. +12.
   monthFull(m) { const p = String(m || '').split('-'); const N = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; return p.length === 2 ? N[Number(p[1]) - 1] + ' ' + p[0] : String(m || ''); }
+  // monthFilterMonths() (2026-11-17) — the filter lists every month that has plans or runs, plus the
+  // selectable window, newest first — so seeded months never drop out as the real date moves.
+  monthFilterMonths() {
+    const d = this.state.data || {}; const set = {};
+    this.monthWindow().forEach(m => { set[m] = true; });
+    ['plans', 'runs', 'schedulerPlans'].forEach(k => (d[k] || []).forEach(x => { if (x.cycleMonth) set[x.cycleMonth] = true; }));
+    return Object.keys(set).sort().reverse();
+  }
   monthWindow() {
     const cur = currentMonthKey(); const [y, m] = cur.split('-').map(Number);
     const out = []; for (let k = 12; k >= -6; k--) { const d = new Date(y, m - 1 + k, 1); out.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')); }
@@ -10605,6 +10633,29 @@ class NDCApp extends React.Component {
   // P — status-only run lifecycle (NO percentage; % isn't computable for an async Gurobi solve).
   // Queued/Planned -> In Progress -> Completed. The Queued state is real: only a batch of
   // CONCURRENCY runs are In Progress at once, the rest wait as Queued (relevant at large SC counts).
+  // makeLiveRun(queueRow, runs) (2026-11-17) — the Design Review record for a Route Planner run that
+  // just completed in the queue. Shaped like the seeded runs: it clones the SC's latest run as a
+  // template (any SC's run if it has none) and stamps this trigger's facts — target month
+  // (cycleMonth), Run Name, HW from Step 2, triggered now by the planner — with lightly varied
+  // metrics so repeated runs read as different solves. No real solver yet (as before).
+  makeLiveRun(r, runs) {
+    const mine = runs.filter(x => x.scCode === r.scCode);
+    const tpl = mine.slice().sort((a, b) => (b.runNo || 0) - (a.runNo || 0))[0] || runs[0] || {};
+    const sc = (this.state.data.scs || []).find(s => s.code === r.scCode) || {};
+    const runNo = mine.reduce((a, x) => Math.max(a, x.runNo || 0), 0) + 1;
+    const now = new Date(); const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const stamp = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '_' + String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0');
+    const jit = (v, pct, seed) => (typeof v === 'number' ? Math.max(0, v * (1 + ((((seed * 9301 + 49297) % 233280) / 233280) - 0.5) * pct)) : v);
+    const seed = runNo * 31 + r.scCode.charCodeAt(0);
+    const hw = (r.params && r.params.hw != null) ? Number(r.params.hw) : (tpl.hw != null ? tpl.hw : 0);
+    return Object.assign({}, tpl, {
+      id: r.scCode + '-LIVE-' + stamp, runId: r.scCode + '_' + stamp, runName: r.runName || '', runNo,
+      triggeredAt: String(now.getDate()).padStart(2, '0') + ' ' + MON[now.getMonth()] + ' \u00b7 ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'),
+      triggeredBy: 'Pranita Sapkal', scCode: r.scCode, scName: sc.name || tpl.scName || r.scCode, zone: sc.zone || tpl.zone, hw,
+      status: 'Completed', cycleMonth: r.cycleMonth || currentMonthKey(), live: true, params: r.params || tpl.params,
+      coverage: Math.min(1, jit(tpl.coverage, 0.04, seed)), cps: jit(tpl.cps, 0.12, seed + 1), util: Math.min(1, jit(tpl.util, 0.1, seed + 2)),
+    });
+  }
   triggerRuns(codes) {
     if (!codes || !codes.length) return;
     const CONCURRENCY = NDC_CONCURRENCY;
@@ -10631,13 +10682,17 @@ class NDCApp extends React.Component {
         const q = s.runQueue.map(r => Object.assign({}, r));
         // advance In-Progress rows; complete after a deterministic-ish number of ticks
         q.forEach(r => {
-          if (r.status === 'In Progress') { r.ticks = (r.ticks || 0) + 1; if (r.ticks >= 4 + (r.scCode.charCodeAt(0) % 4)) r.status = 'Completed'; }
+          if (r.status === 'In Progress') { r.ticks = (r.ticks || 0) + 1; if (r.ticks >= 4 + (r.scCode.charCodeAt(0) % 4)) { r.status = 'Completed'; r.justCompleted = true; } }
         });
         // promote Queued rows into freed In-Progress slots
         let active = q.filter(r => r.status === 'In Progress').length;
         for (let i = 0; i < q.length && active < CONCURRENCY; i++) { if (q[i].status === 'Queued') { q[i].status = 'In Progress'; q[i].ticks = 0; active++; } }
         any = q.some(r => r.status !== 'Completed');
         if (!any) clearInterval(this._q);
+        // 2026-11-17 — runs triggered here now reach Design Review: each run that just completed is
+        // added to data.runs (target month, Run Name, Step 2 params), built by makeLiveRun().
+        const done = q.filter(r => r.justCompleted); q.forEach(r => { delete r.justCompleted; });
+        if (done.length) { const runs = (s.data.runs || []).slice(); done.forEach(r => runs.unshift(this.makeLiveRun(r, runs))); return { runQueue: q, data: Object.assign({}, s.data, { runs }) }; }
         return { runQueue: q };
       });
     }, 520);
@@ -11740,7 +11795,10 @@ class NDCApp extends React.Component {
     const activePlanType = PLAN_TYPES.find(t => t.value === planInputType) || PLAN_TYPES[0];
     // 2.3: Filter to LMDC Landing only (already done via planInputType), last 4, and search by name.
     const volSearchQ = (st.creationVolSearch || '').toLowerCase();
-    const volOptionsAll = d.volumeFiles.filter(f => f.type === planInputType).slice(-4); // last 4 LMDC Landing files
+    // 2026-11-17 — volume files are a global input (every month's files, newest first): the picker shows
+    // the newest 4 LMDC Landing files, and search reaches every file.
+    const volLmdcAll = d.volumeFiles.filter(f => f.type === planInputType);
+    const volOptionsAll = volSearchQ ? volLmdcAll : volLmdcAll.slice(0, 4);
     const volOptions = volOptionsAll.filter(f => !volSearchQ || f.name.toLowerCase().indexOf(volSearchQ) >= 0).map(f => ({ name: f.name, rows: fmtInt(f.rows), vol: fmtL(f.vol), selected: st.creationVolume === f.name,
       bd: st.creationVolume === f.name ? '#003F98' : '#E6EBF2', bg: st.creationVolume === f.name ? '#F3F7FE' : '#FFFFFF', dotBg: st.creationVolume === f.name ? '#003F98' : '#FFFFFF', dotBd: st.creationVolume === f.name ? '#003F98' : '#C3C9D4', dotOp: st.creationVolume === f.name ? '1' : '0',
       // G11 — switching the volume file invalidates prior DC drops (coverage differs). Reset them + re-check.
@@ -12417,7 +12475,7 @@ class NDCApp extends React.Component {
       previewCardCount: sel.length, triggerCount: trigSelCount,
       // 2.3 — volume file search
       creationVolSearch: st.creationVolSearch || '', onVolSearch: (e) => this.setState({ creationVolSearch: e.target.value }),
-      volFilesEmpty: volOptions.length === 0 && volSearchQ.length > 0,
+      volFilesEmpty: volOptions.length === 0, // 2026-11-17 — also when there are no files at all (was search-only)
       // 2.6 — step-4 validation panel
       step4FlagsList, step4AnyFlags, step4HasErrorFlags, step4HasWarnFlags,
       step4ErrorFlagCount, step4WarnFlagCount,
@@ -13077,7 +13135,7 @@ class NDCApp extends React.Component {
     // NLH pairing is scenario-based now (later session) — one scenario chosen for the whole
     // trigger, every parent SC needs coverage inside THAT scenario specifically.
     const month = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
-    const chosenScenario = listNlhIngestedPlans(this.engineStore, month).find(p => p.planId === st.schedulerNlhScenarioId) || null;
+    const chosenScenario = (st.schedulerNlhScenarioId ? findNlhIngestedPlanById(this.engineStore, st.schedulerNlhScenarioId) : null);
     if (!chosenScenario) { this.showToast('Blocked \u2014 pick an NLH scenario first', '#D14B4B'); return; }
     const uncovered = parents.filter(p => !(chosenScenario.scData && chosenScenario.scData[p.scCode]));
     if (uncovered.length > 0) {
@@ -13239,13 +13297,14 @@ class NDCApp extends React.Component {
     // is picked globally for the whole trigger (matching how a Volume Inputs file is picked, not
     // per-SC), since every SC in one Scheduler run should reference the same real-world NLH
     // landing scenario together.
-    const schedulerNlhSourceMonth = st.schedulerNlhSourceMonth || st.activeCycleMonth.rlh;
+    const schedulerNlhSourceMonth = st.activeCycleMonth.rlh; // kept for older bindings; scenarios are global now
     const selectedScCodesForNlh = Array.from(new Set(selectedPlanIds.map(pid => { const p = (d.plans || []).find(pp => pp.id === pid); return p ? p.scCode : null; }).filter(Boolean)));
-    const nlhScenariosThisMonth = listNlhIngestedPlans(this.engineStore, schedulerNlhSourceMonth);
+    // 2026-11-17 — NLH scenarios are a global input: every month's scenarios, tagged with their month.
+    const nlhScenariosThisMonth = listAllNlhIngestedPlans(this.engineStore);
     const chosenNlhScenarioId = st.schedulerNlhScenarioId;
     const chosenNlhScenario = nlhScenariosThisMonth.find(p => p.planId === chosenNlhScenarioId) || null;
     const schedulerNlhScenarioCards = nlhScenariosThisMonth.map(p => ({
-      planId: p.planId, name: p.name, origin: p.origin || 'ingested', ingestedAt: p.ingestedAt,
+      planId: p.planId, name: p.name + (p.cycleMonth ? ' \u00b7 ' + monthLabel(p.cycleMonth) : ''), origin: p.origin || 'ingested', ingestedAt: p.ingestedAt,
       scCount: Object.keys(p.scData || {}).length, active: p.planId === chosenNlhScenarioId,
       onClick: () => this.setState({ schedulerNlhScenarioId: p.planId }),
     }));
@@ -17968,10 +18027,10 @@ class NDCApp extends React.Component {
       })() : [],
       legVolumeLibraryEmpty: (st.activeLeg === 'nlh') ? listUploadHistory(this.engineStore, 'nlh', st.activeCycleMonth.nlh).length === 0 : true,
       legVolumeSearch: st.legVolumeSearch || '', onLegVolumeSearch: (e) => this.setState({ legVolumeSearch: e.target.value }),
-      legIngestedPlans: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).map(p => ({
-        planId: p.planId, name: p.name, origin: p.origin || 'ingested', ingestedAt: p.ingestedAt, scCount: Object.keys(p.scData || {}).length,
+      legIngestedPlans: (st.activeLeg === 'nlh') ? listAllNlhIngestedPlans(this.engineStore).map(p => ({
+        planId: p.planId, name: p.name + (p.cycleMonth ? ' \u00b7 ' + monthLabel(p.cycleMonth) : ''), origin: p.origin || 'ingested', ingestedAt: p.ingestedAt, scCount: Object.keys(p.scData || {}).length,
       })) : [],
-      legIngestedEmpty: (st.activeLeg === 'nlh') ? listNlhIngestedPlans(this.engineStore, st.activeCycleMonth.nlh).length === 0 : true,
+      legIngestedEmpty: (st.activeLeg === 'nlh') ? listAllNlhIngestedPlans(this.engineStore).length === 0 : true,
       legIngestScenarioName: st.legIngestScenarioName || '',
       onLegIngestScenarioName: (e) => this.setState({ legIngestScenarioName: e.target.value }),
       legIngestOrigin: st.legIngestOrigin || 'ingested',
@@ -18028,7 +18087,7 @@ class NDCApp extends React.Component {
       // Network Map; one value for all three screens (not per SC).
       showMonthFilter: ['review', 'align', 'ops', 'map', 'finalise'].indexOf(st.view) >= 0,
       monthFilter: st.monthFilter || 'all', monthFilterLabel: (st.monthFilter && st.monthFilter !== 'all') ? this.monthFull(st.monthFilter) : 'All months',
-      monthFilterOptions: [{ value: 'all', label: 'All months' }].concat(this.monthWindow().map(m => ({ value: m, label: this.monthFull(m) }))),
+      monthFilterOptions: [{ value: 'all', label: 'All months' }].concat(this.monthFilterMonths().map(m => ({ value: m, label: this.monthFull(m) }))),
       onMonthFilter: (e) => this.setState({ monthFilter: e.target.value }),
       freezeMiniText: daysToFreeze + 'd to freeze · ' + health.label, freezeMiniBg: health.miniBg, freezeMiniFg: health.miniFg,
       plannerSegBg: planner ? '#fff' : 'transparent', plannerSegFg: planner ? '#003F98' : '#5A5E66',

@@ -106,7 +106,9 @@ function suffixRlhIdsForMonth(bucket, month) {
     id: sp.id + suf,
     parentPlanId: sp.parentPlanId ? (idMap[sp.parentPlanId] || (sp.parentPlanId + suf)) : sp.parentPlanId,
   }));
-  const runs = (bucket.runs || []).map(r => Object.assign({}, r, { runId: r.runId ? r.runId + suf : r.runId }));
+  // 2026-11-17 — run ids are suffixed too: they repeat across months otherwise, and the all-months
+  // merge (keyed on id) collapsed 12 months of runs into one.
+  const runs = (bucket.runs || []).map(r => Object.assign({}, r, { id: r.id ? r.id + suf : r.id, runId: r.runId ? r.runId + suf : r.runId }));
   return Object.assign({}, bucket, { plans, schedulerPlans, runs });
 }
 
@@ -943,6 +945,13 @@ function ingestNlhPlan(store, cycleMonth, planRecord) {
   return planRecord;
 }
 
+// listAllNlhIngestedPlans(store) (2026-11-17) — NLH scenarios are a global input: every scenario from
+// every month, each tagged with the month it was ingested for (cycleMonth), newest month first.
+function listAllNlhIngestedPlans(store) {
+  const out = [];
+  Object.keys(store.nlhIngestedPlans || {}).sort().reverse().forEach(m => (store.nlhIngestedPlans[m] || []).forEach(p => out.push(Object.assign({ cycleMonth: m }, p))));
+  return out;
+}
 function listNlhIngestedPlans(store, cycleMonth) {
   return store.nlhIngestedPlans[cycleMonth] || [];
 }

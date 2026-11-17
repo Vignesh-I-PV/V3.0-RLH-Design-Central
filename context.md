@@ -3844,3 +3844,39 @@ RNG-based approximation. Read the method's own comment block first; the short ve
   - **SC Master table**: the "Needs action" chip is gone; every row shows its source chip —
     **AutoDML** (blue) or **Manual** (amber). Red row tint, red "Missing" cells, ordering and the
     count banner are unchanged.
+
+- **2026-11-17 — Debug: seeded data missing in Design Creation → global inputs restored; more seed;
+  Route Planner runs reach Design Review.**
+  - **Root causes found** (compared with the 2026-09-30 build at Sep 2026): after the global cycle was
+    removed, every leg opened on the REAL current month (Nov 2026 by then), but the seed only filled
+    May–Sep 2026 and October was created empty on purpose; a new month only carried masters forward,
+    never the month-scoped inputs. Lost in Design Creation: volume files (6 → 0, Step 1 picker
+    empty), AutoDML snapshot / details / nodes (3/3/29 → 0), node additions / closures / migrations
+    (10 → 0), NLH scenarios for the month (2 → 0, Route Scheduler blocked). Masters, plans, runs and
+    scheduler plans were intact.
+  - **Global inputs** (product decision): Design Inputs are one global set, each seeded entry tagged
+    with its month (`cycleMonth`), kept in the bucket the app works in so it never empties as the date
+    moves. Volume files = every seeded month's files (72, newest first; Step 1 shows the newest 4,
+    search reaches all). AutoDML actions and node changes = one set (same DCs every month) with row
+    month tags spread over past seeded months. NLH scenarios = all months (`listAllNlhIngestedPlans`
+    in engine.js), shown as "30L Base · Sep 2026"; Route Scheduler's NLH month picker removed; the NLH
+    card's Design Ingestion lists all. Target month stays on runs / plans / scheduler plans only and
+    is used purely as the Design Review / Ops Alignment / Network Map filter.
+  - **More seed**: 12 target months, May 2026 – Apr 2027 (July dataset re-dated; year too for 2027).
+    Months after the real current month are early in the loop (Finalised → In Alignment,
+    Acknowledged → Pushed) with no scheduler plans. Totals: 492 plans, 3,132 runs, 140 scheduler
+    plans, 24 NLH scenarios. Run ids are now suffixed per month in `suffixRlhIdsForMonth` (they
+    collided across months and the all-months merge collapsed them).
+  - **Month filter options** = months that have plans / runs plus the −6…+12 window
+    (`monthFilterMonths`), so seeded months never drop out as the date moves.
+  - **Route Planner runs → Design Review**: when a queued run completes, `makeLiveRun()` adds a run to
+    data.runs (target month, Run Name, HW / Step 2 params, triggered now; metrics cloned from the SC's
+    latest run, lightly varied — still no real solver). Verified: Jan 2027 run named "Jan wave test"
+    shows under the Jan 2027 filter, hidden under Dec 2026, written back to Jan 2027's bucket.
+  - Small fix: Route Planner Step 1 now shows an empty-state message when there are no volume files
+    (`volFilesEmpty` only fired for a search with no matches).
+  - **Verification**: jsdom — all Design Inputs / Creation / Review / Ops Alignment / Finalise / Map
+    screens render; Volume Inputs and Additions/Closures/Migrations populated; Route Scheduler
+    trigger with Sep's "30L Base" for a Dec 2026 target; NLH card lists 24 scenarios; Ops Alignment
+    plan count 140 (all) → 10 (Sep 2026) → 14 (Feb 2027). Save-back ≈1 ms per update; entering RLH
+    ≈1.9 s and Design Review ≈0.7 s in jsdom at this scale. Zero runtime errors.

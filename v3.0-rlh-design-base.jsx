@@ -6751,6 +6751,9 @@ class NDCApp extends React.Component {
         return Object.assign({}, sp, { nlhPlanId: 'NLH-SCENARIO-' + scenarioName.replace(/[^A-Za-z0-9]/g, '') + '-' + month });
       });
     });
+    // 2026-11-17 (seed realism) — each month gets its own status mix, metrics, run links and extra
+    // plans per SC; see realiseSeedMonth().
+    SEED_MONTHS.forEach(month => { this.engineStore.rlhCycleData[month] = this.realiseSeedMonth(this.engineStore.rlhCycleData[month], month, _curMonth); });
     // 2026-11-17 — GLOBAL INPUTS. Design Inputs aren't tied to a month any more: one global set,
     // where each seeded entry carries the month it came from (`cycleMonth`) as a tag. It lives in
     // the bucket the app works in (the real current month), so it never goes empty as the date
@@ -10633,6 +10636,78 @@ class NDCApp extends React.Component {
   // P — status-only run lifecycle (NO percentage; % isn't computable for an async Gurobi solve).
   // Queued/Planned -> In Progress -> Completed. The Queued state is real: only a batch of
   // CONCURRENCY runs are In Progress at once, the rest wait as Queued (relevant at large SC counts).
+  // planForScInScope(plans, code) (2026-11-17) — when only an SC is known (Network Map, standalone map):
+  // that SC's plan for the current month if there is one, else the most recent target month — among
+  // the plans in scope (the month filter has already narrowed them).
+  planForScInScope(plans, code) {
+    const cur = currentMonthKey();
+    const mine = (plans || []).filter(p => p.scCode === code);
+    return mine.find(p => p.cycleMonth === cur) || mine.slice().sort((a, b) => String(b.cycleMonth || '').localeCompare(String(a.cycleMonth || '')))[0] || null;
+  }
+
+  // realiseSeedMonth(bucket, month, curMonth) (2026-11-17) — turns one re-dated copy of the July
+  // dataset into a believable month. The target month is only a tag + filter, and an SC can have
+  // several plans in a month. Deterministic (hash of SC + month), so every load looks the same.
+  //  - Run links: every plan gets sourceRunId / runId = the same-SC, same-month run with its HW
+  //    (seeded plans had none, so Design Review run chips and Ops Alignment headers mis-resolved).
+  //  - Statuses by period: past months mostly Finalised / Acknowledged, the current month a mix,
+  //    future months Pushed / In Alignment only. Plan fields and route rows are normalised to the
+  //    status (no feedback on Pushed; every route decided on Acknowledged / Finalised).
+  //  - ~40% of SCs get a second plan from a different-HW run in the same month.
+  //  - Metrics vary per month (CPS, coverage, utilisation, distance, cost, TAT); runs too.
+  //  - Names carry the month and HW; sent dates carry the year.
+  //  - Route Scheduler plans are kept only where the parent plan is still Finalised.
+  realiseSeedMonth(bucket, month, curMonth) {
+    if (!bucket) return bucket;
+    // FNV-1a + avalanche, so neighbouring months / SCs land far apart (a plain *31 hash barely moved).
+    const H = (s) => { let h = 2166136261; String(s).split('').forEach(c => { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }); h ^= h >>> 16; h = Math.imul(h, 0x45d9f3b) >>> 0; h ^= h >>> 16; return h >>> 0; };
+    const pick = (h, table) => { const tot = table.reduce((a, t) => a + t[1], 0); let x = h % tot; for (const [v, w] of table) { if (x < w) return v; x -= w; } return table[0][0]; };
+    const period = monthCompare(month, curMonth) < 0 ? 'past' : (month === curMonth ? 'current' : 'future');
+    const MIX = { past: [['Finalised', 62], ['Acknowledged', 14], ['In Alignment', 14], ['Pushed', 10]], current: [['Finalised', 22], ['Acknowledged', 18], ['In Alignment', 32], ['Pushed', 28]], future: [['In Alignment', 38], ['Pushed', 62]] };
+    const year = month.slice(0, 4), monLbl = monthLabel(month);
+    const jit = (v, pct, h) => (typeof v === 'number' ? v * (1 + ((h % 1000) / 1000 - 0.5) * pct) : v);
+    const round = (v, dp) => (typeof v === 'number' ? Math.round(v * Math.pow(10, dp)) / Math.pow(10, dp) : v);
+    const runs = (bucket.runs || []).map(r => { const h = H(r.id + month); return Object.assign({}, r, { cycleMonth: month, coverage: round(Math.min(0.995, jit(r.coverage, 0.05, h)), 3), cps: round(jit(r.cps, 0.18, h >>> 3), 2), util: round(Math.min(0.97, jit(r.util, 0.16, h >>> 5)), 2) }); });
+    const runFor = (sc, hw, notId) => runs.find(r => r.scCode === sc && r.hw === hw && r.id !== notId) || runs.find(r => r.scCode === sc && r.id !== notId) || null;
+    const statusShape = (p, status, h) => {
+      const fbStatuses = { 'In Alignment': 1, Acknowledged: 1, Finalised: 1 };
+      const revs = p.reviewerNames || [];
+      const rows = (p.rows || []).map((r, i) => {
+        if (status === 'Pushed') return Object.assign({}, r, { ops: null, planner: null, fb: null, proposedBy: null });
+        if (status === 'Finalised') return Object.assign({}, r, { ops: 'Aligned', planner: 'Accept' });
+        const hadFb = r.ops === 'Aligned' || r.ops === 'Needs Change';
+        const ops = hadFb ? r.ops : (((h >>> i) % 5) === 0 ? 'Needs Change' : 'Aligned');
+        const planner = status === 'Acknowledged' ? (r.planner || 'Accept') : (r.planner !== undefined ? r.planner : null);
+        return Object.assign({}, r, { ops, planner: (ops === 'Needs Change' || status === 'Acknowledged') ? planner : (planner || null) });
+      });
+      const allDecided = status === 'Pushed' ? false : (status === 'In Alignment' ? rows.every(r => r.ops !== 'Needs Change' || r.planner) : true);
+      return Object.assign({}, p, { status, rows,
+        feedbackReceived: !!fbStatuses[status], allDecided, sendBack: status === 'In Alignment' ? (p.sendBack || 0) : 0,
+        submittedReviewers: status === 'Pushed' ? [] : (status === 'In Alignment' ? revs.slice(0, Math.max(1, revs.length - ((h >>> 2) % 2))) : revs.slice()) });
+    };
+    const mkName = (p, hw) => p.scCode + ' \u00b7 ' + (p.scName || '') + ' RLH \u00b7 ' + monLbl + ' \u00b7 HW ' + hw;
+    const withYear = (s) => (/^\d{1,2} [A-Z][a-z]{2}$/.test(String(s || '')) ? s + ' ' + year : s);
+    const plans = [];
+    (bucket.plans || []).forEach(p0 => {
+      const h = H(p0.scCode + month);
+      const run = runFor(p0.scCode, p0.hw);
+      const metrics = Object.assign({}, p0.metrics, { cps: round(jit((p0.metrics || {}).cps, 0.18, h), 2), coverage: round(Math.min(0.995, jit((p0.metrics || {}).coverage, 0.05, h >>> 2)), 3), util: round(Math.min(0.97, jit((p0.metrics || {}).util, 0.16, h >>> 4)), 2), distance: Math.round(jit((p0.metrics || {}).distance, 0.12, h >>> 6) || 0), cost: Math.round(jit((p0.metrics || {}).cost, 0.14, h >>> 7) || 0), avgTat: round(jit((p0.metrics || {}).avgTat, 0.1, h >>> 8), 1) });
+      const base = Object.assign({}, p0, { cycleMonth: month, sourceRunId: run ? run.id : null, runId: run ? run.runId : null, name: mkName(p0, p0.hw), sentDate: withYear(p0.sentDate), metrics });
+      plans.push(statusShape(base, pick(h, MIX[period]), h));
+      if ((h % 100) < 40) {
+        const alt = runFor(p0.scCode, p0.hw === 0.5 ? 1 : 0.5, run ? run.id : null);
+        if (alt) {
+          const h2 = H(p0.scCode + month + 'B');
+          const m2 = Object.assign({}, metrics, { cps: round(jit(alt.cps, 0.06, h2), 2), coverage: alt.coverage, util: alt.util, routes: alt.routes || metrics.routes, vehicles: alt.vehicles || metrics.vehicles });
+          plans.push(statusShape(Object.assign({}, base, { id: p0.id + '-B', hw: alt.hw, sourceRunId: alt.id, runId: alt.runId, name: mkName(p0, alt.hw), metrics: m2, sentDate: withYear(String(Math.min(28, (parseInt(p0.sentDate, 10) || 5) + 2)).padStart(2, '0') + ' ' + MONTH_NAMES[Number(month.slice(5)) - 1]) }), pick(h2, MIX[period]), h2));
+        }
+      }
+    });
+    const fin = {}; plans.forEach(p => { if (p.status === 'Finalised') fin[p.id] = true; });
+    const schedulerPlans = (bucket.schedulerPlans || []).filter(sp => fin[sp.parentPlanId]).map(sp => Object.assign({}, sp, { cycleMonth: month }));
+    return Object.assign({}, bucket, { plans, runs, schedulerPlans });
+  }
+
   // makeLiveRun(queueRow, runs) (2026-11-17) — the Design Review record for a Route Planner run that
   // just completed in the queue. Shaped like the seeded runs: it clones the SC's latest run as a
   // template (any SC's run if it has none) and stamps this trigger's facts — target month
@@ -12914,7 +12989,12 @@ class NDCApp extends React.Component {
     const hwTxt = runHw === 0 ? 'HW 0' : runHw === 0.5 ? 'HW 0.5' : 'HW 1';
     const plans = d.plans.slice();
     const alignStatus = Object.assign({}, st.alignStatus);
-    const idx = plans.findIndex(p => p.scCode === code);
+    // 2026-11-17 — an SC can have several plans per target month: a push updates the plan made from
+    // THIS run (re-push), otherwise it creates a new plan tagged with the run's target month.
+    const idx = run ? plans.findIndex(p => p.sourceRunId === run.id) : -1;
+    const _pm = (run && run.cycleMonth) || currentMonthKey();
+    const _now = new Date(); const _stamp = _now.getFullYear() + String(_now.getMonth() + 1).padStart(2, '0') + String(_now.getDate()).padStart(2, '0') + String(_now.getHours()).padStart(2, '0') + String(_now.getMinutes()).padStart(2, '0') + String(_now.getSeconds()).padStart(2, '0');
+    const _sent = String(_now.getDate()).padStart(2, '0') + ' ' + MONTH_NAMES[_now.getMonth()] + ' ' + _now.getFullYear();
     let plan = idx >= 0 ? plans[idx] : null;
     if (plan && run && sc) {
       // existing plan for this SC \u2014 re-push it for fresh Ops review against the CHOSEN run:
@@ -12929,7 +13009,7 @@ class NDCApp extends React.Component {
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
       const reviewerNamesNext = reviewers.length ? reviewers : plan.reviewerNames;
-      plan = Object.assign({}, plan, { hw: runHw, rows, pushedBy: 'Pranita Sapkal', reviewerNames: reviewerNamesNext,
+      plan = Object.assign({}, plan, { hw: runHw, rows, sentDate: _sent, pushedBy: 'Pranita Sapkal', reviewerNames: reviewerNamesNext,
         // 2026-07-31 — sourceRunId + finalisedDirect: an SC can have several runs (HW variants),
         // but only ONE `plans[SC]` object exists at a time — this records WHICH run is the one
         // currently promoted, so each run's own card can show its own correct status instead of
@@ -12954,7 +13034,7 @@ class NDCApp extends React.Component {
         rows.push({ routeCode: sc.cityCode + '-R' + String(j + 1).padStart(2, '0'), veh, vehTp: 7, tp, dcs, rtDist: 80 + j * 18, breakdownTat: 1.2, outCutoff: '23:00', oLat: sc.lat, oLng: sc.lng, volume: Math.round(run.volume / rowCount), util: run.util, cps: run.cps, ops: 'Pending', planner: null, fb: null });
       }
       const newPlanReviewers = reviewers.length ? reviewers : [...new Set(sc.pocs)];
-      plan = { id: 'PL-' + code, name: code + ' \u00b7 ' + sc.name + ' RLH', scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: 'Today', sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], sourceRunId: run.id, finalisedDirect: !!finaliseDirect, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost, vehByType: run.vehByType, vehAvail: run.vehAvail } };
+      plan = { id: 'PL-' + code + '-' + _pm + '-' + _stamp, name: code + ' \u00b7 ' + sc.name + ' RLH \u00b7 ' + monthLabel(_pm) + ' \u00b7 HW ' + runHw, cycleMonth: _pm, sourceRunId: run.id, runId: run.runId || run.id, scCode: code, scName: sc.name, zone: sc.zone, hw: runHw, status: targetStatus, rows, pushedBy: 'Pranita Sapkal', sentDate: _sent, sendBack: 0, feedbackReceived: false, allDecided: finaliseDirect ? true : false, reviewerNames: newPlanReviewers, submittedReviewers: finaliseDirect ? newPlanReviewers.slice() : [], sourceRunId: run.id, finalisedDirect: !!finaliseDirect, metrics: { routes: run.routes, vehicles: run.vehicles, distance: run.distance, cps: run.cps, coverage: run.coverage, util: run.util, avgTat: run.avgTat, cost: run.cost, vehByType: run.vehByType, vehAvail: run.vehAvail } };
       plans.push(plan);
     }
     const pushed = Object.assign({}, st.pushedSCs); pushed[code] = true;
@@ -13240,7 +13320,8 @@ class NDCApp extends React.Component {
     const filteredScsStep1 = scsWithFinal.filter(s => (zf1 === 'All' || s.zone === zf1) && (!q1 || s.code.toLowerCase().indexOf(q1) >= 0 || s.name.toLowerCase().indexOf(q1) >= 0));
 
     const toggleIds = (ids, id) => { const set = new Set(ids); if (set.has(id)) set.delete(id); else set.add(id); return Array.from(set); };
-    const parseDateKey = (s) => { if (!s) return 0; if (s === 'Today') return 999; const m = String(s).match(/^(\d+)/); return m ? parseInt(m[1], 10) : 0; };
+    // 2026-11-17 — real date order (was the day number only): "06 Sep 2026" → 20260906.
+    const parseDateKey = (s) => { if (!s) return 0; if (s === 'Today') return 99999999; const m = String(s).match(/^(\d{1,2}) ([A-Z][a-z]{2})(?: (\d{4}))?/); if (!m) return 0; const mi = MONTH_NAMES.indexOf(m[2]); return (m[3] ? Number(m[3]) : 0) * 10000 + (mi + 1) * 100 + Number(m[1]); };
     // 2026-09-04 — SC rail + separate detail pane replaced with Route Planner's own Step 1
     // pattern: zone-grouped collapsible sections, each SC a single-line row that expands INLINE
     // (accordion, multiple SCs can be open at once — schedulerExpandedScs is a set of codes, not
@@ -13252,7 +13333,7 @@ class NDCApp extends React.Component {
     // toolbar already does.
     const expandedScs = st.schedulerExpandedScs || [];
     const schedulerScGroups = filteredScsStep1.map(sc => {
-      const plansForSc = finalisedPlans.filter(p => p.scCode === sc.code);
+      const plansForSc = finalisedPlans.filter(p => p.scCode === sc.code).sort((a, b) => parseDateKey(b.sentDate) - parseDateKey(a.sentDate)); // newest first
       const checkedCount = plansForSc.filter(p => selectedPlanIds.indexOf(p.id) >= 0).length;
       const expanded = expandedScs.indexOf(sc.code) >= 0;
       return { code: sc.code, name: sc.name, zone: sc.zone, planCount: plansForSc.length,
@@ -13260,7 +13341,7 @@ class NDCApp extends React.Component {
         selCountLabel: checkedCount > 0 ? (checkedCount + '/' + plansForSc.length + ' selected') : (plansForSc.length + ' plan' + (plansForSc.length === 1 ? '' : 's')),
         latestDateLabel: plansForSc.length ? plansForSc.slice().sort((a, b) => parseDateKey(b.sentDate) - parseDateKey(a.sentDate))[0].sentDate : '\u2014',
         onToggleExpand: () => { const ids = toggleIds(expandedScs, sc.code); this.setState({ schedulerExpandedScs: ids }); },
-        plans: plansForSc.map(p => ({ id: p.id, runId: 'RUN-' + p.scCode + '-01', hw: p.hw, routes: (p.rows || []).length, finalisedDate: p.sentDate,
+        plans: plansForSc.map(p => ({ id: p.id, runId: (p.runId || p.id) + (p.cycleMonth ? ' \u00b7 ' + monthLabel(p.cycleMonth) : ''), hw: p.hw, routes: (p.rows || []).length, finalisedDate: p.sentDate,
           checked: selectedPlanIds.indexOf(p.id) >= 0, isPreselected: p.id === preselectId,
           onToggle: () => this.setState({ schedulerSelectedPlanIds: toggleIds(selectedPlanIds, p.id) }) })) };
     });
@@ -14881,7 +14962,7 @@ class NDCApp extends React.Component {
     // predicate shape) rather than a differently-behaving lookalike. Run ID/Run Name aren't
     // stored on the plan directly, so resolved via sourceRunId back into d.runs, same as
     // everywhere else in this codebase that needs a plan's originating run.
-    const planRunInfo = (p) => (p.sourceRunId && d.runs.find(r => r.id === p.sourceRunId)) || d.runs.find(r => r.scCode === p.scCode) || {};
+    const planRunInfo = (p) => (p.sourceRunId && this.state.data.runs.find(r => r.id === p.sourceRunId)) || this.state.data.runs.find(r => r.scCode === p.scCode && r.cycleMonth === p.cycleMonth && r.hw === p.hw) || this.state.data.runs.find(r => r.scCode === p.scCode && r.cycleMonth === p.cycleMonth) || {};
     const ALIGN_FILTER_OPTS = [['cov100', 'Coverage = 100%'], ['hw0', 'HW = 0'], ['hw05', 'HW = 0.5'], ['hw1', 'HW = 1']];
     const alignFilterSet = st.alignFilters || {};
     const alignFilterActive = Object.keys(alignFilterSet).some(k => alignFilterSet[k]);
@@ -15970,7 +16051,10 @@ class NDCApp extends React.Component {
     const cats = [];
     const vals = Object.keys(dcMap || {}).map(k => dcMap[k] || {});
     const has = (v) => v !== '' && v != null;
-    const existing = new Set((((this.state.data || {}).plans || []).find(p => p.id === (this.state.alignPlanId || this.state.opsPlanId)) || { routes: [] }).routes.map(r => r.code || r.routeCode));
+    // 2026-11-17 fix — plans keep their routes in `rows` (not `routes`); reading .routes crashed Ops
+    // Alignment as soon as a plan was selected.
+    const _selPlan = ((this.state.data || {}).plans || []).find(p => p.id === (this.state.alignPlanId || this.state.opsPlanId)) || {};
+    const existing = new Set((_selPlan.rows || _selPlan.routes || []).map(r => r.routeCode || r.code));
     if ((flags || {}).vehicleType) cats.push('vehicle');
     if (vals.some(v => has(v.routeCode) && v.routeCode !== '__SPLIT__' && (existing.size === 0 || existing.has(v.routeCode)))) cats.push('dcMove');
     if (vals.some(v => has(v.tp))) cats.push('order');
@@ -16798,7 +16882,7 @@ class NDCApp extends React.Component {
     // chosen-HW run's routes when no plan exists yet. Only the arc *geometry* is synthesised
     // (DCs carry no lat/lng), every load-bearing figure — route id, vehicle, TP, DC count,
     // RT distance — comes straight from the source rows.
-    const srcPlan = selPlan || d.plans.find(p => p.scCode === curCode);
+    const srcPlan = selPlan || this.planForScInScope(d.plans, curCode);
     // Prefer the run the planner opened the map from (mapRunId) so a HW-0/HW-1 run card draws ITS
     // geometry, not the HW-0.5 default. Fall back to the balanced run, then any run for this SC.
     const srcRun = (st.mapRunId && d.runs.find(r => r.id === st.mapRunId && r.scCode === curCode))
@@ -17084,7 +17168,7 @@ class NDCApp extends React.Component {
     // if one exists, else just the SC); detail icon opens the full-screen plan-detail state for that run.
     // Open the run's route map as an in-context POPUP (does NOT navigate away to the Network Map page — that broke the review flow).
     // Sets mapSC/mapRunId so mapVals computes this run's per-SC geometry; the modal binds the same arcs/dcMarkers the map page uses.
-    const openRunMap = (run) => { const pl = d.plans.find(p => p.scCode === run.scCode); this.setState({ runMapOpen: true, mapSC: run.scCode, mapRunId: run.id, mapPlanId: pl ? pl.id : null, mapRoute: 'All', mapVeh: 'All', mapSearch: '' }); };
+    const openRunMap = (run) => { const pl = d.plans.find(p => p.sourceRunId === run.id) || null; this.setState({ runMapOpen: true, mapSC: run.scCode, mapRunId: run.id, mapPlanId: pl ? pl.id : null, mapRoute: 'All', mapVeh: 'All', mapSearch: '' }); };
     const openRunDetail = (run) => this.setState({ reviewDetailRunId: run.id });
 
     // Left rail = one entry per SC; dot = worst flag across ALL the SC's runs; the cps slot carries the run count.
@@ -17121,7 +17205,7 @@ class NDCApp extends React.Component {
       // Now matches plan.sourceRunId against THIS run specifically, and reflects the plan's real
       // status (+ whether it was Finalised via "Finalise Directly", which reads as "Pushed Without
       // Alignment" rather than a plain "Finalised" that would wrongly imply Ops actually reviewed it).
-      const srcPlan = d.plans.find(p => p.scCode === r.scCode);
+      const srcPlan = d.plans.find(p => p.sourceRunId === r.id); // 2026-11-17 — the plan made from THIS run
       const isChosenRun = !!(srcPlan && srcPlan.sourceRunId === r.id);
       const planStatus = isChosenRun ? eff(srcPlan) : null;
       const isFinalDirect = isChosenRun && planStatus === 'Finalised' && !!srcPlan.finalisedDirect;
@@ -18142,7 +18226,7 @@ class NDCApp extends React.Component {
     const e = React.createElement;
     const st = this.state, d = st.data;
     const sc = d.scs.find(s => s.code === this.standaloneMapSc);
-    const plan = d.plans.find(p => p.scCode === this.standaloneMapSc);
+    const plan = this.planForScInScope(d.plans, this.standaloneMapSc);
     if (!sc || !plan) {
       return e('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'Inter, sans-serif', color: '#5A5E66' } }, 'No plan found for ' + this.standaloneMapSc);
     }

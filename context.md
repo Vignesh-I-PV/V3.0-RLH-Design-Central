@@ -3880,3 +3880,37 @@ RNG-based approximation. Read the method's own comment block first; the short ve
     trigger with Sep's "30L Base" for a Dec 2026 target; NLH card lists 24 scenarios; Ops Alignment
     plan count 140 (all) → 10 (Sep 2026) → 14 (Feb 2027). Save-back ≈1 ms per update; entering RLH
     ≈1.9 s and Design Review ≈0.7 s in jsdom at this scale. Zero runtime errors.
+
+- **2026-11-17 (later) — Seeded plans after the cycle removal: per-run, per-target-month plans;
+  realistic seed.** Model: the month is only a plan's target month (tag + filter) and an SC can
+  have several plans in a month.
+  - **Gaps found**: code assumed one plan per SC (per cycle) and resolved "the SC's plan" as the
+    first match — after merging 12 months that was always the newest month's plan. Push / Finalise
+    directly overwrote the SC's April 2027 plan whatever run was pushed (and a new plan got no month
+    in its id and the current month as its target); Design Review run chips, the run-map popup, the
+    Network Map and the standalone map read the wrong month's plan; Ops Alignment's plan header fell
+    back to the SC's first run (451 / 492 plans showed another month's run) because seeded plans
+    had no run link. Seed: every month an identical copy (same routes, metrics, status per SC),
+    names repeated ×12, future months "Pushed" with feedback already in, dates without a year, and
+    Route Scheduler Step 1 sorting "latest" by day number only with every row labelled RUN-‹SC›-01.
+  - **Fixes**: `doPush` updates the plan made from the pushed run (re-push) or creates a new one —
+    id `PL-‹SC›-‹month›-‹timestamp›`, target month = the run's, `sourceRunId` / `runId` set, sent
+    date with year. Run chips and the run-map popup resolve by `sourceRunId`; Ops Alignment's header
+    by `sourceRunId`, else same SC + month + HW; Network Map / standalone map via
+    `planForScInScope` (current month, else latest target month, within the filter). Route
+    Scheduler Step 1: rows show the real run id + month, newest first; `parseDateKey` uses the full
+    date (year, month, day).
+  - **Seed realism** (`realiseSeedMonth`, deterministic): every plan linked to its same-month run;
+    statuses by period (past mostly Finalised / Acknowledged, current a mix, future Pushed /
+    In Alignment) with plan fields and route rows normalised to the status; ~40% of SCs get a
+    second plan from a different-HW run in the same month; per-month variation of CPS, coverage,
+    utilisation, distance, cost and TAT (runs too); names "‹SC› · ‹City› RLH · ‹Mon YYYY› · HW x";
+    sent dates with year; scheduler plans kept only under Finalised parents. Totals ≈ 695 plans,
+    3,132 runs, 78 scheduler plans.
+  - **Bug fixed on the way**: `rpNcCategories` (2026-10-15) read `plan.routes`, but plans keep routes
+    in `rows` — Ops Alignment crashed as soon as a plan was selected (surfaced by the push landing).
+  - **Verification**: jsdom — 695 / 695 plans linked to a same-month run; 0 inconsistent states; 0
+    duplicate names; no SC with the same status every month; 203 SC-months with 2 plans; push of a
+    Sep run → new Sep plan, April 2027 untouched, Sep Design Review shows "Pushed"; live Feb 2027
+    run → push → new Feb 2027 plan (3rd GGNS plan that month), visible in Ops Alignment under Feb.
+    All screens render; zero runtime errors. engine.js unchanged this round.
